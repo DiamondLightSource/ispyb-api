@@ -10,9 +10,9 @@
 # data acquisition and processing pipeline.
 #
 
-# TODO: Mark's suggestions:
+# TODO: 
 # - Implement way to tell if a datacollection already exists in the database based on the unique scan number used on non-MX beamlines.
-# - Extend OrderedDict so that it won't allow new entries to be added after the instantiation.
+# - A way to get the scalingid when storing MX MR results, if you don't know it.
 #
 
 from ispyb_api.dbconnection import dbconnection

@@ -23,6 +23,7 @@ import datetime
 from logging.handlers import RotatingFileHandler
 import copy
 from collections import OrderedDict
+from ispyb_api.ExtendedOrderedDict import ExtendedOrderedDict
 
 class MXStrategy:
   '''MXStrategy provides methods to store data in the strategy tables.'''
@@ -30,7 +31,7 @@ class MXStrategy:
   def __init__(self):
     pass
 
-  _strategy_params = OrderedDict([('parentid',None), ('short_comments',None), ('comments',None), ('program_version',None), ('in_beamx',None), ('in_beamy',None), ('in_rms_err_lim',None), ('in_min_fraction_indexed',None), ('in_max_fraction_rejected',None), ('in_min_signal2noise',None)])
+  _strategy_params = ExtendedOrderedDict([('parentid',None), ('short_comments',None), ('comments',None), ('program_version',None), ('in_beamx',None), ('in_beamy',None), ('in_rms_err_lim',None), ('in_min_fraction_indexed',None), ('in_max_fraction_rejected',None), ('in_min_signal2noise',None)])
 
   def get_strategy_params(self):
     return copy.deepcopy(self._strategy_params)

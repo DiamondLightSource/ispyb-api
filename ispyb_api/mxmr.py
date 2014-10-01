@@ -23,6 +23,7 @@ import datetime
 from logging.handlers import RotatingFileHandler
 from collections import OrderedDict
 import copy
+from ispyb_api.ExtendedOrderedDict import ExtendedOrderedDict
 
 class MXMR:
   '''MXMR provides methods to store data in the MX molecular replacement tables.'''
@@ -30,7 +31,7 @@ class MXMR:
   def __init__(self):
     pass
 
-  _run_params = OrderedDict([('parentid',None), ('success',None), ('message',None), ('pipeline',None), ('input_coord_file',None), ('output_coord_file',None), ('input_MTZ_file',None), ('output_MTZ_file',None), ('run_dir',None), ('log_file',None), ('cmd_line',None), ('r_start',None), ('r_end',None), ('rfree_start',None), ('rfree_end',None), ('starttime',None), ('endtime',None)])
+  _run_params = ExtendedOrderedDict([('parentid',None), ('success',None), ('message',None), ('pipeline',None), ('input_coord_file',None), ('output_coord_file',None), ('input_MTZ_file',None), ('output_MTZ_file',None), ('run_dir',None), ('log_file',None), ('cmd_line',None), ('r_start',None), ('r_end',None), ('rfree_start',None), ('rfree_end',None), ('starttime',None), ('endtime',None)])
 
   def get_run_params(self):
     return copy.deepcopy(self._run_params)

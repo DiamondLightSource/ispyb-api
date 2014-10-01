@@ -23,6 +23,7 @@ import datetime
 from logging.handlers import RotatingFileHandler
 from collections import OrderedDict
 import copy
+from ispyb_api.ExtendedOrderedDict import ExtendedOrderedDict
 
 class MXDataReduction:
   '''MXDataReduction provides methods to store reduced MX data.'''
@@ -30,9 +31,9 @@ class MXDataReduction:
   def __init__(self):
     pass
 
-  _processing_params = OrderedDict([('parentid',None), ('spacegroup',None), ('refinedcell_a',None), ('refinedcell_b',None), ('refinedcell_c',None), ('refinedcell_alpha',None), ('refinedcell_beta',None), ('refinedcell_gamma',None), ('cmd_line',None), ('programs',None), ('status',None), ('message',None), ('starttime',None), ('endtime',None), ('environment',None)])
+  _processing_params = ExtendedOrderedDict([('parentid',None), ('spacegroup',None), ('refinedcell_a',None), ('refinedcell_b',None), ('refinedcell_c',None), ('refinedcell_alpha',None), ('refinedcell_beta',None), ('refinedcell_gamma',None), ('cmd_line',None), ('programs',None), ('status',None), ('message',None), ('starttime',None), ('endtime',None), ('environment',None)])
 
-  _scaling_params = OrderedDict([('parentid',None), ('type1',None), ('comments1',None), ('resolutionLimitLow1', None), ('resolutionLimitHigh1',None), ('rMerge1',None), ('rMeasWithinIPlusIMinus1',None), ('rMeasAllIPlusIMinus1',None), 
+  _scaling_params = ExtendedOrderedDict([('parentid',None), ('type1',None), ('comments1',None), ('resolutionLimitLow1', None), ('resolutionLimitHigh1',None), ('rMerge1',None), ('rMeasWithinIPlusIMinus1',None), ('rMeasAllIPlusIMinus1',None), 
         ('rPimWithinIPlusIMinus1',None), ('rPimAllIPlusIMinus1',None), ('fractionalPartialBias1',None), ('nTotalObservations1',None), ('nTotalUniqueObservations1',None), ('meanIOverSigI1',None), 
         ('completeness1',None), ('multiplicity1',None), ('anomalous1',None), ('anomalousCompleteness1',None), ('anomalousMultiplicity1',None), ('ccHalf1',None),
         ('type2',None), ('comments2',None), ('resolutionLimitLow2', None), ('resolutionLimitHigh2',None), ('rMerge2',None), ('rMeasWithinIPlusIMinus2',None), ('rMeasAllIPlusIMinus2',None),
@@ -42,7 +43,7 @@ class MXDataReduction:
         ('rPimWithinIPlusIMinus3',None), ('rPimAllIPlusIMinus3',None), ('fractionalPartialBias3',None), ('nTotalObservations3',None), ('nTotalUniqueObservations3',None), ('meanIOverSigI3',None),
         ('completeness3',None), ('multiplicity3',None), ('anomalous3',None), ('anomalousCompleteness3',None), ('anomalousMultiplicity3',None), ('ccHalf3',None)])
 
-  _integration_params = OrderedDict([('parentid',None), ('datacollectionid',None), ('startImageNumber',None), ('endImageNumber',None), ('refinedDetectorDistance',None), ('refinedXBeam',None), ('refinedYBeam',None), ('rotationAxisX',None), ('rotationAxisY',None), ('rotationAxisZ',None), ('beamVectorX',None), ('beamVectorY',None), ('beamVectorZ',None), ('cell_a',None), ('cell_b',None), ('cell_c',None), ('cell_alpha',None), ('cell_beta',None), ('cell_gamma',None), ('anomalous', None), ('cmd_line',None), ('programs',None), ('status',None), ('message',None), ('starttime',None), ('endtime',None), ('environment',None)])
+  _integration_params = ExtendedOrderedDict([('parentid',None), ('datacollectionid',None), ('startImageNumber',None), ('endImageNumber',None), ('refinedDetectorDistance',None), ('refinedXBeam',None), ('refinedYBeam',None), ('rotationAxisX',None), ('rotationAxisY',None), ('rotationAxisZ',None), ('beamVectorX',None), ('beamVectorY',None), ('beamVectorZ',None), ('cell_a',None), ('cell_b',None), ('cell_c',None), ('cell_alpha',None), ('cell_beta',None), ('cell_gamma',None), ('anomalous', None), ('cmd_line',None), ('programs',None), ('status',None), ('message',None), ('starttime',None), ('endtime',None), ('environment',None)])
 
   def get_processing_params(self):
     return copy.deepcopy(self._processing_params)
