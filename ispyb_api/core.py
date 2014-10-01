@@ -30,14 +30,14 @@ class Core:
 
   def retrieve_visit_id(self, cursor, visit):
     '''Get the database ID for a visit on the form mx1234-5.'''
-    id = cursor.callfunc('PKG_Corev1.retrieveVisitId', cx_Oracle.NUMBER, [visit])
+    id = cursor.callfunc('ispyb4a_db.PKG_Corev1.retrieveVisitId', cx_Oracle.NUMBER, [visit])
     if id is not None:
 	return int(id)
     return None
 
   def retrieve_datacollection_id(self, cursor, img_filename, img_fileloc):
     '''Get the database ID for the data collection corresponding to the given diffraction image file.'''
-    id = cursor.callfunc('PKG_Corev1.retrieveDataCollectionId', cx_Oracle.NUMBER, [img_filename, img_fileloc])
+    id = cursor.callfunc('ispyb4a_db.PKG_Corev1.retrieveDataCollectionId', cx_Oracle.NUMBER, [img_filename, img_fileloc])
     if id is not None:
         return int(id)
     return None

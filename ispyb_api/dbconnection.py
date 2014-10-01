@@ -46,12 +46,12 @@ class DBConnection:
   def connect_to_prod(self):
     '''Create a connection to the production database'''
     self.disconnect()
-    return self._connect('ispyb4a_db', self.decode('UGx1dG8='), 'ispyb')
+    return self._connect('ispyb_sp', self.decode('W2NhbmlzJWx1cHVzXQ=='), 'ispyb')
 
   def connect_to_dev(self):
     '''Create a connection to the development database'''
     self.disconnect()
-    return self._connect('ispyb4a_db', self.decode('UGx1dG8='), 'ws096')
+    return self._connect('ispyb_sp', self.decode('W2NhbmlzJWx1cHVzXQ=='), 'ws096')
 
   def _connect(self, u, pw, db):
     '''Create a connection to the database using the given parameters.'''

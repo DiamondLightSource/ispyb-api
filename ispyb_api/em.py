@@ -38,11 +38,11 @@ class EM:
     else:
       end_time = None
 
-    return self.cursor.callfunc('PKG_EMv1.putMovie', cx_Oracle.NUMBER, [movieid, sessionid, sampleid, microscopeid, filename, micrograph, powerspectrum1, powerspectrum2, drift, no_images, frame_len, tot_exp, magnification, sample_pix_size, dose_per_frame, tot_dose, run_status, comments, run_dir, binning, particle_diameter, pixel_size, box_size, min_resol, max_resol, min_defocus, max_defocus, defocus_step_size, astigmatism, extract_size, bg_radius, start_time, end_time])
+    return self.cursor.callfunc('ispyb4a_db.PKG_EMv1.putMovie', cx_Oracle.NUMBER, [movieid, sessionid, sampleid, microscopeid, filename, micrograph, powerspectrum1, powerspectrum2, drift, no_images, frame_len, tot_exp, magnification, sample_pix_size, dose_per_frame, tot_dose, run_status, comments, run_dir, binning, particle_diameter, pixel_size, box_size, min_resol, max_resol, min_defocus, max_defocus, defocus_step_size, astigmatism, extract_size, bg_radius, start_time, end_time])
 
   def put_particle(self, particleid, movieid, x=None, y=None):
     if movieid is not None and particleid is not None:
-      return cursor.callfunc('PKG_EMv1.putParticle', cx_Oracle.NUMBER, [particleid, movieid, x, y])
+      return cursor.callfunc('ispyb4a_db.PKG_EMv1.putParticle', cx_Oracle.NUMBER, [particleid, movieid, x, y])
     return None
 
 em = EM()

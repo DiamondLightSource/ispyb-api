@@ -44,21 +44,21 @@ class MXAcquisition:
 
   def insert_data_collection_group(self, cursor, values):
     '''Store new MX data collection group.'''
-    id = cursor.callfunc('PKG_mxAcquisitionV1.insertDataCollectionGroup', cx_Oracle.NUMBER, values)
+    id = cursor.callfunc('ispyb4a_db.PKG_mxAcquisitionV1.insertDataCollectionGroup', cx_Oracle.NUMBER, values)
     if id != None:
       return int(id)
     return None
 
   def insert_data_collection(self, cursor, values):
     '''Store new data collection.'''
-    id = cursor.callfunc('PKG_mxAcquisitionV1.insertDataCollection', cx_Oracle.NUMBER, values)
+    id = cursor.callfunc('ispyb4a_db.PKG_mxAcquisitionV1.insertDataCollection', cx_Oracle.NUMBER, values)
     if id != None:
       return int(id)
     return None
 
   def store_image(self, cursor, values):
     '''Store new or update existing MX diffraction image.'''
-    return cursor.callfunc('PKG_mxAcquisitionV1.putImage', cx_Oracle.NUMBER, values)
+    return cursor.callfunc('ispyb4a_db.PKG_mxAcquisitionV1.putImage', cx_Oracle.NUMBER, values)
 
 mxacquisition = MXAcquisition()
 

@@ -36,7 +36,7 @@ class MXStrategy:
     return copy.deepcopy(self._strategy_params)
 
   def insert_strategy(self, cursor, values):
-    return cursor.callfunc('PKG_MXStrategyV1.insertStrategy', cx_Oracle.NUMBER, values)
+    return cursor.callfunc('ispyb4a_db.PKG_MXStrategyV1.insertStrategy', cx_Oracle.NUMBER, values)
 
 mxstrategy = MXStrategy()
 

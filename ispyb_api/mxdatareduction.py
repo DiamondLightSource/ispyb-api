@@ -54,13 +54,13 @@ class MXDataReduction:
     return copy.deepcopy(self._integration_params)
 
   def insert_processing(self, cursor, values):
-    return cursor.callfunc('PKG_MXDataReductionv1.insertProcessing', cx_Oracle.NUMBER, values)
+    return cursor.callfunc('ispyb4a_db.PKG_MXDataReductionv1.insertProcessing', cx_Oracle.NUMBER, values)
 
   def insert_scaling(self, cursor, values):
-    return cursor.callfunc('PKG_MXDataReductionv1.insertScaling', cx_Oracle.NUMBER, values)
+    return cursor.callfunc('ispyb4a_db.PKG_MXDataReductionv1.insertScaling', cx_Oracle.NUMBER, values)
 
   def insert_integration(self, cursor, values):
-    return cursor.callfunc('PKG_MXDataReductionv1.insertIntegration', cx_Oracle.NUMBER, values)
+    return cursor.callfunc('ispyb4a_db.PKG_MXDataReductionv1.insertIntegration', cx_Oracle.NUMBER, values)
 
 mxdatareduction = MXDataReduction()
 
