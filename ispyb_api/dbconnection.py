@@ -53,6 +53,11 @@ class DBConnection:
     self.disconnect()
     return self._connect('ispyb_sp', self.decode('W2NhbmlzJWx1cHVzXQ=='), 'ws096')
 
+  def connect_to_test(self):
+    '''Create a connection to the test database'''
+    self.disconnect()
+    return self._connect('ispyb_sp', self.decode('W2NhbmlzJWx1cHVzXQ=='), 'ispybtst')
+
   def _connect(self, u, pw, db):
     '''Create a connection to the database using the given parameters.'''
     self.conn = cx_Oracle.connect(user=u, password=pw, dsn=db)
