@@ -10,12 +10,6 @@
 # data acquisition and processing pipeline.
 #
 
-# TODO: 
-# - Implement way to tell if a datacollection already exists in the database based on the unique scan number used on non-MX beamlines.
-# - A way to get the scalingid when storing MX MR results, if you don't know it.
-# - Finish up methods in mxacquisition.py
-#
-
 from ispyb_api.dbconnection import dbconnection
 from ispyb_api.core import core
 from ispyb_api.mxacquisition import mxacquisition
@@ -30,7 +24,7 @@ cursor = dbconnection.connect_to_test()
 # Find the id for a given visit
 visitid = core.retrieve_visit_id(cursor, 'cm5952-5')
 
-# Create a new data collection entry
+# Create a new data collection entry:
 params = mxacquisition.get_data_collection_group_params()
 params['parentid'] = visitid
 # experimentType should be one of None, 'SAD', 'SAD - Inverse Beam', 'OSC', 'Collect - Multiwedge', 'MAD', 'Helical', 'Multi-positional', 'Mesh',  'Burn', 'MAD - Inverse Beam', 'Screening'
