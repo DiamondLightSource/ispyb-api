@@ -33,10 +33,10 @@ class MXDataReduction:
 
   _processing_params = ExtendedOrderedDict([('parentid',None), ('spacegroup',None), ('refinedcell_a',None), ('refinedcell_b',None), ('refinedcell_c',None), ('refinedcell_alpha',None), ('refinedcell_beta',None), ('refinedcell_gamma',None), ('cmd_line',None), ('programs',None), ('status',None), ('message',None), ('starttime',None), ('endtime',None), ('environment',None)])
 
-  _scaling_params = ExtendedOrderedDict([('parentid',None), ('type1',None), ('comments1',None), ('resolutionLimitLow1', None), ('resolutionLimitHigh1',None), ('rMerge1',None), ('rMeasWithinIPlusIMinus1',None), ('rMeasAllIPlusIMinus1',None), 
-        ('rPimWithinIPlusIMinus1',None), ('rPimAllIPlusIMinus1',None), ('fractionalPartialBias1',None), ('nTotalObservations1',None), ('nTotalUniqueObservations1',None), ('meanIOverSigI1',None), 
-        ('completeness1',None), ('multiplicity1',None), ('anomalous1',None), ('anomalousCompleteness1',None), ('anomalousMultiplicity1',None), ('ccHalf1',None),
-        ('type2',None), ('comments2',None), ('resolutionLimitLow2', None), ('resolutionLimitHigh2',None), ('rMerge2',None), ('rMeasWithinIPlusIMinus2',None), ('rMeasAllIPlusIMinus2',None),
+  _scaling_params = ExtendedOrderedDict([('parentid',None), ('type1',None), ('comments1',None), ('resolutionLimitLow1', None), ('resolutionLimitHigh1',None), ('rMerge1',None), 
+	('rMeasWithinIPlusIMinus1',None), ('rMeasAllIPlusIMinus1',None), ('rPimWithinIPlusIMinus1',None), ('rPimAllIPlusIMinus1',None), ('fractionalPartialBias1',None), ('nTotalObservations1',None), 
+	('nTotalUniqueObservations1',None), ('meanIOverSigI1',None), ('completeness1',None), ('multiplicity1',None), ('anomalous1',None), ('anomalousCompleteness1',None), ('anomalousMultiplicity1',None), 
+	('ccHalf1',None), ('type2',None), ('comments2',None), ('resolutionLimitLow2', None), ('resolutionLimitHigh2',None), ('rMerge2',None), ('rMeasWithinIPlusIMinus2',None), ('rMeasAllIPlusIMinus2',None),
         ('rPimWithinIPlusIMinus2',None), ('rPimAllIPlusIMinus2',None), ('fractionalPartialBias2',None), ('nTotalObservations2',None), ('nTotalUniqueObservations2',None), ('meanIOverSigI2',None),
         ('completeness2',None), ('multiplicity2',None), ('anomalous2',None), ('anomalousCompleteness2',None), ('anomalousMultiplicity2',None), ('ccHalf2',None),
         ('type3',None), ('comments3',None), ('resolutionLimitLow3', None), ('resolutionLimitHigh3',None), ('rMerge3',None), ('rMeasWithinIPlusIMinus3',None), ('rMeasAllIPlusIMinus3',None),

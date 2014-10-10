@@ -19,7 +19,7 @@ from ispyb_api.mxmr import mxmr
 
 from datetime import datetime
 
-cursor = dbconnection.connect_to_test()
+cursor = dbconnection.connect_to_dev()
 
 # Find the id for a given visit
 visitid = core.retrieve_visit_id(cursor, 'cm5952-5')
@@ -27,27 +27,55 @@ visitid = core.retrieve_visit_id(cursor, 'cm5952-5')
 # Create a new data collection entry:
 params = mxacquisition.get_data_collection_group_params()
 params['parentid'] = visitid
-# experimentType should be one of None, 'SAD', 'SAD - Inverse Beam', 'OSC', 'Collect - Multiwedge', 'MAD', 'Helical', 'Multi-positional', 'Mesh',  'Burn', 'MAD - Inverse Beam', 'Screening'
+# experimenttype must be one of the allowed values: None, 'SAD', 'SAD - Inverse Beam', 'OSC', 'Collect - Multiwedge', 'MAD', 'Helical', 'Multi-positional', 'Mesh',  'Burn', 'MAD - Inverse Beam', 'Screening'
 params['experimenttype'] = 'OSC'
 params['starttime'] = datetime.strptime('2014-09-25 13:00:00', '%Y-%m-%d %H:%M:%S')
 params['endtime'] = datetime.strptime('2014-09-25 13:00:10', '%Y-%m-%d %H:%M:%S')
 params['comments'] = 'This is a test of data collection group.'
 dcg_id = mxacquisition.insert_data_collection_group(cursor, params.values())
 
+# Store a data collection ...
 params = mxacquisition.get_data_collection_params()
 params['parentid'] = dcg_id
 params['visitid'] = visitid
-params['imgdir'] = '/dls/i03/data/2014/cm4950-4'
+params['imgdir'] = '/dls/i03/data/2014/cm4950-4/Ybbr_Se_Met'
 params['imgprefix'] = 'test'
 params['imgsuffix'] = 'cbf'
 params['wavelength'] = 2.0
 params['starttime'] = datetime.strptime('2014-09-25 13:00:00', '%Y-%m-%d %H:%M:%S')
-params['endtime'] = datetime.strptime('2014-09-25 13:00:05', '%Y-%m-%d %H:%M:%S')
 params['comments'] = 'This is a test of data collection.'
 dc_id = mxacquisition.insert_data_collection(cursor, params.values())
 
+# ... then update its end time: 
+params = mxacquisition.get_data_collection_params()
+params['id'] = dc_id
+params['endtime'] = datetime.strptime('2014-09-25 13:00:05', '%Y-%m-%d %H:%M:%S')
+mxacquisition.update_data_collection(cursor, params.values())
+
 # Alternatively, we could have used an existing datacollection:
 # core.retrieve_datacollection_id(cursor, 'filename.cbf', '/dls/i0x/data/201y/visit-z/directory')
+
+# This works, but commented out because the combination of filelocation + filename needs to be uique for each row in the database, and it's not easy (impossible!) to ensure that there.
+#params = mxacquisition.get_image_params()
+#params['parentid'] = dc_id
+#params['img_number'] = 120
+#params['filename'] = 'Ybbr_SeMet2_MS_1_120.img'
+#params['file_location'] = '/dls/i03/data/2014/cm4950-4/Ybbr_Se_Met'
+#params['measured_intensity'] = 8.5
+#params['jpeg_path'] = '/dls/i03/data/2014/cm4950-4/jpegs/Ybbr_Se_Met/Ybbr_SeMet2_MS_1_120.jpeg'
+#params['jpeg_thumb_path'] = '/dls/i03/data/2014/cm4950-4/jpegs/Ybbr_Se_Met/Ybbr_SeMet2_MS_1_120.thumb.jpeg'
+#params['temperature'] = 100.5
+#params['cumulative_intensity'] = 5.4
+#params['synchrotron_current'] = 7.0
+#params['comments'] = 'Test image'
+#params['machine_msg'] = 'No problems ...'
+#i_id = mxacquisition.insert_image(cursor, params.values())
+
+# TODO : this is not implemented yet
+#params = mxacquisition.get_image_quality_indicators_params()
+#params['parentid'] = i_id
+#iqi_id = mxacquisition.insert_image_quality_indicators(cursor, params.values())
+
 
 # Store results from the EDNA / MX data collection strategy pipelines
 params = mxstrategy.get_strategy_params()
