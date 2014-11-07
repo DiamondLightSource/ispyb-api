@@ -7,6 +7,7 @@ import pipes
 import time
 import re
 import logging
+import traceback
 
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
@@ -117,7 +118,7 @@ try:
         hdlr2.setFormatter(_formatter)
         logging.getLogger().addHandler(hdlr2)
 except:
-        logging.getLogger().exception("ISPyBServer: problem setting the file logging using file %s :-(" % log_file)
+        logging.getLogger().exception("dimple2ispyb: problem setting the file logging using file %s :-(" % log_file)
 
 
 
@@ -132,9 +133,9 @@ scaling_id = get_scaling_id(sys.argv[2])
 if scaling_id is not None:
     try:
         store_result(cursor, sys.argv[1], scaling_id)
-    except Exception as e:
+    except:
         print e
-        logging.getLogger().error(e)
+        logging.getLogger().exception("dimple2ispyb: Problem extracting / storing the dimple result.")
         store_failure(cursor, scaling_id)
 
 dbconnection.disconnect()
