@@ -6,6 +6,7 @@ import pickle
 import pipes
 import time
 import re
+import logging
 
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
