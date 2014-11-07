@@ -8,6 +8,8 @@ import time
 import re
 
 from datetime import datetime
+from logging.handlers import RotatingFileHandler
+
 from ispyb_api.dbconnection import dbconnection
 from ispyb_api.mxmr import mxmr
 
@@ -97,6 +99,27 @@ def store_failure(cursor, scaling_id):
     mr_id = mxmr.insert_run(cursor, params.values())
 
 
+# Configure logging
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter('* %(asctime)s [id=%(thread)d] <%(levelname)s> %(message)s')
+hdlr = logging.StreamHandler(sys.stdout)
+hdlr.setFormatter(formatter)
+logging.getLogger().addHandler(hdlr)
+
+log_file = None
+
+# Add file logging
+try:
+    if log_file is not None:
+        hdlr2 = RotatingFileHandler(filename=log_file, maxBytes=1000000, backupCount=10) # 'a', 4194304, 10)
+        hdlr2.setFormatter(_formatter)
+        logging.getLogger().addHandler(hdlr2)
+except:
+        logging.getLogger().exception("ISPyBServer: problem setting the file logging using file %s :-(" % log_file)
+
+
+
 if len(sys.argv) != 3:
     print("Usage: %s dimple-output-dir fast_dp-output-dir" % sys.argv[0])
     sys.exit(1)
@@ -108,7 +131,9 @@ scaling_id = get_scaling_id(sys.argv[2])
 if scaling_id is not None:
     try:
         store_result(cursor, sys.argv[1], scaling_id)
-    except:
+    except Exception as e:
+        print e
+        logging.getLogger().error(e)
         store_failure(cursor, scaling_id)
 
 dbconnection.disconnect()
