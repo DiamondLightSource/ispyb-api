@@ -60,10 +60,10 @@ def store_result(cursor, dir, scaling_id):
     params = mxmr.get_run_params()
     params['parentid'] = scaling_id
     params['pipeline'] = 'dimple'
-    params['starttime'] = format_time(wf.jobs[0].started) 
-    # datetime.strptime('2014-09-24 14:30:01', '%Y-%m-%d %H:%M:%S')
-    params['endtime'] =  format_time(wf.jobs[-1].started + wf.jobs[-1].total_time)
-    # datetime.strptime('2014-09-24 14:30:27', '%Y-%m-%d %H:%M:%S')
+    starttime = format_time(wf.jobs[0].started)
+    params['starttime'] = datetime.strptime(starttime, '%Y-%m-%d %H:%M:%S')
+    endtime = format_time(wf.jobs[-1].started + wf.jobs[-1].total_time)
+    params['endtime'] = datetime.strptime(endtime, '%Y-%m-%d %H:%M:%S')
     params['success'] = 1
 
     scores = fb_job.data["scores"][:2]
