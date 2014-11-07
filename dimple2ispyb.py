@@ -100,6 +100,8 @@ def store_failure(cursor, scaling_id):
     params['message'] = 'Unknown error'
     mr_id = mxmr.insert_run(cursor, params.values())
 
+# Hack:
+sys.path.append('/dls_sw/apps/ispyb-api')
 
 # Configure logging
 logger = logging.getLogger()
