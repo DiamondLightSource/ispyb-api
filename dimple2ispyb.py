@@ -134,7 +134,6 @@ if scaling_id is not None:
     try:
         store_result(cursor, sys.argv[1], scaling_id)
     except:
-        print e
         logging.getLogger().exception("dimple2ispyb: Problem extracting / storing the dimple result.")
         store_failure(cursor, scaling_id)
 
