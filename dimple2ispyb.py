@@ -86,7 +86,7 @@ def store_result(cursor, dir, scaling_id):
     mr_id = mxmr.insert_run(cursor, params.values())
 
     for n,_ in enumerate(scores):
-        mrblob_id = mxmr.insert_run_blob(cursor, mr_id, 'blob%dv1.png', 'blob%dv2.png', 'blob%dv3.png' % (n, n, n))
+        mrblob_id = mxmr.insert_run_blob(cursor, mr_id, 'blob{0}v1.png'.format(n), 'blob{0}v2.png'.format(n), 'blob{0}v3.png'.format(n))
         
     print "done"
 
