@@ -8,6 +8,7 @@ import time
 import re
 import logging
 import traceback
+import ConfigParser
 
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
@@ -44,51 +45,45 @@ def get_scaling_id(dir):
 def store_result(cursor, dir, scaling_id):
     '''Store results from DIMPLE pipeline'''
 
-    pkl = os.path.join(dir, "workflow.pickle")
-    if (not os.path.isfile(pkl)) or (not os.access(pkl, os.R_OK)):
-        print "Either file %s is missing or is not readable" % pkl        
+    log_file = os.path.join(dir, "dimple.log")
+    if (not os.path.isfile(log_file)) or (not os.access(log_file, os.R_OK)):
+        print "Either file %s is missing or is not readable" % log_file        
         return None
-    wf = None
-    with open(pkl, "rb") as f:
-        wf = pickle.load(f)
-    if wf is None:
-        return None
-    
-    refmac_job = [job for job in wf.jobs if job.name == 'refmac5 restr'][0]
-    fb_job = [job for job in wf.jobs if job.name == 'find-blobs'][0]
+
+    log = ConfigParser.RawConfigParser()
+    log.read(log_file)
 
     params = mxmr.get_run_params()
     params['parentid'] = scaling_id
     params['pipeline'] = 'dimple'
-    starttime = format_time(wf.jobs[0].started)
-    params['starttime'] = datetime.strptime(starttime, '%Y-%m-%d %H:%M:%S')
-    endtime = format_time(wf.jobs[-1].started + wf.jobs[-1].total_time)
-    params['endtime'] = datetime.strptime(endtime, '%Y-%m-%d %H:%M:%S')
+    params['log_file'] = log_file 
     params['success'] = 1
 
-    scores = fb_job.data["scores"][:2]
-    if scores:
-        params['message'] = "Blob scores: " + " ".join("%.0f" % sc for sc in scores)
-    else:
-        params['message'] = "No blobs found"
+    starttime = log.get(log.sections()[1], 'start_time')
+    params['starttime'] = datetime.strptime(starttime, '%Y-%m-%d %H:%M:%S')
+    endtime = log.get(log.sections()[-1], 'end_time')
+    params['endtime'] = datetime.strptime(endtime, '%Y-%m-%d %H:%M:%S')
 
-    params['cmd_line'] = " ".join(pipes.quote(a) for a in wf.argv)
-    params['input_coord_file'] = get_logical_arg(wf.jobs[0], 'XYZIN')
-    params['output_coord_file'] = get_logical_arg(refmac_job, 'XYZOUT')
-    params['input_MTZ_file'] = get_logical_arg(wf.jobs[0], 'HKLIN') 
-    params['output_MTZ_file'] = get_logical_arg(refmac_job, 'HKLOUT') 
-    params['run_dir'] = wf.output_dir
-    params['log_file'] = wf.output_dir
-    params['r_start'] = refmac_job.data["ini_overall_r"]
-    params['r_end'] = refmac_job.data["overall_r"]
-    params['rfree_start'] = refmac_job.data["ini_free_r"]
-    params['rfree_end'] = refmac_job.data["free_r"]
+    params['rfree_start'] = log.getfloat('refmac5 restr', 'ini_free_r')
+    params['rfree_end'] = log.getfloat('refmac5 restr', 'free_r')
+    
+    params['r_start'] = log.getfloat('refmac5 restr', 'ini_overall_r')
+    params['r_end'] = log.getfloat('refmac5 restr', 'overall_r')
+    params['message'] = " ".join(log.get('find-blobs', 'info').split()[:4])
+    params['run_dir'] = dir
+    dimple_args = log.get('workflow', 'args').split()
+    params['input_MTZ_file'] = dimple_args[0]
+    params['input_coord_file'] = dimple_args[1]
+    params['output_MTZ_file'] = dir + '/final.mtz'
+    params['output_coord_file'] = dir + '/final.pdb'
+    params['cmd_line'] = log.get('workflow', 'prog') + ' ' + log.get('workflow', 'args').replace('\n', ' ')
     mr_id = mxmr.insert_run(cursor, params.values())
 
-    for n,_ in enumerate(scores):
-        mrblob_id = mxmr.insert_run_blob(cursor, mr_id, 'blob{0}v1.png'.format(n), 'blob{0}v2.png'.format(n), 'blob{0}v3.png'.format(n))
-        
-    print "done"
+    for n in (1,2):
+        if os.path.exists(dir+'/blob{0}v1.png'.format(n)):
+            mrblob_id = mxmr.insert_run_blob(cursor, mr_id,
+                'blob{0}v1.png'.format(n), 'blob{0}v2.png'.format(n),
+                'blob{0}v3.png'.format(n))
 
 
 def store_failure(cursor, scaling_id):
