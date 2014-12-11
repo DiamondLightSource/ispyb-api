@@ -53,7 +53,7 @@ def store_recon(cursor, parentid):
     return tomo.insert_recon(cursor, params.values())
     
 
-cursor = dbconnection.connect_to_dev()
+cursor = dbconnection.connect_to_prod()
 
 visit_id = core.retrieve_visit_id(cursor, 'ee9478-1')
 dc_id = store_dc(cursor, visit_id)
