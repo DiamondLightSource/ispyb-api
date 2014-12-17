@@ -31,7 +31,11 @@ class MXDataReduction:
   def __init__(self):
     pass
 
-  _processing_params = ExtendedOrderedDict([('parentid',None), ('spacegroup',None), ('refinedcell_a',None), ('refinedcell_b',None), ('refinedcell_c',None), ('refinedcell_alpha',None), ('refinedcell_beta',None), ('refinedcell_gamma',None), ('cmd_line',None), ('programs',None), ('status',None), ('message',None), ('starttime',None), ('endtime',None), ('environment',None)])
+  _processing_params = ExtendedOrderedDict([('parentid',None), ('spacegroup',None), 
+    ('refinedcell_a',None), ('refinedcell_b',None), ('refinedcell_c',None), 
+    ('refinedcell_alpha',None), ('refinedcell_beta',None), ('refinedcell_gamma',None), 
+    ('cmd_line',None), ('programs',None), ('status',None), ('message',None), ('starttime',None), ('endtime',None), 
+    ('environment',None)])
 
   _scaling_params = ExtendedOrderedDict([ 
     ('type',None), ('comments',None), ('res_lim_low', None), ('res_limit_high',None), ('r_merge',None), 
@@ -39,7 +43,13 @@ class MXDataReduction:
 	('n_tot_unique_obs',None), ('mean_i_sig_i',None), ('completeness',None), ('multiplicity',None), ('anom',None), ('anom_completeness',None), ('anom_multiplicity',None), 
 	('cc_half',None), ('cc_anom',None)])
 
-  _integration_params = ExtendedOrderedDict([('parentid',None), ('datacollectionid',None), ('startImageNumber',None), ('endImageNumber',None), ('refinedDetectorDistance',None), ('refinedXBeam',None), ('refinedYBeam',None), ('rotationAxisX',None), ('rotationAxisY',None), ('rotationAxisZ',None), ('beamVectorX',None), ('beamVectorY',None), ('beamVectorZ',None), ('cell_a',None), ('cell_b',None), ('cell_c',None), ('cell_alpha',None), ('cell_beta',None), ('cell_gamma',None), ('anomalous', None), ('cmd_line',None), ('programs',None), ('status',None), ('message',None), ('starttime',None), ('endtime',None), ('environment',None)])
+  _integration_params = ExtendedOrderedDict([('parentid',None), ('datacollectionid',None), 
+    ('start_image_no',None), ('end_image_no',None), ('refined_detector_dist',None), 
+    ('refined_xbeam',None), ('refined_ybeam',None), ('rot_axis_x',None), ('rot_axis_y',None), ('rot_axis_z',None), 
+    ('beam_vec_x',None), ('beam_vec_y',None), ('beam_vec_z',None), 
+    ('cell_a',None), ('cell_b',None), ('cell_c',None), ('cell_alpha',None), ('cell_beta',None), ('cell_gamma',None), 
+    ('anomalous', None), ('cmd_line',None), ('programs',None), ('status',None), ('message',None), 
+    ('starttime',None), ('endtime',None), ('environment',None)])
 
   def get_processing_params(self):
     return copy.deepcopy(self._processing_params)
