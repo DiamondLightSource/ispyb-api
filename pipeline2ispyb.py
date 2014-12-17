@@ -95,7 +95,6 @@ strategy_id = mxstrategy.insert_strategy(cursor, params.values())
 # Store results from XIA2 / MX data reduction pipelines
 # ...first the top-level processing entry
 params = mxdatareduction.get_processing_params()
-params['parentid'] = dc_id
 params['spacegroup'] = 'P222'
 params['refinedcell_a'] = 1.0
 params['refinedcell_b'] = 1.0
@@ -107,15 +106,22 @@ params['programs'] = 'xia2'
 params['cmd_line'] = 'xia2 -3dii ........'
 params['starttime'] = datetime.strptime('2014-09-24 14:30:01', '%Y-%m-%d %H:%M:%S')
 params['endtime'] = datetime.strptime('2014-09-24 14:30:27', '%Y-%m-%d %H:%M:%S')
+
 ap_id = mxdatareduction.insert_processing(cursor, params.values())
 
 # ... then the scaling results
-params = mxdatareduction.get_scaling_params()
-params['parentid'] = ap_id
-params['type1'] = 'outerShell'
-params['type2'] = 'innerShell'
-params['type3'] = 'overall'
-scaling_id = mxdatareduction.insert_scaling(cursor, params.values())
+params1 = mxdatareduction.get_scaling_params()
+params1['type'] = 'outerShell'
+params2 = mxdatareduction.get_scaling_params()
+params2['type'] = 'innerShell'
+params2['cc_half'] = 0.5
+params2['cc_anom'] = 0.5
+params3 = mxdatareduction.get_scaling_params()
+params3['type'] = 'overall'
+params3['cc_half'] = 0.6
+params3['cc_anom'] = 0.6
+
+scaling_id = mxdatareduction.insert_scaling(cursor, ap_id, params1.values(), params2.values(), params3.values())
 
 # ... and finally the integration results
 params = mxdatareduction.get_integration_params()
