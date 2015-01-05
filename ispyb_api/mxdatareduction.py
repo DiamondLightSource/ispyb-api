@@ -35,10 +35,10 @@ class MXDataReduction:
     ('refinedcell_a',None), ('refinedcell_b',None), ('refinedcell_c',None), 
     ('refinedcell_alpha',None), ('refinedcell_beta',None), ('refinedcell_gamma',None), 
     ('cmd_line',None), ('programs',None), ('status',None), ('message',None), ('starttime',None), ('endtime',None), 
-    ('environment',None)])
+    ('environment',None), ('filename',None), ('filepath',None), ('filetype',None), ])
 
   _scaling_params = ExtendedOrderedDict([ 
-    ('type',None), ('comments',None), ('res_lim_low', None), ('res_limit_high',None), ('r_merge',None), 
+    ('type',None), ('comments',None), ('res_lim_low', None), ('res_lim_high',None), ('r_merge',None), 
 	('r_meas_within_iplusi_minus',None), ('r_meas_all_iplusi_minus',None), ('r_pim_within_iplusi_minus',None), ('r_pim_all_iplusi_minus',None), ('fract_partial_bias',None), ('n_tot_obs',None), 
 	('n_tot_unique_obs',None), ('mean_i_sig_i',None), ('completeness',None), ('multiplicity',None), ('anom',None), ('anom_completeness',None), ('anom_multiplicity',None), 
 	('cc_half',None), ('cc_anom',None)])
@@ -54,8 +54,20 @@ class MXDataReduction:
   def get_processing_params(self):
     return copy.deepcopy(self._processing_params)
 
-  def get_scaling_params(self):
-    return copy.deepcopy(self._scaling_params)
+  def get_inner_shell_scaling_params(self):
+    sp = copy.deepcopy(self._scaling_params)
+    sp['type'] = 'innerShell'
+    return sp
+
+  def get_outer_shell_scaling_params(self):
+    sp = copy.deepcopy(self._scaling_params)
+    sp['type'] = 'outerShell'
+    return sp
+  
+  def get_overall_scaling_params(self):
+    sp = copy.deepcopy(self._scaling_params)
+    sp['type'] = 'overall'
+    return sp
 
   def get_integration_params(self):
     return copy.deepcopy(self._integration_params)
