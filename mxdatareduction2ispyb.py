@@ -179,10 +179,14 @@ for i in 0, 1, 2:
   p[i]['multiplicity'] = s[i]['multiplicity']
   p[i]['anom_completeness'] = s[i]['anomalousCompleteness']
   p[i]['anom_multiplicity'] = s[i]['anomalousMultiplicity']
-  p[i]['cc_half'] = s[i]['ccHalf']
-  p[i]['cc_anom'] = s[i]['ccAnomalous']
-  p[i]['n_tot_obs'] = s[i]['nTotalObservations']
-  p[i]['n_tot_unique_obs'] = s[i]['nTotalUniqueObservations']
+  if 'ccHalf' in s[i]:
+      p[i]['cc_half'] = s[i]['ccHalf']
+  if 'ccAnomalous' in s[i]:
+      p[i]['cc_anom'] = s[i]['ccAnomalous']
+  if 'nTotalObservations' in s[i]:
+      p[i]['n_tot_obs'] = s[i]['nTotalObservations']
+  if 'nTotalUniqueObservations' in s[i]:
+      p[i]['n_tot_unique_obs'] = s[i]['nTotalUniqueObservations']
 
 scaling_id = mxdatareduction.insert_scaling(cursor, ap_id, p[0].values(), p[1].values(), p[2].values())
 
