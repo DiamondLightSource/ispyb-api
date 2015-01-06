@@ -137,7 +137,7 @@ if s[0] == None or s[1] == None or s[2] == None:
     sys.exit("ERROR - please make sure the XML file contains 3 AutoProcScalingStatistics elements.")
 
 # Get a database cursor
-cursor = dbconnection.connect_to_dev()
+cursor = dbconnection.connect_to_prod()
 
 # Find the datacollection associated with this data reduction run
 
