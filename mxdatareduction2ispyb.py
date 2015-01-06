@@ -95,8 +95,10 @@ class XmlDictConfig(dict):
             else:
                 self.update({element.tag: element.text})
 
-if len(sys.argv) != 2:
-    print("Usage: %s xml_file" % sys.argv[0])
+if len(sys.argv) not in (2,3):
+    print("Usage:")
+    print("%s xml_in_file" % sys.argv[0])
+    print("%s xml_in_file xml_out_file" % sys.argv[0])
     sys.exit(1)
 
 # Convert the XML to a dictionary
@@ -104,13 +106,22 @@ tree = ElementTree.parse(sys.argv[1])
 root = tree.getroot()
 xmldict = XmlDictConfig(root)
 
-# Convenience pointers
+# Convenience pointers and sanity checks
 image = xmldict['AutoProcScalingContainer']['AutoProcIntegrationContainer']['Image']
 integration = xmldict['AutoProcScalingContainer']['AutoProcIntegrationContainer']['AutoProcIntegration']
 proc = xmldict['AutoProc']
 program = xmldict['AutoProcProgramContainer']['AutoProcProgram']
 attachment = xmldict['AutoProcProgramContainer']['AutoProcProgramAttachment']
 scaling = xmldict['AutoProcScalingContainer']['AutoProcScaling']
+
+if proc == None:
+    sys.exit("ERROR - please make sure the XML file contains an AutoProc element.")
+if scaling == None:
+    sys.exit("ERROR - please make sure the XML file contains an AutoProcScaling element.")
+if integration == None:
+    sys.exit("ERROR - please make sure the XML file contains an AutoProcIntegration element.")
+if image == None or image['fileName'] == None or image['fileLocation'] == None:
+    sys.exit("ERROR - please make sure the XML file contains an Image element with fileName and fileLocation elements.")
 
 s = [None, None, None]
 for i in xrange(0,3):
@@ -122,10 +133,14 @@ for i in xrange(0,3):
     elif stats['scalingStatisticsType'] == 'overall':
         s[2] = stats
 
+if s[0] == None or s[1] == None or s[2] == None:
+    sys.exit("ERROR - please make sure the XML file contains 3 AutoProcScalingStatistics elements.")
+
 # Get a database cursor
 cursor = dbconnection.connect_to_dev()
 
 # Find the datacollection associated with this data reduction run
+
 dc_id = core.retrieve_datacollection_id(cursor, image['fileName'], image['fileLocation'])
 
 # Store results from XIA2 / MX data reduction pipelines
@@ -138,11 +153,15 @@ params['refinedcell_c'] = proc['refinedCell_c']
 params['refinedcell_alpha'] = proc['refinedCell_alpha']
 params['refinedcell_beta'] = proc['refinedCell_beta']
 params['refinedcell_gamma'] = proc['refinedCell_gamma']
-params['programs'] = program['processingPrograms']
-params['cmd_line'] = program['processingCommandLine']
-params['filename'] = attachment['fileName'] 
-params['filepath'] = attachment['filePath']
-params['filetype'] = attachment['fileType']
+
+if program != None:
+    params['programs'] = program['processingPrograms']
+    params['cmd_line'] = program['processingCommandLine']
+if attachment != None:
+    params['filename'] = attachment['fileName'] 
+    params['filepath'] = attachment['filePath']
+    params['filetype'] = attachment['fileType']
+
 ap_id = mxdatareduction.insert_processing(cursor, params.values())
 
 # ... then the scaling results
@@ -180,3 +199,15 @@ params['cell_beta'] = integration['cell_beta']
 params['cell_gamma'] = integration['cell_gamma']
 
 integration_id = mxdatareduction.insert_integration(cursor, params.values())
+
+# Write results to xml_out_file
+if len(sys.argv) == 3:
+    xml = '<?xml version="1.0" encoding="ISO-8859-1"?>'\
+        '<dbstatus><autoProcId>%d</autoProcId>'\
+        '<autoProcScalingId>%d</autoProcScalingId>'\
+        '<autoProcIntegrationId>%d</autoProcIntegrationId>'\
+        '<code>ok</code></dbstatus>' % (ap_id, scaling_id, integration_id)
+    f = open(sys.argv[2], 'w')
+    f.write(xml)
+    f.close()
+     

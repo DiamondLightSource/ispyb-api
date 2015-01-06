@@ -49,7 +49,7 @@ class MXDataReduction:
     ('beam_vec_x',None), ('beam_vec_y',None), ('beam_vec_z',None), 
     ('cell_a',None), ('cell_b',None), ('cell_c',None), ('cell_alpha',None), ('cell_beta',None), ('cell_gamma',None), 
     ('anomalous', None), ('cmd_line',None), ('programs',None), ('status',None), ('message',None), 
-    ('starttime',None), ('endtime',None), ('environment',None)])
+    ('starttime',None), ('endtime',None), ('environment',None), ('filename',None), ('filepath',None), ('filetype',None)])
 
   def get_processing_params(self):
     return copy.deepcopy(self._processing_params)
@@ -73,13 +73,22 @@ class MXDataReduction:
     return copy.deepcopy(self._integration_params)
 
   def insert_processing(self, cursor, values):
-    return cursor.callfunc('ispyb4a_db.PKG_MXDataReductionv1.insertProcessing', cx_Oracle.NUMBER, values)
+    id = cursor.callfunc('ispyb4a_db.PKG_MXDataReductionv1.insertProcessing', cx_Oracle.NUMBER, values)
+    if id != None:
+      return int(id)
+    return None
 
   def insert_scaling(self, cursor, parent_id, values1, values2, values3):
-    return cursor.callfunc('ispyb4a_db.PKG_MXDataReductionv1.insertScaling', cx_Oracle.NUMBER, [parent_id] + values1 + values2 + values3)
+    id = cursor.callfunc('ispyb4a_db.PKG_MXDataReductionv1.insertScaling', cx_Oracle.NUMBER, [parent_id] + values1 + values2 + values3)
+    if id != None:
+      return int(id)
+    return None
 
   def insert_integration(self, cursor, values):
-    return cursor.callfunc('ispyb4a_db.PKG_MXDataReductionv1.insertIntegration', cx_Oracle.NUMBER, values)
+    id = cursor.callfunc('ispyb4a_db.PKG_MXDataReductionv1.insertIntegration', cx_Oracle.NUMBER, values)
+    if id != None:
+      return int(id)
+    return None
 
 mxdatareduction = MXDataReduction()
 
