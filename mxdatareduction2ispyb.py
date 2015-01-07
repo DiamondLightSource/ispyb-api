@@ -111,7 +111,9 @@ image = xmldict['AutoProcScalingContainer']['AutoProcIntegrationContainer']['Ima
 integration = xmldict['AutoProcScalingContainer']['AutoProcIntegrationContainer']['AutoProcIntegration']
 proc = xmldict['AutoProc']
 program = xmldict['AutoProcProgramContainer']['AutoProcProgram']
-attachment = xmldict['AutoProcProgramContainer']['AutoProcProgramAttachment']
+attachments = xmldict['AutoProcProgramContainer']['AutoProcProgramAttachment']
+if isinstance(attachments, dict): # Make it a list regardless
+    attachments = [attachments]
 scaling = xmldict['AutoProcScalingContainer']['AutoProcScaling']
 
 if proc == None:
@@ -144,24 +146,36 @@ cursor = dbconnection.connect_to_prod()
 dc_id = core.retrieve_datacollection_id(cursor, image['fileName'], image['fileLocation'])
 
 # Store results from XIA2 / MX data reduction pipelines
-# ...first the top-level processing entry
+# ...first the program info 
+params = mxdatareduction.get_program_params()
+if 'processingPrograms' in program:
+    params['programs'] = program['processingPrograms']
+if 'processingCommandLine' in program:
+    params['cmd_line'] = program['processingCommandLine']
+if attachments != None:
+    i = 0
+    for attachment in attachments:
+        i += 1
+        if 'fileName' in attachment:
+            params['filename'+str(i)] = attachment['fileName'] 
+        if 'filePath' in attachment:
+            params['filepath'+str(i)] = attachment['filePath']
+        if 'fileType' in attachment:
+            params['filetype'+str(i)] = attachment['fileType']
+        if i == 3:
+            break
+app_id = mxdatareduction.insert_program(cursor, params.values())
+
+# ...then the top-level processing entry
 params = mxdatareduction.get_processing_params()
 params['spacegroup'] = proc['spaceGroup']
+params['parentid'] = app_id
 params['refinedcell_a'] = proc['refinedCell_a']
 params['refinedcell_b'] = proc['refinedCell_b']
 params['refinedcell_c'] = proc['refinedCell_c']
 params['refinedcell_alpha'] = proc['refinedCell_alpha']
 params['refinedcell_beta'] = proc['refinedCell_beta']
 params['refinedcell_gamma'] = proc['refinedCell_gamma']
-
-if program != None:
-    params['programs'] = program['processingPrograms']
-    params['cmd_line'] = program['processingCommandLine']
-if attachment != None:
-    params['filename'] = attachment['fileName'] 
-    params['filepath'] = attachment['filePath']
-    params['filetype'] = attachment['fileType']
-
 ap_id = mxdatareduction.insert_processing(cursor, params.values())
 
 # ... then the scaling results
@@ -195,6 +209,7 @@ scaling_id = mxdatareduction.insert_scaling(cursor, ap_id, p[0].values(), p[1].v
 params = mxdatareduction.get_integration_params()
 params['parentid'] = scaling_id
 params['datacollectionid'] = dc_id
+params['programid'] = app_id
 params['cell_a'] = integration['cell_a']
 params['cell_b'] = integration['cell_b']
 params['cell_c'] = integration['cell_c']
@@ -207,10 +222,11 @@ integration_id = mxdatareduction.insert_integration(cursor, params.values())
 # Write results to xml_out_file
 if len(sys.argv) == 3:
     xml = '<?xml version="1.0" encoding="ISO-8859-1"?>'\
-        '<dbstatus><autoProcId>%d</autoProcId>'\
+        '<dbstatus><autoProcProgramId>%d</autoProcProgramId>'\
+        '<autoProcId>%d</autoProcId>'\
         '<autoProcScalingId>%d</autoProcScalingId>'\
         '<autoProcIntegrationId>%d</autoProcIntegrationId>'\
-        '<code>ok</code></dbstatus>' % (ap_id, scaling_id, integration_id)
+        '<code>ok</code></dbstatus>' % (app_id, ap_id, scaling_id, integration_id)
     f = open(sys.argv[2], 'w')
     f.write(xml)
     f.close()
