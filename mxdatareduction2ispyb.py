@@ -185,14 +185,19 @@ p = [mxdatareduction.get_outer_shell_scaling_params(),
 
 for i in 0, 1, 2:
   p[i]['r_merge'] = s[i]['rMerge']
-  p[i]['r_meas_all_iplusi_minus'] = s[i]['rMeasAllIPlusIMinus']
+  if 'rMeasAllIPlusIMinus' in s[i]:
+      p[i]['r_meas_all_iplusi_minus'] = s[i]['rMeasAllIPlusIMinus']
+  if 'rMeasWithinIPlusIMinus' in s[i]:
+      p[i]['r_meas_within_iplusi_minus'] = s[i]['rMeasWithinIPlusIMinus']
   p[i]['res_lim_low'] = s[i]['resolutionLimitLow']
   p[i]['res_lim_high'] = s[i]['resolutionLimitHigh']
   p[i]['mean_i_sig_i'] = s[i]['meanIOverSigI']
   p[i]['completeness'] = s[i]['completeness']
   p[i]['multiplicity'] = s[i]['multiplicity']
-  p[i]['anom_completeness'] = s[i]['anomalousCompleteness']
-  p[i]['anom_multiplicity'] = s[i]['anomalousMultiplicity']
+  if 'anomalousCompleteness' in s[i]:
+      p[i]['anom_completeness'] = s[i]['anomalousCompleteness']
+  if 'anomalousMultiplicity' in s[i]:
+      p[i]['anom_multiplicity'] = s[i]['anomalousMultiplicity']
   if 'ccHalf' in s[i]:
       p[i]['cc_half'] = s[i]['ccHalf']
   if 'ccAnomalous' in s[i]:
@@ -201,6 +206,10 @@ for i in 0, 1, 2:
       p[i]['n_tot_obs'] = s[i]['nTotalObservations']
   if 'nTotalUniqueObservations' in s[i]:
       p[i]['n_tot_unique_obs'] = s[i]['nTotalUniqueObservations']
+  if 'rPimWithinIPlusIMinus' in s[i]:
+      p[i]['r_pim_within_iplusi_minus'] = s[i]['rPimWithinIPlusIMinus']
+  if 'rPimAllIPlusIMinus' in s[i]:
+      p[i]['r_pim_all_iplusi_minus'] = s[i]['rPimAllIPlusIMinus']
 
 scaling_id = mxdatareduction.insert_scaling(cursor, ap_id, p[0].values(), p[1].values(), p[2].values())
 
