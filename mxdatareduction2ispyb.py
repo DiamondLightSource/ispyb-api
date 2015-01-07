@@ -216,6 +216,18 @@ params['cell_c'] = integration['cell_c']
 params['cell_alpha'] = integration['cell_alpha']
 params['cell_beta'] = integration['cell_beta']
 params['cell_gamma'] = integration['cell_gamma']
+if 'startImageNumber' in integration:
+    params['start_image_no'] = integration['startImageNumber']
+if 'endImageNumber' in integration:
+    params['end_image_no'] = integration['endImageNumber']
+if 'refinedDetectorDistance' in integration:
+    params['refined_detector_dist'] = integration['refinedDetectorDistance']
+if 'refinedXBeam' in integration:
+    params['refined_xbeam'] = integration['refinedXBeam']
+if 'refinedYBeam' in integration:
+    params['refined_ybeam'] = integration['refinedYBeam']
+if 'anomalous' in integration:
+    params['anomalous'] = integration['anomalous']
 
 integration_id = mxdatareduction.insert_integration(cursor, params.values())
 

@@ -52,7 +52,7 @@ class MXDataReduction:
     ('refined_xbeam',None), ('refined_ybeam',None), ('rot_axis_x',None), ('rot_axis_y',None), ('rot_axis_z',None), 
     ('beam_vec_x',None), ('beam_vec_y',None), ('beam_vec_z',None), 
     ('cell_a',None), ('cell_b',None), ('cell_c',None), ('cell_alpha',None), ('cell_beta',None), ('cell_gamma',None), 
-    ('anomalous', None)])
+    ('anomalous', '0')])
 
   def get_program_params(self):
     return copy.deepcopy(self._program_params)
