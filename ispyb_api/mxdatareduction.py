@@ -44,7 +44,7 @@ class MXDataReduction:
   _scaling_params = ExtendedOrderedDict([ 
     ('type',None), ('comments',None), ('res_lim_low', None), ('res_lim_high',None), ('r_merge',None), 
 	('r_meas_within_iplusi_minus',None), ('r_meas_all_iplusi_minus',None), ('r_pim_within_iplusi_minus',None), ('r_pim_all_iplusi_minus',None), ('fract_partial_bias',None), ('n_tot_obs',None), 
-	('n_tot_unique_obs',None), ('mean_i_sig_i',None), ('completeness',None), ('multiplicity',None), ('anom',None), ('anom_completeness',None), ('anom_multiplicity',None), 
+	('n_tot_unique_obs',None), ('mean_i_sig_i',None), ('completeness',None), ('multiplicity',None), ('anom','0'), ('anom_completeness',None), ('anom_multiplicity',None), 
 	('cc_half',None), ('cc_anom',None)])
 
   _integration_params = ExtendedOrderedDict([('parentid',None), ('datacollectionid',None), ('programid',None), 
@@ -52,7 +52,7 @@ class MXDataReduction:
     ('refined_xbeam',None), ('refined_ybeam',None), ('rot_axis_x',None), ('rot_axis_y',None), ('rot_axis_z',None), 
     ('beam_vec_x',None), ('beam_vec_y',None), ('beam_vec_z',None), 
     ('cell_a',None), ('cell_b',None), ('cell_c',None), ('cell_alpha',None), ('cell_beta',None), ('cell_gamma',None), 
-    ('anomalous', '0')])
+    ('anom', '0')])
 
   def get_program_params(self):
     return copy.deepcopy(self._program_params)

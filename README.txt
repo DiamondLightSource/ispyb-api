@@ -16,8 +16,6 @@ The pipeline2ispyb.py file is provided as an example of how to use the API.
 TODO: 
 - Implement way to tell if a datacollection already exists in the database
 based on the unique scan number used on non-MX beamlines.
-- A way to get the scalingid when storing MX MR results, if you don't know
-it.
 - Finish up insertDataCollection stored function so all inputs are stored
 - Implement insertImage stored function
 - Finish MXStrategy work
