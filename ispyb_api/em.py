@@ -10,7 +10,7 @@
 
 try:
   import cx_Oracle
-except ImportError, e
+except ImportError, e:
   print 'Oracle API module not found'
   raise e
 
