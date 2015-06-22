@@ -1,5 +1,10 @@
 #!/usr/bin/env python
-
+#
+# Copyright (C) 2014 Diamond Light Source, Karl Levik
+#
+# 2015-06-22
+#
+# Usage example:
 # python put_dcgroup.py --movieid=1 --x=123.4 --y=50.02
 
 import cx_Oracle
@@ -43,7 +48,7 @@ if __name__ == '__main__' :
     (opts, args) = parser.parse_args()
 
 
-    cursor = dbconnection.connect_to_dev()
+    cursor = dbconnection.connect_to_prod()
     
     # Find the id for a given visit
     visitid = core.retrieve_visit_id(cursor, opts.visit)
