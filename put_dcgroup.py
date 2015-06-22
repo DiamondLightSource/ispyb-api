@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # python put_dcgroup.py --movieid=1 --x=123.4 --y=50.02
 
 import cx_Oracle
@@ -8,7 +10,21 @@ import time
 import os
 import sys
 
+
+
 if __name__ == '__main__' :
+
+    from ispyb_api.dbconnection import dbconnection
+    from ispyb_api.core import core
+    from ispyb_api.mxacquisition import mxacquisition
+
+    from datetime import datetime
+
+    def exit(code, message=None):
+        dbconnection.disconnect()
+        if not message is None:
+            print(message)
+        sys.exit(code)
     
     logging.info("test")
     
@@ -26,19 +42,13 @@ if __name__ == '__main__' :
     parser.add_option("--comments", dest="comments", help="User comments", metavar="STRING")
     (opts, args) = parser.parse_args()
 
-    from ispyb_api.dbconnection import dbconnection
-    from ispyb_api.core import core
-    from ispyb_api.mxacquisition import mxacquisition
-
-    from datetime import datetime
 
     cursor = dbconnection.connect_to_dev()
     
     # Find the id for a given visit
     visitid = core.retrieve_visit_id(cursor, opts.visit)
     if visitid is None:
-        print "ERROR: visit not found."
-        sys.exit()
+        exit(1, "ERROR: visit not found.") # exit code 1 - indicates error
 
     # Create a new data collection entry:
     params = mxacquisition.get_data_collection_group_params()
@@ -60,8 +70,7 @@ if __name__ == '__main__' :
     dcg_id = mxacquisition.put_data_collection_group(cursor, params.values())
     
     if dcg_id is None:
-        print "ERROR: dc_group is None."
-    else:
-        print "--dcg_id=%d" % dcg_id
+        exit(1, "ERROR: dc_group is None.") # exit code 1 - indicates error
+    exit(0, "--dcg_id=%d" % dcg_id)
     
-    dbconnection.disconnect()
+    
