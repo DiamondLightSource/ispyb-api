@@ -45,10 +45,19 @@ if __name__ == '__main__' :
     parser.add_option("--detector_mode", dest="detector_mode", help="Detector mode", metavar="STRING")
     parser.add_option("--actual_sample_barcode", dest="actual_sample_barcode", help="Actual sample barcode", metavar="STRING")
     parser.add_option("--comments", dest="comments", help="User comments", metavar="STRING")
+    parser.add_option("--db", dest="db", help="Database to use: dev, test or prod (default)", metavar="STRING")
+
     (opts, args) = parser.parse_args()
 
-
-    cursor = dbconnection.connect_to_prod()
+    cursor = None
+    if opts.db is None or opts.db == "prod": 
+        cursor = dbconnection.connect_to_prod()
+    elif opts.db == "dev":
+        cursor = dbconnection.connect_to_dev()
+    elif opts.db == "test":
+        cursor = dbconnection.connect_to_test()
+    else:
+        exit(1, "ERROR: Invalid database")
     
     # Find the id for a given visit
     visitid = core.retrieve_visit_id(cursor, opts.visit)
