@@ -55,6 +55,6 @@ if __name__ == '__main__' :
     if opts.particleid is None and opts.dcid is None:
         exit(1, "ERROR: Both movieid and particleid are None.")
         
-    p_id = em.put_particle(opts.particleid, opts.dcid, opts.x, opts.y)
+    p_id = em.put_particle(cursor, opts.particleid, opts.dcid, opts.x, opts.y)
     exit(0, "--particleid=%d" % p_id)
     
