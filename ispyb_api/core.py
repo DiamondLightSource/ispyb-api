@@ -42,6 +42,5 @@ class Core:
         return int(id)
     return None
 
-
 core = Core()
 
