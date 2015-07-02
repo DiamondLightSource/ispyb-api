@@ -31,7 +31,7 @@ class MXDataReduction:
   def __init__(self):
     pass
 
-  _program_params = ExtendedOrderedDict([('cmd_line',None), ('programs',None), 
+  _program_params = ExtendedOrderedDict([('id',None), ('cmd_line',None), ('programs',None), 
     ('status',None), ('message',None), ('starttime',None), ('endtime',None), ('environment',None), 
     ('filename1',None), ('filepath1',None), ('filetype1',None), 
     ('filename2',None), ('filepath2',None), ('filetype2',None), 
@@ -80,10 +80,29 @@ class MXDataReduction:
 
 
   def insert_program(self, cursor, values):
-    id = cursor.callfunc('ispyb4a_db.PKG_MXDataReductionv1.insertProgram', cx_Oracle.NUMBER, values)
+    id = cursor.callfunc('ispyb4a_db.PKG_MXDataReductionv1.insertProgram', cx_Oracle.NUMBER, values[1:])
     if id != None:
       return int(id)
     return None
+
+  def update_program(self, cursor, values):
+    id = cursor.callfunc('ispyb4a_db.PKG_MXDataReductionv1.updateProgram', cx_Oracle.NUMBER, values)
+    if id != None:
+      return int(id)
+    return None
+
+  def put_program(self, cursor, values):
+    id = None
+    if values[0] is None: 
+        id = self.insert_program(cursor, values)
+    else:
+        self.update_program(cursor, values)
+        id = values[0]
+    
+    if id != None:
+      return int(id)
+    return None
+
 
   def insert_processing(self, cursor, values):
     id = cursor.callfunc('ispyb4a_db.PKG_MXDataReductionv1.insertProcessing', cx_Oracle.NUMBER, values)
