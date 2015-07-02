@@ -83,6 +83,12 @@ class EM:
     if id != None:
       return int(id)
     return None
+
+  def retrieve_dcgroup_id_for_sample_code(self, cursor, sample_shortname, visitid):
+    if sample_shortname is not None and visitid is not None:
+      return cursor.callfunc('ispyb4a_db.PKG_EMv1.retrieveDCGroupIdForSampleCode', cx_Oracle.NUMBER, [sample_shortname, visitid])
+    return None
+      
       
 
 em = EM()
