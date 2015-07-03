@@ -102,9 +102,10 @@ class MXAcquisition:
   def update_data_collection(self, cursor, values):
     '''Update existing data collection.'''
     if values[0] is not None:
-    	cursor.callfunc('ispyb4a_db.PKG_mxAcquisitionV1.updateDataCollection', cx_Oracle.NUMBER, values)
-#    else:
-#	raise 
+    	id = cursor.callfunc('ispyb4a_db.PKG_mxAcquisitionV1.updateDataCollection', cx_Oracle.NUMBER, values)
+        if id != None:
+            return int(id)
+    return None
 
   def insert_image(self, cursor, values):
     '''Store new MX diffraction image.'''
