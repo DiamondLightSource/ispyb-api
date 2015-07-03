@@ -66,7 +66,7 @@ class EM:
                                  defocus_step_size, astigmatism, extract_size, bg_radius, start_time, end_time])
 
   def put_particle(self, cursor, particleid, movieid, x=None, y=None):
-    if movieid is not None:
+    if movieid is not None or particleid is not None:
       return cursor.callfunc('ispyb4a_db.PKG_EMv1.putParticle', cx_Oracle.NUMBER, [particleid, movieid, x, y])
     return None
 
