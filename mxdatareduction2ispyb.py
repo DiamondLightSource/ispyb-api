@@ -9,6 +9,7 @@
 #
 
 import sys
+import os
 from datetime import datetime
 from xml.etree import ElementTree
 from ispyb_api.dbconnection import dbconnection
@@ -143,7 +144,13 @@ cursor = dbconnection.connect_to_prod()
 
 # Find the datacollection associated with this data reduction run
 
-dc_id = core.retrieve_datacollection_id(cursor, image['fileName'], image['fileLocation'])
+xml_dir = os.path.split(sys.argv[1])[0]
+
+try:
+  dc_id = int(open(os.path.join(xml_dir, '.dc_id'), 'r').read())
+  print 'Got DC ID %d from file system' % dc_id
+except:
+  dc_id = core.retrieve_datacollection_id(cursor, image['fileName'], image['fileLocation'])
 
 # Store results from XIA2 / MX data reduction pipelines
 # ...first the program info 
