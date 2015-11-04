@@ -108,8 +108,9 @@ root = tree.getroot()
 xmldict = XmlDictConfig(root)
 
 # Convenience pointers and sanity checks
-image = xmldict['AutoProcScalingContainer']['AutoProcIntegrationContainer']['Image']
-integration = xmldict['AutoProcScalingContainer']['AutoProcIntegrationContainer']['AutoProcIntegration']
+int_containers = xmldict['AutoProcScalingContainer']['AutoProcIntegrationContainer']
+if isinstance(int_containers, dict): # Make it a list regardless
+    int_containers = [int_containers]
 proc = xmldict['AutoProc']
 program = xmldict['AutoProcProgramContainer']['AutoProcProgram']
 attachments = xmldict['AutoProcProgramContainer']['AutoProcProgramAttachment']
@@ -121,10 +122,10 @@ if proc == None:
     sys.exit("ERROR - please make sure the XML file contains an AutoProc element.")
 if scaling == None:
     sys.exit("ERROR - please make sure the XML file contains an AutoProcScaling element.")
-if integration == None:
-    sys.exit("ERROR - please make sure the XML file contains an AutoProcIntegration element.")
-if image == None or image['fileName'] == None or image['fileLocation'] == None:
-    sys.exit("ERROR - please make sure the XML file contains an Image element with fileName and fileLocation elements.")
+if int_containers == None:
+    sys.exit("ERROR - please make sure the XML file contains an AutoProcIntegrationContainer element.")
+#if image == None or image['fileName'] == None or image['fileLocation'] == None:
+#    sys.exit("ERROR - please make sure the XML file contains an Image element with fileName and fileLocation elements.")
 
 s = [None, None, None]
 for i in xrange(0,3):
@@ -140,7 +141,7 @@ if s[0] == None or s[1] == None or s[2] == None:
     sys.exit("ERROR - please make sure the XML file contains 3 AutoProcScalingStatistics elements.")
 
 # Get a database cursor
-cursor = dbconnection.connect_to_prod()
+cursor = dbconnection.connect_to_dev()
 
 # Find the datacollection associated with this data reduction run
 
@@ -150,7 +151,17 @@ try:
   dc_id = int(open(os.path.join(xml_dir, '.dc_id'), 'r').read())
   print 'Got DC ID %d from file system' % dc_id
 except:
-  dc_id = core.retrieve_datacollection_id(cursor, image['fileName'], image['fileLocation'])
+  dc_id = None
+
+for int_container in int_containers:
+    integration = int_container['AutoProcIntegration']
+    if 'dataCollectionId' not in integration:
+	if dc_id is not None:
+	    integration['dataCollectionId'] = dc_id
+        else:
+            image = int_container['Image']
+            dc_id = core.retrieve_datacollection_id(cursor, image['fileName'], image['fileLocation'])
+            integration['dataCollectionId'] = dc_id
 
 # Store results from XIA2 / MX data reduction pipelines
 # ...first the program info 
@@ -230,30 +241,34 @@ scaling_id = mxdatareduction.insert_scaling(cursor, ap_id, p[0].values(), p[1].v
 
 # ... and finally the integration results
 
-params = mxdatareduction.get_integration_params()
-params['parentid'] = scaling_id
-params['datacollectionid'] = dc_id
-params['programid'] = app_id
-params['cell_a'] = integration['cell_a']
-params['cell_b'] = integration['cell_b']
-params['cell_c'] = integration['cell_c']
-params['cell_alpha'] = integration['cell_alpha']
-params['cell_beta'] = integration['cell_beta']
-params['cell_gamma'] = integration['cell_gamma']
-if 'startImageNumber' in integration:
-    params['start_image_no'] = integration['startImageNumber']
-if 'endImageNumber' in integration:
-    params['end_image_no'] = integration['endImageNumber']
-if 'refinedDetectorDistance' in integration:
-    params['refined_detector_dist'] = integration['refinedDetectorDistance']
-if 'refinedXBeam' in integration:
-    params['refined_xbeam'] = integration['refinedXBeam']
-if 'refinedYBeam' in integration:
-    params['refined_ybeam'] = integration['refinedYBeam']
-if 'anomalous' in integration:
-    params['anom'] = integration['anomalous']
+for int_container in int_containers:
+    integration = int_container['AutoProcIntegration']
 
-integration_id = mxdatareduction.insert_integration(cursor, params.values())
+    params = mxdatareduction.get_integration_params()
+    params['parentid'] = scaling_id
+    if 'dataCollectionId' in integration:
+        params['datacollectionid'] = integration['dataCollectionId']
+    params['programid'] = app_id
+    params['cell_a'] = integration['cell_a']
+    params['cell_b'] = integration['cell_b']
+    params['cell_c'] = integration['cell_c']
+    params['cell_alpha'] = integration['cell_alpha']
+    params['cell_beta'] = integration['cell_beta']
+    params['cell_gamma'] = integration['cell_gamma']
+    if 'startImageNumber' in integration:
+        params['start_image_no'] = integration['startImageNumber']
+    if 'endImageNumber' in integration:
+        params['end_image_no'] = integration['endImageNumber']
+    if 'refinedDetectorDistance' in integration:
+        params['refined_detector_dist'] = integration['refinedDetectorDistance']
+    if 'refinedXBeam' in integration:
+        params['refined_xbeam'] = integration['refinedXBeam']
+    if 'refinedYBeam' in integration:
+        params['refined_ybeam'] = integration['refinedYBeam']
+    if 'anomalous' in integration:
+        params['anom'] = integration['anomalous']
+
+    integration_id = mxdatareduction.insert_integration(cursor, params.values())
 
 # Write results to xml_out_file
 if len(sys.argv) == 3:
