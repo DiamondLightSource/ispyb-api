@@ -156,12 +156,12 @@ except:
 for int_container in int_containers:
     integration = int_container['AutoProcIntegration']
     if 'dataCollectionId' not in integration:
-	if dc_id is not None:
-	    integration['dataCollectionId'] = dc_id
+        if dc_id is not None:
+	       integration['dataCollectionId'] = dc_id
         else:
-            image = int_container['Image']
-            dc_id = core.retrieve_datacollection_id(cursor, image['fileName'], image['fileLocation'])
-            integration['dataCollectionId'] = dc_id
+           image = int_container['Image']
+           dc_id = core.retrieve_datacollection_id(cursor, image['fileName'], image['fileLocation'])
+           integration['dataCollectionId'] = dc_id
 
 # Store results from XIA2 / MX data reduction pipelines
 # ...first the program info 
