@@ -38,19 +38,37 @@ class MXMR:
 
   def insert_run(self, cursor, values):
     '''Store new entry with info about an MX molecular replacement run, e.g. Dimple.'''
-    return cursor.callfunc('ispyb4a_db.PKG_MXMRv1.insertMRRun', cx_Oracle.NUMBER, values[1:])
+    cursor.execute('select ispyb.upsert_mrrun(%s)' % ','.join(['%s'] * len(values)), values)
+    rs = cursor.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
+    return None
 
   def update_run(self, cursor, values):
     '''Update an existing entry with info about an MX molecular replacement run, e.g. Dimple.'''
-    return cursor.callfunc('ispyb4a_db.PKG_MXMRv1.updateMRRun', cx_Oracle.NUMBER, values)
+    cursor.execute('select ispyb.upsert_mrrun(%s)' % ','.join(['%s'] * len(values)), values)
+    rs = cursor.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
+    return None
 
   def insert_run_blob(self, cursor, parentid, view1=None, view2=None, view3=None):
     '''Store new entry with info about views (image paths) for an MX molecular replacement run, e.g. Dimple.'''
-    return cursor.callfunc('ispyb4a_db.PKG_MXMRv1.insertMRRunBlob', cx_Oracle.NUMBER, [parentid, view1, view2, view2])
+    values = [None, parentid, view1, view2, view2]
+    cursor.execute('select ispyb.upsert_mrrun_blob(%s)' % ','.join(['%s'] * len(values)), values) 
+    rs = cursor.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
+    return None
   
   def update_run_blob(self, cursor, id, parentid=None, view1=None, view2=None, view3=None):
     '''Update existing entry with info about views (image paths) for an MX molecular replacement run, e.g. Dimple.'''
-    return cursor.callfunc('ispyb4a_db.PKG_MXMRv1.updateMRRunBlob', cx_Oracle.NUMBER, [id, parentid, view1, view2, view2])
+    values = [None, parentid, view1, view2, view2]
+    cursor.execute('select ispyb.upsert_mrrun_blob(%s)' % ','.join(['%s'] * len(values)), values)
+    rs = cursor.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
+    return None
 
 mxmr = MXMR()
 

@@ -71,55 +71,55 @@ class MXAcquisition:
 
   def insert_data_collection_group(self, cursor, values):
     '''Store new MX data collection group.'''
-    id = cursor.callfunc('ispyb4a_db.PKG_mxAcquisitionV1.insertDataCollectionGroup', cx_Oracle.NUMBER, values[1:])
-    if id != None:
-      return int(id)
+    cursor.execute('select ispyb.upsert_dcgroup(%s)' % ','.join(['%s'] * len(values)), values)
+    rs = cursor.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
     return None
 
   def update_data_collection_group(self, cursor, values):
     '''Update existing data collection group.'''
     if values[0] is not None:
-        cursor.callfunc('ispyb4a_db.PKG_mxAcquisitionV1.updateDataCollectionGroup', cx_Oracle.NUMBER, values)
+        cursor.execute('select ispyb.upsert_dcgroup(%s)' % ','.join(['%s'] * len(values)), values)
 
   def put_data_collection_group(self, cursor, values):
-    id = None
-    if values[0] is not None:
-        cursor.callfunc('ispyb4a_db.PKG_mxAcquisitionV1.updateDataCollectionGroup', cx_Oracle.NUMBER, values)
-        id = values[0] 
-    else:
-        id = cursor.callfunc('ispyb4a_db.PKG_mxAcquisitionV1.insertDataCollectionGroup', cx_Oracle.NUMBER, values[1:])
-    if id != None:
-      return int(id)
+    cursor.execute('select ispyb.upsert_dcgroup(%s)' % ','.join(['%s'] * len(values)), values)
+    rs = cursor.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
     return None
 
   def insert_data_collection(self, cursor, values):
     '''Store new data collection.'''
-    id = cursor.callfunc('ispyb4a_db.PKG_mxAcquisitionV1.insertDataCollection', cx_Oracle.NUMBER, values[1:])
-    if id != None:
-      return int(id)
+    cursor.execute('select ispyb.upsert_dc(%s)' % ','.join(['%s'] * len(values)), values)
+    rs = cursor.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
     return None
 
   def update_data_collection(self, cursor, values):
     '''Update existing data collection.'''
-    if values[0] is not None:
-    	id = cursor.callfunc('ispyb4a_db.PKG_mxAcquisitionV1.updateDataCollection', cx_Oracle.NUMBER, values)
-        if id != None:
-            return int(id)
+    cursor.execute('select ispyb.upsert_dc(%s)' % ','.join(['%s'] * len(values)), values)
+    rs = cursor.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
     return None
 
   def insert_image(self, cursor, values):
     '''Store new MX diffraction image.'''
-    id = cursor.callfunc('ispyb4a_db.PKG_mxAcquisitionV1.insertImage', cx_Oracle.NUMBER, values[1:])
-    if id != None:
-      return int(id)
+    cursor.execute('select ispyb.upsert_image(%s)' % ','.join(['%s'] * len(values)), values)
+    rs = cursor.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
     return None
 
   def update_image(self, cursor, values):
-    '''Update existing image.'''
-    if values[0] is not None:
-    	cursor.callfunc('ispyb4a_db.PKG_mxAcquisitionV1.updateImage', cx_Oracle.NUMBER, values)
-#    else:
-#	raise
+    '''Update existing diffraction image.'''
+    cursor.execute('select ispyb.upsert_image(%s)' % ','.join(['%s'] * len(values)), values)
+    rs = cursor.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
+    return None
 
 mxacquisition = MXAcquisition()
 

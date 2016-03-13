@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 # core.py
 #
-#    Copyright (C) 2014 Diamond Light Source, Karl Levik
+#    Copyright (C) 2015 Diamond Light Source, Karl Levik
 #    
-# 2014-09-24 
+# 2015-11-03 
 #
 # Methods to store and retrieve data in the core tables 
 #
 
 try:
-  import cx_Oracle
+  import MySQLdb
 except ImportError, e:
-  print 'Oracle API module not found'
+  print 'MySQL API module not found'
   raise e
 
 import string
@@ -39,6 +39,9 @@ class Core:
   def get_sample_params(self):
     return copy.deepcopy(self._sample_params)
 
+  def str_format_ops(l):
+      return ','.join(['%s'] * len(l))
+
   def put_sample(self, cursor, values):
     id = None
     if values[0] is not None:
@@ -52,29 +55,34 @@ class Core:
 
   def insert_sample(self, cursor, values):
     '''Store new sample.'''
-    id = cursor.callfunc('ispyb4a_db.PKG_CoreV1.insertSample', cx_Oracle.NUMBER, values[1:])
-    if id != None:
-      return int(id)
+    cursor.execute('select ispyb.upsert_sample(%s)' % ','.join(['%s'] * len(values)), values)
+    rs = c.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
     return None
 
   def update_sample(self, cursor, values):
     '''Update existing sample.'''
-    if values[0] is not None:
-        cursor.callfunc('ispyb4a_db.PKG_CoreV1.updateSample', cx_Oracle.NUMBER, values)
-
+    cursor.execute('select ispyb.upsert_sample(%s)' % ','.join(['%s'] * len(values)), values)
+    rs = c.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
+    return None
 
   def retrieve_visit_id(self, cursor, visit):
     '''Get the database ID for a visit on the form mx1234-5.'''
-    id = cursor.callfunc('ispyb4a_db.PKG_Corev1.retrieveVisitId', cx_Oracle.NUMBER, [visit])
-    if id is not None:
-        return int(id)
+    cursor.execute('select ispyb.retrieve_visit_id(%s)', [visit])
+    rs = cursor.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
     return None
 
   def retrieve_datacollection_id(self, cursor, img_filename, img_fileloc):
     '''Get the database ID for the data collection corresponding to the given diffraction image file.'''
-    id = cursor.callfunc('ispyb4a_db.PKG_Corev1.retrieveDataCollectionId', cx_Oracle.NUMBER, [img_filename, img_fileloc])
-    if id is not None:
-        return int(id)
+    cursor.execute('select ispyb.retrieve_datacollection_id(%s,%s)', [img_filename, img_fileloc])
+    rs = c.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
     return None
 
 core = Core()

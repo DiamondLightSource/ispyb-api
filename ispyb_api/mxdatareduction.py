@@ -80,15 +80,17 @@ class MXDataReduction:
 
 
   def insert_program(self, cursor, values):
-    id = cursor.callfunc('ispyb4a_db.PKG_MXDataReductionv1.insertProgram', cx_Oracle.NUMBER, values[1:])
-    if id != None:
-      return int(id)
+    cursor.execute('select ispyb.upsert_program_run(%s)' % ','.join(['%s'] * len(values)), values)
+    rs = cursor.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
     return None
 
   def update_program(self, cursor, values):
-    id = cursor.callfunc('ispyb4a_db.PKG_MXDataReductionv1.updateProgram', cx_Oracle.NUMBER, values)
-    if id != None:
-      return int(id)
+    id = cursor.execute('select ispyb.upsert_program_run(%s)' % ','.join(['%s'] * len(values)), values)
+    rs = cursor.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
     return None
 
   def put_program(self, cursor, values):
@@ -105,21 +107,25 @@ class MXDataReduction:
 
 
   def insert_processing(self, cursor, values):
-    id = cursor.callfunc('ispyb4a_db.PKG_MXDataReductionv1.insertProcessing', cx_Oracle.NUMBER, values)
-    if id != None:
-      return int(id)
+    cursor.execute('select ispyb.upsert_processing(%s)' % ','.join(['%s'] * len(values)), values)
+    rs = cursor.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
     return None
 
   def insert_scaling(self, cursor, parent_id, values1, values2, values3):
-    id = cursor.callfunc('ispyb4a_db.PKG_MXDataReductionv1.insertScaling', cx_Oracle.NUMBER, [parent_id] + values1 + values2 + values3)
-    if id != None:
-      return int(id)
+    values = [parent_id] + values1 + values2 + values3 
+    cursor.execute('select ispyb.insert_scaling(%s)' % ','.join(['%s'] * len(values)), values)
+    rs = cursor.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
     return None
 
   def insert_integration(self, cursor, values):
-    id = cursor.callfunc('ispyb4a_db.PKG_MXDataReductionv1.insertIntegration', cx_Oracle.NUMBER, values)
-    if id != None:
-      return int(id)
+    id = cursor.callfunc('select ispyb.upsert_integration(%s)' % ','.join(['%s'] * len(values)), values)
+    rs = cursor.fetchone()
+    if len(rs) > 0:
+        return int(rs[0])
     return None
 
 mxdatareduction = MXDataReduction()

@@ -9,9 +9,9 @@
 #
 
 try:
-  import cx_Oracle
-except ImportError as e:
-  print 'Oracle API module not found'
+  import MySQLdb
+except ImportError, e:
+  print 'MySQL API module not found'
   raise e
 
 import string
@@ -22,6 +22,8 @@ import sys
 import datetime
 from logging.handlers import RotatingFileHandler
 import base64
+import ConfigParser
+
 
 class DBConnection:
   '''DBConnection provides access to a database'''
@@ -29,6 +31,9 @@ class DBConnection:
   def __init__(self):
     self.cursor = None
     self.conn = None
+    self.config = ConfigParser.RawConfigParser(allow_no_value=True)
+    #self.config.read( os.path.join( os.path.dirname( os.path.abspath(__file__) ), "credentials.cfg" ))
+    self.config.read('/dls_sw/dasc/mariadb/credentials/ispyb_api.cfg')
     return
 
   def __del__(self):
@@ -46,26 +51,25 @@ class DBConnection:
   def connect_to_prod(self):
     '''Create a connection to the production database'''
     self.disconnect()
-    return self._connect('ispyb_sp', self.decode('W2NhbmlzJWx1cHVzXQ=='), 'ispyb')
+    return self._connect(conf='prod')
 
   def connect_to_dev(self):
     '''Create a connection to the development database'''
     self.disconnect()
-    return self._connect('ispyb_sp', self.decode('W2NhbmlzJWx1cHVzXQ=='), 'ws096')
+    return self._connect(conf='dev')
 
   def connect_to_test(self):
     '''Create a connection to the test database'''
     self.disconnect()
-    return self._connect('ispyb_sp', self.decode('W2NhbmlzJWx1cHVzXQ=='), 'ispybtst')
+    return self._connect(conf='test')
 
-  def _connect(self, u, pw, db):
+  def _connect(self, conf='dev'):
     '''Create a connection to the database using the given parameters.'''
-    self.conn = cx_Oracle.connect(user=u, password=pw, dsn=db)
+    self.conn = MySQLdb.connect(user=self.config.get(conf, 'user'), passwd=self.config.get(conf, 'pw'), \
+                                host=self.config.get(conf, 'host'), db=self.config.get(conf, 'db'))
     if self.conn is not None:
-      self.conn.autocommit = True
+      self.conn.autocommit(True)
       self.cursor = self.conn.cursor()
-    else:
-      print 'Connection to %s@%s was unsuccessful.' % (u, db)
     return self.cursor
 
   def disconnect(self):
