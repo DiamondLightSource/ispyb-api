@@ -122,7 +122,7 @@ class MXDataReduction:
     return None
 
   def insert_integration(self, cursor, values):
-    id = cursor.callfunc('select ispyb.upsert_integration(%s)' % ','.join(['%s'] * len(values)), values)
+    id = cursor.execute('select ispyb.upsert_integration(%s)' % ','.join(['%s'] * len(values)), values)
     rs = cursor.fetchone()
     if len(rs) > 0:
         return int(rs[0])
