@@ -37,7 +37,7 @@ class MXDataReduction:
     ('fileid2',None), ('filename2',None), ('filepath2',None), ('filetype2',None), 
     ('fileid3',None), ('filename3',None), ('filepath3',None), ('filetype3',None)])
 
-  _processing_params = ExtendedOrderedDict([('parentid',None), ('spacegroup',None), 
+  _processing_params = ExtendedOrderedDict([('id',None), ('parentid',None), ('spacegroup',None), 
     ('refinedcell_a',None), ('refinedcell_b',None), ('refinedcell_c',None), 
     ('refinedcell_alpha',None), ('refinedcell_beta',None), ('refinedcell_gamma',None)])
 
