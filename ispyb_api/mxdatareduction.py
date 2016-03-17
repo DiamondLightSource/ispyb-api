@@ -33,9 +33,9 @@ class MXDataReduction:
 
   _program_params = ExtendedOrderedDict([('id',None), ('cmd_line',None), ('programs',None), 
     ('status',None), ('message',None), ('starttime',None), ('endtime',None), ('environment',None), 
-    ('filename1',None), ('filepath1',None), ('filetype1',None), 
-    ('filename2',None), ('filepath2',None), ('filetype2',None), 
-    ('filename3',None), ('filepath3',None), ('filetype3',None)])
+    ('fileid1',None), ('filename1',None), ('filepath1',None), ('filetype1',None), 
+    ('fileid2',None), ('filename2',None), ('filepath2',None), ('filetype2',None), 
+    ('fileid3',None), ('filename3',None), ('filepath3',None), ('filetype3',None)])
 
   _processing_params = ExtendedOrderedDict([('parentid',None), ('spacegroup',None), 
     ('refinedcell_a',None), ('refinedcell_b',None), ('refinedcell_c',None), 
