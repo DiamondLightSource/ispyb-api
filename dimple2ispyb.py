@@ -86,13 +86,14 @@ def store_result(cursor, dir, scaling_id):
                 'blob{0}v3.png'.format(n))
 
 
-def store_failure(cursor, scaling_id):
+def store_failure(cursor, run_dir, scaling_id):
     '''Store failure of DIMPLE pipeline'''
     params = mxmr.get_run_params()
     params['parentid'] = scaling_id
     params['pipeline'] = 'dimple'
     params['success'] = 0
     params['message'] = 'Unknown error'
+    params['run_dir'] = run_dir
     mr_id = mxmr.insert_run(cursor, params.values())
 
 # Configure logging
@@ -129,7 +130,7 @@ if scaling_id is not None:
         store_result(cursor, sys.argv[1], scaling_id)
     except:
         logging.getLogger().exception("dimple2ispyb: Problem extracting / storing the dimple result.")
-        store_failure(cursor, scaling_id)
+        store_failure(cursor, sys.argv[1], scaling_id)
 
 dbconnection.disconnect()
 
