@@ -66,7 +66,7 @@ class DBConnection:
   def _connect(self, conf='dev'):
     '''Create a connection to the database using the given parameters.'''
     self.conn = MySQLdb.connect(user=self.config.get(conf, 'user'), passwd=self.config.get(conf, 'pw'), \
-                                host=self.config.get(conf, 'host'), db=self.config.get(conf, 'db'))
+                                host=self.config.get(conf, 'host'), db=self.config.get(conf, 'db'), port=int(self.config.get(conf, 'port')))
     if self.conn is not None:
       self.conn.autocommit(True)
       self.cursor = self.conn.cursor()
