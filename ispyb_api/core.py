@@ -85,5 +85,11 @@ class Core:
         return int(rs[0])
     return None
 
+  def retrieve_current_sessions(self, cursor, beamline):
+    '''Get a result-set with the currently active sessions on the given beamline. Commissioning sessions (cm) are appended.'''
+    cursor.callproc(procname='ispyb.retrieve_current_sessions', args=(beamline,))
+    return cursor.fetchall()
+
+
 core = Core()
 
