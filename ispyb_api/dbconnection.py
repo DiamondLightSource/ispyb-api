@@ -48,28 +48,32 @@ class DBConnection:
     '''Decode base64 string'''
     return base64.b64decode(encoded_s)
 
-  def connect_to_prod(self):
+  def connect_to_prod(self, dict_cursor=False):
     '''Create a connection to the production database'''
     self.disconnect()
-    return self._connect(conf='prod')
+    return self._connect(conf='prod', dict_cursor=dict_cursor)
 
-  def connect_to_dev(self):
+  def connect_to_dev(self, dict_cursor=False):
     '''Create a connection to the development database'''
     self.disconnect()
-    return self._connect(conf='dev')
+    return self._connect(conf='dev', dict_cursor=dict_cursor)
 
-  def connect_to_test(self):
+  def connect_to_test(self, dict_cursor=False):
     '''Create a connection to the test database'''
     self.disconnect()
-    return self._connect(conf='test')
+    return self._connect(conf='test', dict_cursor=dict_cursor)
 
-  def _connect(self, conf='dev'):
+  def _connect(self, conf='dev', dict_cursor=False):
     '''Create a connection to the database using the given parameters.'''
     self.conn = MySQLdb.connect(user=self.config.get(conf, 'user'), passwd=self.config.get(conf, 'pw'), \
                                 host=self.config.get(conf, 'host'), db=self.config.get(conf, 'db'), port=int(self.config.get(conf, 'port')))
     if self.conn is not None:
       self.conn.autocommit(True)
-      self.cursor = self.conn.cursor()
+
+    if dict_cursor: 
+        self.cursor = self.conn.cursor(MySQLdb.cursors.DictCursor)
+    else:
+        self.cursor = self.conn.cursor()
     return self.cursor
 
   def disconnect(self):
