@@ -56,7 +56,7 @@ class Core:
   def insert_sample(self, cursor, values):
     '''Store new sample.'''
     cursor.execute('select ispyb.upsert_sample(%s)' % ','.join(['%s'] * len(values)), values)
-    rs = c.fetchone()
+    rs = cursor.fetchone()
     if len(rs) > 0:
         return int(rs[0])
     return None
@@ -64,7 +64,7 @@ class Core:
   def update_sample(self, cursor, values):
     '''Update existing sample.'''
     cursor.execute('select ispyb.upsert_sample(%s)' % ','.join(['%s'] * len(values)), values)
-    rs = c.fetchone()
+    rs = cursor.fetchone()
     if len(rs) > 0:
         return int(rs[0])
     return None
@@ -80,7 +80,7 @@ class Core:
   def retrieve_datacollection_id(self, cursor, img_filename, img_fileloc):
     '''Get the database ID for the data collection corresponding to the given diffraction image file.'''
     cursor.execute('select ispyb.retrieve_datacollection_id(%s,%s)', [img_filename, img_fileloc])
-    rs = c.fetchone()
+    rs = cursor.fetchone()
     if len(rs) > 0:
         return int(rs[0])
     return None
