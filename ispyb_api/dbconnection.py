@@ -58,10 +58,10 @@ class DBConnection:
     self.disconnect()
     return self._connect(conf='dev', dict_cursor=dict_cursor)
 
-  def connect_to_test(self, dict_cursor=False):
+  def connect_to_stage(self, dict_cursor=False):
     '''Create a connection to the test database'''
     self.disconnect()
-    return self._connect(conf='test', dict_cursor=dict_cursor)
+    return self._connect(conf='stage', dict_cursor=dict_cursor)
 
   def _connect(self, conf='dev', dict_cursor=False):
     '''Create a connection to the database using the given parameters.'''
