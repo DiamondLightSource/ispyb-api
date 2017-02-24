@@ -114,7 +114,7 @@ class Core:
 
   def retrieve_active_plates(self, cursor, beamline):
     '''Get a result-set with the submitted plates not yet in local storage on a given beamline'''
-    cursor.callproc(procname="retrieve_containers_submitted_non_ls", args=(beamline,))
+    cursor.callproc(procname="ispyb.retrieve_containers_submitted_non_ls", args=(beamline,))
     rs = cursor.fetchall()
     cursor.nextset()
     return rs
