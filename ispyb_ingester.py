@@ -259,11 +259,8 @@ def kill_handler(sig, frame):
     os._exit(-1)
 
 def receive_message(header, message):
-    io = StringIO(message)
-    msg = json.load(io)
-    logging.getLogger().debug(msg)
-    
-    store_processing_dict(msg)
+    logging.getLogger().debug(message)
+    store_processing_dict(message)
     stomp.ack(header['message-id'], header['subscription'])
 
 
