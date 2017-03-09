@@ -9,11 +9,11 @@ from nose import with_setup
 
 def get_dict_cursor():
     global cursor
-    cursor = dbconnection.connect_to_dev(dict_cursor=True) 
+    cursor = dbconnection.connect(conf='dev', dict_cursor=True) 
 
 def get_cursor():
     global cursor
-    cursor = dbconnection.connect_to_dev()
+    cursor = dbconnection.connect(conf='dev')
 
 def close_cursor():
     cursor.close()
