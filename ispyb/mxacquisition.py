@@ -84,10 +84,7 @@ class MXAcquisition:
   def insert_data_collection_group(self, cursor, values):
     '''Store new MX data collection group.'''
     cursor.execute('select ispyb.upsert_dcgroup(%s)' % ','.join(['%s'] * len(values)), values)
-    rs = cursor.fetchone()
-    if len(rs) > 0:
-        return int(rs[0])
-    return None
+    return self.first_item_in_cursor( cursor )
 
   def update_data_collection_group(self, cursor, values):
     '''Update existing data collection group.'''
@@ -96,42 +93,27 @@ class MXAcquisition:
 
   def put_data_collection_group(self, cursor, values):
     cursor.execute('select ispyb.upsert_dcgroup(%s)' % ','.join(['%s'] * len(values)), values)
-    rs = cursor.fetchone()
-    if len(rs) > 0:
-        return int(rs[0])
-    return None
+    return self.first_item_in_cursor( cursor )
 
   def insert_data_collection(self, cursor, values):
     '''Store new data collection.'''
     cursor.execute('select ispyb.upsert_dc(%s)' % ','.join(['%s'] * len(values)), values)
-    rs = cursor.fetchone()
-    if len(rs) > 0:
-        return int(rs[0])
-    return None
+    return self.first_item_in_cursor( cursor )
 
   def update_data_collection(self, cursor, values):
     '''Update existing data collection.'''
     cursor.execute('select ispyb.upsert_dc(%s)' % ','.join(['%s'] * len(values)), values)
-    rs = cursor.fetchone()
-    if len(rs) > 0:
-        return int(rs[0])
-    return None
+    return self.first_item_in_cursor( cursor )
 
   def insert_image(self, cursor, values):
     '''Store new MX diffraction image.'''
     cursor.execute('select ispyb.upsert_image(%s)' % ','.join(['%s'] * len(values)), values)
-    rs = cursor.fetchone()
-    if len(rs) > 0:
-        return int(rs[0])
-    return None
+    return self.first_item_in_cursor( cursor )
 
   def update_image(self, cursor, values):
     '''Update existing diffraction image.'''
     cursor.execute('select ispyb.upsert_image(%s)' % ','.join(['%s'] * len(values)), values)
-    rs = cursor.fetchone()
-    if len(rs) > 0:
-        return int(rs[0])
-    return None
+    return self.first_item_in_cursor( cursor )
 
 mxacquisition = MXAcquisition()
 
