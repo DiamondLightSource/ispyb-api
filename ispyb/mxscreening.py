@@ -96,21 +96,21 @@ class MXScreening:
         return None
 
   def insert_screening_strategy(self, cursor, values):
-    result_args = cursor.callproc(procname='ispyb.insert_screening_output_strategy', args=(values))
+    result_args = cursor.callproc(procname='ispyb.insert_screening_strategy', args=(values))
     if result_args is not None and len(result_args) > 0: 
         return result_args[0]
     else:
         return None
 
   def insert_screening_strategy_wedge(self, cursor, values):
-    result_args = cursor.callproc(procname='ispyb.insert_screening_output_strategy_wedge', args=(values))
+    result_args = cursor.callproc(procname='ispyb.insert_screening_strategy_wedge', args=(values))
     if result_args is not None and len(result_args) > 0: 
         return result_args[0]
     else:
         return None
 
   def insert_screening_strategy_sub_wedge(self, cursor, values):
-    result_args = cursor.callproc(procname='ispyb.insert_screening_output_sub_strategy_wedge', args=(values))
+    result_args = cursor.callproc(procname='ispyb.insert_screening_strategy_sub_wedge', args=(values))
     if result_args is not None and len(result_args) > 0: 
         return result_args[0]
     else:
