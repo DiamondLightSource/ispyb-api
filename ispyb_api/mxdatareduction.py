@@ -8,12 +8,6 @@
 # Methods to store data from MX reduction pipelines
 #
 
-try:
-  import cx_Oracle
-except ImportError, e:
-  print 'Oracle API module not found'
-  raise e
-
 import string
 import logging
 import time
