@@ -80,13 +80,12 @@ def insert_screening_output(c, session_id = None):
     params['status_description'] = 'success'
     params['rejected_reflections'] = 16
     params['resolution_obtained'] = 2.0
-    params['mosaicity_estimated'] = True
     params['mosaicity'] = 20.86    
     params['beam_shift_x'] = 14
     params['beam_shift_y'] = 11
     params['num_spots_found'] = 120
     params['num_spots_used'] = 104    
-    params['diffraction_rings'] = False    
+    params['diffraction_rings'] = False
     params['indexing_success'] = True    
     params['strategy_success'] = True    
 
