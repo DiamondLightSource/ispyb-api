@@ -281,14 +281,14 @@ except workflows.WorkflowsError, e:
 StompTransport.add_command_line_options(parser)
 
 
-# Run process in background
-try:
-    pid = os.fork()
-except OSError, e:
-    logging.getLogger().error("Unable to fork, can't run as daemon in background")
-    sys.exit(1)
-if pid != 0:
-    sys.exit()
+## Run process in background
+#try:
+#    pid = os.fork()
+#except OSError, e:
+#    logging.getLogger().error("Unable to fork, can't run as daemon in background")
+#    sys.exit(1)
+#if pid != 0:
+#    sys.exit()
 
 
 # Get a database cursor
