@@ -18,7 +18,6 @@ from logging.handlers import RotatingFileHandler
 from collections import OrderedDict
 import copy
 from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
-from astropy.io.ascii.tests.common import assert_equal
 
 class MXScreening:
   '''MXScreening provides methods to store MX characterisations and strategies.'''
