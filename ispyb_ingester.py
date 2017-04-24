@@ -260,6 +260,7 @@ def kill_handler(sig, frame):
 
 def receive_message(header, message):
     logging.getLogger().debug(message)
+    print "Processing message", header['message-id']
     store_processing_dict(message)
     stomp.ack(header['message-id'], header['subscription'])
 
