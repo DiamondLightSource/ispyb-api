@@ -30,6 +30,9 @@ from ispyb.core import core
 from ispyb.mxdatareduction import mxdatareduction
 from datetime import datetime
 
+# Disable Python output buffering
+sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+
 def set_logging(config):
     levels_dict = {"debug" : logging.DEBUG, "info" : logging.INFO, "warning" : logging.WARNING, "error" : logging.ERROR, "critical" : logging.CRITICAL}
     logger = logging.getLogger()
