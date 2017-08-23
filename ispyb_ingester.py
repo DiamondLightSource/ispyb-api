@@ -283,17 +283,6 @@ except workflows.WorkflowsError, e:
   raise
 StompTransport.add_command_line_options(parser)
 
-
-## Run process in background
-#try:
-#    pid = os.fork()
-#except OSError, e:
-#    logging.getLogger().error("Unable to fork, can't run as daemon in background")
-#    sys.exit(1)
-#if pid != 0:
-#    sys.exit()
-
-
 # Get a database cursor
 global cursor
 cursor = dbconnection.connect(config.get('db', 'conf'))
@@ -303,12 +292,10 @@ def receive_message_but_exit_on_error(*args, **kwargs):
     receive_message(*args, **kwargs)
   except KeyboardInterrupt:
     print "Terminating."
-    import sys
     sys.exit(0)
-  except Exception:
+  except Exception, e:
     print "Uncaught exception:", e
     print "Terminating."
-    import sys
     sys.exit(1)
 
 # Create stomp object - must do this *after* forking
@@ -325,9 +312,7 @@ signal.signal(signal.SIGTERM, kill_handler)
 # Run for max 24 hrs, then terminate. Service will be restarted automatically.
 try:
   time.sleep(24 * 3600)
-
 except KeyboardInterrupt:
   print "Terminating."
-  import sys
   sys.exit(0)
 
