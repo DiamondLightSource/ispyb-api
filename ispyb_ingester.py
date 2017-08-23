@@ -29,6 +29,8 @@ from ispyb.core import core
 from ispyb.mxdatareduction import mxdatareduction
 from datetime import datetime
 
+# Disable Python output buffering
+sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
 
 def set_logging(config):
     levels_dict = {"debug" : logging.DEBUG, "info" : logging.INFO, "warning" : logging.WARNING, "error" : logging.ERROR, "critical" : logging.CRITICAL}
@@ -260,6 +262,7 @@ def kill_handler(sig, frame):
 
 def receive_message(header, message):
     logging.getLogger().debug(message)
+    print "Processing message", header['message-id']
     store_processing_dict(message)
     stomp.ack(header['message-id'], header['subscription'])
 
@@ -295,18 +298,36 @@ StompTransport.add_command_line_options(parser)
 global cursor
 cursor = dbconnection.connect(config.get('db', 'conf'))
 
+def receive_message_but_exit_on_error(*args, **kwargs):
+  try:
+    receive_message(*args, **kwargs)
+  except KeyboardInterrupt:
+    print "Terminating."
+    import sys
+    sys.exit(0)
+  except Exception:
+    print "Uncaught exception:", e
+    print "Terminating."
+    import sys
+    sys.exit(1)
+
 # Create stomp object - must do this *after* forking
 stomp = StompTransport()
 stomp.connect()
-stomp.subscribe('processing_ingest', receive_message, acknowledgement=True)
-stomp.subscribe('ispyb.processing_ingest', receive_message, acknowledgement=True, ignore_namespace=True)
-stomp.subscribe('zocalo.ispyb', receive_message, acknowledgement=True, ignore_namespace=True)
+stomp.subscribe('processing_ingest', receive_message_but_exit_on_error, acknowledgement=True)
+stomp.subscribe('ispyb.processing_ingest', receive_message_but_exit_on_error, acknowledgement=True, ignore_namespace=True)
+stomp.subscribe('zocalo.ispyb', receive_message_but_exit_on_error, acknowledgement=True, ignore_namespace=True)
 
 # Make sure logging and stomp get closed properly
 atexit.register(logging.shutdown)
 signal.signal(signal.SIGTERM, kill_handler)
 
-# Loop, wait 0.5 s
-while 1 == 1:
-    time.sleep(0.5)
+# Run for max 24 hrs, then terminate. Service will be restarted automatically.
+try:
+  time.sleep(24 * 3600)
+
+except KeyboardInterrupt:
+  print "Terminating."
+  import sys
+  sys.exit(0)
 
