@@ -89,12 +89,18 @@ class EMAcquisition:
 
     def insert_motion_correction(self, cursor, values):
         '''Store new motion correction params.'''
-        cursor.execute('select ispyb.upsert_motion_correction(%s)' % ','.join(['%s'] * len(values)), values)
-        return self.first_item_in_cursor(cursor)
+        result_args = cursor.callproc(procname='ispyb.upsert_motion_correction', args=values)
+        if result_args is not None and len(result_args) > 0:
+            return result_args[0]
+        else:
+            return None
 
     def insert_ctf(self, cursor, values):
         '''Store new ctf params.'''
-        cursor.execute('select ispyb.upsert_ctf(%s)' % ','.join(['%s'] * len(values)), values)
-        return self.first_item_in_cursor(cursor)
+        result_args = cursor.callproc(procname='ispyb.upsert_ctf', args=values)
+        if result_args is not None and len(result_args) > 0:
+            return result_args[0]
+        else:
+            return None
 
 emacquisition = EMAcquisition()
