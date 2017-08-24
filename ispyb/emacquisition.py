@@ -50,8 +50,9 @@ class EMAcquisition:
                 ('totalMotion', None),
                 ('averageMotionPerFrame', None),
                 ('driftPlotFullPath', None),
-                ('micrographfullPath', None),
-                ('patchesUsed', None),
+                ('micrographFullPath', None),
+                ('patchesUsedX', None),
+                ('patchesUsedY', None),
                 ('comments', None)
             ]
         )
@@ -75,8 +76,7 @@ class EMAcquisition:
                 ('estimatedDefocus', None),
                 ('amplitudeContrast', None),
                 ('ccValue', None),
-                ('fftPlotFullPath', None),
-                ('fftPlotFullPath2', None),
+                ('fftTheoreticalFullPath', None),
                 ('comments', None)
             ]
         )
