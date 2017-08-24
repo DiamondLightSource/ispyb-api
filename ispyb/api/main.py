@@ -1,8 +1,10 @@
 from __future__ import division, absolute_import
 
+import ispyb.api.datacollection
 import ispyb.api.reprocessing
 
-class API(ispyb.api.reprocessing.API):
+class API(ispyb.api.datacollection.API,
+          ispyb.api.reprocessing.API):
 
   def _notimplemented(self):
     '''Overrideable function which is called when a driver lacks an

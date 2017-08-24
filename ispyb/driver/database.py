@@ -3,6 +3,7 @@ import ConfigParser
 import ispyb.api.main
 import ispyb.exception
 import mysql.connector
+import os.path
 
 class ISPyBDatabaseDriver(ispyb.api.main.API):
   '''This driver connects directly to an ISPyB MySQL/MariaDB database.
@@ -58,6 +59,26 @@ class ISPyBDatabaseDriver(ispyb.api.main.API):
       result = cursor.fetchone()
     if result:
       return result
+    raise ispyb.exception.ISPyBNoResultException()
+
+  def get_datacollection_id(self, dcid):
+    with self._db_cc() as cursor:
+      cursor.run("SELECT * "
+                 "FROM DataCollection "
+                 "WHERE dataCollectionId = %s;", dcid)
+      result = cursor.fetchone()
+    if result:
+      return result
+    raise ispyb.exception.ISPyBNoResultException()
+
+  def get_datacollection_template(self, dcid):
+    with self._db_cc() as cursor:
+      cursor.run("SELECT imageDirectory, fileTemplate "
+                 "FROM DataCollection "
+                 "WHERE dataCollectionId = %s;", dcid)
+      result = cursor.fetchone()
+    if result:
+      return os.path.join(result['imageDirectory'], result['fileTemplate'])
     raise ispyb.exception.ISPyBNoResultException()
 
   def get_reprocessing_parameters(self, reprocessing_id):
