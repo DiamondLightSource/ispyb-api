@@ -59,3 +59,28 @@ class ISPyBDatabaseDriver(ispyb.api.main.API):
     if result:
       return result
     raise ispyb.exception.ISPyBNoResultException()
+
+  def get_reprocessing_parameters(self, reprocessing_id):
+    params = {}
+    with self._db_cc() as cursor:
+      cursor.run("SELECT parameterKey, parameterValue "
+                 "FROM ReprocessingParameter "
+                 "WHERE reprocessingId = %s;", reprocessing_id)
+      while True:
+        result = cursor.fetchmany(size=50)
+        if not result: break
+        for row in result:
+          params[row['parameterKey']] = row['parameterValue']
+    return params
+
+  def get_reprocessing_sweeps(self, reprocessing_id):
+    sweeps = []
+    with self._db_cc() as cursor:
+      cursor.run("SELECT dataCollectionId, startImage, endImage "
+                 "FROM ReprocessingImageSweep "
+                 "WHERE reprocessingId = %s;", reprocessing_id)
+      while True:
+        result = cursor.fetchmany(size=50)
+        if not result: break
+        sweeps.extend(result)
+    return sweeps
