@@ -9,6 +9,16 @@ class API(object):
        It returns a string that is stored in the database.'''
     self._notimplemented()
 
+  def get_reprocessing_sweeps(self, reprocessing_id):
+    '''returns a list of image sweeps relevant for a particular reprocessing
+       job.'''
+    self._notimplemented()
+
+  def get_reprocessing_parameters(self, reprocessing_id):
+    '''Returns a dictionary containing all key/value pairs defined in ISPyB
+       for a particular reprocessing job.'''
+    self._notimplemented()
+
   def undocumented_function(self, thingA, thingB, thingC):
     '''This is a function.'''
     self._notimplemented()
