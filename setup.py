@@ -24,7 +24,7 @@ setup(name='ispyb',
       install_requires=['mysql-connector<2.2.3'],
       packages=find_packages(),
       license='BSD',
-      tests_require=['mock'],
+      tests_require=['mock', 'pytest'],
       classifiers = [
         'Development Status :: 1 - Planning',
         'License :: OSI Approved :: BSD License',
