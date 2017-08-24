@@ -4,11 +4,11 @@ from enum import Enum
 class Backend(Enum):
   '''List of available backends for ispyb.'''
   DUMMY    = ('Dummy driver',
-              'math', 'sin')
+              'ispyb.driver.dummy', 'ISPyBDummyDriver')
   API      = ('Official API',
-              'math', 'sin')
+              'ispyb.driver.api', 'ISPyBAPIDriver')
   DATABASE = ('Direct database access',
-              'math', 'sin')
+              'ispyb.driver.database', 'ISPyBDatabaseDriver')
 
   def __init__(self, description, module, classname):
     '''Make tuple elements reachable via attribute names.'''

@@ -3,7 +3,7 @@ import ConfigParser
 import ispyb.api.main
 import mysql.connector
 
-class ISPyB_database_driver(ispyb.api.main.API):
+class ISPyBDatabaseDriver(ispyb.api.main.API):
   '''This driver connects directly to an ISPyB MySQL/MariaDB database.
   '''
 
