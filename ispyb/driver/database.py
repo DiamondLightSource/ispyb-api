@@ -24,3 +24,22 @@ class ISPyBDatabaseDriver(ispyb.api.main.API):
     self._db_conndata = { 'host': host, 'port': port, 'user': username,
                           'password': password, 'database': database }
     self._db = mysql.connector.connect(**self._db_conndata)
+    self._dbcur = self._db.cursor()
+
+  def _db_call(self, query, parameters=None):
+    cursor = self._dbcur # cursor()
+    if parameters:
+      if isinstance(parameters, (basestring, int, long)):
+        parameters = (parameters,)
+      cursor.execute(query, parameters)
+    else:
+      cursor.execute(query)
+    results = [result for result in cursor]
+    return results
+
+  def get_reprocessing_id(self, reprocessing_id):
+    results = self._db_call("SELECT * "
+                            "FROM Reprocessing "
+                            "WHERE reprocessingId = %s;", reprocessing_id)
+    return results
+    return "ID=%s" % str(number)
