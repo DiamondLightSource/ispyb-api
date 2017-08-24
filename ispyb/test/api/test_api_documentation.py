@@ -13,7 +13,6 @@ class TestAPIDocumentation(object):
     function_names = dir(apiobj)
     public_fn_names = filter(lambda name: not name.startswith('_'),
                              function_names)
-    undocumented_functions = \
-        filter(lambda name: not inspect.getdoc(getattr(apiobj, name)),
-               public_fn_names)
-    assert undocumented_functions == []
+    for function in public_fn_names:
+      assert inspect.getdoc(getattr(apiobj, function)), \
+          "The API call %s is not documented." % function
