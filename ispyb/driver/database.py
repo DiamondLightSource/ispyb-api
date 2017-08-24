@@ -25,18 +25,37 @@ class ISPyBDatabaseDriver(ispyb.api.main.API):
     self._db_conndata = { 'host': host, 'port': port, 'user': username,
                           'password': password, 'database': database }
     self._db = mysql.connector.connect(**self._db_conndata)
-    self._dbcur = self._db.cursor(dictionary=True)
+
+    class context_cursor(object):
+      '''Context manager for a mysql.connector cursor with two differences
+         to a regular cursor: By default results are returned as a dictionary,
+         and a new .run() function is an alias to .execute which accepts query
+         parameters as function parameters rather than a list.'''
+      def __init__(cc, **parameters):
+        if 'dictionary' not in parameters:
+          parameters['dictionary'] = True
+        cc.cursorparams = parameters
+      def __enter__(cc):
+        cc.cursor = self._db.cursor(**cc.cursorparams)
+        def flat_execute(stmt, *parameters):
+          cc.cursor.execute(stmt, parameters)
+        setattr(cc.cursor, 'run', flat_execute)
+        return cc.cursor
+      def __exit__(cc, *args):
+        cc.cursor.close()
+    self._db_cc = context_cursor
 
   def _db_call(self, query, *parameters):
-    cursor = self._dbcur # cursor()
+    cursor = self._dbcursor()
     cursor.execute(query, parameters)
-    results = [result for result in cursor]
-    return results
+    return cursor
 
   def get_reprocessing_id(self, reprocessing_id):
-    result = self._db_call("SELECT * "
-                           "FROM Reprocessing "
-                           "WHERE reprocessingId = %s;", reprocessing_id)
+    with self._db_cc() as cursor:
+      cursor.run("SELECT * "
+                 "FROM Reprocessing "
+                 "WHERE reprocessingId = %s;", reprocessing_id)
+      result = cursor.fetchone()
     if result:
-      return result[0]
+      return result
     raise ispyb.exception.ISPyBNoResultException()
