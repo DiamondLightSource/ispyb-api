@@ -1,6 +1,7 @@
 from __future__ import division, absolute_import
 import ConfigParser
 import ispyb.api.main
+import ispyb.exception
 import mysql.connector
 
 class ISPyBDatabaseDriver(ispyb.api.main.API):
@@ -24,22 +25,18 @@ class ISPyBDatabaseDriver(ispyb.api.main.API):
     self._db_conndata = { 'host': host, 'port': port, 'user': username,
                           'password': password, 'database': database }
     self._db = mysql.connector.connect(**self._db_conndata)
-    self._dbcur = self._db.cursor()
+    self._dbcur = self._db.cursor(dictionary=True)
 
-  def _db_call(self, query, parameters=None):
+  def _db_call(self, query, *parameters):
     cursor = self._dbcur # cursor()
-    if parameters:
-      if isinstance(parameters, (basestring, int, long)):
-        parameters = (parameters,)
-      cursor.execute(query, parameters)
-    else:
-      cursor.execute(query)
+    cursor.execute(query, parameters)
     results = [result for result in cursor]
     return results
 
   def get_reprocessing_id(self, reprocessing_id):
-    results = self._db_call("SELECT * "
-                            "FROM Reprocessing "
-                            "WHERE reprocessingId = %s;", reprocessing_id)
-    return results
-    return "ID=%s" % str(number)
+    result = self._db_call("SELECT * "
+                           "FROM Reprocessing "
+                           "WHERE reprocessingId = %s;", reprocessing_id)
+    if result:
+      return result[0]
+    raise ispyb.exception.ISPyBNoResultException()

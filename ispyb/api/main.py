@@ -8,5 +8,5 @@ class API(ispyb.api.reprocessing.API):
     '''Overrideable function which is called when a driver lacks an
        implementation for an API function. In general this function
        should always end in an exception being raised.'''
-    raise NotImplementedError('This function is not provided by the selected '
+    raise NotImplementedError('This call is not supported by the selected '
                               'ISPyB driver.')
