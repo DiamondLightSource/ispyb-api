@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 import sys
 
 # to release increment this number:
-package_version = '0.4'
+package_version = '0.5'
 # and run the following on a bash prompt:
 '''
 export NUMBER="$(grep package_version setup.py | head -1 | cut -d"'" -f 2)";
