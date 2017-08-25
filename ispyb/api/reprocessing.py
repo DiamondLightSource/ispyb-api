@@ -26,6 +26,8 @@ class API(object):
        - status can only change
            from submitted to running, finished, or failed, and
            from running to finished or failed.
+       - once the status is set to finished or failed the record
+         becomes read-only
        - start_time only matters if the previous status is submitted
        - in that case, if start_time is not set, the current time is used
        - if update_time is not set the current time is used

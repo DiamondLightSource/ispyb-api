@@ -112,7 +112,7 @@ class ISPyBDatabaseDriver(ispyb.api.main.API):
     with self._db_cc() as cursor:
       cursor.execute('''
 UPDATE Reprocessing
-SET status = IF(%(status)s = 'submitted', status, %(status)s),
+SET status = IF(%(status)s = 'submitted', status, IFNULL(%(status)s, status)),
     startedTimestamp = IFNULL(startedTimestamp, IFNULL(%(start_time)s, NOW())),
     lastUpdateTimestamp = IFNULL(%(update_time)s, NOW()),
     lastUpdateMessage = IFNULL(%(update_message)s, lastUpdateMessage)
