@@ -19,6 +19,15 @@ class API(object):
        for a particular reprocessing job.'''
     self._notimplemented()
 
-  def undocumented_function(self, thingA, thingB, thingC):
-    '''This is a function.'''
+  def update_reprocessing_status(self, reprocessing_id, status='running',
+                                 start_time=None,
+                                 update_time=None, update_message=None):
+    '''Modify the reprocessing status. Some restrictions apply:
+       - status can only change
+           from submitted to running, finished, or failed, and
+           from running to finished or failed.
+       - start_time only matters if the previous status is submitted
+       - in that case, if start_time is not set, the current time is used
+       - if update_time is not set the current time is used
+    '''
     self._notimplemented()

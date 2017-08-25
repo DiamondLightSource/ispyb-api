@@ -105,3 +105,21 @@ class ISPyBDatabaseDriver(ispyb.api.main.API):
         if not result: break
         sweeps.extend(result)
     return sweeps
+
+  def update_reprocessing_status(self, reprocessing_id, status='running',
+                                 start_time=None,
+                                 update_time=None, update_message=None):
+    with self._db_cc() as cursor:
+      cursor.execute('''
+UPDATE Reprocessing
+SET status = IF(%(status)s = 'submitted', status, %(status)s),
+    startedTimestamp = IFNULL(startedTimestamp, IFNULL(%(start_time)s, NOW())),
+    lastUpdateTimestamp = IFNULL(%(update_time)s, NOW()),
+    lastUpdateMessage = IFNULL(%(update_message)s, lastUpdateMessage)
+WHERE reprocessingId = %(reprocessing_id)s AND status NOT IN ('finished', 'failed')
+          ''', { 'reprocessing_id': reprocessing_id,
+                 'status': status, 'update_message': update_message,
+                 'start_time': start_time, 'update_time': update_time } )
+      if not cursor.rowcount:
+        raise ispyb.exception.UpdateFailed()
+      self._db.commit()
