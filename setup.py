@@ -25,6 +25,7 @@ setup(name='ispyb',
                         'mysql-connector<2.2.3'],
       packages=find_packages(),
       license='BSD',
+      setup_requires=['pytest-runner'],
       tests_require=['mock',
                      'pytest'],
       classifiers = [
