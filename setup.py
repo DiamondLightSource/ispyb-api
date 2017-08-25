@@ -1,18 +1,26 @@
 from __future__ import absolute_import, division
 from setuptools import setup, find_packages
+import io
+import os
+import re
 import sys
 
-# to release increment this number:
-package_version = '0.5'
-# and run the following on a bash prompt:
-'''
-export NUMBER="$(grep package_version setup.py | head -1 | cut -d"'" -f 2)";
-git add -u; git commit -m "v${NUMBER} release"; git tag -a v${NUMBER} -m v${NUMBER}; git push; git push origin v${NUMBER}
-python setup.py sdist upload
-'''
+# cf.
+# https://packaging.python.org/guides/single-sourcing-package-version/#single-sourcing-the-version
+def read(*names, **kwargs):
+  with io.open(
+    os.path.join(os.path.dirname(__file__), *names),
+    encoding=kwargs.get("encoding", "utf8")
+  ) as fp:
+    return fp.read()
 
-if sys.version_info < (2,7):
-  sys.exit('Sorry, Python < 2.7 is not supported')
+def find_version(*file_paths):
+  version_file = read(*file_paths)
+  version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
+                            version_file, re.M)
+  if version_match:
+    return version_match.group(1)
+  raise RuntimeError("Unable to find version string.")
 
 setup(name='ispyb',
       description='Python API for ISPyB',
@@ -20,7 +28,7 @@ setup(name='ispyb',
       author='Markus Gerstel',
       author_email='markus.gerstel@diamond.ac.uk',
       download_url="https://github.com/DiamondLightSource/python-ispyb/releases",
-      version=package_version,
+      version=find_version("ispyb", "__init__.py"),
       install_requires=['enum-compat',
                         'mysql-connector<2.2.3'],
       packages=find_packages(),
