@@ -29,5 +29,7 @@ class API(object):
        - start_time only matters if the previous status is submitted
        - in that case, if start_time is not set, the current time is used
        - if update_time is not set the current time is used
+       - if update_time is set and older than the one in the database
+         records are not updated. Unless the new status is finished or failed.
     '''
     self._notimplemented()

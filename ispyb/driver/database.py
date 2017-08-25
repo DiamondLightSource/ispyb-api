@@ -116,7 +116,11 @@ SET status = IF(%(status)s = 'submitted', status, %(status)s),
     startedTimestamp = IFNULL(startedTimestamp, IFNULL(%(start_time)s, NOW())),
     lastUpdateTimestamp = IFNULL(%(update_time)s, NOW()),
     lastUpdateMessage = IFNULL(%(update_message)s, lastUpdateMessage)
-WHERE reprocessingId = %(reprocessing_id)s AND status NOT IN ('finished', 'failed')
+WHERE reprocessingId = %(reprocessing_id)s
+  AND status NOT IN ('finished', 'failed')
+  AND (ISNULL(lastUpdateTimestamp) OR
+       lastUpdateTimestamp <= IFNULL(%(update_time)s, NOW()) OR
+       %(status)s IN ('finished', 'failed'))
           ''', { 'reprocessing_id': reprocessing_id,
                  'status': status, 'update_message': update_message,
                  'start_time': start_time, 'update_time': update_time } )
