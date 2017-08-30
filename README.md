@@ -8,7 +8,7 @@ via the official ISPyB webservices API or direct database access.
 
 ```python
 import ispyb
-api = ispyb.driver(ispyb.Backend.DATABASE)
+api = ispyb.get_driver(ispyb.Backend.DATABASE)
 i = api(config_file='credentials.cfg')
 rp = i.get_reprocessing_id(rpid)
 print(rp['displayName'])
