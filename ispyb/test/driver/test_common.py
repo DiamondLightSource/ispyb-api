@@ -2,7 +2,7 @@ import inspect
 
 import ispyb.api.main
 import ispyb.driver.api
-import ispyb.driver.database
+import ispyb.driver.mysql
 import ispyb.driver.dummy
 import pytest
 
@@ -26,7 +26,7 @@ class TestAPIImplementation(object):
     self.check_api(ispyb.driver.api.ISPyBAPIDriver)
 
   def test_that_the_database_driver_implementation_matches_the_api_function_signatures(self):
-    self.check_api(ispyb.driver.database.ISPyBDatabaseDriver)
+    self.check_api(ispyb.driver.mysql.ISPyBMySQLDriver)
 
   def test_that_the_dummy_driver_implementation_matches_the_api_function_signatures(self):
     self.check_api(ispyb.driver.dummy.ISPyBDummyDriver)
