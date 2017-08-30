@@ -1,6 +1,7 @@
 import inspect
-import ispyb.api.main
 import pkgutil
+
+import ispyb.api.main
 import pytest
 
 @pytest.mark.incremental

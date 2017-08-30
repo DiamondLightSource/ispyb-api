@@ -1,9 +1,11 @@
 from __future__ import absolute_import, division
-from setuptools import setup, find_packages
+
 import io
 import os
 import re
 import sys
+
+from setuptools import find_packages, setup
 
 # cf.
 # https://packaging.python.org/guides/single-sourcing-package-version/#single-sourcing-the-version
@@ -26,7 +28,7 @@ setup(name='ispyb',
       description='Python API for ISPyB',
       url='https://github.com/DiamondLightSource/python-ispyb',
       author='Markus Gerstel',
-      author_email='markus.gerstel@diamond.ac.uk',
+      author_email='scientificsoftware@diamond.ac.uk',
       download_url="https://github.com/DiamondLightSource/python-ispyb/releases",
       version=find_version("ispyb", "__init__.py"),
       install_requires=['enum-compat',

@@ -1,5 +1,6 @@
-import ispyb.common.driver
 import math
+
+import ispyb.common.driver
 import mock
 
 def test_getdriver_method_can_import_names_from_passed_object():

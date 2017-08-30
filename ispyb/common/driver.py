@@ -1,4 +1,5 @@
-from __future__ import division, absolute_import
+from __future__ import absolute_import, division
+
 from enum import Enum
 
 class Backend(Enum):

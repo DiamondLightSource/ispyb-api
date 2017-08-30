@@ -1,9 +1,11 @@
-from __future__ import division, absolute_import
+from __future__ import absolute_import, division
+
 import ConfigParser
+import os.path
+
 import ispyb.api.main
 import ispyb.exception
 import mysql.connector
-import os.path
 
 class ISPyBDatabaseDriver(ispyb.api.main.API):
   '''This driver connects directly to an ISPyB MySQL/MariaDB database.
