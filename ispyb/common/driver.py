@@ -4,12 +4,18 @@ from enum import Enum
 
 class Backend(Enum):
   '''List of available backends for ispyb.'''
-  DUMMY    = ('Dummy driver',
-              'ispyb.driver.dummy', 'ISPyBDummyDriver')
-  API      = ('Official API',
-              'ispyb.driver.api', 'ISPyBAPIDriver')
-  DATABASE = ('Direct database access',
-              'ispyb.driver.database', 'ISPyBDatabaseDriver')
+
+  API = \
+     ('Official ISPyB web services API',
+      'ispyb.driver.api', 'ISPyBAPIDriver')
+
+  DATABASE_MYSQL = \
+     ('Direct MySQL/MariaDB database access',
+      'ispyb.driver.database', 'ISPyBDatabaseDriver')
+
+  DUMMY = \
+     ('Dummy driver',
+      'ispyb.driver.dummy', 'ISPyBDummyDriver')
 
   def __init__(self, description, module, classname):
     '''Make tuple elements reachable via attribute names.'''
