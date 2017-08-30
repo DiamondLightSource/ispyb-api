@@ -11,7 +11,7 @@ class Backend(Enum):
 
   DATABASE_MYSQL = \
      ('Direct MySQL/MariaDB database access',
-      'ispyb.driver.database', 'ISPyBDatabaseDriver')
+      'ispyb.driver.mysql', 'ISPyBMySQLDriver')
 
   DUMMY = \
      ('Dummy driver',

@@ -7,7 +7,7 @@ import ispyb.api.main
 import ispyb.exception
 import mysql.connector
 
-class ISPyBDatabaseDriver(ispyb.api.main.API):
+class ISPyBMySQLDriver(ispyb.api.main.API):
   '''This driver connects directly to an ISPyB MySQL/MariaDB database.
   '''
 
@@ -67,7 +67,8 @@ class ISPyBDatabaseDriver(ispyb.api.main.API):
     with self._db_cc() as cursor:
       cursor.run("SELECT * "
                  "FROM DataCollection "
-                 "WHERE dataCollectionId = %s;", dcid)
+                 "WHERE dataCollectionId = %s "
+                 "LIMIT 1;", dcid)
       result = cursor.fetchone()
     if result:
       return result
@@ -77,7 +78,8 @@ class ISPyBDatabaseDriver(ispyb.api.main.API):
     with self._db_cc() as cursor:
       cursor.run("SELECT imageDirectory, fileTemplate "
                  "FROM DataCollection "
-                 "WHERE dataCollectionId = %s;", dcid)
+                 "WHERE dataCollectionId = %s "
+                 "LIMIT 1;", dcid)
       result = cursor.fetchone()
     if result:
       return os.path.join(result['imageDirectory'], result['fileTemplate'])
@@ -123,7 +125,7 @@ WHERE reprocessingId = %(reprocessing_id)s
   AND (ISNULL(lastUpdateTimestamp) OR
        lastUpdateTimestamp <= IFNULL(%(update_time)s, NOW()) OR
        %(status)s IN ('finished', 'failed'))
-          ''', { 'reprocessing_id': reprocessing_id,
+LIMIT 1   ''', { 'reprocessing_id': reprocessing_id,
                  'status': status, 'update_message': update_message,
                  'start_time': start_time, 'update_time': update_time } )
       if not cursor.rowcount:
