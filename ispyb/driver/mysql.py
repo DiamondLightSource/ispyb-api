@@ -57,9 +57,20 @@ class ISPyBMySQLDriver(ispyb.interface.main.IF):
     with self._db_cc() as cursor:
       cursor.run("SELECT * "
                  "FROM Reprocessing "
+                 "LEFT JOIN AutoProcProgram USING (reprocessingId) "
                  "WHERE reprocessingId = %s;", reprocessing_id)
       result = cursor.fetchone()
     if result:
+      if not result.get('autoProcProgramId'):
+        result['readableStatus'] = 'submitted'
+      elif result.get('processingStatus') == None:
+        result['readableStatus'] = 'running'
+      elif result.get('processingStatus') == 1:
+        result['readableStatus'] = 'success'
+      elif result.get('processingStatus') == 0:
+        result['readableStatus'] = 'failure'
+      else:
+        result['readableStatus'] = 'unknown'
       return result
     raise ispyb.exception.ISPyBNoResultException()
 
@@ -113,21 +124,4 @@ class ISPyBMySQLDriver(ispyb.interface.main.IF):
   def update_reprocessing_status(self, reprocessing_id, status='running',
                                  start_time=None,
                                  update_time=None, update_message=None):
-    with self._db_cc() as cursor:
-      cursor.execute('''
-UPDATE Reprocessing
-SET status = IF(%(status)s = 'submitted', status, IFNULL(%(status)s, status)),
-    startedTimestamp = IFNULL(startedTimestamp, IFNULL(%(start_time)s, NOW())),
-    lastUpdateTimestamp = IFNULL(%(update_time)s, NOW()),
-    lastUpdateMessage = IFNULL(%(update_message)s, lastUpdateMessage)
-WHERE reprocessingId = %(reprocessing_id)s
-  AND status NOT IN ('finished', 'failed')
-  AND (ISNULL(lastUpdateTimestamp) OR
-       lastUpdateTimestamp <= IFNULL(%(update_time)s, NOW()) OR
-       %(status)s IN ('finished', 'failed'))
-LIMIT 1   ''', { 'reprocessing_id': reprocessing_id,
-                 'status': status, 'update_message': update_message,
-                 'start_time': start_time, 'update_time': update_time } )
-      if not cursor.rowcount:
-        raise ispyb.exception.UpdateFailed()
-      self._db.commit()
+    raise ispyb.exception.UpdateFailed("This operation is currently not supported by ISPyB. SCI-6048")
