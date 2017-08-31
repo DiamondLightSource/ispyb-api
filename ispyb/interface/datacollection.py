@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division
 
-class API(object):
-  '''Functions in this object are added to the main ISPyB API object.'''
+class IF(object):
+  '''Functions in this object are added to the ISPyB interface definition.'''
 
   def get_datacollection_id(self, dcid):
     '''Here is some explanation of this method.

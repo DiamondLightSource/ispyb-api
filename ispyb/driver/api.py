@@ -1,6 +1,6 @@
 from __future__ import absolute_import, division
 
-import ispyb.api.main
+import ispyb.interface.main
 
-class ISPyBAPIDriver(ispyb.api.main.API):
+class ISPyBAPIDriver(ispyb.interface.main.IF):
   '''Not implemented.'''

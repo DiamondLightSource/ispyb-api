@@ -1,6 +1,6 @@
 from __future__ import absolute_import, division
 
-import ispyb.api.main
+import ispyb.interface.main
 
-class ISPyBDummyDriver(ispyb.api.main.API):
+class ISPyBDummyDriver(ispyb.interface.main.IF):
   pass

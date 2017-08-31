@@ -3,11 +3,11 @@ from __future__ import absolute_import, division
 import ConfigParser
 import os.path
 
-import ispyb.api.main
+import ispyb.interface.main
 import ispyb.exception
 import mysql.connector
 
-class ISPyBMySQLDriver(ispyb.api.main.API):
+class ISPyBMySQLDriver(ispyb.interface.main.IF):
   '''This driver connects directly to an ISPyB MySQL/MariaDB database.
   '''
 

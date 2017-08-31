@@ -1,32 +1,32 @@
 import inspect
 
-import ispyb.api.main
+import ispyb.interface.main
 import ispyb.driver.api
 import ispyb.driver.mysql
 import ispyb.driver.dummy
 import pytest
 
 @pytest.mark.incremental
-class TestAPIImplementation(object):
-  def test_create_main_api_object(self):
-    ispyb.api.main.API()
+class TestInterfaceImplementation(object):
+  def test_create_main_interface_object(self):
+    ispyb.interface.main.IF()
 
-  def check_api(self, implementation):
-    apiobj = ispyb.api.main.API()
-    public_fn_names = filter(lambda name: not name.startswith('_'), dir(apiobj))
+  def check_interface(self, implementation):
+    interface = ispyb.interface.main.IF()
+    public_names = filter(lambda name: not name.startswith('_'), dir(interface))
     implemented_functions = dir(implementation)
 
-    for fn in public_fn_names:
+    for fn in public_names:
       assert inspect.getargspec(getattr(implementation, fn)) == \
-             inspect.getargspec(getattr(apiobj, fn)), \
+             inspect.getargspec(getattr(interface, fn)), \
              "Implementation of function %s in database driver does not " \
-             "match function signature in API definition" % fn
+             "match function signature in interface definition" % fn
 
-  def test_that_the_api_driver_implementation_matches_the_api_function_signatures(self):
-    self.check_api(ispyb.driver.api.ISPyBAPIDriver)
+  def test_that_the_API_driver_implementation_matches_the_interface_function_signatures(self):
+    self.check_interface(ispyb.driver.api.ISPyBAPIDriver)
 
-  def test_that_the_database_driver_implementation_matches_the_api_function_signatures(self):
-    self.check_api(ispyb.driver.mysql.ISPyBMySQLDriver)
+  def test_that_the_database_driver_implementation_matches_the_interface_function_signatures(self):
+    self.check_interface(ispyb.driver.mysql.ISPyBMySQLDriver)
 
-  def test_that_the_dummy_driver_implementation_matches_the_api_function_signatures(self):
-    self.check_api(ispyb.driver.dummy.ISPyBDummyDriver)
+  def test_that_the_dummy_driver_implementation_matches_the_interface_function_signatures(self):
+    self.check_interface(ispyb.driver.dummy.ISPyBDummyDriver)

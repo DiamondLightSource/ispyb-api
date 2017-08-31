@@ -1,14 +1,15 @@
 from __future__ import absolute_import, division
 
-import ispyb.api.datacollection
-import ispyb.api.reprocessing
+import ispyb.interface.datacollection
+import ispyb.interface.reprocessing
 
-class API(ispyb.api.datacollection.API,
-          ispyb.api.reprocessing.API):
+class IF(ispyb.interface.datacollection.IF,
+         ispyb.interface.reprocessing.IF):
+  '''ISPyB interface definition object.'''
 
   def _notimplemented(self):
     '''Overrideable function which is called when a driver lacks an
-       implementation for an API function. In general this function
+       implementation for an interface function. In general this function
        should always end in an exception being raised.'''
     raise NotImplementedError('This call is not supported by the selected '
                               'ISPyB driver.')

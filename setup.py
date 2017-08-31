@@ -25,25 +25,26 @@ def find_version(*file_paths):
   raise RuntimeError("Unable to find version string.")
 
 setup(name='ispyb',
-      description='Python API for ISPyB',
-      url='https://github.com/DiamondLightSource/python-ispyb',
-      author='Markus Gerstel',
-      author_email='scientificsoftware@diamond.ac.uk',
-      download_url="https://github.com/DiamondLightSource/python-ispyb/releases",
-      version=find_version("ispyb", "__init__.py"),
-      install_requires=['enum-compat',
-                        'mysql-connector<2.2.3'],
-      packages=find_packages(),
-      license='BSD',
-      setup_requires=['pytest-runner'],
-      tests_require=['mock',
-                     'pytest'],
-      classifiers = [
-        'Development Status :: 1 - Planning',
-        'License :: OSI Approved :: BSD License',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
-        'Operating System :: OS Independent',
-        'Topic :: Software Development :: Libraries :: Python Modules'
-        ]
-     )
+  description='Python package to access ISPyB database',
+  long_description='This package provides a python interface to ISPyB. It can run on top of the official ISPyB webservices API or access the ISPyB database directly.',
+  url='https://github.com/DiamondLightSource/python-ispyb',
+  author='Markus Gerstel',
+  author_email='scientificsoftware@diamond.ac.uk',
+  download_url="https://github.com/DiamondLightSource/python-ispyb/releases",
+  version=find_version("ispyb", "__init__.py"),
+  install_requires=['enum-compat',
+                    'mysql-connector<2.2.3'],
+  packages=find_packages(),
+  license='BSD',
+  setup_requires=['pytest-runner'],
+  tests_require=['mock',
+                 'pytest'],
+  classifiers = [
+    'Development Status :: 2 - Pre-Alpha',
+    'License :: OSI Approved :: BSD License',
+    'Programming Language :: Python :: 2',
+    'Programming Language :: Python :: 2.7',
+    'Operating System :: OS Independent',
+    'Topic :: Software Development :: Libraries :: Python Modules',
+  ]
+)

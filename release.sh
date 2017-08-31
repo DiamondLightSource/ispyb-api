@@ -7,3 +7,4 @@ git tag -a v${NUMBER} -m v${NUMBER}
 git push origin v${NUMBER}
 python setup.py clean --all
 python setup.py sdist bdist_wheel upload
+python setup.py clean --all
