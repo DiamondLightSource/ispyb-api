@@ -14,20 +14,13 @@
 
 from optparse import OptionParser
 import ConfigParser
-import workflows
 from workflows.transport.stomp_transport import StompTransport
 import time
 import sys
 import os
 import logging
-import signal
-import atexit
-import json
-from StringIO import StringIO
 from ispyb.dbconnection import dbconnection
-from ispyb.core import core
 from ispyb.mxdatareduction import mxdatareduction
-from datetime import datetime
 
 # Disable Python output buffering
 sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
@@ -56,33 +49,6 @@ def set_logging(config):
             handler.setLevel(logging.WARNING)
         logger.addHandler(handler)
     
-    
-def set_logging_old(logs):
-    levels_dict = {"debug" : logging.DEBUG, "info" : logging.INFO, "warning" : logging.WARNING, "error" : logging.ERROR, "critical" : logging.CRITICAL}
-
-    logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)
-
-    config = ConfigParser.RawConfigParser(allow_no_value=True)
-    config.read(conf_file)
-    
-    for log_name in logs:
-        handler = None
-        if log_name == "syslog":
-            handler = logging.handlers.SysLogHandler(address=(logs[log_name]['host'], logs[log_name]['port']))
-        elif log_name == "rotating_file":
-            handler = logging.handlers.RotatingFileHandler(filename=logs[log_name]['filename'], maxBytes=logs[log_name]['max_bytes'], backupCount=logs[log_name]['no_files'])
-        else:
-            sys.exit("Invalid logging mechanism defined in config: %s. (Valid options are syslog and rotating_file.)" % log_name)
-        
-        handler.setFormatter(logging.Formatter(logs[log_name]['format']))
-        level = logs[log_name]['level']
-        if levels_dict[level]:
-            handler.setLevel(levels_dict[level])
-        else:
-            handler.setLevel(logging.WARNING)
-        logger.addHandler(handler)
-
 def store_processing_dict(xmldict):
     # Convenience pointers and sanity checks
     int_containers = xmldict['AutoProcScalingContainer']['AutoProcIntegrationContainer']
@@ -253,13 +219,6 @@ def store_processing_dict(xmldict):
 #         f.close()
 
 
-def kill_handler(sig, frame):
-    hostname = os.uname()[1]
-    logging.getLogger().warning("%s: got SIGTERM on %s :-O" % (sys.argv[0], hostname))
-    logging.shutdown()
-    stomp.disconnect()
-    os._exit(-1)
-
 def receive_message(header, message):
     logging.getLogger().debug(message)
     print "Processing message", header['message-id']
@@ -277,10 +236,7 @@ config = ConfigParser.RawConfigParser(allow_no_value=True)
 config.read(options.config)
 set_logging(config)
 
-try:
-  StompTransport.load_configuration_file(options.stomp_config)
-except workflows.WorkflowsError, e:
-  raise
+StompTransport.load_configuration_file(options.stomp_config)
 StompTransport.add_command_line_options(parser)
 
 # Get a database cursor
@@ -298,21 +254,14 @@ def receive_message_but_exit_on_error(*args, **kwargs):
     print "Terminating."
     sys.exit(1)
 
-# Create stomp object - must do this *after* forking
 stomp = StompTransport()
 stomp.connect()
 stomp.subscribe('processing_ingest', receive_message_but_exit_on_error, acknowledgement=True)
 stomp.subscribe('ispyb.processing_ingest', receive_message_but_exit_on_error, acknowledgement=True, ignore_namespace=True)
 stomp.subscribe('zocalo.ispyb', receive_message_but_exit_on_error, acknowledgement=True, ignore_namespace=True)
 
-# Make sure logging and stomp get closed properly
-atexit.register(logging.shutdown)
-signal.signal(signal.SIGTERM, kill_handler)
-
 # Run for max 24 hrs, then terminate. Service will be restarted automatically.
 try:
   time.sleep(24 * 3600)
 except KeyboardInterrupt:
   print "Terminating."
-  sys.exit(0)
-
