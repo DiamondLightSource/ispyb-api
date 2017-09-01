@@ -51,6 +51,9 @@ class EMAcquisition:
                 ('averageMotionPerFrame', None),
                 ('driftPlotFullPath', None),
                 ('micrographFullPath', None),
+                ('micrographSnapshotFullPath', None),
+                ('fftFullPath', None),
+                ('fftCorrectedFullPath', None),
                 ('patchesUsedX', None),
                 ('patchesUsedY', None),
                 ('comments', None)

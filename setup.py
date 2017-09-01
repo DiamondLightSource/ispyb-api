@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ispyb-api',
-    version='1.0.1',
+    version='1.0.3',
     description='ISPyB library',
     url='https://github.com/DiamondLightSource/ispyb-api',
     author='Karl Erik Levik',
