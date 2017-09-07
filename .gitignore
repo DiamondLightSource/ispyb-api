@@ -103,3 +103,7 @@ ENV/
 # text editors
 ~*
 *.sw[op]
+
+# Change notification emails
+.git-notifier*
+git-notifier.log
