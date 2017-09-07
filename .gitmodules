@@ -1,3 +1,0 @@
-[submodule "ispyb/api-mx"]
-	path = ispyb/api-mx
-	url = ssh://dascgitolite@dasc-git.diamond.ac.uk/diamond/ispyb-api-mx.git
