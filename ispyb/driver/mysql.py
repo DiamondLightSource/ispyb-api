@@ -14,15 +14,16 @@ class ISPyBMySQLDriver(ispyb.interface.main.IF):
   def __init__(self, host=None, port=None, database=None,
                username=None, password=None, config_file=None):
     if config_file:
-      cfgparser = ConfigParser.ConfigParser(allow_no_value=True)
+      cfgparser = ConfigParser.ConfigParser()
       if not cfgparser.read(config_file):
         raise RuntimeError('Could not read from configuration file %s' %
                            config_file)
-      if not host: host = cfgparser.get('ispyb', 'host')
-      if not port: port = cfgparser.get('ispyb', 'port')
-      if not database: database = cfgparser.get('ispyb', 'database')
-      if not username: username = cfgparser.get('ispyb', 'username')
-      if not password: password = cfgparser.get('ispyb', 'password')
+      cfgsection = dict(cfgparser.items('ispyb'))
+      if not host: host = cfgsection.get('host')
+      if not port: port = cfgsection.get('port', 3306)
+      if not database: database = cfgsection.get('database')
+      if not username: username = cfgsection.get('username')
+      if not password: password = cfgsection.get('password')
     if not port: port = 3306
 
     self._db_conndata = { 'host': host, 'port': port, 'user': username,
