@@ -23,12 +23,20 @@ def close_cursor():
 def insert_integration_and_processing(c):
     params = mxprocessing.get_program_params()
     params['cmd_line'] = 'ls -ltr'
+    params['message'] = 'Just started ...'    
+    id = mxprocessing.upsert_program(c, params.values())
+    assert id is not None
+    assert id > 0
+
+    params['id'] = id
+    params['status'] = True
+    params['message'] = 'Finished'    
     id = mxprocessing.upsert_program(c, params.values())
     assert id is not None
     assert id > 0
     
     params = mxprocessing.get_program_attachment_params()
-    params['programid'] = id
+    params['parentid'] = id
     params['file_name'] = 'file.log' 
     params['file_path'] = '/tmp'
     params['file_type'] = 'Log' # should be one of Log, Result, Graph

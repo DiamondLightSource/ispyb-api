@@ -27,9 +27,10 @@ class MXProcessing:
     pass
 
   _program_params = ExtendedOrderedDict([('id',None), ('cmd_line',None), ('programs',None), 
-    ('status',None), ('message',None), ('starttime',None), ('endtime',None), ('environment',None), ('reprocessingid',None)])
+    ('status',None), ('message',None), ('starttime',None), ('updatetime',None), ('environment',None), ('reprocessingid',None), 
+    ('recordtime',None)])
 
-  _program_attachment_params = ExtendedOrderedDict([('id',None), ('programid', None), ('file_name',None), ('file_path',None), ('file_type',None)])
+  _program_attachment_params = ExtendedOrderedDict([('id',None), ('parentid', None), ('file_name',None), ('file_path',None), ('file_type',None)])
 
   _processing_params = ExtendedOrderedDict([('id',None), ('parentid',None), ('spacegroup',None), 
     ('refinedcell_a',None), ('refinedcell_b',None), ('refinedcell_c',None), 
@@ -82,7 +83,6 @@ class MXProcessing:
 
   def get_quality_indicators_params(self):
     return copy.deepcopy(self._quality_indicators_params)
-
 
   def upsert_program(self, cursor, values):
     '''Store new or update existing program params.'''
