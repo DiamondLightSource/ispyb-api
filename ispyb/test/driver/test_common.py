@@ -1,8 +1,10 @@
+from __future__ import absolute_import, division
+
 import inspect
 
 import ispyb.interface.main
 import ispyb.driver.api
-import ispyb.driver.mysql
+import ispyb.driver.mysql.main
 import ispyb.driver.dummy
 import pytest
 
@@ -26,7 +28,7 @@ class TestInterfaceImplementation(object):
     self.check_interface(ispyb.driver.api.ISPyBAPIDriver)
 
   def test_that_the_database_driver_implementation_matches_the_interface_function_signatures(self):
-    self.check_interface(ispyb.driver.mysql.ISPyBMySQLDriver)
+    self.check_interface(ispyb.driver.mysql.main.ISPyBMySQLDriver)
 
   def test_that_the_dummy_driver_implementation_matches_the_interface_function_signatures(self):
     self.check_interface(ispyb.driver.dummy.ISPyBDummyDriver)

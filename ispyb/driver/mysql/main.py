@@ -3,6 +3,7 @@ from __future__ import absolute_import, division
 import ConfigParser
 import os.path
 
+import ispyb.driver.mysql.cursors as cursors
 import ispyb.interface.main
 import ispyb.exception
 import mysql.connector
@@ -30,44 +31,8 @@ class ISPyBMySQLDriver(ispyb.interface.main.IF):
                           'password': password, 'database': database }
     self._db = mysql.connector.connect(**self._db_conndata)
 
-    class context_cursor(object):
-      '''Context manager for a mysql.connector cursor with two differences
-         to a regular cursor: By default results are returned as a dictionary,
-         and a new .run() function is an alias to .execute which accepts query
-         parameters as function parameters rather than a list.'''
-      @staticmethod
-      def _default_cursor_options(): return {}
-      @staticmethod
-      def _add_specific_calls(cursor): return
-      def __init__(cc, **parameters):
-        cc.cursorparams = cc._default_cursor_options()
-        cc.cursorparams.update(parameters)
-      def __enter__(cc):
-        cc.cursor = self._db.cursor(**cc.cursorparams)
-        cc._add_specific_calls(cc.cursor)
-        return cc.cursor
-      def __exit__(cc, *args):
-        cc.cursor.close()
-
-    class context_cursor_dictionary(context_cursor):
-      @staticmethod
-      def _default_cursor_options():
-        return { 'dictionary': True }
-      @staticmethod
-      def _add_specific_calls(cursor):
-        def flat_execute(stmt, *parameters):
-          return cursor.execute(stmt, parameters)
-        setattr(cursor, 'run', flat_execute)
-
-    class context_cursor_stored_procedure(context_cursor):
-      @staticmethod
-      def _add_specific_calls(cursor):
-        def flat_call_procedure(procedure_name, arguments):
-          return cursor.callproc(procedure_name, arguments)
-        setattr(cursor, 'call', flat_call_procedure)
-
-    self._db_cc = context_cursor_dictionary
-    self._db_sp = context_cursor_stored_procedure
+    self._db_cc = cursors.dictionary_contextcursor_factory(self._db.cursor)
+    self._db_sp = cursors.stored_proc_contextcursor_factory(self._db.cursor)
 
   def get_reprocessing_id(self, reprocessing_id):
     with self._db_cc() as cursor:
