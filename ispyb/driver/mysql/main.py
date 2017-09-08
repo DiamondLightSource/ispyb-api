@@ -4,11 +4,13 @@ import ConfigParser
 import os.path
 
 import ispyb.driver.mysql.cursors as cursors
+import ispyb.driver.mysql.stored_procedures
 import ispyb.interface.main
 import ispyb.exception
 import mysql.connector
 
-class ISPyBMySQLDriver(ispyb.interface.main.IF):
+class ISPyBMySQLDriver(ispyb.interface.main.IF,
+                       ispyb.driver.mysql.stored_procedures.MySQLStoredProcedureInterface):
   '''This driver connects directly to an ISPyB MySQL/MariaDB database.
   '''
 
