@@ -107,6 +107,14 @@ class Core:
         rs = result.fetchall()
     cursor.nextset()
     return rs
+
+  def retrieve_persons_for_proposal(self, cursor, proposal_code, proposal_number):
+    '''Get a result-set with the persons associated with a given proposal specified by proposal code, proposal_number'''
+    cursor.callproc(procname='ispyb.retrieve_persons_for_proposal', args=(proposal_code, proposal_number))
+    for result in cursor.stored_results():
+        rs = result.fetchall()
+    cursor.nextset()
+    return rs
     
   def retrieve_current_cm_sessions(self, cursor, beamline):
     '''Get a result-set with the currently active commissioning (cm) sessions on the given beamline.'''

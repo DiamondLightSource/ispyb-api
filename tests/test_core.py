@@ -35,6 +35,10 @@ def retrieve_most_recent_session(c):
     rs = core.retrieve_most_recent_session(c, 'b24', 'cm')
     assert len(rs) == 1
 
+def retrieve_persons_for_proposal(c):
+    rs = core.retrieve_persons_for_proposal(c, 'nt', 14248)
+    assert len(rs) == 1
+
 def retrieve_current_cm_sessions(c):
     rs = core.retrieve_current_cm_sessions(c, 'b24')
     assert len(rs) > 0
@@ -66,6 +70,11 @@ def test_dict_retrieve_most_recent_session():
     retrieve_most_recent_session(cursor)
 
 @with_setup(get_dict_cursor, close_cursor)
+def test_dict_retrieve_persons_for_proposal():
+    global cursor
+    retrieve_persons_for_proposal(cursor)
+
+@with_setup(get_dict_cursor, close_cursor)
 def test_dict_retrieve_current_cm_sessions():
     global cursor
     retrieve_current_cm_sessions(cursor)
@@ -91,6 +100,11 @@ def test_retrieve_current_sessions():
 def test_retrieve_most_recent_session():
     global cursor
     retrieve_most_recent_session(cursor)
+
+@with_setup(get_cursor, close_cursor)
+def test_retrieve_persons_for_proposal():
+    global cursor
+    retrieve_persons_for_proposal(cursor)
 
 @with_setup(get_cursor, close_cursor)
 def test_retrieve_current_cm_sessions():
