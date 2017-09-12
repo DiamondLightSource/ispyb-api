@@ -16,9 +16,9 @@ except ImportError, e:
 
 from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
 import copy
+from ispyb.storedroutines import StoredRoutines
 
-
-class EMAcquisition:
+class EMAcquisition(StoredRoutines):
     '''EMAcquisition provides methods to store data in the MotionCorrection and CTF tables.'''
 
     def __init__(self):
@@ -92,18 +92,10 @@ class EMAcquisition:
 
     def insert_motion_correction(self, cursor, values):
         '''Store new motion correction params.'''
-        result_args = cursor.callproc(procname='ispyb.upsert_motion_correction', args=values)
-        if result_args is not None and len(result_args) > 0:
-            return result_args[0]
-        else:
-            return None
+        return self.call_sp(cursor, procname='ispyb.upsert_motion_correction', args=values)[0]
 
     def insert_ctf(self, cursor, values):
         '''Store new ctf params.'''
-        result_args = cursor.callproc(procname='ispyb.upsert_ctf', args=values)
-        if result_args is not None and len(result_args) > 0:
-            return result_args[0]
-        else:
-            return None
+        return self.call_sp(cursor, procname='ispyb.upsert_ctf', args=values)[0]
 
 emacquisition = EMAcquisition()

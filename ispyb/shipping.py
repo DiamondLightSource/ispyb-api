@@ -18,8 +18,9 @@ from logging.handlers import RotatingFileHandler
 from collections import OrderedDict
 import copy
 from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
+from ispyb.storedroutines import StoredRoutines
 
-class Shipping:
+class Shipping(StoredRoutines):
   '''Shipping provides methods to update shipments and samples.'''
 
   def __init__(self):
@@ -28,7 +29,7 @@ class Shipping:
 # IN p_beamline varchar(20), IN p_registry_barcode varchar(45), IN p_position int
   def update_container_assign(self, cursor, beamline, registry_barcode, position):
     '''Assign a container'''
-    result_args = cursor.callproc(procname='ispyb.update_container_assign', args=(beamline, registry_barcode, position))
+    result_args = self.call_sp(cursor, procname='ispyb.update_container_assign', args=(beamline, registry_barcode, position))
 
 shipping = Shipping()
 

@@ -23,24 +23,13 @@ import datetime
 from logging.handlers import RotatingFileHandler
 from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
 import copy
+from ispyb.storedroutines import StoredRoutines
 
-class MXAcquisition:
+class MXAcquisition(StoredRoutines):
   '''MXAcquisition provides methods to store data in the MX acquisition tables.'''
 
   def __init__(self):
     pass
-
-  def first_item_in_cursor(self, cursor):
-    rs = cursor.fetchone()
-    if len(rs) == 0:
-        return None
-    elif isinstance(cursor, mysql.connector.cursor.MySQLCursorDict):
-        return rs.iteritems().next()[1]
-    else:
-        try:
-            return int(rs[0])
-        except:
-            return rs[0]
 
   _data_collection_group_params =\
     ExtendedOrderedDict([('id',None), ('parentid',None), ('sampleid',None), ('experimenttype',None), ('starttime',None), ('endtime',None), 

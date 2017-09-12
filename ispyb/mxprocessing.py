@@ -19,8 +19,9 @@ from collections import OrderedDict
 import copy
 from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
 import mysql.connector
+from ispyb.storedroutines import StoredRoutines
 
-class MXProcessing:
+class MXProcessing(StoredRoutines):
   '''MXProcessing provides methods to store MX processing data.'''
 
   def __init__(self):
@@ -86,50 +87,25 @@ class MXProcessing:
 
   def upsert_program(self, cursor, values):
     '''Store new or update existing program params.'''
-    result_args = cursor.callproc(procname='ispyb.upsert_processing_program', args=values)
-    if result_args is not None and len(result_args) > 0:
-        return result_args[0] # doesn't work with dict cursors
-    else:
-        return None
+    return self.call_sp(cursor, procname='ispyb.upsert_processing_program', args=values)[0] # doesn't work with dict cursors
 
   def upsert_program_attachment(self, cursor, values):
     '''Store new or update existing program attachment params.'''
-    result_args = cursor.callproc(procname='ispyb.upsert_processing_program_attachment', args=values)
-    if result_args is not None and len(result_args) > 0:
-        return result_args[0]
-    else:
-        return None
+    return self.call_sp(cursor, procname='ispyb.upsert_processing_program_attachment', args=values)[0]
 
   def upsert_processing(self, cursor, values):
-    result_args = cursor.callproc(procname='ispyb.upsert_processing', args=values)
-    if result_args is not None and len(result_args) > 0:
-        return result_args[0]
-    else:
-        return None
+    return self.call_sp(cursor, procname='ispyb.upsert_processing', args=values)[0]
 
   def insert_scaling(self, cursor, parent_id, values1, values2, values3):
     id = None
     values = [id, parent_id] + values1 + values2 + values3
-    result_args = cursor.callproc(procname='ispyb.insert_processing_scaling', args=values)
-    if result_args is not None and len(result_args) > 0:
-        return result_args[0]
-    else:
-        return None
+    return self.call_sp(cursor, procname='ispyb.insert_processing_scaling', args=values)[0]
 
   def upsert_integration(self, cursor, values):
-    result_args = cursor.callproc(procname='ispyb.upsert_processing_integration', args=values)
-    if result_args is not None and len(result_args) > 0:
-        return result_args[0]
-    else:
-        return None
+    return self.call_sp(cursor, procname='ispyb.upsert_processing_integration', args=values)[0]
 
   def insert_quality_indicators(self, cursor, values):
-    result_args = cursor.callproc(procname='ispyb.insert_quality_indicators', args=values)
-    if result_args is not None and len(result_args) > 0:
-        return result_args[0]
-    else:
-        return None
-
+    return self.call_sp(cursor, procname='ispyb.insert_quality_indicators', args=values)[0]
 
 mxprocessing = MXProcessing()
 

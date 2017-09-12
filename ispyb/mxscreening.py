@@ -18,8 +18,9 @@ from logging.handlers import RotatingFileHandler
 from collections import OrderedDict
 import copy
 from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
+from ispyb.storedroutines import StoredRoutines
 
-class MXScreening:
+class MXScreening(StoredRoutines):
   '''MXScreening provides methods to store MX characterisations and strategies.'''
 
   def __init__(self):
@@ -67,53 +68,25 @@ class MXScreening:
     return copy.deepcopy(self._screening_strategy_sub_wedge_params)
 
   def insert_screening(self, cursor, values):
-    result_args = cursor.callproc(procname='ispyb.insert_screening', args=(values))
-    if result_args is not None and len(result_args) > 0: 
-        return result_args[0]
-    else:
-        return None
+    return self.call_sp(cursor, procname='ispyb.insert_screening', args=(values))[0]
 
   def insert_screening_input(self, cursor, values):
-    result_args = cursor.callproc(procname='ispyb.insert_screening_input', args=(values))
-    if result_args is not None and len(result_args) > 0: 
-        return result_args[0]
-    else:
-        return None
+    return self.call_sp(cursor, procname='ispyb.insert_screening_input', args=(values))[0]
 
   def insert_screening_output(self, cursor, values):
-    result_args = cursor.callproc(procname='ispyb.insert_screening_output', args=(values))
-    if result_args is not None and len(result_args) > 0: 
-        return result_args[0]
-    else:
-        return None
+    return self.call_sp(cursor, procname='ispyb.insert_screening_output', args=(values))[0]
 
   def insert_screening_output_lattice(self, cursor, values):
-    result_args = cursor.callproc(procname='ispyb.insert_screening_output_lattice', args=(values))
-    if result_args is not None and len(result_args) > 0: 
-        return result_args[0]
-    else:
-        return None
+    return self.call_sp(cursor, procname='ispyb.insert_screening_output_lattice', args=(values))[0]
 
   def insert_screening_strategy(self, cursor, values):
-    result_args = cursor.callproc(procname='ispyb.insert_screening_strategy', args=(values))
-    if result_args is not None and len(result_args) > 0: 
-        return result_args[0]
-    else:
-        return None
+    return self.call_sp(cursor, procname='ispyb.insert_screening_strategy', args=(values))[0]
 
   def insert_screening_strategy_wedge(self, cursor, values):
-    result_args = cursor.callproc(procname='ispyb.insert_screening_strategy_wedge', args=(values))
-    if result_args is not None and len(result_args) > 0: 
-        return result_args[0]
-    else:
-        return None
+    return self.call_sp(cursor, procname='ispyb.insert_screening_strategy_wedge', args=(values))[0]
 
   def insert_screening_strategy_sub_wedge(self, cursor, values):
-    result_args = cursor.callproc(procname='ispyb.insert_screening_strategy_sub_wedge', args=(values))
-    if result_args is not None and len(result_args) > 0: 
-        return result_args[0]
-    else:
-        return None
+    return self.call_sp(cursor, procname='ispyb.insert_screening_strategy_sub_wedge', args=(values))[0]
 
 mxscreening = MXScreening()
 

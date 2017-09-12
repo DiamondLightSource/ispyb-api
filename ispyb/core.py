@@ -23,24 +23,13 @@ import datetime
 from logging.handlers import RotatingFileHandler
 from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
 import copy
+from ispyb.storedroutines import StoredRoutines
 
-class Core:
+class Core(StoredRoutines):
   '''Core provides methods to store and retrieve data in the core tables.'''
 
   def __init__(self):
     pass
-
-  def first_item_in_cursor(self, cursor):
-    rs = cursor.fetchone()
-    if len(rs) == 0:
-        return None
-    elif isinstance(cursor, mysql.connector.cursor.MySQLCursorDict):
-        return rs.iteritems().next()[1]
-    else:
-        try:
-            return int(rs[0])
-        except:
-            return rs[0]
 
   _sample_params =\
     ExtendedOrderedDict([('id',None), ('crystalid',None), ('containerid',None), ('name',None), ('code',None), 
@@ -86,51 +75,33 @@ class Core:
 
   def retrieve_current_sessions(self, cursor, beamline, tolerance_mins=0):
     '''Get a result-set with the currently active sessions on the given beamline.'''
-    cursor.callproc(procname='ispyb.retrieve_current_sessions', args=(beamline,tolerance_mins))
-    for result in cursor.stored_results():
-        rs = result.fetchall()
-    cursor.nextset()
-    return rs
+    self.call_sp(cursor, procname='ispyb.retrieve_current_sessions', args=(beamline,tolerance_mins))
+    return self.get_sp_resultset(cursor)
 
   def retrieve_current_sessions_for_person(self, cursor, beamline, fed_id, tolerance_mins=0):
     '''Get a result-set with the currently active sessions on the given beamline.'''
-    cursor.callproc(procname='ispyb.retrieve_current_sessions_for_person', args=(beamline, fed_id, tolerance_mins))
-    for result in cursor.stored_results():
-        rs = result.fetchall()
-    cursor.nextset()
-    return rs
+    self.call_sp(cursor, procname='ispyb.retrieve_current_sessions_for_person', args=(beamline, fed_id, tolerance_mins))
+    return self.get_sp_resultset(cursor)
 
   def retrieve_most_recent_session(self, cursor, beamline, proposal_code):
     '''Get a result-set with the most recent session on the given beamline for the given proposal code '''
-    cursor.callproc(procname='ispyb.retrieve_most_recent_session', args=(beamline, proposal_code))
-    for result in cursor.stored_results():
-        rs = result.fetchall()
-    cursor.nextset()
-    return rs
+    self.call_sp(cursor, procname='ispyb.retrieve_most_recent_session', args=(beamline, proposal_code))
+    return self.get_sp_resultset(cursor)
 
   def retrieve_persons_for_proposal(self, cursor, proposal_code, proposal_number):
     '''Get a result-set with the persons associated with a given proposal specified by proposal code, proposal_number'''
-    cursor.callproc(procname='ispyb.retrieve_persons_for_proposal', args=(proposal_code, proposal_number))
-    for result in cursor.stored_results():
-        rs = result.fetchall()
-    cursor.nextset()
-    return rs
+    self.call_sp(cursor, procname='ispyb.retrieve_persons_for_proposal', args=(proposal_code, proposal_number))
+    return self.get_sp_resultset(cursor)
     
   def retrieve_current_cm_sessions(self, cursor, beamline):
     '''Get a result-set with the currently active commissioning (cm) sessions on the given beamline.'''
-    cursor.callproc(procname='ispyb.retrieve_current_cm_sessions', args=(beamline,))
-    for result in cursor.stored_results():
-        rs = result.fetchall()
-    cursor.nextset()
-    return rs
+    self.call_sp(cursor, procname='ispyb.retrieve_current_cm_sessions', args=(beamline,))
+    return self.get_sp_resultset(cursor)
 
   def retrieve_active_plates(self, cursor, beamline):
     '''Get a result-set with the submitted plates not yet in local storage on a given beamline'''
-    cursor.callproc(procname="ispyb.retrieve_containers_submitted_non_ls", args=(beamline,))
-    for result in cursor.stored_results():
-        rs = result.fetchall()
-    cursor.nextset()
-    return rs
+    self.call_sp(cursor, procname="ispyb.retrieve_containers_submitted_non_ls", args=(beamline,))
+    return self.get_sp_resultset(cursor)
 
   def retrieve_proposal_title(self, cursor, proposal_code, proposal_number):
     '''Get the title of a given proposal'''

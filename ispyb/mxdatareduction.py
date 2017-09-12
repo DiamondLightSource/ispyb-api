@@ -19,24 +19,13 @@ from collections import OrderedDict
 import copy
 from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
 import mysql.connector
+from ispyb.storedroutines import StoredRoutines
 
-class MXDataReduction:
+class MXDataReduction(StoredRoutines):
   '''MXDataReduction provides methods to store reduced MX data.'''
 
   def __init__(self):
     pass
-
-  def first_item_in_cursor(self, cursor):
-    rs = cursor.fetchone()
-    if len(rs) == 0:
-        return None
-    elif isinstance(cursor, mysql.connector.cursor.MySQLCursorDict):
-        return rs.iteritems().next()[1]
-    else:
-        try:
-            return int(rs[0])
-        except:
-            return rs[0]
 
   _program_params = ExtendedOrderedDict([('id',None), ('cmd_line',None), ('programs',None), 
     ('status',None), ('message',None), ('starttime',None), ('endtime',None), ('environment',None), 
