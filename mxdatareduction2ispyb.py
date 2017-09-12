@@ -12,9 +12,9 @@ import sys
 import os
 from datetime import datetime
 from xml.etree import ElementTree
-from ispyb_api.dbconnection import dbconnection
-from ispyb_api.core import core
-from ispyb_api.mxdatareduction import mxdatareduction
+from ispyb.dbconnection import dbconnection
+from ispyb.core import core
+from ispyb.mxprocessing import mxprocessing
 
 # XML-to-dict code from here: 
 # http://code.activestate.com/recipes/410469-xml-as-dictionary/
@@ -141,7 +141,7 @@ if s[0] == None or s[1] == None or s[2] == None:
     sys.exit("ERROR - please make sure the XML file contains 3 AutoProcScalingStatistics elements.")
 
 # Get a database cursor
-cursor = dbconnection.connect_to_prod()
+cursor = dbconnection.connect('prod')
 
 # Find the datacollection associated with this data reduction run
 
@@ -165,27 +165,29 @@ for int_container in int_containers:
 
 # Store results from XIA2 / MX data reduction pipelines
 # ...first the program info 
-params = mxdatareduction.get_program_params()
+params = mxprocessing.get_program_params()
 if 'processingPrograms' in program:
     params['programs'] = program['processingPrograms']
 if 'processingCommandLine' in program:
     params['cmd_line'] = program['processingCommandLine']
+if 'reprocessingId' in program:
+    params['reprocessingid'] = program['reprocessingId']
+app_id = mxprocessing.upsert_program(cursor, params.values())
+
 if attachments != None:
-    i = 0
+    params = mxprocessing.get_program_attachment_params()
     for attachment in attachments:
-        i += 1
+        params['parentid'] = app_id
         if 'fileName' in attachment:
-            params['filename'+str(i)] = attachment['fileName'] 
+            params['file_name'] = attachment['fileName'] 
         if 'filePath' in attachment:
-            params['filepath'+str(i)] = attachment['filePath']
+            params['file_path'] = attachment['filePath']
         if 'fileType' in attachment:
-            params['filetype'+str(i)] = attachment['fileType']
-        if i == 3:
-            break
-app_id = mxdatareduction.insert_program(cursor, params.values())
+            params['file_type'] = attachment['fileType']
+        mxprocessing.upsert_program_attachment(cursor, params.values())
 
 # ...then the top-level processing entry
-params = mxdatareduction.get_processing_params()
+params = mxprocessing.get_processing_params()
 params['spacegroup'] = proc['spaceGroup']
 params['parentid'] = app_id
 params['refinedcell_a'] = proc['refinedCell_a']
@@ -194,12 +196,12 @@ params['refinedcell_c'] = proc['refinedCell_c']
 params['refinedcell_alpha'] = proc['refinedCell_alpha']
 params['refinedcell_beta'] = proc['refinedCell_beta']
 params['refinedcell_gamma'] = proc['refinedCell_gamma']
-ap_id = mxdatareduction.insert_processing(cursor, params.values())
+ap_id = mxprocessing.upsert_processing(cursor, params.values())
 
 # ... then the scaling results
-p = [mxdatareduction.get_outer_shell_scaling_params(), 
-     mxdatareduction.get_inner_shell_scaling_params(), 
-     mxdatareduction.get_overall_scaling_params()]
+p = [mxprocessing.get_outer_shell_scaling_params(), 
+     mxprocessing.get_inner_shell_scaling_params(), 
+     mxprocessing.get_overall_scaling_params()]
 
 for i in 0, 1, 2:
   if 'rMerge' in s[i]:
@@ -237,14 +239,14 @@ for i in 0, 1, 2:
   if 'rPimAllIPlusIMinus' in s[i]:
       p[i]['r_pim_all_iplusi_minus'] = s[i]['rPimAllIPlusIMinus']
 
-scaling_id = mxdatareduction.insert_scaling(cursor, ap_id, p[0].values(), p[1].values(), p[2].values())
+scaling_id = mxprocessing.insert_scaling(cursor, ap_id, p[0].values(), p[1].values(), p[2].values())
 
 # ... and finally the integration results
 
 for int_container in int_containers:
     integration = int_container['AutoProcIntegration']
 
-    params = mxdatareduction.get_integration_params()
+    params = mxprocessing.get_integration_params()
     params['parentid'] = scaling_id
     if 'dataCollectionId' in integration:
         params['datacollectionid'] = integration['dataCollectionId']
@@ -268,7 +270,7 @@ for int_container in int_containers:
     if 'anomalous' in integration:
         params['anom'] = integration['anomalous']
 
-    integration_id = mxdatareduction.insert_integration(cursor, params.values())
+    integration_id = mxprocessing.upsert_integration(cursor, params.values())
 
 # Write results to xml_out_file
 if len(sys.argv) == 3:
