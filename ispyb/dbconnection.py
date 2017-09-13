@@ -9,7 +9,7 @@
 #
 
 try:
-  import mysql.connector # MySQLdb
+  import mysql.connector
 except ImportError, e:
   print 'MySQL API module not found'
   raise e
@@ -34,7 +34,6 @@ class DBConnection:
     self.conn = None
     self.config = ConfigParser.RawConfigParser(allow_no_value=True)
     self.config.readfp(codecs.open("/dls_sw/dasc/mariadb/credentials/ispyb_api.cfg", "r", "utf8"))
-    return
 
   def __del__(self):
     self.disconnect()
@@ -47,7 +46,8 @@ class DBConnection:
     self.disconnect()
     '''Create a connection to the database using the given parameters.'''
     self.conn = mysql.connector.connect(user=self.config.get(conf, 'user'), password=self.config.get(conf, 'pw'), \
-                                host=self.config.get(conf, 'host'), database=self.config.get(conf, 'db'), port=int(self.config.get(conf, 'port')))
+                                host=self.config.get(conf, 'host'), database=self.config.get(conf, 'db'), \
+                                port=int(self.config.get(conf, 'port')))
     if self.conn is not None:
       self.conn.autocommit=True
 
