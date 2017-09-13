@@ -36,26 +36,34 @@ class ISPyBMySQLDriver(ispyb.interface.main.IF,
     self._db_cc = cursors.dictionary_contextcursor_factory(self._db.cursor)
     self._db_sp = cursors.stored_proc_contextcursor_factory(self._db.cursor)
 
+  def get_processing_instances_for_reprocessing_id(self, reprocessing_id):
+    with self._db_cc() as cursor:
+      cursor.run("SELECT * "
+                 "FROM AutoProcProgram "
+                 "WHERE reprocessingId = %s "
+                 "LIMIT 100;", reprocessing_id)
+      result = cursor.fetchall()
+
+    for row in result:
+      if row['processingStatus'] == 1:
+        row['readableStatus'] = 'success'
+      elif row['processingStatus'] == 0:
+        row['readableStatus'] = 'failure'
+      elif row['processingStartTime']:
+        row['readableStatus'] = 'running'
+      else:
+        row['readableStatus'] = 'queued'
+    return result
+
   def get_reprocessing_id(self, reprocessing_id):
     with self._db_cc() as cursor:
       cursor.run("SELECT * "
                  "FROM Reprocessing "
-                 "LEFT JOIN AutoProcProgram USING (reprocessingId) "
                  "WHERE reprocessingId = %s;", reprocessing_id)
       result = cursor.fetchone()
-    if result:
-      if not result.get('autoProcProgramId'):
-        result['readableStatus'] = 'submitted'
-      elif result.get('processingStatus') == None:
-        result['readableStatus'] = 'running'
-      elif result.get('processingStatus') == 1:
-        result['readableStatus'] = 'success'
-      elif result.get('processingStatus') == 0:
-        result['readableStatus'] = 'failure'
-      else:
-        result['readableStatus'] = 'unknown'
-      return result
-    raise ispyb.exception.ISPyBNoResultException()
+    if not result:
+      raise ispyb.exception.ISPyBNoResultException()
+    return result
 
   def get_datacollection_id(self, dcid):
     with self._db_cc() as cursor:
