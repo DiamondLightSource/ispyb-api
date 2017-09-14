@@ -61,48 +61,52 @@ class MXAcquisition(StoredRoutines):
                          ('measured_intensity',None), ('jpeg_path',None), ('jpeg_thumb_path',None), ('temperature',None), 
                          ('cumulative_intensity',None), ('synchrotron_current',None), ('comments',None), ('machine_msg',None)])
 
-  def get_data_collection_group_params(self):
-    return copy.deepcopy(self._data_collection_group_params)
+  @classmethod
+  def get_data_collection_group_params(cls):
+    return copy.deepcopy(cls._data_collection_group_params)
 
-  def get_data_collection_params(self):
-    return copy.deepcopy(self._data_collection_params)
+  @classmethod
+  def get_data_collection_params(cls):
+    return copy.deepcopy(cls._data_collection_params)
 
-  def get_image_params(self):
-    return copy.deepcopy(self._image_params)
+  @classmethod
+  def get_image_params(cls):
+    return copy.deepcopy(cls._image_params)
 
-  def insert_data_collection_group(self, cursor, values):
+  @classmethod
+  def insert_data_collection_group(cls, cursor, values):
     '''Store new MX data collection group.'''
-    cursor.execute('select ispyb.upsert_dcgroup(%s)' % ','.join(['%s'] * len(values)), values)
-    return self.first_item_in_cursor( cursor )
+    return cls.call_sf(cursor, 'ispyb.upsert_dcgroup', values)
 
-  def update_data_collection_group(self, cursor, values):
+  @classmethod
+  def update_data_collection_group(cls, cursor, values):
     '''Update existing data collection group.'''
     if values[0] is not None:
-        cursor.execute('select ispyb.upsert_dcgroup(%s)' % ','.join(['%s'] * len(values)), values)
+        return cls.call_sf(cursor, 'ispyb.upsert_dcgroup', values)
 
-  def put_data_collection_group(self, cursor, values):
-    cursor.execute('select ispyb.upsert_dcgroup(%s)' % ','.join(['%s'] * len(values)), values)
-    return self.first_item_in_cursor( cursor )
+  @classmethod
+  def put_data_collection_group(cls, cursor, values):
+    return cls.call_sf(cursor, 'ispyb.upsert_dcgroup', values)
 
-  def insert_data_collection(self, cursor, values):
+  @classmethod
+  def insert_data_collection(cls, cursor, values):
     '''Store new data collection.'''
-    cursor.execute('select ispyb.upsert_dc(%s)' % ','.join(['%s'] * len(values)), values)
-    return self.first_item_in_cursor( cursor )
+    return cls.call_sf(cursor, 'ispyb.upsert_dc', values)
 
-  def update_data_collection(self, cursor, values):
+  @classmethod
+  def update_data_collection(cls, cursor, values):
     '''Update existing data collection.'''
-    cursor.execute('select ispyb.upsert_dc(%s)' % ','.join(['%s'] * len(values)), values)
-    return self.first_item_in_cursor( cursor )
+    return cls.call_sf(cursor, 'ispyb.upsert_dc', values)
 
-  def insert_image(self, cursor, values):
+  @classmethod
+  def insert_image(cls, cursor, values):
     '''Store new MX diffraction image.'''
-    cursor.execute('select ispyb.upsert_image(%s)' % ','.join(['%s'] * len(values)), values)
-    return self.first_item_in_cursor( cursor )
+    return cls.call_sf(cursor, 'ispyb.upsert_image', values)
 
-  def update_image(self, cursor, values):
+  @classmethod  
+  def update_image(cls, cursor, values):
     '''Update existing diffraction image.'''
-    cursor.execute('select ispyb.upsert_image(%s)' % ','.join(['%s'] * len(values)), values)
-    return self.first_item_in_cursor( cursor )
+    return cls.call_sf(cursor, 'ispyb.upsert_image', values)
 
 mxacquisition = MXAcquisition()
 

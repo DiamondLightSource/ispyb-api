@@ -11,7 +11,8 @@
 import mysql.connector
 
 class StoredRoutines:
-  def first_item_in_cursor(self, cursor):
+  @staticmethod
+  def first_item_in_cursor(cursor):
     rs = cursor.fetchone()
     if len(rs) == 0:
         return None
@@ -23,7 +24,8 @@ class StoredRoutines:
         except:
             return rs[0]
 
-  def get_sp_resultset(self, cursor):
+  @staticmethod
+  def get_sp_resultset(cursor):
     result = []
     for recordset in cursor.stored_results():
         if isinstance(cursor, mysql.connector.cursor.MySQLCursorDict):
@@ -34,9 +36,15 @@ class StoredRoutines:
     cursor.nextset()
     return result
 
-  def call_sp(self, cursor, procname, args):
+  @staticmethod
+  def call_sp(cursor, procname, args):
     result_args = cursor.callproc(procname=procname, args=args)
     if result_args is not None and len(result_args) > 0:
         return result_args
     else:
         return [None]
+
+  @classmethod
+  def call_sf(cls, cursor, funcname, args):
+    cursor.execute(('select %s' % funcname) + ' (%s)' % ','.join(['%s'] * len(args)), args)
+    return cls.first_item_in_cursor( cursor )

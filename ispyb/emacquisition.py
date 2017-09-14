@@ -24,19 +24,6 @@ class EMAcquisition(StoredRoutines):
     def __init__(self):
         pass
 
-    @staticmethod
-    def first_item_in_cursor(cursor):
-        rs = cursor.fetchone()
-        if len(rs) == 0:
-            return None
-        elif isinstance(cursor, mysql.connector.cursor.MySQLCursorDict):
-            return rs.iteritems().next()[1]
-        else:
-            try:
-                return int(rs[0])
-            except:
-                return rs[0]
-
     _motion_correction_params = \
         ExtendedOrderedDict(
             [
@@ -83,19 +70,22 @@ class EMAcquisition(StoredRoutines):
                 ('comments', None)
             ]
         )
+    @classmethod
+    def get_motion_correction_params(cls):
+        return copy.deepcopy(cls._motion_correction_params)
 
-    def get_motion_correction_params(self):
-        return copy.deepcopy(self._motion_correction_params)
+    @classmethod
+    def get_ctf_params(cls):
+        return copy.deepcopy(cls._ctf_params)
 
-    def get_ctf_params(self):
-        return copy.deepcopy(self._ctf_params)
-
-    def insert_motion_correction(self, cursor, values):
+    @classmethod
+    def insert_motion_correction(cls, cursor, values):
         '''Store new motion correction params.'''
-        return self.call_sp(cursor, procname='ispyb.upsert_motion_correction', args=values)[0]
+        return cls.call_sp(cursor, procname='ispyb.upsert_motion_correction', args=values)[0]
 
-    def insert_ctf(self, cursor, values):
+    @classmethod
+    def insert_ctf(cls, cursor, values):
         '''Store new ctf params.'''
-        return self.call_sp(cursor, procname='ispyb.upsert_ctf', args=values)[0]
+        return cls.call_sp(cursor, procname='ispyb.upsert_ctf', args=values)[0]
 
 emacquisition = EMAcquisition()

@@ -50,63 +50,69 @@ class MXDataReduction(StoredRoutines):
     ('cell_a',None), ('cell_b',None), ('cell_c',None), ('cell_alpha',None), ('cell_beta',None), ('cell_gamma',None), 
     ('anom', '0')])
 
-  def get_program_params(self):
-    return copy.deepcopy(self._program_params)
+  @classmethod
+  def get_program_params(cls):
+    return copy.deepcopy(cls._program_params)
 
-  def get_processing_params(self):
-    return copy.deepcopy(self._processing_params)
+  @classmethod
+  def get_processing_params(cls):
+    return copy.deepcopy(cls._processing_params)
 
-  def get_inner_shell_scaling_params(self):
-    sp = copy.deepcopy(self._scaling_params)
+  @classmethod
+  def get_inner_shell_scaling_params(cls):
+    sp = copy.deepcopy(cls._scaling_params)
     sp['type'] = 'innerShell'
     return sp
 
-  def get_outer_shell_scaling_params(self):
-    sp = copy.deepcopy(self._scaling_params)
+  @classmethod
+  def get_outer_shell_scaling_params(cls):
+    sp = copy.deepcopy(cls._scaling_params)
     sp['type'] = 'outerShell'
     return sp
-  
-  def get_overall_scaling_params(self):
-    sp = copy.deepcopy(self._scaling_params)
+
+  @classmethod  
+  def get_overall_scaling_params(cls):
+    sp = copy.deepcopy(cls._scaling_params)
     sp['type'] = 'overall'
     return sp
 
-  def get_integration_params(self):
-    return copy.deepcopy(self._integration_params)
+  @classmethod
+  def get_integration_params(cls):
+    return copy.deepcopy(cls._integration_params)
 
+  @classmethod
+  def insert_program(cls, cursor, values):
+    return cls.call_sf(cursor, 'ispyb.upsert_program_run', values)
 
-  def insert_program(self, cursor, values):
-    cursor.execute('select ispyb.upsert_program_run(%s)' % ','.join(['%s'] * len(values)), values)
-    return self.first_item_in_cursor( cursor )
+  @classmethod
+  def update_program(cls, cursor, values):
+    return cls.call_sf(cursor, 'ispyb.upsert_program_run', values)
 
-  def update_program(self, cursor, values):
-    cursor.execute('select ispyb.upsert_program_run(%s)' % ','.join(['%s'] * len(values)), values)
-    return self.first_item_in_cursor( cursor )
-
-  def put_program(self, cursor, values):
+  @classmethod
+  def put_program(cls, cursor, values):
     id = None
     if values[0] is None: 
-        id = self.insert_program(cursor, values)
+        id = cls.insert_program(cursor, values)
     else:
-        self.update_program(cursor, values)
+        cls.update_program(cursor, values)
         id = values[0]
     
     if id != None:
       return int(id)
     return None
 
-  def insert_processing(self, cursor, values):
-    cursor.execute('select ispyb.upsert_processing(%s)' % ','.join(['%s'] * len(values)), values)
-    return self.first_item_in_cursor( cursor )
+  @classmethod
+  def insert_processing(cls, cursor, values):
+    return cls.call_sf(cursor, 'ispyb.upsert_processing', values)
 
-  def insert_scaling(self, cursor, parent_id, values1, values2, values3):
+  @classmethod
+  def insert_scaling(cls, cursor, parent_id, values1, values2, values3):
     values = [parent_id] + values1 + values2 + values3 
-    cursor.execute('select ispyb.insert_scaling(%s)' % ','.join(['%s'] * len(values)), values)
-    return self.first_item_in_cursor( cursor )
+    return cls.call_sf(cursor, 'ispyb.insert_scaling', values)
 
-  def insert_integration(self, cursor, values):
-    cursor.execute('select ispyb.upsert_integration(%s)' % ','.join(['%s'] * len(values)), values)
-    return self.first_item_in_cursor( cursor )
+  @classmethod
+  def insert_integration(cls, cursor, values):
+    return cls.call_sf(cursor, 'ispyb.upsert_integration', values)
 
 mxdatareduction = MXDataReduction()
 

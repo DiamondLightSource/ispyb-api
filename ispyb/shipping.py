@@ -27,9 +27,10 @@ class Shipping(StoredRoutines):
     pass
 
 # IN p_beamline varchar(20), IN p_registry_barcode varchar(45), IN p_position int
-  def update_container_assign(self, cursor, beamline, registry_barcode, position):
+  @classmethod
+  def update_container_assign(cls, cursor, beamline, registry_barcode, position):
     '''Assign a container'''
-    result_args = self.call_sp(cursor, procname='ispyb.update_container_assign', args=(beamline, registry_barcode, position))
+    result_args = cls.call_sp(cursor, procname='ispyb.update_container_assign', args=(beamline, registry_barcode, position))
 
 shipping = Shipping()
 

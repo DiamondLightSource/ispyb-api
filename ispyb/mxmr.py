@@ -29,19 +29,23 @@ class MXMR(StoredRoutines):
   _run_params = ExtendedOrderedDict([('id',None), ('parentid',None), ('success',None), ('message',None), ('pipeline',None), ('input_coord_file',None), ('output_coord_file',None), ('input_MTZ_file',None), ('output_MTZ_file',None), ('run_dir',None), ('log_file',None), ('cmd_line',None), ('r_start',None), ('r_end',None), ('rfree_start',None), ('rfree_end',None), ('starttime',None), ('endtime',None)])
   _run_blob_params = ExtendedOrderedDict([('id',None), ('parentid',None), ('view1',None), ('view2',None), ('view3',None)])
 
-  def get_run_params(self):
-    return copy.deepcopy(self._run_params)
+  @classmethod
+  def get_run_params(cls):
+    return copy.deepcopy(cls._run_params)
 
-  def get_run_blob_params(self):
-    return copy.deepcopy(self._run_blob_params)
+  @classmethod
+  def get_run_blob_params(cls):
+    return copy.deepcopy(cls._run_blob_params)
 
-  def upsert_run(self, cursor, values):
+  @classmethod
+  def upsert_run(cls, cursor, values):
     '''Update or insert new entry with info about an MX molecular replacement run, e.g. Dimple.'''
-    return self.call_sp(cursor, procname='ispyb.upsert_mrrun', args=values)[0]
+    return cls.call_sp(cursor, procname='ispyb.upsert_mrrun', args=values)[0]
 
-  def upsert_run_blob(self, cursor, values):
+  @classmethod
+  def upsert_run_blob(cls, cursor, values):
     '''Update or insert new entry with info about views (image paths) for an MX molecular replacement run, e.g. Dimple.'''
-    return self.call_sp(cursor, procname='ispyb.upsert_mrrun_blob', args=values)[0] 
+    return cls.call_sp(cursor, procname='ispyb.upsert_mrrun_blob', args=values)[0] 
 
 mxmr = MXMR()
 
