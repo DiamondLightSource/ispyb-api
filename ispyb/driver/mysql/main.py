@@ -112,7 +112,49 @@ class ISPyBMySQLDriver(ispyb.interface.main.IF,
         sweeps.extend(result)
     return sweeps
 
-  def update_reprocessing_status(self, reprocessing_id, status='running',
-                                 start_time=None,
-                                 update_time=None, update_message=None):
-    raise ispyb.exception.UpdateFailed("This operation is currently not supported by ISPyB. SCI-6048")
+  def add_processing_program(self, reprocessing_id=None,
+      command_line=None, programs=None, environment=None,
+      record_timestamp=None, status=None, start_time=None,
+      update_time=None, update_message=None):
+
+    status_code = None
+    if status == 'success':
+      status_code = 1
+    elif status == 'failure':
+      status_code = 0
+
+    result = self.sp_ispyb_upsert_processing_program( \
+        reprocessing_id=reprocessing_id,
+        programs=programs,
+        command_line=command_line,
+        environment=environment,
+        record_time=record_timestamp,
+        start_time=start_time,
+        update_time=update_time,
+        message=update_message,
+        status=status_code,
+      )
+    if result and 'program_id' in result:
+      return result['program_id']
+    raise ispyb.exception.UpdateFailed("Could not add processing program (%s)" % str(result))
+
+  def update_processing_status(self, program_id, status=None,
+                               start_time=None, update_time=None,
+                               update_message=None):
+    status_code = None
+    if status == 'success':
+      status_code = 1
+    elif status == 'failure':
+      status_code = 0
+
+    result = self.sp_ispyb_upsert_processing_program(
+        program_id=program_id,
+        start_time=start_time,
+        update_time=update_time,
+        message=update_message,
+        status=status_code,
+      )
+
+    if result and 'program_id' in result and result['program_id'] == program_id:
+      return result
+    raise ispyb.exception.UpdateFailed("Processing status update failed (%s)" % str(result))

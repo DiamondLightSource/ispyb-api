@@ -2,7 +2,7 @@ from __future__ import division, absolute_import
 
 import ispyb.common.driver
 
-__version__ = "0.11"
+__version__ = "0.12"
 
 get_driver = ispyb.common.driver.get_driver
 Backend = ispyb.common.driver.Backend

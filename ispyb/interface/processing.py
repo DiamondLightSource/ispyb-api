@@ -18,22 +18,16 @@ class IF(object):
     '''Add an entry to the AutoProcProgram table.
 
        Returns the numerical ID of the newly created AutoProcProgram entry.'''
-
     self._notimplemented()
 
-  def update_reprocessing_status(self, reprocessing_id, status='running',
-                                 start_time=None,
-                                 update_time=None, update_message=None):
-    '''Modify the reprocessing status. Some restrictions apply:
-       - status can only change
-           from submitted to running, finished, or failed, and
-           from running to finished or failed.
-       - once the status is set to finished or failed the record
-         becomes read-only
-       - start_time only matters if the previous status is submitted
-       - in that case, if start_time is not set, the current time is used
-       - if update_time is not set the current time is used
+  def update_processing_status(self, program_id, status=None,
+                               start_time=None, update_time=None,
+                               update_message=None):
+    '''Modify a processing program status. Some restrictions apply:
+       - if update_time is not set the current time is used.
        - if update_time is set and older than the one in the database
-         records are not updated. Unless the new status is finished or failed.
+         records are not updated. Unless status is set.
+       - once the status is set to 'success' or 'failed' the record
+         becomes read-only.
     '''
     self._notimplemented()
