@@ -1,4 +1,0 @@
-Repository has now been superseded by
-  https://github.com/DiamondLightSource/python-ispyb
-and the ispyb pypi module
-  https://pypi.python.org/pypi/ispyb
