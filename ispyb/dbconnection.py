@@ -33,7 +33,6 @@ class DBConnection:
     self.cursor = None
     self.conn = None
     self.config = ConfigParser.RawConfigParser(allow_no_value=True)
-    self.config.readfp(codecs.open("/dls_sw/dasc/mariadb/credentials/ispyb_api.cfg", "r", "utf8"))
 
   def __del__(self):
     self.disconnect()
@@ -42,8 +41,12 @@ class DBConnection:
   def _connect(self, conf='dev', dict_cursor=False):
       return self.connect(conf, dict_cursor)
       
-  def connect(self, conf='dev', dict_cursor=False):
+  def connect(self, conf='dev', dict_cursor=False, conf_file='conf/defaults.cfg'):
     self.disconnect()
+    if not os.path.isfile(conf_file):
+        conf_file = 'conf/defaults.example.cfg'
+    self.config.readfp(codecs.open(conf_file, "r", "utf8"))
+    
     '''Create a connection to the database using the given parameters.'''
     self.conn = mysql.connector.connect(user=self.config.get(conf, 'user'), password=self.config.get(conf, 'pw'), \
                                 host=self.config.get(conf, 'host'), database=self.config.get(conf, 'db'), \
