@@ -2,8 +2,8 @@
 # dbconnection.py
 #
 #    Copyright (C) 2016 Diamond Light Source, Karl Levik
-#    
-# 2016-11-30 
+#
+# 2016-11-30
 #
 # Methods to connect to and disconnect from a database
 #
@@ -40,21 +40,23 @@ class DBConnection:
 
   def _connect(self, conf='dev', dict_cursor=False):
       return self.connect(conf, dict_cursor)
-      
+
   def connect(self, conf='dev', dict_cursor=False, conf_file='../conf/defaults.cfg'):
     self.disconnect()
     if not os.path.isfile(conf_file):
         conf_file = '../conf/defaults.example.cfg'
     self.config.readfp(codecs.open(conf_file, "r", "utf8"))
-    
+
     '''Create a connection to the database using the given parameters.'''
-    self.conn = mysql.connector.connect(user=self.config.get(conf, 'user'), password=self.config.get(conf, 'pw'), \
-                                host=self.config.get(conf, 'host'), database=self.config.get(conf, 'db'), \
-                                port=int(self.config.get(conf, 'port')))
+    self.conn = mysql.connector.connect(user=self.config.get(conf, 'user'),
+        password=self.config.get(conf, 'pw'), \
+        host=self.config.get(conf, 'host'),
+        database=self.config.get(conf, 'db'), \
+        port=int(self.config.get(conf, 'port')))
     if self.conn is not None:
       self.conn.autocommit=True
 
-    if dict_cursor: 
+    if dict_cursor:
         self.cursor = self.conn.cursor(dictionary=True)
     else:
         self.cursor = self.conn.cursor()
@@ -71,4 +73,3 @@ class DBConnection:
     return
 
 dbconnection = DBConnection()
-
