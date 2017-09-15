@@ -2,10 +2,10 @@
 # mxacquisition.py
 #
 #    Copyright (C) 2014 Diamond Light Source, Karl Levik
-#    
-# 2014-09-24 
 #
-# Methods to store MX acquisition data 
+# 2014-09-24
+#
+# Methods to store MX acquisition data
 #
 
 try:
@@ -32,33 +32,33 @@ class MXAcquisition(StoredRoutines):
     pass
 
   _data_collection_group_params =\
-    ExtendedOrderedDict([('id',None), ('parentid',None), ('sampleid',None), ('experimenttype',None), ('starttime',None), ('endtime',None), 
+    ExtendedOrderedDict([('id',None), ('parentid',None), ('sampleid',None), ('experimenttype',None), ('starttime',None), ('endtime',None),
                          ('crystal_class',None), ('detector_mode',None), ('actual_sample_barcode',None), ('actual_sample_slot_in_container',None),
                          ('actual_container_barcode',None), ('actual_container_slot_in_sc',None), ('comments',None)])
 
   _data_collection_params =\
-    ExtendedOrderedDict([('id',None), ('parentid',None), ('visitid',None), ('sampleid',None), ('detectorid',None), ('positionid',None), 
-                         ('apertureid',None), ('datacollection_number',None), ('starttime',None), ('endtime',None), ('run_status',None), 
-                         ('axis_start',None), ('axis_end',None), ('axis_range',None), ('overlap',None), ('n_images',None), 
-                         ('start_image_number',None), ('n_passes',None), ('exp_time',None), 
-                         ('imgdir',None), ('imgprefix',None), ('imgsuffix',None), ('file_template',None), 
-                         ('wavelength',None), ('resolution',None), ('detector_distance',None), ('xbeam',None), ('ybeam',None), 
-                         ('comments',None), ('slitgap_vertical',None), ('slitgap_horizontal',None), ('transmission',None), 
-                         ('synchrotron_mode',None), ('xtal_snapshot1',None), ('xtal_snapshot2',None), ('xtal_snapshot3',None), 
-                         ('xtal_snapshot4',None), ('rotation_axis',None), ('phistart',None), ('kappastart',None), ('omegastart',None), 
-                         ('resolution_at_corner',None), ('detector2theta',None), ('undulator_gap1',None), ('undulator_gap2',None), 
-                         ('undulator_gap3',None), ('beamsize_at_samplex',None), ('beamsize_at_sampley',None), ('avg_temperature',None), 
-                         ('actual_centering_position',None), ('beam_shape',None), ('focal_spot_size_at_samplex',None), 
-                         ('focal_spot_size_at_sampley',None), ('polarisation',None), ('flux',None), 
-                         ('processed_data_file',None), ('dat_file',None), ('magnification',None), ('total_absorbed_dose',None), 
-                         ('binning',None), ('particle_diameter',None), ('box_size_ctf',None), ('min_resolution',None), 
-                         ('min_defocus',None), ('max_defocus',None), ('defocus_step_size',None), ('amount_astigmatism',None), 
-                         ('extract_size',None), ('bg_radius',None), ('voltage',None), ('obj_aperture',None), ('c1aperture',None), 
+    ExtendedOrderedDict([('id',None), ('parentid',None), ('visitid',None), ('sampleid',None), ('detectorid',None), ('positionid',None),
+                         ('apertureid',None), ('datacollection_number',None), ('starttime',None), ('endtime',None), ('run_status',None),
+                         ('axis_start',None), ('axis_end',None), ('axis_range',None), ('overlap',None), ('n_images',None),
+                         ('start_image_number',None), ('n_passes',None), ('exp_time',None),
+                         ('imgdir',None), ('imgprefix',None), ('imgsuffix',None), ('file_template',None),
+                         ('wavelength',None), ('resolution',None), ('detector_distance',None), ('xbeam',None), ('ybeam',None),
+                         ('comments',None), ('slitgap_vertical',None), ('slitgap_horizontal',None), ('transmission',None),
+                         ('synchrotron_mode',None), ('xtal_snapshot1',None), ('xtal_snapshot2',None), ('xtal_snapshot3',None),
+                         ('xtal_snapshot4',None), ('rotation_axis',None), ('phistart',None), ('kappastart',None), ('omegastart',None),
+                         ('resolution_at_corner',None), ('detector2theta',None), ('undulator_gap1',None), ('undulator_gap2',None),
+                         ('undulator_gap3',None), ('beamsize_at_samplex',None), ('beamsize_at_sampley',None), ('avg_temperature',None),
+                         ('actual_centering_position',None), ('beam_shape',None), ('focal_spot_size_at_samplex',None),
+                         ('focal_spot_size_at_sampley',None), ('polarisation',None), ('flux',None),
+                         ('processed_data_file',None), ('dat_file',None), ('magnification',None), ('total_absorbed_dose',None),
+                         ('binning',None), ('particle_diameter',None), ('box_size_ctf',None), ('min_resolution',None),
+                         ('min_defocus',None), ('max_defocus',None), ('defocus_step_size',None), ('amount_astigmatism',None),
+                         ('extract_size',None), ('bg_radius',None), ('voltage',None), ('obj_aperture',None), ('c1aperture',None),
                          ('c2aperture',None), ('c3aperture',None), ('c1lens',None), ('c2lens',None), ('c3lens',None)])
 
   _image_params =\
-    ExtendedOrderedDict([('id',None), ('parentid',None), ('img_number',None), ('filename',None), ('file_location',None), 
-                         ('measured_intensity',None), ('jpeg_path',None), ('jpeg_thumb_path',None), ('temperature',None), 
+    ExtendedOrderedDict([('id',None), ('parentid',None), ('img_number',None), ('filename',None), ('file_location',None),
+                         ('measured_intensity',None), ('jpeg_path',None), ('jpeg_thumb_path',None), ('temperature',None),
                          ('cumulative_intensity',None), ('synchrotron_current',None), ('comments',None), ('machine_msg',None)])
 
   @classmethod
@@ -76,37 +76,36 @@ class MXAcquisition(StoredRoutines):
   @classmethod
   def insert_data_collection_group(cls, cursor, values):
     '''Store new MX data collection group.'''
-    return cls.call_sf(cursor, 'ispyb.upsert_dcgroup', values)
+    return cls.call_sf(cursor, 'upsert_dcgroup', values)
 
   @classmethod
   def update_data_collection_group(cls, cursor, values):
     '''Update existing data collection group.'''
     if values[0] is not None:
-        return cls.call_sf(cursor, 'ispyb.upsert_dcgroup', values)
+        return cls.call_sf(cursor, 'upsert_dcgroup', values)
 
   @classmethod
   def put_data_collection_group(cls, cursor, values):
-    return cls.call_sf(cursor, 'ispyb.upsert_dcgroup', values)
+    return cls.call_sf(cursor, 'upsert_dcgroup', values)
 
   @classmethod
   def insert_data_collection(cls, cursor, values):
     '''Store new data collection.'''
-    return cls.call_sf(cursor, 'ispyb.upsert_dc', values)
+    return cls.call_sf(cursor, 'upsert_dc', values)
 
   @classmethod
   def update_data_collection(cls, cursor, values):
     '''Update existing data collection.'''
-    return cls.call_sf(cursor, 'ispyb.upsert_dc', values)
+    return cls.call_sf(cursor, 'upsert_dc', values)
 
   @classmethod
   def insert_image(cls, cursor, values):
     '''Store new MX diffraction image.'''
-    return cls.call_sf(cursor, 'ispyb.upsert_image', values)
+    return cls.call_sf(cursor, 'upsert_image', values)
 
-  @classmethod  
+  @classmethod
   def update_image(cls, cursor, values):
     '''Update existing diffraction image.'''
-    return cls.call_sf(cursor, 'ispyb.upsert_image', values)
+    return cls.call_sf(cursor, 'upsert_image', values)
 
 mxacquisition = MXAcquisition()
-

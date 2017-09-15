@@ -2,8 +2,8 @@
 # shipping.py
 #
 #    Copyright (C) 2017 Diamond Light Source, Karl Levik
-#    
-# 2017-06-28 
+#
+# 2017-06-28
 #
 # Methods to update data related to shipping of samples
 #
@@ -30,8 +30,6 @@ class Shipping(StoredRoutines):
   @classmethod
   def update_container_assign(cls, cursor, beamline, registry_barcode, position):
     '''Assign a container'''
-    result_args = cls.call_sp(cursor, procname='ispyb.update_container_assign', args=(beamline, registry_barcode, position))
+    result_args = cls.call_sp(cursor, procname='update_container_assign', args=(beamline, registry_barcode, position))
 
 shipping = Shipping()
-
-

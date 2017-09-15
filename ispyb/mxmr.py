@@ -2,10 +2,10 @@
 # mxmr.py
 #
 #    Copyright (C) 2014 Diamond Light Source, Karl Levik
-#    
-# 2017-09-13 
 #
-# Methods to store molecular replacement data 
+# 2017-09-13
+#
+# Methods to store molecular replacement data
 #
 
 import string
@@ -40,12 +40,11 @@ class MXMR(StoredRoutines):
   @classmethod
   def upsert_run(cls, cursor, values):
     '''Update or insert new entry with info about an MX molecular replacement run, e.g. Dimple.'''
-    return cls.call_sp(cursor, procname='ispyb.upsert_mrrun', args=values)[0]
+    return cls.call_sp(cursor, procname='upsert_mrrun', args=values)[0]
 
   @classmethod
   def upsert_run_blob(cls, cursor, values):
     '''Update or insert new entry with info about views (image paths) for an MX molecular replacement run, e.g. Dimple.'''
-    return cls.call_sp(cursor, procname='ispyb.upsert_mrrun_blob', args=values)[0] 
+    return cls.call_sp(cursor, procname='upsert_mrrun_blob', args=values)[0] 
 
 mxmr = MXMR()
-

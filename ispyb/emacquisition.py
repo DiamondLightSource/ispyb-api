@@ -81,11 +81,11 @@ class EMAcquisition(StoredRoutines):
     @classmethod
     def insert_motion_correction(cls, cursor, values):
         '''Store new motion correction params.'''
-        return cls.call_sp(cursor, procname='ispyb.upsert_motion_correction', args=values)[0]
+        return cls.call_sp(cursor, procname='upsert_motion_correction', args=values)[0]
 
     @classmethod
     def insert_ctf(cls, cursor, values):
         '''Store new ctf params.'''
-        return cls.call_sp(cursor, procname='ispyb.upsert_ctf', args=values)[0]
+        return cls.call_sp(cursor, procname='upsert_ctf', args=values)[0]
 
 emacquisition = EMAcquisition()
