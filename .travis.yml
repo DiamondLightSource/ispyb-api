@@ -6,7 +6,7 @@ addons:
   mariadb: '10.1'
   
 before_install:
-- mysql -u -e "CREATE DATABASE travis;"
+- mysql -u root -e "CREATE DATABASE travis;"
 - mysql -u root -D travis < conf/schema.sql
 
 before_script:
