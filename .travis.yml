@@ -1,6 +1,8 @@
 sudo: false # use containers
 
 language: python
+python:
+  - "2.7"
 
 addons:
   mariadb: '10.1'
@@ -11,4 +13,10 @@ before_install:
 
 before_script:
 - cp conf/defaults.example.cfg conf/defaults.cfg
-    
+
+# command to install dependencies
+install:
+- pip install mysql-connector
+  
+script:
+- cd tests && nosetests -v
