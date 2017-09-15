@@ -1,0 +1,13 @@
+sudo: false # use containers
+
+language: python
+
+addons:
+  mariadb: '10.1'
+  
+before_install:
+- mysql -u root < conf/schema.sql
+
+before_script:
+- cp conf/defaults.example.cfg conf/defaults.cfg
+    
