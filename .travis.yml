@@ -16,7 +16,7 @@ before_script:
 
 # command to install dependencies
 install:
-- pip install mysql-connector
+- pip install -Iv mysql-connector==2.0.4
   
 script:
 - cd tests && nosetests -v
