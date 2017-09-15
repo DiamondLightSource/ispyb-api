@@ -6,9 +6,9 @@ python:
 
 addons:
   mariadb: '10.1'
-  
+
 before_install:
-- mysql -u root -e "CREATE DATABASE ispybtest;"
+- mysql -u root -e "CREATE DATABASE ispybtest; SET GLOBAL log_bin_trust_function_creators=ON;"
 - mysql -u root -D ispybtest < conf/schema.sql
 
 before_script:
@@ -17,6 +17,6 @@ before_script:
 # command to install dependencies
 install:
 - pip install -Iv mysql-connector==2.1.6
-  
+
 script:
 - cd tests && nosetests -v
