@@ -147,6 +147,7 @@ class ISPyBMySQLDriver(ispyb.interface.main.IF,
     elif status == 'failure':
       status_code = 0
 
+    program_id = int(program_id)
     result = self.sp_ispyb_upsert_processing_program(
         program_id=program_id,
         start_time=start_time,
