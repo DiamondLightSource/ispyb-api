@@ -32,7 +32,6 @@ class DBConnection:
   def __init__(self):
     self.cursor = None
     self.conn = None
-    self.config = ConfigParser.RawConfigParser(allow_no_value=True)
 
   def __del__(self):
     self.disconnect()
@@ -41,18 +40,21 @@ class DBConnection:
   def _connect(self, conf='dev', dict_cursor=False):
       return self.connect(conf, dict_cursor)
 
-  def connect(self, conf='dev', dict_cursor=False, conf_file='../conf/defaults.cfg'):
+  def connect(self, conf='dev', dict_cursor=False, conf_file=None):
     self.disconnect()
-    if not os.path.isfile(conf_file):
-        conf_file = '../conf/defaults.example.cfg'
-    self.config.readfp(codecs.open(conf_file, "r", "utf8"))
+    if not conf_file is None:
+        self.config = ConfigParser.ConfigParser(allow_no_value=True)
+        self.config.readfp(codecs.open(conf_file, "r", "utf8"))
+    else:
+        self.config = ConfigParser.ConfigParser(defaults={'user':'root', 'pw': '', 'host':'localhost', 'db':'ispybstoredproc', 'port': '3306'}, allow_no_value=True)
+        self.config.add_section(conf)
 
     '''Create a connection to the database using the given parameters.'''
     self.conn = mysql.connector.connect(user=self.config.get(conf, 'user'),
         password=self.config.get(conf, 'pw'), \
         host=self.config.get(conf, 'host'),
         database=self.config.get(conf, 'db'), \
-        port=int(self.config.get(conf, 'port')))
+        port=self.config.getint(conf, 'port'))
     if self.conn is not None:
       self.conn.autocommit=True
 
