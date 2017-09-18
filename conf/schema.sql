@@ -7676,7 +7676,7 @@ CREATE FUNCTION `upsert_program_run`(
      p_starttime datetime,
      p_endtime datetime,
      p_environment varchar(255),
-
+-- Store AutoProcProgramAttachments as well
      p_file1_id int(10) unsigned,
      p_filename1 varchar(255),
      p_filepath1 varchar(255),
@@ -7694,7 +7694,7 @@ CREATE FUNCTION `upsert_program_run`(
 BEGIN
     DECLARE appid int(10) DEFAULT NULL;
     INSERT INTO AutoProcProgram (autoProcProgramId, processingCommandLine, processingPrograms, processingStatus, processingMessage, processingStartTime, processingEndTime, processingEnvironment, recordtimestamp)
-		VALUES (s_autoProcProgram.nextval, substr(p_cmd_line, 1, 255), p_programs, p_status, p_message, p_starttime, p_endtime, p_environment, sysdate)
+		VALUES (p_Id, substr(p_cmd_line, 1, 255), p_programs, p_status, p_message, p_starttime, p_endtime, p_environment, now())
 		ON DUPLICATE KEY UPDATE
       processingCommandLine = IFNULL(p_cmd_line, processingCommandLine),
       processingPrograms = IFNULL(p_programs, processingPrograms),
@@ -9178,6 +9178,35 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_persons_for_proposal` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_persons_for_proposal`(p_proposal_code varchar(5), p_proposal_number int)
+    READS SQL DATA
+    COMMENT 'Returns a multi-row result-set with info about the persons for \nproposal p_proposal_code + p_proposal_number'
+BEGIN
+    IF p_proposal_code IS NOT NULL AND p_proposal_number IS NOT NULL THEN
+      SELECT per.title, per.givenName, per.familyName, per.login, php.role
+      FROM Person per 
+        INNER JOIN ProposalHasPerson php on php.personId = per.personId
+        INNER JOIN Proposal p on p.proposalId = php.proposalId
+	  WHERE p.proposalCode = p_proposal_code AND p.proposalNumber = p_proposal_number;
+    ELSE
+	  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory arguments p_proposalCode + p_proposalNumber can not be NULL';
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `retrieve_reprocessing_by_dc` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -10325,6 +10354,133 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_mrrun` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_mrrun`(
+     INOUT p_id integer,
+     p_parentId integer,
+     p_success boolean,
+     p_message varchar(255), 
+     p_pipeline varchar(50),
+     p_inputCoordFile varchar(255), 
+     p_outputCoordFile varchar(255), 
+     p_inputMTZFile varchar(255), 
+     p_outputMTZFile varchar(255), 
+     p_runDirectory varchar(255),
+     p_logFile varchar(255),
+     p_commandLine varchar(255),
+     p_rValueStart float ,
+     p_rValueEnd float ,
+     p_rFreeValueStart float ,
+     p_rFreeValueEnd float ,
+     p_starttime datetime,
+     p_endtime datetime
+     )
+    MODIFIES SQL DATA
+    COMMENT 'Update or insert new entry with info about a MX molecular replacements run, e.g. Dimple'
+BEGIN
+    IF p_parentId IS NOT NULL THEN
+      INSERT INTO MXMRRun (mxMRRunId, autoProcScalingId, success, message, pipeline, inputCoordFile, outputCoordFile, inputMTZFile, outputMTZFile, 
+		runDirectory, logFile, commandLine, rValueStart, rValueEnd, rFreeValueStart, rFreeValueEnd, starttime, endtime) 
+      VALUES (
+        p_id, 
+        p_parentId, 
+        p_success, 
+        p_message, 
+        p_pipeline, 
+        p_inputCoordFile, 
+        p_outputCoordFile, 
+        p_inputMTZFile, 
+        p_outputMTZFile, 
+        p_runDirectory,
+        p_logFile,
+        p_commandLine,
+        p_rValueStart, 
+        p_rValueEnd, 
+        p_rFreeValueStart, 
+        p_rFreeValueEnd, 
+        IFNULL(p_starttime, NOW()), 
+        p_endtime)
+		ON DUPLICATE KEY UPDATE
+			autoProcScalingId = IFNULL(p_parentId, autoProcScalingId), 
+            success = IFNULL(p_success, success), 
+            message = IFNULL(p_message, message), 
+            pipeline = IFNULL(p_pipeline, pipeline), 
+            inputCoordFile = IFNULL(p_inputCoordFile, inputCoordFile), 
+            outputCoordFile = IFNULL(p_outputCoordFile, outputCoordFile), 
+            inputMTZFile = IFNULL(p_inputMTZFile, inputMTZFile), 
+            outputMTZFile = IFNULL(p_outputMTZFile, outputMTZFile), 
+            runDirectory = IFNULL(p_runDirectory, runDirectory), 
+            logFile = IFNULL(p_logFile, logFile), 
+            commandLine = IFNULL(p_commandLine, commandLine), 
+            rValueStart = IFNULL(p_rValueStart, rValueStart), 
+            rValueEnd = IFNULL(p_rValueEnd, rValueEnd), 
+            rFreeValueStart = IFNULL(p_rFreeValueStart, rFreeValueStart), 
+            rFreeValueEnd = IFNULL(p_rFreeValueEnd, rFreeValueEnd), 
+            starttime = IFNULL(p_starttime, starttime), 
+            endtime = IFNULL(p_endtime, endtime);
+ 
+ 	  IF p_id IS NULL THEN 
+		SET p_id = LAST_INSERT_ID();
+      END IF;
+	ELSE
+	  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_parentId can not be NULL';
+	END IF;
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_mrrun_blob` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_mrrun_blob`(
+     INOUT p_id integer,
+     p_parentId integer,
+     p_view1 varchar(255), 
+     p_view2 varchar(255), 
+     p_view3 varchar(255) 
+  )
+    MODIFIES SQL DATA
+    COMMENT 'Update or insert new entry with info about views (image paths) for an MX molecular replacement run, e.g. Dimple.'
+BEGIN
+  IF p_parentId IS NOT NULL THEN
+    INSERT INTO MXMRRunBlob (mxMRRunBlobId, mxMRRunId, view1, view2, view3) 
+		VALUES (p_id, p_parentId, p_view1, p_view2, p_view3)
+		ON DUPLICATE KEY UPDATE
+			mxMRRunId = IFNULL(p_parentId, mxMRRunId),
+			view1 = IFNULL(p_view1, view1),
+			view2 = IFNULL(p_view2, view2),
+			view3 = IFNULL(p_view3, view3);
+
+ 	IF p_id IS NULL THEN 
+		SET p_id = LAST_INSERT_ID();
+    END IF;
+  ELSE
+	SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_parentId can not be NULL';
+  END IF;  
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `upsert_processing` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -10528,7 +10684,7 @@ BEGIN
               processingEndTime = IFNULL(p_updateTimestamp, NOW()), 
               -- If update message is not NULL then write update message to processingMessage.
               processingMessage = IFNULL(p_updateMessage, processingMessage), 
-              reprocessingId = p_reprocessingId,
+              reprocessingId = IFNULL(p_recordTimestamp, reprocessingId),
               processingCommandLine = IFNULL(p_commandLine, processingCommandLine),
               processingPrograms = IFNULL(p_programs, processingPrograms),
 			  processingEnvironment = IFNULL(p_environment, processingEnvironment)
@@ -11121,5 +11277,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
-
--- Dump completed on 2017-09-07 15:46:07
+-- Dump completed on 2017-09-18 11:57:21
