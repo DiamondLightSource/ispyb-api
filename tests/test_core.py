@@ -9,11 +9,11 @@ from nose import with_setup
 
 def get_dict_cursor():
     global cursor
-    cursor = dbconnection.connect(conf='dev', dict_cursor=True) 
+    cursor = dbconnection.connect(conf='dev', dict_cursor=True, conf_file='../conf/defaults.cfg')
 
 def get_cursor():
     global cursor
-    cursor = dbconnection.connect(conf='dev')
+    cursor = dbconnection.connect(conf='dev', conf_file='../conf/defaults.cfg')
 
 def close_cursor():
     cursor.close()
@@ -22,7 +22,7 @@ def close_cursor():
 def retrieve_visit_id(c):
     id = core.retrieve_visit_id(c, 'mx12788-35')
     assert id == 344095
-    
+
 def retrieve_proposal_title(c):
     title = core.retrieve_proposal_title(c, 'mx', 12788)
     assert title.strip() == 'Manchester/Sheffield/Liverpool Crystallography BAG'
@@ -47,7 +47,7 @@ def retrieve_current_cm_sessions(c):
 def retrieve_active_plates(c):
     rs = core.retrieve_active_plates(c, 'i02-2')
     assert len(rs) >= 0
-    
+
 # ---- Test with dict_cursor
 
 @with_setup(get_dict_cursor, close_cursor)
@@ -120,4 +120,3 @@ def test_retrieve_current_cm_sessions():
 def test_retrieve_active_plates():
     global cursor
     retrieve_active_plates(cursor)
-
