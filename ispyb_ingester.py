@@ -100,12 +100,15 @@ def store_processing_dict(xmldict):
 #                integration['dataCollectionId'] = dc_id
     
     # Store results from XIA2 / MX data reduction pipelines
-    # ...first the program info 
+    # ...first the program info
     params = mxdatareduction.get_program_params()
-    if 'processingPrograms' in program:
+    if isinstance(program, dict):
+      if 'processingPrograms' in program:
         params['programs'] = program['processingPrograms']
-    if 'processingCommandLine' in program:
+      if 'processingCommandLine' in program:
         params['cmd_line'] = program['processingCommandLine']
+    else:
+      params['id'] = program
     if attachments != None:
         i = 0
         for attachment in attachments:
@@ -118,7 +121,11 @@ def store_processing_dict(xmldict):
                 params['filetype' + str(i)] = attachment['fileType']
             if i == 3:
                 break
-    app_id = mxdatareduction.insert_program(cursor, params.values())
+    if attachments or isinstance(program, dict):
+      app_id = mxdatareduction.insert_program(cursor, params.values())
+    else:
+      # No update required
+      app_id = program
     
     # ...then the top-level processing entry
     params = mxdatareduction.get_processing_params()
