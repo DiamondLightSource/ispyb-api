@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-import sys
-sys.path.append('..')
+import context
 from ispyb.dbconnection import dbconnection
 from ispyb.core import core
 from ispyb.mxdatareduction import mxdatareduction
@@ -10,11 +9,11 @@ from nose import with_setup
 
 def get_dict_cursor():
     global cursor
-    cursor = dbconnection.connect(conf='dev', dict_cursor=True) 
+    cursor = dbconnection.connect(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
 
 def get_cursor():
     global cursor
-    cursor = dbconnection.connect(conf='dev')
+    cursor = dbconnection.connect(conf='dev', conf_file='../conf/config.cfg')
 
 def close_cursor():
     cursor.close()
@@ -23,13 +22,13 @@ def close_cursor():
 def insert_integration_and_processing(c):
     params = mxdatareduction.get_program_params()
     params['cmd_line'] = 'ls -ltr'
-    
+
     id = mxdatareduction.insert_program(c, params.values())
     assert id is not None
     assert id > 0
-    
+
     params = mxdatareduction.get_integration_params()
-    params['datacollectionid'] = 834 # only works on dev 
+    params['datacollectionid'] = 834 # only works on dev
     params['start_image_no'] = 1
     params['end_image_no'] = 100
     params['refined_detector_dist'] = 1106.20
@@ -47,13 +46,13 @@ def insert_integration_and_processing(c):
     params['cell_alpha'] = 90.0
     params['cell_beta'] = 90.0
     params['cell_gamma'] = 90.0
-    
+
     id = mxdatareduction.insert_integration(c, params.values())
     assert id is not None
     assert id > 0
 
     print id
-    
+
     params = mxdatareduction.get_processing_params()
     params['parentid'] = id
     params['spacegroup'] = 'P212121'
@@ -63,14 +62,14 @@ def insert_integration_and_processing(c):
     params['refinedcell_alpha'] = 90
     params['refinedcell_beta'] = 90
     params['refinedcell_gamma'] = 90
-    
+
     id = mxdatareduction.insert_processing(c, params.values())
     assert id is not None
     assert id > 0
 
 
 
-    
+
 
 # ---- Test with dict_cursor
 
@@ -78,6 +77,3 @@ def insert_integration_and_processing(c):
 def test_dict_insert_integration_and_processing():
     global cursor
     insert_integration_and_processing(cursor)
-
-
-

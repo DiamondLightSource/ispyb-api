@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-import sys
-sys.path.append('..')
+import context
 from ispyb.dbconnection import dbconnection
 from ispyb.core import core
 from datetime import datetime
@@ -9,11 +8,11 @@ from nose import with_setup
 
 def get_dict_cursor():
     global cursor
-    cursor = dbconnection.connect(conf='dev', dict_cursor=True, conf_file='../conf/defaults.cfg')
+    cursor = dbconnection.connect(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
 
 def get_cursor():
     global cursor
-    cursor = dbconnection.connect(conf='dev', conf_file='../conf/defaults.cfg')
+    cursor = dbconnection.connect(conf='dev', conf_file='../conf/config.cfg')
 
 def close_cursor():
     cursor.close()

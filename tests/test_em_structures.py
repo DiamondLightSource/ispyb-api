@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-import sys
-sys.path.append('..')
+import context
 from ispyb.dbconnection import dbconnection
 from nose import with_setup
 from ispyb.mxacquisition import mxacquisition
@@ -9,7 +8,7 @@ from ispyb.emacquisition import emacquisition
 
 def get_cursor():
     global cursor
-    cursor = dbconnection.connect(conf='dev')
+    cursor = dbconnection.connect(conf='dev', conf_file='../conf/config.cfg')
 
 def close_cursor():
     cursor.close()

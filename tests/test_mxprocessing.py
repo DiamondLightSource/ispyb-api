@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-import sys
-sys.path.append('..')
+import context
 from ispyb.dbconnection import dbconnection
 from ispyb.core import core
 from ispyb.mxprocessing import mxprocessing
@@ -10,11 +9,11 @@ from nose import with_setup
 
 def get_dict_cursor():
     global cursor
-    cursor = dbconnection.connect(conf='dev') #, dict_cursor=True 
+    cursor = dbconnection.connect(conf='dev', conf_file='../conf/config.cfg') #, dict_cursor=True
 
 def get_cursor():
     global cursor
-    cursor = dbconnection.connect(conf='dev')
+    cursor = dbconnection.connect(conf='dev'conf_file='../conf/config.cfg')
 
 def close_cursor():
     cursor.close()
@@ -23,31 +22,31 @@ def close_cursor():
 def insert_integration_and_processing(c):
     params = mxprocessing.get_program_params()
     params['cmd_line'] = 'ls -ltr'
-    params['message'] = 'Just started ...'    
+    params['message'] = 'Just started ...'
     id = mxprocessing.upsert_program(c, params.values())
     assert id is not None
     assert id > 0
 
     params['id'] = id
     params['status'] = True
-    params['message'] = 'Finished'    
+    params['message'] = 'Finished'
     id = mxprocessing.upsert_program(c, params.values())
     assert id is not None
     assert id > 0
-    
+
     params = mxprocessing.get_program_attachment_params()
     params['parentid'] = id
-    params['file_name'] = 'file.log' 
+    params['file_name'] = 'file.log'
     params['file_path'] = '/tmp'
     params['file_type'] = 'Log' # should be one of Log, Result, Graph
     id = mxprocessing.upsert_program_attachment(c, params.values())
     assert id is not None
     assert id > 0
-    
+
     programid = id
-    
+
     params = mxprocessing.get_integration_params()
-    params['datacollectionid'] = 834 # only works on dev 
+    params['datacollectionid'] = 834 # only works on dev
     params['start_image_no'] = 1
     params['end_image_no'] = 100
     params['refined_detector_dist'] = 1106.20
@@ -65,7 +64,7 @@ def insert_integration_and_processing(c):
     params['cell_alpha'] = 90.0
     params['cell_beta'] = 90.0
     params['cell_gamma'] = 90.0
-    
+
     id = mxprocessing.upsert_integration(c, params.values())
     assert id is not None
     assert id > 0
@@ -79,7 +78,7 @@ def insert_integration_and_processing(c):
     params['refinedcell_alpha'] = 90
     params['refinedcell_beta'] = 90
     params['refinedcell_gamma'] = 90
-    
+
     id = mxprocessing.upsert_processing(c, params.values())
     assert id is not None
     assert id > 0
@@ -106,14 +105,14 @@ def insert_integration_and_processing(c):
     id = mxprocessing.insert_scaling(c, parentid, params1.values(), params2.values(), params3.values())
 
     assert id is not None
-    
+
     params = mxprocessing.get_quality_indicators_params()
     params['datacollectionid'] = 834 # only works on dev
     params['image_number'] = 1
-    params['spot_total'] = 130  
-    params['programid'] = programid      
+    params['spot_total'] = 130
+    params['programid'] = programid
     id = mxprocessing.insert_quality_indicators(c, params.values())
-    print id 
+    print id
 
     assert id is not None
 
@@ -123,10 +122,3 @@ def insert_integration_and_processing(c):
 def test_dict_insert_integration_and_processing():
     global cursor
     insert_integration_and_processing(cursor)
-
-
-
-
-
-
-

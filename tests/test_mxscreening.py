@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-import sys
-sys.path.append('..')
+import context
 from ispyb.dbconnection import dbconnection
 from ispyb.core import core
 from ispyb.mxacquisition import mxacquisition
@@ -13,11 +12,11 @@ test_session = 'cm5952-5'
 
 def get_dict_cursor():
     global cursor
-    cursor = dbconnection.connect(conf='dev', dict_cursor=False) 
+    cursor = dbconnection.connect(conf='dev', dict_cursor=False, conf_file='../conf/config.cfg')
 
 def get_cursor():
     global cursor
-    cursor = dbconnection.connect(conf='dev')
+    cursor = dbconnection.connect(conf='dev', conf_file='../conf/config.cfg')
 
 def close_cursor():
     cursor.close()
@@ -42,10 +41,10 @@ def insert_screening(c, session_id = None):
     dcg_id = insert_dcgroup(c, session_id)
 
     params = mxscreening.get_screening_params()
-    params['dcgid'] = dcg_id 
-    params['program_version'] = 'EDNA 1.0' 
-    params['short_comments'] = 'ENDAStrategy1' 
-    params['comments'] = 'param1 = 1.2, param2 = 2.06' 
+    params['dcgid'] = dcg_id
+    params['program_version'] = 'EDNA 1.0'
+    params['short_comments'] = 'ENDAStrategy1'
+    params['comments'] = 'param1 = 1.2, param2 = 2.06'
 
     id = mxscreening.insert_screening(c, params.values())
     assert id is not None
@@ -58,18 +57,18 @@ def insert_screening_input(c):
 
     params = mxscreening.get_screening_input_params()
     params['screening_id'] = s_id
-    params['beamx'] = 20.2 
+    params['beamx'] = 20.2
     params['beamy'] = 25.6
     params['rms_err_lim'] = 2.09
     params['min_fraction_indexed'] = 0.10
-    params['max_fraction_rejected'] = 0.30 
+    params['max_fraction_rejected'] = 0.30
     params['min_signal2noise'] = 0.98
 
     id = mxscreening.insert_screening_input(c, params.values())
     assert id is not None
     assert id > 0
     return id
-    
+
 def insert_screening_output(c, session_id = None):
     if session_id is None:
         session_id = core.retrieve_visit_id(cursor, test_session)
@@ -80,14 +79,14 @@ def insert_screening_output(c, session_id = None):
     params['status_description'] = 'success'
     params['rejected_reflections'] = 16
     params['resolution_obtained'] = 2.0
-    params['mosaicity'] = 20.86    
+    params['mosaicity'] = 20.86
     params['beam_shift_x'] = 14
     params['beam_shift_y'] = 11
     params['num_spots_found'] = 120
-    params['num_spots_used'] = 104    
+    params['num_spots_used'] = 104
     params['diffraction_rings'] = False
-    params['indexing_success'] = True    
-    params['strategy_success'] = True    
+    params['indexing_success'] = True
+    params['strategy_success'] = True
 
     id = mxscreening.insert_screening_output(c, params.values())
     assert id is not None
@@ -105,11 +104,11 @@ def insert_screening_output_lattice(c):
     params['bravais_lattice'] = 'monoclinic'
     params['unit_cell_a'] = 11
     params['unit_cell_b'] = 11
-    params['unit_cell_c'] = 11    
-    params['unit_cell_alpha'] = 90    
-    params['unit_cell_beta'] = 90    
-    params['unit_cell_gamma'] = 90    
-    params['labelit_indexing'] = True    
+    params['unit_cell_c'] = 11
+    params['unit_cell_alpha'] = 90
+    params['unit_cell_beta'] = 90
+    params['unit_cell_gamma'] = 90
+    params['labelit_indexing'] = True
 
     id = mxscreening.insert_screening_output_lattice(c, params.values())
     assert id is not None
@@ -155,7 +154,7 @@ def insert_screening_strategy_sub_wedge(c):
     assert id > 0
     return id
 
-    
+
 # ---- Tests with normal cursor
 
 @with_setup(get_cursor, close_cursor)
@@ -201,6 +200,3 @@ def test_insert_screening_strategy_sub_wedge():
 #def test_dict_insert_screening():
 #    global cursor
 #    insert_screening(cursor)
-
-
-
