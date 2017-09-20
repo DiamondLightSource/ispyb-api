@@ -1,6 +1,9 @@
 from __future__ import absolute_import, division
 
-import ConfigParser
+try:
+  import configparser
+except ImportError:
+  import ConfigParser as configparser
 import os.path
 
 import ispyb.driver.mysql.cursors as cursors
@@ -17,7 +20,7 @@ class ISPyBMySQLDriver(ispyb.interface.main.IF,
   def __init__(self, host=None, port=None, database=None,
                username=None, password=None, config_file=None):
     if config_file:
-      cfgparser = ConfigParser.ConfigParser()
+      cfgparser = configparser.ConfigParser()
       if not cfgparser.read(config_file):
         raise RuntimeError('Could not read from configuration file %s' %
                            config_file)
