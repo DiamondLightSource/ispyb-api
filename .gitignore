@@ -1,6 +1,7 @@
 *.pyc
 *.pyo
 build/
+conf/config.cfg
 dist/
 ispyb_api.egg-info/
 .idea/
