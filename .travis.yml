@@ -12,7 +12,7 @@ before_install:
 - mysql -u root -D ispybtest < conf/schema.sql
 
 before_script:
-- cp conf/defaults.example.cfg conf/defaults.cfg
+- cp conf/config.example.cfg conf/config.cfg
 
 # command to install dependencies
 install:
