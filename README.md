@@ -10,4 +10,4 @@ stored procedures and functions.
 * An ISPyB database on either MariaDB or MySQL
 * Before importing the test schema into the database: set global log_bin_trust_function_creators=ON;
 
-The pipeline2ispyb.py file is provided as an example of how to use the API.
+The docs/pipeline2ispyb.py file is provided as an example of how to use the API.
