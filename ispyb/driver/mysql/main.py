@@ -5,8 +5,8 @@ import os.path
 
 import ispyb.driver.mysql.cursors as cursors
 import ispyb.driver.mysql.stored_procedures
-import ispyb.interface.main
 import ispyb.exception
+import ispyb.interface.main
 import mysql.connector
 
 class ISPyBMySQLDriver(ispyb.interface.main.IF,

@@ -1,8 +1,8 @@
 from __future__ import absolute_import, division
 
 import ispyb.driver.mysql.stored_procedures
-import pytest
 import mock
+import pytest
 
 def test_stored_procedure_interface_only_provides_public_names_beginning_with_sp_():
   MSPI = ispyb.driver.mysql.stored_procedures.MySQLStoredProcedureInterface()

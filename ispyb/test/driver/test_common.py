@@ -2,10 +2,10 @@ from __future__ import absolute_import, division
 
 import inspect
 
-import ispyb.interface.main
 import ispyb.driver.api
-import ispyb.driver.mysql.main
 import ispyb.driver.dummy
+import ispyb.driver.mysql.main
+import ispyb.interface.main
 import pytest
 
 @pytest.mark.incremental

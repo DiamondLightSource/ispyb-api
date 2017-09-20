@@ -18,4 +18,3 @@ class IF(object):
     '''Returns a dictionary containing all key/value pairs defined in ISPyB
        for a particular reprocessing job.'''
     self._notimplemented()
-

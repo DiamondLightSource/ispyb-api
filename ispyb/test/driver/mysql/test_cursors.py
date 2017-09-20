@@ -1,8 +1,8 @@
 from __future__ import absolute_import, division
 
 import ispyb.driver.mysql.cursors as cursors
-import pytest
 import mock
+import pytest
 
 class pseudo_cursor():
   def execute(self, *args, **kwargs):
@@ -152,4 +152,3 @@ def test_stored_procedure_contextmanager_class():
   assert mock_cursor_factory.method_calls == [
       mock.call().close(),
       ], "Observed calls:\n" + "\n".join(map(str, mock_cursor_factory.method_calls))
-
