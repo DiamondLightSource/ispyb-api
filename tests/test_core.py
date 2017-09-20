@@ -19,28 +19,28 @@ def close_cursor():
     dbconnection.disconnect()
 
 def retrieve_visit_id(c):
-    id = core.retrieve_visit_id(c, 'mx12788-35')
-    assert id == 344095
+    id = core.retrieve_visit_id(c, 'cm14451-2')
+    assert id == 55168
 
 def retrieve_proposal_title(c):
-    title = core.retrieve_proposal_title(c, 'mx', 12788)
-    assert title.strip() == 'Manchester/Sheffield/Liverpool Crystallography BAG'
+    title = core.retrieve_proposal_title(c, 'cm', 14451)
+    assert title.strip() == 'I03 Commissioning Directory 2016'
 
 def retrieve_current_sessions(c):
-    rs = core.retrieve_current_sessions(c, 'i03', 24*60*30)
+    rs = core.retrieve_current_sessions(c, 'i03', 24*60*30000)
     assert len(rs) > 0
 
 def retrieve_most_recent_session(c):
-    rs = core.retrieve_most_recent_session(c, 'b24', 'cm')
+    rs = core.retrieve_most_recent_session(c, 'i03', 'cm')
     assert len(rs) == 1
 
 def retrieve_persons_for_proposal(c):
-    rs = core.retrieve_persons_for_proposal(c, 'nt', 14248)
+    rs = core.retrieve_persons_for_proposal(c, 'cm', 14451)
     assert len(rs) == 1
     return rs
 
 def retrieve_current_cm_sessions(c):
-    rs = core.retrieve_current_cm_sessions(c, 'b24')
+    rs = core.retrieve_current_cm_sessions(c, 'i03')
     assert len(rs) > 0
 
 def retrieve_active_plates(c):
