@@ -4704,7 +4704,7 @@ CREATE TABLE `ProposalHasPerson` (
   KEY `fk_ProposalHasPerson_Personal` (`personId`),
   CONSTRAINT `fk_ProposalHasPerson_Personal` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_ProposalHasPerson_Proposal` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4713,6 +4713,7 @@ CREATE TABLE `ProposalHasPerson` (
 
 LOCK TABLES `ProposalHasPerson` WRITE;
 /*!40000 ALTER TABLE `ProposalHasPerson` DISABLE KEYS */;
+INSERT INTO `ProposalHasPerson` VALUES (4,37027,1,'Principal Investigator');
 /*!40000 ALTER TABLE `ProposalHasPerson` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -11277,4 +11278,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-09-18 11:57:21
+-- Dump completed on 2017-09-20 21:57:15
