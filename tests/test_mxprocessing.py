@@ -13,7 +13,7 @@ def get_dict_cursor():
 
 def get_cursor():
     global cursor
-    cursor = dbconnection.connect(conf='dev'conf_file='../conf/config.cfg')
+    cursor = dbconnection.connect(conf='dev', conf_file='../conf/config.cfg')
 
 def close_cursor():
     cursor.close()
@@ -30,12 +30,12 @@ def insert_integration_and_processing(c):
     params['id'] = id
     params['status'] = True
     params['message'] = 'Finished'
-    id = mxprocessing.upsert_program(c, params.values())
-    assert id is not None
-    assert id > 0
+    programid = mxprocessing.upsert_program(c, params.values())
+    assert programid is not None
+    assert programid > 0
 
     params = mxprocessing.get_program_attachment_params()
-    params['parentid'] = id
+    params['parentid'] = programid
     params['file_name'] = 'file.log'
     params['file_path'] = '/tmp'
     params['file_type'] = 'Log' # should be one of Log, Result, Graph
@@ -43,10 +43,8 @@ def insert_integration_and_processing(c):
     assert id is not None
     assert id > 0
 
-    programid = id
-
     params = mxprocessing.get_integration_params()
-    params['datacollectionid'] = 834 # only works on dev
+    params['datacollectionid'] = 993677
     params['start_image_no'] = 1
     params['end_image_no'] = 100
     params['refined_detector_dist'] = 1106.20
@@ -107,7 +105,7 @@ def insert_integration_and_processing(c):
     assert id is not None
 
     params = mxprocessing.get_quality_indicators_params()
-    params['datacollectionid'] = 834 # only works on dev
+    params['datacollectionid'] = 993677 # only works on dev
     params['image_number'] = 1
     params['spot_total'] = 130
     params['programid'] = programid

@@ -8,7 +8,7 @@ from ispyb.mxscreening import mxscreening
 from datetime import datetime
 from nose import with_setup
 
-test_session = 'cm5952-5'
+test_session = 'cm14451-2'
 
 def get_dict_cursor():
     global cursor
