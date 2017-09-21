@@ -1,4 +1,4 @@
-https://travis-ci.org/DiamondLightSource/ispyb-api.svg?branch=master
+[![Build Status](https://travis-ci.org/DiamondLightSource/ispyb-api.svg?branch=master)](https://travis-ci.org/DiamondLightSource/ispyb-api)
 # ISPyB API
 
 This API is meant to be used server-side only as it connects directly to the database.
