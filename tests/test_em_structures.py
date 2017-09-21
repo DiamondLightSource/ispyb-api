@@ -18,7 +18,7 @@ def close_cursor():
 def test_insert_motion_correction():
     global cursor
     group_params = mxacquisition.get_data_collection_group_params()
-    group_params['parentid'] = 403
+    group_params['parentid'] = 55168
     group_id = mxacquisition.insert_data_collection_group(cursor, group_params.values())
     collection_params = mxacquisition.get_data_collection_params()
     collection_params['parentid'] = group_id
@@ -33,7 +33,7 @@ def test_insert_motion_correction():
 def test_insert_ctf():
     global cursor
     group_params = mxacquisition.get_data_collection_group_params()
-    group_params['parentid'] = 403
+    group_params['parentid'] = 55168
     group_id = mxacquisition.insert_data_collection_group(cursor, group_params.values())
     collection_params = mxacquisition.get_data_collection_params()
     collection_params['parentid'] = group_id

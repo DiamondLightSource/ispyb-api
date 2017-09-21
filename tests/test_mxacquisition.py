@@ -21,7 +21,7 @@ def close_cursor():
 
 def mxacquisition_methods(c):
     params = mxacquisition.get_data_collection_group_params()
-    params['parentid'] = 834 # sessionId
+    params['parentid'] = 55168 # sessionId
     params['experimenttype'] = 'OSC'
     dcgid = mxacquisition.insert_data_collection_group(c, params.values())
     assert dcgid is not None
