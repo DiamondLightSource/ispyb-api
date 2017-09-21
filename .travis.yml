@@ -20,4 +20,4 @@ install:
 - pip install coveralls
 
 script:
-- cd tests && nosetests -v --with-coverage --cover-package=ispyb
+- cd tests && nosetests -v --with-coverage --cover-package=ispyb && coveralls
