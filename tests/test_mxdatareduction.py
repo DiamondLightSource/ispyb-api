@@ -28,7 +28,7 @@ def insert_integration_and_processing(c):
     assert id > 0
 
     params = mxdatareduction.get_integration_params()
-    params['datacollectionid'] = 834 # only works on dev
+    params['datacollectionid'] = 993677
     params['start_image_no'] = 1
     params['end_image_no'] = 100
     params['refined_detector_dist'] = 1106.20

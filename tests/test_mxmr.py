@@ -21,7 +21,7 @@ def close_cursor():
 
 def upsert_run(c):
     params = mxmr.get_run_params()
-    params['parentid'] = 44356 # some autoProcScalingId
+    params['parentid'] = 596133 # some autoProcScalingId
     params['message'] = 'Just started ...'
     params['pipeline'] = 'dimple v2'
     params['cmd_line'] = 'dimple.sh --input=file.xml'
