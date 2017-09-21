@@ -103,15 +103,15 @@ class MXDataReduction(StoredRoutines):
 
   @classmethod
   def insert_processing(cls, cursor, values):
-    return cls.call_sf(cursor, 'ispyb.upsert_processing', values)
+    return cls.call_sf(cursor, 'upsert_processing', values)
 
   @classmethod
   def insert_scaling(cls, cursor, parent_id, values1, values2, values3):
     values = [parent_id] + values1 + values2 + values3
-    return cls.call_sf(cursor, 'ispyb.insert_scaling', values)
+    return cls.call_sf(cursor, 'insert_scaling', values)
 
   @classmethod
   def insert_integration(cls, cursor, values):
-    return cls.call_sf(cursor, 'ispyb.upsert_integration', values)
+    return cls.call_sf(cursor, 'upsert_integration', values)
 
 mxdatareduction = MXDataReduction()
