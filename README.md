@@ -1,3 +1,4 @@
+https://travis-ci.org/DiamondLightSource/ispyb-api.svg?branch=master
 # ISPyB API
 
 This API is meant to be used server-side only as it connects directly to the database.
