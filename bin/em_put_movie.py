@@ -20,22 +20,22 @@ import os
 import sys
 import datetime
 
-from ispyb_api.dbconnection import dbconnection
-from ispyb_api.core import core
-from ispyb_api.mxacquisition import mxacquisition
+from ispyb.dbconnection import dbconnection
+from ispyb.core import core
+from ispyb.mxacquisition import mxacquisition
 
 from datetime import datetime
 
 if __name__ == '__main__' :
-    
+
     def exit(code, message=None):
         dbconnection.disconnect()
         if not message is None:
             print(message)
         sys.exit(code)
-    
+
     logging.info("test")
-    
+
     import optparse
     parser = optparse.OptionParser()
     parser.add_option("--movieid", dest="movieid", help="Id for movie", metavar="INTEGER")
@@ -77,32 +77,32 @@ if __name__ == '__main__' :
     (opts, args) = parser.parse_args()
 
     cursor = None
-    if opts.db is None or opts.db == "prod": 
-        cursor = dbconnection.connect_to_prod()
+    if opts.db is None or opts.db == "prod":
+        cursor = dbconnection.connect('prod')
     elif opts.db == "dev":
-        cursor = dbconnection.connect_to_dev()
+        cursor = dbconnection.connect('dev')
     elif opts.db == "test":
-        cursor = dbconnection.connect_to_test()
+        cursor = dbconnection.connect('test')
     else:
         exit(1, "ERROR: Invalid database")
 
     # Find the id for the visit
     visitid = core.retrieve_visit_id(cursor, opts.visit)
-    
+
     result = None
     if visitid is not None or opts.movieid is not None:
 	# EMMovieId, blsessionId,blsampleId,movieFile,p_NOImages,frameLength,totalExposure,magnification,samplePixSize,dosePerFrame,totalDose,runStatus,comments,runDirectory,binning,particleDiameter,pixelSize,boxSize,minResolution,maxResolution, minDefocus, maxDefocus, defocusStepSize, amountAstigmatism, extractSize, starttime, endtime
-        
+
         # Store a movie data collection ...
         params = mxacquisition.get_data_collection_params()
         params['parentid'] = opts.groupid
         params['visitid'] = visitid
         params['sampleid'] = opts.sampleid
         params['detectorid'] = opts.microscopeid
-        
+
         if not opts.filename is None:
             imgdir = opts.filename[:opts.filename.rfind('/')]
-        
+
             params['imgdir'] = imgdir
             params['imgprefix'] = opts.filename[opts.filename.rfind('/') + 1 : opts.filename.rfind('_')]
             params['imgsuffix'] = opts.filename[opts.filename.rfind('.')+1:]
@@ -110,7 +110,7 @@ if __name__ == '__main__' :
 
         # TODO: finish the mapping here ...
         params['xtal_snapshot1'] = opts.powerspectrum2
-        params['xtal_snapshot2'] = opts.powerspectrum1 
+        params['xtal_snapshot2'] = opts.powerspectrum1
         params['dat_file'] = opts.drift # not sure where drift should go yet
         params['xtal_snapshot4'] = opts.micrograph
 
@@ -139,7 +139,7 @@ if __name__ == '__main__' :
         params['extract_size'] = opts.extract_size
         params['bg_radius'] = opts.bg_radius
 
-        dc_id = None        
+        dc_id = None
         if opts.movieid is None:
             dc_id = mxacquisition.insert_data_collection(cursor, params.values())
         else:
@@ -148,8 +148,3 @@ if __name__ == '__main__' :
         exit(0, "--movieid=%d" % dc_id)
     else:
         exit(1, "ERROR: Neither visit nor movieid found/provided.")
- 
-    
-
-
-    

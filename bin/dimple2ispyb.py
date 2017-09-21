@@ -13,8 +13,8 @@ import ConfigParser
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
 
-from ispyb_api.dbconnection import dbconnection
-from ispyb_api.mxmr import mxmr
+from ispyb.dbconnection import dbconnection
+from ispyb.mxmr import mxmr
 
 
 def get_logical_arg(job, name):
@@ -28,14 +28,14 @@ def get_scaling_id(dir):
     id_file = os.path.join(dir, "ispyb_ids.xml")
 
     if (not os.path.isfile(id_file)) or (not os.access(id_file, os.R_OK)):
-        print "Either file %s is missing or is not readable" % id_file        
+        print "Either file %s is missing or is not readable" % id_file
         return None
-    xml = None    
+    xml = None
     with open(id_file, 'rb') as f:
         xml = f.read()
     if xml is None:
         return None
- 
+
     m = re.match(r'.*\<autoProcScalingId\>(\d+)\<\/autoProcScalingId\>.*', xml)
     if m is None:
         return None
@@ -47,7 +47,7 @@ def store_result(cursor, dir, scaling_id):
 
     log_file = os.path.join(dir, "dimple.log")
     if (not os.path.isfile(log_file)) or (not os.access(log_file, os.R_OK)):
-        print "Either file %s is missing or is not readable" % log_file        
+        print "Either file %s is missing or is not readable" % log_file
         return None
 
     log = ConfigParser.RawConfigParser()
@@ -56,7 +56,7 @@ def store_result(cursor, dir, scaling_id):
     params = mxmr.get_run_params()
     params['parentid'] = scaling_id
     params['pipeline'] = 'dimple'
-    params['log_file'] = log_file 
+    params['log_file'] = log_file
     params['success'] = 1
 
     starttime = log.get(log.sections()[1], 'start_time')
@@ -66,7 +66,7 @@ def store_result(cursor, dir, scaling_id):
 
     params['rfree_start'] = log.getfloat('refmac5 restr', 'ini_free_r')
     params['rfree_end'] = log.getfloat('refmac5 restr', 'free_r')
-    
+
     params['r_start'] = log.getfloat('refmac5 restr', 'ini_overall_r')
     params['r_end'] = log.getfloat('refmac5 restr', 'overall_r')
     params['message'] = " ".join(log.get('find-blobs', 'info').split()[:4])
@@ -115,25 +115,20 @@ try:
 except:
         logging.getLogger().exception("dimple2ispyb: problem setting the file logging using file %s :-(" % log_file)
 
-
-
-if len(sys.argv) != 3:
-    print("Usage: %s dimple-output-dir fast_dp-output-dir" % sys.argv[0])
+if len(sys.argv) != 4:
+    print("Usage: %s conf_file dimple-output-dir fast_dp-output-dir" % sys.argv[0])
     sys.exit(1)
 
-cursor = dbconnection.connect_to_prod()
+conf_file = sys.argv[1]
+cursor = dbconnection.connect('prod', conf_file = conf_file)
 
-scaling_id = get_scaling_id(sys.argv[2])
+scaling_id = get_scaling_id(sys.argv[3])
 
 if scaling_id is not None:
     try:
-        store_result(cursor, sys.argv[1], scaling_id)
+        store_result(cursor, sys.argv[2], scaling_id)
     except:
         logging.getLogger().exception("dimple2ispyb: Problem extracting / storing the dimple result.")
-        store_failure(cursor, sys.argv[1], scaling_id)
+        store_failure(cursor, sys.argv[2], scaling_id)
 
 dbconnection.disconnect()
-
-
-
-

@@ -2,10 +2,10 @@
 # mxdatareduction2ispyb.py
 #
 #    Copyright (C) 2014 Diamond Light Source, Karl Levik
-#    
-# 2015-01-05 
 #
-# Script to store e.g. xia2 and fast_dp results using the ispyb_api.  
+# 2015-01-05
+#
+# Script to store e.g. xia2 and fast_dp results using the ispyb_api.
 #
 
 import sys
@@ -16,7 +16,7 @@ from ispyb.dbconnection import dbconnection
 from ispyb.core import core
 from ispyb.mxprocessing import mxprocessing
 
-# XML-to-dict code from here: 
+# XML-to-dict code from here:
 # http://code.activestate.com/recipes/410469-xml-as-dictionary/
 
 class XmlListConfig(list):
@@ -55,7 +55,7 @@ class XmlDictConfig(dict):
         childrenNames = []
         for child in parent_element.getchildren():
             childrenNames.append(child.tag)
-        
+
         if parent_element.items():
             self.update(dict(parent_element.items()))
         for element in parent_element:
@@ -69,12 +69,12 @@ class XmlDictConfig(dict):
                 else:
                     # here, we put the list in dictionary; the key is the
                     # tag name the list elements all share in common, and
-                    # the value is the list itself 
+                    # the value is the list itself
                     aDict = {element[0].tag: XmlListConfig(element)}
                 # if the tag has attributes, add those to the dict
                 if element.items():
                     aDict.update(dict(element.items()))
-                    
+
                 if childrenNames.count(element.tag) > 1:
                     try:
                         currentValue = self[element.tag]
@@ -86,7 +86,7 @@ class XmlDictConfig(dict):
                 else:
                     self.update({element.tag: aDict})
             # this assumes that if you've got an attribute in a tag,
-            # you won't be having any text. This may or may not be a 
+            # you won't be having any text. This may or may not be a
             # good idea -- time will tell. It works for the way we are
             # currently doing XML configuration files...
             elif element.items():
@@ -96,14 +96,16 @@ class XmlDictConfig(dict):
             else:
                 self.update({element.tag: element.text})
 
-if len(sys.argv) not in (2,3):
+if len(sys.argv) not in (3,4):
     print("Usage:")
-    print("%s xml_in_file" % sys.argv[0])
-    print("%s xml_in_file xml_out_file" % sys.argv[0])
+    print("%s conf_file xml_in_file" % sys.argv[0])
+    print("%s conf_file xml_in_file xml_out_file" % sys.argv[0])
     sys.exit(1)
 
+conf_file = sys.argv[1]
+
 # Convert the XML to a dictionary
-tree = ElementTree.parse(sys.argv[1])
+tree = ElementTree.parse(sys.argv[2])
 root = tree.getroot()
 xmldict = XmlDictConfig(root)
 
@@ -141,11 +143,11 @@ if s[0] == None or s[1] == None or s[2] == None:
     sys.exit("ERROR - please make sure the XML file contains 3 AutoProcScalingStatistics elements.")
 
 # Get a database cursor
-cursor = dbconnection.connect('prod')
+cursor = dbconnection.connect('prod', conf_file = conf_file)
 
 # Find the datacollection associated with this data reduction run
 
-xml_dir = os.path.split(sys.argv[1])[0]
+xml_dir = os.path.split(sys.argv[2])[0]
 
 try:
   dc_id = int(open(os.path.join(xml_dir, '.dc_id'), 'r').read())
@@ -164,7 +166,7 @@ for int_container in int_containers:
            integration['dataCollectionId'] = dc_id
 
 # Store results from XIA2 / MX data reduction pipelines
-# ...first the program info 
+# ...first the program info
 params = mxprocessing.get_program_params()
 if 'processingPrograms' in program:
     params['programs'] = program['processingPrograms']
@@ -179,7 +181,7 @@ if attachments != None:
     for attachment in attachments:
         params['parentid'] = app_id
         if 'fileName' in attachment:
-            params['file_name'] = attachment['fileName'] 
+            params['file_name'] = attachment['fileName']
         if 'filePath' in attachment:
             params['file_path'] = attachment['filePath']
         if 'fileType' in attachment:
@@ -199,8 +201,8 @@ params['refinedcell_gamma'] = proc['refinedCell_gamma']
 ap_id = mxprocessing.upsert_processing(cursor, params.values())
 
 # ... then the scaling results
-p = [mxprocessing.get_outer_shell_scaling_params(), 
-     mxprocessing.get_inner_shell_scaling_params(), 
+p = [mxprocessing.get_outer_shell_scaling_params(),
+     mxprocessing.get_inner_shell_scaling_params(),
      mxprocessing.get_overall_scaling_params()]
 
 for i in 0, 1, 2:
@@ -273,14 +275,13 @@ for int_container in int_containers:
     integration_id = mxprocessing.upsert_integration(cursor, params.values())
 
 # Write results to xml_out_file
-if len(sys.argv) == 3:
+if len(sys.argv) > 3:
     xml = '<?xml version="1.0" encoding="ISO-8859-1"?>'\
         '<dbstatus><autoProcProgramId>%d</autoProcProgramId>'\
         '<autoProcId>%d</autoProcId>'\
         '<autoProcScalingId>%d</autoProcScalingId>'\
         '<autoProcIntegrationId>%d</autoProcIntegrationId>'\
         '<code>ok</code></dbstatus>' % (app_id, ap_id, scaling_id, integration_id)
-    f = open(sys.argv[2], 'w')
+    f = open(sys.argv[3], 'w')
     f.write(xml)
     f.close()
-     
