@@ -1,14 +1,15 @@
 [![Build Status](https://travis-ci.org/DiamondLightSource/ispyb-api.svg?branch=master)](https://travis-ci.org/DiamondLightSource/ispyb-api)
 # ISPyB API
 
-This API is meant to be used server-side only as it connects directly to the database.
-The database user has privileges to connect to the database and execute certain
-stored procedures and functions.
+This API is intended to be used server-side only as it connects directly to the
+DB. The DB user has privileges to connect to the DB and execute certain
+stored routines.
 
 ### Requirements
-* Recent version of Python 2.x (2.7?)
-* The mysql.connector Python package. (The old API version is still using MySQLdb)
-* An ISPyB database on either MariaDB or MySQL
-* Before importing the test schema into the database: set global log_bin_trust_function_creators=ON;
+* Python 2.7 or later 2.x
+* The mysql.connector Python package. (The legacy package is still using MySQLdb)
+* An ISPyB database on either MariaDB 10.0+ or MySQL 5.6+
+* If binary logging is enabled in the DB system, then execute the folloing
+before importing the test schema: set global log_bin_trust_function_creators=ON;
 
 The docs/pipeline2ispyb.py file is provided as an example of how to use the API.
