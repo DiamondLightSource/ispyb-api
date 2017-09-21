@@ -17,6 +17,7 @@ before_script:
 # command to install dependencies
 install:
 - pip install -Iv mysql-connector==2.1.6
+- pip install coveralls
 
 script:
 - cd tests && nosetests -v

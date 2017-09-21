@@ -1,0 +1,7 @@
+[report]
+omit =
+    */bin/*
+    */ispyb_api/*
+    */conf/*
+    */docs/*
+    */tests/*
