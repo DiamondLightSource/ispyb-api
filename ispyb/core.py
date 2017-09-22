@@ -59,26 +59,22 @@ class Core(StoredRoutines):
   @classmethod
   def insert_sample(cls, cursor, values):
     '''Store new sample.'''
-    cursor.execute('select upsert_sample(%s)' % ','.join(['%s'] * len(values)), values)
-    return cls.first_item_in_cursor( cursor )
+    return cls.call_sf(cursor, 'upsert_sample', values)
 
   @classmethod
   def update_sample(cls, cursor, values):
     '''Update existing sample.'''
-    cursor.execute('select upsert_sample(%s)' % ','.join(['%s'] * len(values)), values)
-    return cls.first_item_in_cursor( cursor )
+    return cls.call_sf(cursor, 'upsert_sample', values)
 
   @classmethod
   def retrieve_visit_id(cls, cursor, visit):
     '''Get the database ID for a visit on the form mx1234-5.'''
-    cursor.execute('select retrieve_visit_id(%s)', [visit])
-    return cls.first_item_in_cursor( cursor )
+    return cls.call_sf(cursor, 'retrieve_visit_id', [visit])
 
   @classmethod
   def retrieve_datacollection_id(cls, cursor, img_filename, img_fileloc):
     '''Get the database ID for the data collection corresponding to the given diffraction image file.'''
-    cursor.execute('select retrieve_datacollection_id(%s,%s)', [img_filename, img_fileloc])
-    return cls.first_item_in_cursor( cursor )
+    return cls.call_sf(cursor, 'retrieve_datacollection_id', [img_filename, img_fileloc])
 
   @classmethod
   def retrieve_current_sessions(cls, cursor, beamline, tolerance_mins=0):
@@ -119,7 +115,6 @@ class Core(StoredRoutines):
   @classmethod
   def retrieve_proposal_title(cls, cursor, proposal_code, proposal_number):
     '''Get the title of a given proposal'''
-    cursor.execute('select retrieve_proposal_title(%s,%s)', [proposal_code, proposal_number])
-    return cls.first_item_in_cursor( cursor )
+    return cls.call_sf(cursor, 'retrieve_proposal_title', [proposal_code, proposal_number])
 
 core = Core()
