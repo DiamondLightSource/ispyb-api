@@ -23,9 +23,9 @@ def insert_integration_and_processing(c):
     params = mxdatareduction.get_program_params()
     params['cmd_line'] = 'ls -ltr'
 
-    id = mxdatareduction.insert_program(c, params.values())
-    assert id is not None
-    assert id > 0
+    pid = mxdatareduction.insert_program(c, params.values())
+    assert pid is not None
+    assert pid > 0
 
     params = mxdatareduction.get_integration_params()
     params['datacollectionid'] = 993677
@@ -47,14 +47,12 @@ def insert_integration_and_processing(c):
     params['cell_beta'] = 90.0
     params['cell_gamma'] = 90.0
 
-    id = mxdatareduction.insert_integration(c, params.values())
-    assert id is not None
-    assert id > 0
-
-    print id
+    iid = mxdatareduction.insert_integration(c, params.values())
+    assert iid is not None
+    assert iid > 0
 
     params = mxdatareduction.get_processing_params()
-    params['parentid'] = id
+    params['parentid'] = iid
     params['spacegroup'] = 'P212121'
     params['refinedcell_a'] = 10
     params['refinedcell_b'] = 10
@@ -63,13 +61,16 @@ def insert_integration_and_processing(c):
     params['refinedcell_beta'] = 90
     params['refinedcell_gamma'] = 90
 
-    id = mxdatareduction.insert_processing(c, params.values())
-    assert id is not None
-    assert id > 0
+    procid = mxdatareduction.insert_processing(c, params.values())
+    assert procid is not None
+    assert procid > 0
 
-
-
-
+    params1 = mxdatareduction.get_inner_shell_scaling_params()
+    params2 = mxdatareduction.get_outer_shell_scaling_params()
+    params3 = mxdatareduction.get_overall_scaling_params()
+    sid = mxdatareduction.insert_scaling(c, procid, params1.values(), params2.values(), params3.values())
+    assert sid is not None
+    assert sid > 0
 
 # ---- Test with dict_cursor
 
