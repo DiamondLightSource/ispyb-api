@@ -41,10 +41,6 @@ class Core(StoredRoutines):
     return copy.deepcopy(cls._sample_params)
 
   @classmethod
-  def str_format_ops(l):
-      return ','.join(['%s'] * len(l))
-
-  @classmethod
   def put_sample(cls, cursor, values):
     id = None
     if values[0] is not None:
