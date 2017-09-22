@@ -47,6 +47,14 @@ def retrieve_active_plates(c):
     rs = core.retrieve_active_plates(c, 'i02-2')
     assert len(rs) >= 0
 
+def put_sample(c):
+    params = core.get_sample_params()
+    params['containerid'] = 1326
+    params['crystalid'] = 3918
+    params['name'] = 'Sample-010101'
+    params['code'] = 'SAM-010101'
+    id = core.put_sample(c, params.values())
+
 # ---- Test with dict_cursor
 
 @with_setup(get_dict_cursor, close_cursor)
@@ -80,6 +88,11 @@ def test_dict_retrieve_persons_for_proposal():
 def test_dict_retrieve_current_cm_sessions():
     global cursor
     retrieve_current_cm_sessions(cursor)
+
+@with_setup(get_dict_cursor, close_cursor)
+def test_dict_put_sample():
+    global cursor
+    put_sample(cursor)
 
 # ---- Test with regular cursor
 
@@ -119,3 +132,8 @@ def test_retrieve_current_cm_sessions():
 def test_retrieve_active_plates():
     global cursor
     retrieve_active_plates(cursor)
+
+@with_setup(get_cursor, close_cursor)
+def test_dict_put_sample():
+    global cursor
+    put_sample(cursor)
