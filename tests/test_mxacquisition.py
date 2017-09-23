@@ -32,10 +32,30 @@ def mxacquisition_methods(c):
     params['datacollection_number'] = 1
     params['run_status'] = 'DataCollection Successful'
     params['n_images'] = 360
-    id = mxacquisition.insert_data_collection(c, params.values())
-    assert id is not None
-    assert id > 0
+    id1 = mxacquisition.insert_data_collection(c, params.values())
+    assert id1 is not None
+    assert id1 > 0
 
+    params = mxacquisition.get_data_collection_params()
+    params['id'] = id1
+    params['parentid'] = dcgid
+    params['axis_start'] = 0
+    params['axis_end'] = 90
+    id2 = mxacquisition.update_data_collection(c, params.values())
+    assert id2 is not None
+    assert id2 > 0
+    assert id1 == id2
+
+    params = mxacquisition.get_image_params()
+    params['parentid'] = id1
+    params['img_number'] = 1
+    iid = mxacquisition.insert_image(c, params.values())
+
+    params = mxacquisition.get_image_params()
+    params['id'] = iid
+    params['parentid'] = id1
+    params['comments'] = 'Forgot to comment!'
+    iid = mxacquisition.update_image(c, params.values())
 
 # ---- Test with dict_cursor
 
