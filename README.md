@@ -13,6 +13,7 @@ stored routines.
 * If binary logging is enabled in the DB system, then execute this before
 importing the test schema: set global log_bin_trust_function_creators=ON;
 
+### Examples
 ```python
 from ispyb.dbconnection import dbconnection
 from ispyb.core import core
