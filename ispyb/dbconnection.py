@@ -24,7 +24,7 @@ from logging.handlers import RotatingFileHandler
 import base64
 import ConfigParser
 import codecs
-
+from version import __version__
 
 class DBConnection:
   '''DBConnection provides access to a database'''

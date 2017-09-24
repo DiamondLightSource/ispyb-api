@@ -17,6 +17,7 @@ except ImportError, e:
 from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
 import copy
 from ispyb.storedroutines import StoredRoutines
+from version import __version__
 
 class EMAcquisition(StoredRoutines):
     '''EMAcquisition provides methods to store data in the MotionCorrection and CTF tables.'''

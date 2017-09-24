@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from version import __version__
 
 class ExtendedOrderedDict(OrderedDict):
   def __init__(self, *args, **kwargs):

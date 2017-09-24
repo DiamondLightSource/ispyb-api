@@ -19,6 +19,7 @@ from collections import OrderedDict
 import copy
 from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
 from ispyb.storedroutines import StoredRoutines
+from version import __version__
 
 class MXMR(StoredRoutines):
   '''MXMR provides methods to store data in the MX molecular replacement tables.'''
@@ -45,6 +46,6 @@ class MXMR(StoredRoutines):
   @classmethod
   def upsert_run_blob(cls, cursor, values):
     '''Update or insert new entry with info about views (image paths) for an MX molecular replacement run, e.g. Dimple.'''
-    return cls.call_sp(cursor, procname='upsert_mrrun_blob', args=values)[0] 
+    return cls.call_sp(cursor, procname='upsert_mrrun_blob', args=values)[0]
 
 mxmr = MXMR()

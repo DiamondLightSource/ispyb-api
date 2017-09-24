@@ -19,6 +19,7 @@ from collections import OrderedDict
 import copy
 from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
 from ispyb.storedroutines import StoredRoutines
+from version import __version__
 
 class MXScreening(StoredRoutines):
   '''MXScreening provides methods to store MX characterisations and strategies.'''

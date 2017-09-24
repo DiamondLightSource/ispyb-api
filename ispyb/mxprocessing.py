@@ -20,6 +20,7 @@ import copy
 from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
 import mysql.connector
 from ispyb.storedroutines import StoredRoutines
+from version import __version__
 
 class MXProcessing(StoredRoutines):
   '''MXProcessing provides methods to store MX processing data.'''

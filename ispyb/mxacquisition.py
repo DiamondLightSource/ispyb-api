@@ -24,6 +24,7 @@ from logging.handlers import RotatingFileHandler
 from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
 import copy
 from ispyb.storedroutines import StoredRoutines
+from version import __version__
 
 class MXAcquisition(StoredRoutines):
   '''MXAcquisition provides methods to store data in the MX acquisition tables.'''

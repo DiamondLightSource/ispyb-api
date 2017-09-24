@@ -24,6 +24,7 @@ from logging.handlers import RotatingFileHandler
 from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
 import copy
 from ispyb.storedroutines import StoredRoutines
+from version import __version__
 
 class Core(StoredRoutines):
   '''Core provides methods to store and retrieve data in the core tables.'''

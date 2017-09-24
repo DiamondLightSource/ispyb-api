@@ -2,13 +2,14 @@
 # storedroutines.py
 #
 #    Copyright (C) 2017 Diamond Light Source, Karl Levik
-#    
-# 2017-09-12 
 #
-# Methods to aid in retrieving results from stored routines  
+# 2017-09-12
+#
+# Methods to aid in retrieving results from stored routines
 #
 
 import mysql.connector
+from version import __version__
 
 class StoredRoutines:
   @staticmethod

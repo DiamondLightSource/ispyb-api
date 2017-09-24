@@ -20,6 +20,7 @@ import copy
 from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
 import mysql.connector
 from ispyb.storedroutines import StoredRoutines
+from version import __version__
 
 class MXDataReduction(StoredRoutines):
   '''MXDataReduction provides methods to store reduced MX data.'''

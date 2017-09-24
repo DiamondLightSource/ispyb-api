@@ -19,6 +19,7 @@ from collections import OrderedDict
 import copy
 from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
 from ispyb.storedroutines import StoredRoutines
+from version import __version__
 
 class Shipping(StoredRoutines):
   '''Shipping provides methods to update shipments and samples.'''
