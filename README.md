@@ -22,12 +22,13 @@ pip install --user dist/ispyb-${version}-py2-none-any.whl
 
 ### Examples
 ```python
-from ispyb.dbconnection import dbconnection
+from ispyb.dbconnection import DBConnection
 from ispyb.core import core
 from ispyb.mxacquisition import mxacquisition
 from datetime import datetime
 
-cursor = dbconnection.connect('dev', conf_file='dbconfig.cfg')
+conn = DBConnection('dev', conf_file='dbconfig.cfg')
+cursor = conn.get_cursor()
 # Find the id for a given visit
 sessionid = core.retrieve_visit_id(cursor, 'cm14451-2')
 # Create a new data collection entry:
@@ -38,6 +39,7 @@ params['starttime'] = datetime.strptime('2017-09-21 13:00:00', '%Y-%m-%d %H:%M:%
 params['endtime'] = datetime.strptime('2017-09-21 13:00:10', '%Y-%m-%d %H:%M:%S')
 params['comments'] = 'This is a test of data collection group.'
 dcg_id = mxacquisition.insert_data_collection_group(cursor, params.values())
+conn.disconnect()
 print "dcg_id: %i" % dcg_id
 ```
 

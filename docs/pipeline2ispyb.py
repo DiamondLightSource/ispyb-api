@@ -10,7 +10,7 @@
 # data acquisition and processing pipeline.
 #
 
-from ispyb.dbconnection import dbconnection
+from ispyb.dbconnection import DBConnection
 from ispyb.core import core
 from ispyb.mxacquisition import mxacquisition
 from ispyb.mxscreening import mxscreening
@@ -20,7 +20,8 @@ from ispyb.mxmr import mxmr
 from datetime import datetime
 import sys
 
-cursor = dbconnection.connect('dev', conf_file=sys.argv[1])
+conn = DBConnection.connect('dev', conf_file=sys.argv[1])
+cursor = conn.get_cursor()
 
 # Find the id for a given visit
 sessionid = core.retrieve_visit_id(cursor, 'cm14451-2')
@@ -144,4 +145,4 @@ params['view3'] = '/dls/i03/data/2014/cm4950-3/file3.png'
 mrblob_id = mxmr.upsert_run_blob(cursor, params.values())
 print "mrblob_id: %i" % mrblob_id
 
-dbconnection.disconnect()
+conn.disconnect()
