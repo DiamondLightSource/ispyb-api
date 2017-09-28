@@ -13,7 +13,7 @@ import os
 from xml.etree import ElementTree
 from datetime import datetime
 from ispyb.xmltools import XmlDictConfig, mx_data_reduction_xml_to_ispyb
-from ispyb.dbconnection import dbconnection
+from ispyb.dbconnection import DBConnection
 from ispyb.core import core
 from ispyb.mxprocessing import mxprocessing
 
@@ -30,7 +30,8 @@ tree = ElementTree.parse(sys.argv[2])
 xmldict = XmlDictConfig( tree.getroot() )
 
 # Get a database cursor
-cursor = dbconnection.connect('prod', conf_file = conf_file)
+conn = DBConnection('prod', conf_file = conf_file)
+cursor = conn.get_cursor()
 
 # Find the datacollection associated with this data reduction run
 xml_dir = os.path.split(sys.argv[2])[0]
@@ -42,7 +43,7 @@ except:
 
 (app_id, ap_id, scaling_id, integration_id) = mx_data_reduction_xml_to_ispyb(xmldict, dc_id, cursor)
 
-dbconnection.disconnect()
+conn.disconnect()
 
 # Write results to xml_out_file
 if len(sys.argv) > 3:

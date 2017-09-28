@@ -6,18 +6,25 @@ import sys
 import os
 from xml.etree import ElementTree
 from datetime import datetime
-from ispyb.dbconnection import dbconnection
+from ispyb.dbconnection import DBConnection
 from ispyb.xmltools import XmlDictConfig, mx_data_reduction_xml_to_ispyb
 from ispyb.core import core
 from ispyb.mxprocessing import mxprocessing
 
-def get_cursor():
+def get_dict_cursor():
+    global conn
     global cursor
-    cursor = dbconnection.connect(conf='dev', conf_file='../conf/config.cfg')
+    conn = DBConnection(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
+    cursor = conn.get_cursor()
+
+def get_cursor():
+    global conn
+    global cursor
+    conn = DBConnection(conf='dev', conf_file='../conf/config.cfg')
+    cursor = conn.get_cursor()
 
 def close_cursor():
-    cursor.close()
-    dbconnection.disconnect()
+    conn.disconnect()
 
 @with_setup(get_cursor, close_cursor)
 def test_mx_data_reduction_xml_to_ispyb():
@@ -37,8 +44,6 @@ def test_mx_data_reduction_xml_to_ispyb():
         dc_id = None
 
     (app_id, ap_id, scaling_id, integration_id) = mx_data_reduction_xml_to_ispyb(xmldict, dc_id, cursor)
-
-    dbconnection.disconnect()
 
     # Output results xml
     xml = '<?xml version="1.0" encoding="ISO-8859-1"?>'\

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import context
-from ispyb.dbconnection import dbconnection
+from ispyb.dbconnection import DBConnection
 from ispyb.core import core
 from ispyb.mxacquisition import mxacquisition
 from ispyb.mxscreening import mxscreening
@@ -11,16 +11,19 @@ from nose import with_setup
 test_session = 'cm14451-2'
 
 def get_dict_cursor():
+    global conn
     global cursor
-    cursor = dbconnection.connect(conf='dev', dict_cursor=False, conf_file='../conf/config.cfg')
+    conn = DBConnection(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
+    cursor = conn.get_cursor()
 
 def get_cursor():
+    global conn
     global cursor
-    cursor = dbconnection.connect(conf='dev', conf_file='../conf/config.cfg')
+    conn = DBConnection(conf='dev', conf_file='../conf/config.cfg')
+    cursor = conn.get_cursor()
 
 def close_cursor():
-    cursor.close()
-    dbconnection.disconnect()
+    conn.disconnect()
 
 def insert_dcgroup(c, session_id):
     params = mxacquisition.get_data_collection_group_params()

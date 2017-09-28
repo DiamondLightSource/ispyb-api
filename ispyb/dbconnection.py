@@ -29,18 +29,7 @@ from version import __version__
 class DBConnection:
   '''DBConnection provides access to a database'''
 
-  def __init__(self):
-    self.cursor = None
-    self.conn = None
-
-  def __del__(self):
-    self.disconnect()
-    return
-
-  def _connect(self, conf='dev', dict_cursor=False):
-      return self.connect(conf, dict_cursor)
-
-  def connect(self, conf='dev', dict_cursor=False, conf_file=None):
+  def __init__(self, conf='dev', dict_cursor=False, conf_file=None):
     self.disconnect()
     if not conf_file is None:
         self.config = ConfigParser.ConfigParser(allow_no_value=True)
@@ -62,16 +51,19 @@ class DBConnection:
         self.cursor = self.conn.cursor(dictionary=True)
     else:
         self.cursor = self.conn.cursor()
-    return self.cursor
+
+  def __del__(self):
+    self.disconnect()
 
   def disconnect(self):
     '''Release the connection previously created.'''
-    if self.cursor is not None:
+    if hasattr(self, 'cursor') and self.cursor is not None:
     	self.cursor.close()
 	self.cursor = None
-    if self.conn is not None:
+    if hasattr(self, 'conn') and self.conn is not None:
     	self.conn.close()
-        self.conn = None
+    self.conn = None
     return
 
-dbconnection = DBConnection()
+  def get_cursor(self):
+      return self.cursor

@@ -13,7 +13,7 @@ import ConfigParser
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
 
-from ispyb.dbconnection import dbconnection
+from ispyb.dbconnection import DBConnection
 from ispyb.mxmr import mxmr
 
 
@@ -120,7 +120,8 @@ if len(sys.argv) != 4:
     sys.exit(1)
 
 conf_file = sys.argv[1]
-cursor = dbconnection.connect('prod', conf_file = conf_file)
+conn = DBConnection('prod', conf_file = conf_file)
+cursor = conn.get_cursor()
 
 scaling_id = get_scaling_id(sys.argv[3])
 
@@ -131,4 +132,4 @@ if scaling_id is not None:
         logging.getLogger().exception("dimple2ispyb: Problem extracting / storing the dimple result.")
         store_failure(cursor, sys.argv[2], scaling_id)
 
-dbconnection.disconnect()
+conn.disconnect()

@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-# TODO 
+# TODO
 # - validation
 # - init script
 # - install on server with /sbin/chkconfig so it auto-starts on boot-up
 # - more fine-grained storing (integration, scaling, ...)
 # - store to AutoProcStatus
-# - CFE "promise" that it remains running? 
+# - CFE "promise" that it remains running?
 #
 # DONE
 # - logging and error handling (including logging to graylog)
@@ -19,7 +19,7 @@ import time
 import sys
 import os
 import logging
-from ispyb.dbconnection import dbconnection
+from ispyb.dbconnection import DBConnection
 from ispyb.mxdatareduction import mxdatareduction
 
 # Disable Python output buffering
@@ -48,7 +48,7 @@ def set_logging(config):
         else:
             handler.setLevel(logging.WARNING)
         logger.addHandler(handler)
-    
+
 def store_processing_dict(xmldict):
     # Convenience pointers and sanity checks
     int_containers = xmldict['AutoProcScalingContainer']['AutoProcIntegrationContainer']
@@ -60,7 +60,7 @@ def store_processing_dict(xmldict):
     if isinstance(attachments, dict):  # Make it a list regardless
         attachments = [attachments]
     scaling = xmldict['AutoProcScalingContainer']['AutoProcScaling']
-    
+
     if proc == None:
         logging.getLogger().error('please make sure the input contains an AutoProc element')
         return
@@ -70,7 +70,7 @@ def store_processing_dict(xmldict):
     if int_containers == None:
         logging.getLogger().error('please make sure the input contains an AutoProcIntegrationContainer element')
         return
-    
+
     s = [None, None, None]
     for i in xrange(0, 3):
         stats = xmldict['AutoProcScalingContainer']['AutoProcScalingStatistics'][i]
@@ -80,25 +80,25 @@ def store_processing_dict(xmldict):
             s[1] = stats
         elif stats['scalingStatisticsType'] == 'overall':
             s[2] = stats
-    
+
     if s[0] == None or s[1] == None or s[2] == None:
         logging.getLogger().error('please make sure the input contains 3 AutoProcScalingStatistics elements')
         return
-    
-    dc_id = None    
+
+    dc_id = None
     for int_container in int_containers:
         integration = int_container['AutoProcIntegration']
         if 'dataCollectionId' not in integration:
             logging.getLogger().error('no dataCollectionId in AutoProcIntegration')
             return
-            
+
 #             if dc_id is not None:
 #                integration['dataCollectionId'] = dc_id
 #             else:
 #                image = int_container['Image']
 #                dc_id = core.retrieve_datacollection_id(cursor, image['fileName'], image['fileLocation'])
 #                integration['dataCollectionId'] = dc_id
-    
+
     # Store results from XIA2 / MX data reduction pipelines
     # ...first the program info
     params = mxdatareduction.get_program_params()
@@ -114,7 +114,7 @@ def store_processing_dict(xmldict):
         for attachment in attachments:
             i += 1
             if 'fileName' in attachment:
-                params['filename' + str(i)] = attachment['fileName'] 
+                params['filename' + str(i)] = attachment['fileName']
             if 'filePath' in attachment:
                 params['filepath' + str(i)] = attachment['filePath']
             if 'fileType' in attachment:
@@ -126,7 +126,7 @@ def store_processing_dict(xmldict):
     else:
       # No update required
       app_id = program
-    
+
     # ...then the top-level processing entry
     params = mxdatareduction.get_processing_params()
     params['spacegroup'] = proc['spaceGroup']
@@ -138,12 +138,12 @@ def store_processing_dict(xmldict):
     params['refinedcell_beta'] = proc['refinedCell_beta']
     params['refinedcell_gamma'] = proc['refinedCell_gamma']
     ap_id = mxdatareduction.insert_processing(cursor, params.values())
-    
+
     # ... then the scaling results
     p = [mxdatareduction.get_outer_shell_scaling_params(),
          mxdatareduction.get_inner_shell_scaling_params(),
          mxdatareduction.get_overall_scaling_params()]
-    
+
     for i in 0, 1, 2:
       if 'rMerge' in s[i]:
           p[i]['r_merge'] = s[i]['rMerge']
@@ -179,14 +179,14 @@ def store_processing_dict(xmldict):
           p[i]['r_pim_within_iplusi_minus'] = s[i]['rPimWithinIPlusIMinus']
       if 'rPimAllIPlusIMinus' in s[i]:
           p[i]['r_pim_all_iplusi_minus'] = s[i]['rPimAllIPlusIMinus']
-    
+
     scaling_id = mxdatareduction.insert_scaling(cursor, ap_id, p[0].values(), p[1].values(), p[2].values())
-    
+
     # ... and finally the integration results
-    
+
     for int_container in int_containers:
         integration = int_container['AutoProcIntegration']
-    
+
         params = mxdatareduction.get_integration_params()
         params['parentid'] = scaling_id
         if 'dataCollectionId' in integration:
@@ -210,9 +210,9 @@ def store_processing_dict(xmldict):
             params['refined_ybeam'] = integration['refinedYBeam']
         if 'anomalous' in integration:
             params['anom'] = integration['anomalous']
-    
+
         integration_id = mxdatareduction.insert_integration(cursor, params.values())
-    
+
 #     # Write results to xml_out_file
 #     if len(sys.argv) == 3:
 #         xml = '<?xml version="1.0" encoding="ISO-8859-1"?>'\
@@ -236,6 +236,7 @@ def receive_message(header, message):
 # Define command-line option switches, load config and stomp config files
 parser = OptionParser(usage="%s [options]" % sys.argv[0])
 parser.add_option("-c", "--config", dest="config", help="the main config file", default="ispyb_ingester.cfg", metavar="FILE")
+parser.add_option("-d", "--dbconfig", dest="db_config", help="the DB config file", default="dbconfig.cfg", metavar="FILE")
 parser.add_option("-s", "--stomp-config", dest="stomp_config", help="the stomp config (i.e. message queue)", default="stomp.cfg", metavar="FILE")
 (options, args) = parser.parse_args(sys.argv[1:])
 
@@ -248,7 +249,8 @@ StompTransport.add_command_line_options(parser)
 
 # Get a database cursor
 global cursor
-cursor = dbconnection.connect(config.get('db', 'conf'))
+conn = DBConnection(config.get('db', 'conf'), conf_file = options.db_config)
+cursor = conn.get_cursor()
 
 def receive_message_but_exit_on_error(*args, **kwargs):
   try:

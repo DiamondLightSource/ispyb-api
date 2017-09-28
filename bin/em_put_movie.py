@@ -20,7 +20,7 @@ import os
 import sys
 import datetime
 
-from ispyb.dbconnection import dbconnection
+from ispyb.dbconnection import DBConnection
 from ispyb.core import core
 from ispyb.mxacquisition import mxacquisition
 
@@ -29,7 +29,7 @@ from datetime import datetime
 if __name__ == '__main__' :
 
     def exit(code, message=None):
-        dbconnection.disconnect()
+        conn.disconnect()
         if not message is None:
             print(message)
         sys.exit(code)
@@ -76,15 +76,18 @@ if __name__ == '__main__' :
 
     (opts, args) = parser.parse_args()
 
+    conn = None
     cursor = None
+    conf_file = sys.argv[1]
     if opts.db is None or opts.db == "prod":
-        cursor = dbconnection.connect('prod')
+        conn = DBConnection('prod', conf_file = conf_file)
     elif opts.db == "dev":
-        cursor = dbconnection.connect('dev')
+        conn = DBConnection('dev', conf_file = conf_file)
     elif opts.db == "test":
-        cursor = dbconnection.connect('test')
+        conn = DBConnection('test', conf_file = conf_file)
     else:
         exit(1, "ERROR: Invalid database")
+    cursor = conn.get_cursor()
 
     # Find the id for the visit
     visitid = core.retrieve_visit_id(cursor, opts.visit)
