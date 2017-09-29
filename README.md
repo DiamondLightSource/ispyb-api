@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/DiamondLightSource/ispyb-api.svg?branch=master)](https://travis-ci.org/DiamondLightSource/ispyb-api)
-[![Coverage Status](https://coveralls.io/repos/github/DiamondLightSource/ispyb-api/badge.svg?branch=master)](https://coveralls.io/github/DiamondLightSource/ispyb-api?branch=master)
+[![Build Status](https://travis-ci.org/DiamondLightSource/ispyb-api.svg?branch=v3.0.0)](https://travis-ci.org/DiamondLightSource/ispyb-api)
+[![Coverage Status](https://coveralls.io/repos/github/DiamondLightSource/ispyb-api/badge.svg?branch=v3.0.0)](https://coveralls.io/github/DiamondLightSource/ispyb-api?branch=v3.0.0)
 # ISPyB API
 
 This API is intended to be used server-side only as it connects directly to the
@@ -22,12 +22,13 @@ pip install --user dist/ispyb-${version}-py2-none-any.whl
 
 ### Examples
 ```python
-from ispyb.dbconnection import DBConnection
+from ispyb.connection import Connection, get_driver
 from ispyb.core import core
 from ispyb.mxacquisition import mxacquisition
 from datetime import datetime
 
-conn = DBConnection('dev', conf_file='dbconfig.cfg')
+ConnClass = get_driver(Connection.ISPYBMYSQLSP)
+conn = ConnClass(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
 cursor = conn.get_cursor()
 # Find the id for a given visit
 sessionid = core.retrieve_visit_id(cursor, 'cm14451-2')
