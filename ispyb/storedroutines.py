@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # storedroutines.py
 #
 #    Copyright (C) 2017 Diamond Light Source, Karl Levik
@@ -9,7 +8,7 @@
 #
 
 import mysql.connector
-from version import __version__
+from ispyb.version import __version__
 
 class StoredRoutines:
   @staticmethod

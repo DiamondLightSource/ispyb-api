@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # emacquisition.py
 #
 #    Copyright (C) 2014 Diamond Light Source, Karl Levik
@@ -14,10 +13,10 @@ except ImportError, e:
     print 'MySQL API module (mysql.connector) not found'
     raise e
 
-from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
+from ispyb.extendedordereddict import ExtendedOrderedDict
 import copy
 from ispyb.storedroutines import StoredRoutines
-from version import __version__
+from ispyb.version import __version__
 
 class EMAcquisition(StoredRoutines):
     '''EMAcquisition provides methods to store data in the MotionCorrection and CTF tables.'''

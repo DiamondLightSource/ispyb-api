@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # mxdatareduction.py
 #
 #    Copyright (C) 2017 Diamond Light Source, Karl Levik
@@ -17,9 +16,9 @@ import datetime
 from logging.handlers import RotatingFileHandler
 from collections import OrderedDict
 import copy
-from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
+from ispyb.extendedordereddict import ExtendedOrderedDict
 from ispyb.storedroutines import StoredRoutines
-from version import __version__
+from ispyb.version import __version__
 
 class MXScreening(StoredRoutines):
   '''MXScreening provides methods to store MX characterisations and strategies.'''

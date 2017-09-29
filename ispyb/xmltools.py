@@ -3,6 +3,7 @@
 
 import sys
 from ispyb.mxprocessing import mxprocessing
+from ispyb.version import __version__
 
 class XmlListConfig(list):
     def __init__(self, aList):

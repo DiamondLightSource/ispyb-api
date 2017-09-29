@@ -1,7 +1,6 @@
-#!/usr/bin/env python
-
+from __future__ import absolute_import, division
 import context
-from ispyb.dbconnection import DBConnection
+from ispyb.connection import Connection, get_driver
 from ispyb.core import core
 from datetime import datetime
 from nose import with_setup
@@ -9,13 +8,15 @@ from nose import with_setup
 def get_dict_cursor():
     global conn
     global cursor
-    conn = DBConnection(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
+    ConnClass = get_driver(Connection.ISPYBMYSQLSP)
+    conn = ConnClass(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
     cursor = conn.get_cursor()
 
 def get_cursor():
     global conn
     global cursor
-    conn = DBConnection(conf='dev', conf_file='../conf/config.cfg')
+    ConnClass = get_driver(Connection.ISPYBMYSQLSP)
+    conn = ConnClass(conf='dev', dict_cursor=False, conf_file='../conf/config.cfg')
     cursor = conn.get_cursor()
 
 def close_cursor():

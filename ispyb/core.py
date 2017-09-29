@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # core.py
 #
 #    Copyright (C) 2016 Diamond Light Source, Karl Levik
@@ -21,10 +20,10 @@ import os
 import sys
 import datetime
 from logging.handlers import RotatingFileHandler
-from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
+from ispyb.extendedordereddict import ExtendedOrderedDict
 import copy
 from ispyb.storedroutines import StoredRoutines
-from version import __version__
+from ispyb.version import __version__
 
 class Core(StoredRoutines):
   '''Core provides methods to store and retrieve data in the core tables.'''

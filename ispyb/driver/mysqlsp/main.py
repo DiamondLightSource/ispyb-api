@@ -1,18 +1,4 @@
-# dbconnection.py
-#
-#    Copyright (C) 2016 Diamond Light Source, Karl Levik
-#
-# 2016-11-30
-#
-# Methods to connect to and disconnect from a database
-#
-
-try:
-  import mysql.connector
-except ImportError, e:
-  print 'MySQL API module not found'
-  raise e
-
+import mysql.connector
 import string
 import logging
 import time
@@ -24,9 +10,11 @@ import base64
 import ConfigParser
 import codecs
 from ispyb.version import __version__
+import ispyb.interface.connection.main
 
-class DBConnection:
-  '''DBConnection provides access to a database'''
+class ISPyBMySQLSPDriver(ispyb.interface.connection.main.IF):
+  '''Provides a connects to an ISPyB MySQL/MariaDB database through stored procedures.
+  '''
 
   def __init__(self, conf='dev', dict_cursor=False, conf_file=None):
     self.disconnect()
