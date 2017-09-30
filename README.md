@@ -27,7 +27,7 @@ from ispyb.core import core
 from ispyb.mxacquisition import mxacquisition
 from datetime import datetime
 
-ConnClass = get_driver(Connection.ISPYBMYSQLSP)
+ConnClass = get_connection_class(Connection.ISPYBMYSQLSP)
 conn = ConnClass(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
 cursor = conn.get_cursor()
 # Find the id for a given visit
