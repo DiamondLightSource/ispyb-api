@@ -3,11 +3,11 @@ from enum import Enum
 
 class Connection(Enum):
     ISPYBMYSQLSP = ('MySQL/MariaDB database access through stored procedures',
-    'ispyb.driver.mysqlsp.main',
-    'ISPyBMySQLSPDriver')
+    'ispyb.connector.mysqlsp.main',
+    'ISPyBMySQLSPConnector')
     ISPYBWS = ('Official ISPyB web services API',
-    'ispyb.driver.ws.main',
-    'ISPyBWSDriver')
+    'ispyb.connector.ws.main',
+    'ISPyBWSConnector')
 
     def __init__(self, description, module, classname):
         '''Make tuple elements reachable via attribute names.'''

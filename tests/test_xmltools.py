@@ -14,7 +14,7 @@ def test_mx_data_reduction_xml_to_ispyb():
     conn = get_connection()
     cursor = conn.get_cursor()
 
-    xml_file = 'data/mx_data_reduction_pipeline_results.xml'
+    xml_file = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data/mx_data_reduction_pipeline_results.xml'))
     # Convert the XML to a dictionary
     tree = ElementTree.parse(xml_file)
     xmldict = XmlDictConfig( tree.getroot() )

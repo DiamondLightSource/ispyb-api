@@ -12,8 +12,8 @@ import codecs
 from ispyb.version import __version__
 import ispyb.interface.connection.main
 
-class ISPyBMySQLSPDriver(ispyb.interface.connection.main.IF):
-  '''Provides a connects to an ISPyB MySQL/MariaDB database through stored procedures.
+class ISPyBMySQLSPConnector(ispyb.interface.connection.main.IF):
+  '''Provides a connector to an ISPyB MySQL/MariaDB database through stored procedures.
   '''
 
   def __init__(self, conf='dev', dict_cursor=False, conf_file=None):
