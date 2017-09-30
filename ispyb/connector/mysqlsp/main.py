@@ -1,12 +1,8 @@
 import mysql.connector
-import string
-import logging
 import time
 import os
 import sys
 import datetime
-from logging.handlers import RotatingFileHandler
-import base64
 import ConfigParser
 import codecs
 from ispyb.version import __version__
