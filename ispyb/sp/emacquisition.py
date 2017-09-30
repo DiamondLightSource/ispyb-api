@@ -15,7 +15,7 @@ except ImportError, e:
 
 from ispyb.extendedordereddict import ExtendedOrderedDict
 import copy
-from ispyb.storedroutines import StoredRoutines
+from ispyb.sp.storedroutines import StoredRoutines
 from ispyb.version import __version__
 
 class EMAcquisition(StoredRoutines):

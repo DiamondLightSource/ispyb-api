@@ -2,8 +2,8 @@
 
 import context
 from ispyb.connection import Connection, get_connection_class
-from ispyb.core import core
-from ispyb.mxmr import mxmr
+from ispyb.sp.core import core
+from ispyb.sp.mxmr import mxmr
 from datetime import datetime
 from nose import with_setup
 from testtools import get_connection

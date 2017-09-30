@@ -2,8 +2,8 @@
 
 import context
 from ispyb.connection import Connection, get_connection_class
-from ispyb.core import core
-from ispyb.mxdatareduction import mxdatareduction
+from ispyb.sp.core import core
+from ispyb.sp.mxdatareduction import mxdatareduction
 from datetime import datetime
 from nose import with_setup
 from testtools import get_connection

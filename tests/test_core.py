@@ -1,6 +1,6 @@
 from __future__ import absolute_import, division
 import context
-from ispyb.core import core
+from ispyb.sp.core import core
 from datetime import datetime
 from nose import with_setup
 from testtools import get_connection

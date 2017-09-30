@@ -2,7 +2,7 @@
 
 import context
 from ispyb.connection import Connection, get_connection_class
-from ispyb.shipping import shipping
+from ispyb.sp.shipping import shipping
 from nose import with_setup
 from testtools import get_connection
 

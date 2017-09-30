@@ -3,8 +3,8 @@
 import context
 from ispyb.connection import Connection, get_connection_class
 from nose import with_setup
-from ispyb.mxacquisition import mxacquisition
-from ispyb.emacquisition import emacquisition
+from ispyb.sp.mxacquisition import mxacquisition
+from ispyb.sp.emacquisition import emacquisition
 from testtools import get_connection
 
 def test_insert_motion_correction():

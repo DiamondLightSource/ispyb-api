@@ -8,30 +8,11 @@ from xml.etree import ElementTree
 from datetime import datetime
 from ispyb.connection import Connection, get_connection_class
 from ispyb.xmltools import XmlDictConfig, mx_data_reduction_xml_to_ispyb
-from ispyb.core import core
-from ispyb.mxprocessing import mxprocessing
 from testtools import get_connection
 
-def get_dict_cursor():
-    global conn
-    global cursor
-    ConnClass = get_connection_class(Connection.ISPYBMYSQLSP)
-    conn = ConnClass(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
-
-def get_cursor():
-    global conn
-    global cursor
-    ConnClass = get_connection_class(Connection.ISPYBMYSQLSP)
-    conn = ConnClass(conf='dev', dict_cursor=False, conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
-
-def close_cursor():
-    conn.disconnect()
-
-@with_setup(get_cursor, close_cursor)
 def test_mx_data_reduction_xml_to_ispyb():
-    global cursor
+    conn = get_connection()
+    cursor = conn.get_cursor()
 
     xml_file = 'data/mx_data_reduction_pipeline_results.xml'
     # Convert the XML to a dictionary
@@ -56,3 +37,4 @@ def test_mx_data_reduction_xml_to_ispyb():
             '<autoProcIntegrationId>%d</autoProcIntegrationId>'\
             '<code>ok</code></dbstatus>' % (app_id, ap_id, scaling_id, integration_id)
     print(xml)
+    conn.disconnect()

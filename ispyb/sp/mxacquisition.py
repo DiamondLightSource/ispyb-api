@@ -22,7 +22,7 @@ import datetime
 from logging.handlers import RotatingFileHandler
 from ispyb.extendedordereddict import ExtendedOrderedDict
 import copy
-from ispyb.storedroutines import StoredRoutines
+from ispyb.sp.storedroutines import StoredRoutines
 from ispyb.version import __version__
 
 class MXAcquisition(StoredRoutines):

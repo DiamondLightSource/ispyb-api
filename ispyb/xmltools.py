@@ -2,7 +2,7 @@
 # http://code.activestate.com/recipes/410469-xml-as-dictionary/
 
 import sys
-from ispyb.mxprocessing import mxprocessing
+from ispyb.sp.mxprocessing import mxprocessing
 from ispyb.version import __version__
 
 class XmlListConfig(list):

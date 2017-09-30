@@ -17,7 +17,7 @@ from logging.handlers import RotatingFileHandler
 from collections import OrderedDict
 import copy
 from ispyb.extendedordereddict import ExtendedOrderedDict
-from ispyb.storedroutines import StoredRoutines
+from ispyb.sp.storedroutines import StoredRoutines
 from ispyb.version import __version__
 
 class MXScreening(StoredRoutines):
