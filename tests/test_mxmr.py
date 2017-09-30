@@ -1,28 +1,12 @@
 #!/usr/bin/env python
 
 import context
-from ispyb.connection import Connection, get_driver
+from ispyb.connection import Connection, get_connection_class
 from ispyb.core import core
 from ispyb.mxmr import mxmr
 from datetime import datetime
 from nose import with_setup
-
-def get_dict_cursor():
-    global conn
-    global cursor
-    ConnClass = get_driver(Connection.ISPYBMYSQLSP)
-    conn = ConnClass(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
-
-def get_cursor():
-    global conn
-    global cursor
-    ConnClass = get_driver(Connection.ISPYBMYSQLSP)
-    conn = ConnClass(conf='dev', dict_cursor=False, conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
-
-def close_cursor():
-    conn.disconnect()
+from testtools import get_connection
 
 def upsert_run(c):
     params = mxmr.get_run_params()
@@ -52,7 +36,8 @@ def upsert_run(c):
 
 # ---- Test with dict_cursor
 
-@with_setup(get_cursor, close_cursor)
 def test_dict_upsert_run():
-    global cursor
+    conn = get_connection()
+    cursor = conn.get_cursor()
     upsert_run(cursor)
+    conn.disconnect()

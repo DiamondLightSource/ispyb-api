@@ -1,28 +1,12 @@
 #!/usr/bin/env python
 
 import context
-from ispyb.connection import Connection, get_driver
+from ispyb.connection import Connection, get_connection_class
 from ispyb.core import core
 from ispyb.mxacquisition import mxacquisition
 from datetime import datetime
 from nose import with_setup
-
-def get_dict_cursor():
-    global conn
-    global cursor
-    ConnClass = get_driver(Connection.ISPYBMYSQLSP)
-    conn = ConnClass(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
-
-def get_cursor():
-    global conn
-    global cursor
-    ConnClass = get_driver(Connection.ISPYBMYSQLSP)
-    conn = ConnClass(conf='dev', dict_cursor=False, conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
-
-def close_cursor():
-    conn.disconnect()
+from testtools import get_connection
 
 def mxacquisition_methods(c):
     params = mxacquisition.get_data_collection_group_params()
@@ -64,7 +48,8 @@ def mxacquisition_methods(c):
 
 # ---- Test with dict_cursor
 
-@with_setup(get_dict_cursor, close_cursor)
 def test_dict_mxacquisition_methods():
-    global cursor
+    conn = get_connection()
+    cursor = conn.get_cursor()
     mxacquisition_methods(cursor)
+    conn.disconnect()

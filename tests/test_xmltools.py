@@ -6,22 +6,23 @@ import sys
 import os
 from xml.etree import ElementTree
 from datetime import datetime
-from ispyb.connection import Connection, get_driver
+from ispyb.connection import Connection, get_connection_class
 from ispyb.xmltools import XmlDictConfig, mx_data_reduction_xml_to_ispyb
 from ispyb.core import core
 from ispyb.mxprocessing import mxprocessing
+from testtools import get_connection
 
 def get_dict_cursor():
     global conn
     global cursor
-    ConnClass = get_driver(Connection.ISPYBMYSQLSP)
+    ConnClass = get_connection_class(Connection.ISPYBMYSQLSP)
     conn = ConnClass(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
     cursor = conn.get_cursor()
 
 def get_cursor():
     global conn
     global cursor
-    ConnClass = get_driver(Connection.ISPYBMYSQLSP)
+    ConnClass = get_connection_class(Connection.ISPYBMYSQLSP)
     conn = ConnClass(conf='dev', dict_cursor=False, conf_file='../conf/config.cfg')
     cursor = conn.get_cursor()
 

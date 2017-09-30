@@ -1,31 +1,15 @@
 #!/usr/bin/env python
 
 import context
-from ispyb.connection import Connection, get_driver
+from ispyb.connection import Connection, get_connection_class
 from nose import with_setup
 from ispyb.mxacquisition import mxacquisition
 from ispyb.emacquisition import emacquisition
+from testtools import get_connection
 
-def get_dict_cursor():
-    global conn
-    global cursor
-    ConnClass = get_driver(Connection.ISPYBMYSQLSP)
-    conn = ConnClass(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
-
-def get_cursor():
-    global conn
-    global cursor
-    ConnClass = get_driver(Connection.ISPYBMYSQLSP)
-    conn = ConnClass(conf='dev', dict_cursor=False, conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
-
-def close_cursor():
-    conn.disconnect()
-
-@with_setup(get_cursor, close_cursor)
 def test_insert_motion_correction():
-    global cursor
+    conn = get_connection()
+    cursor = conn.get_cursor()
     group_params = mxacquisition.get_data_collection_group_params()
     group_params['parentid'] = 55168
     group_id = mxacquisition.insert_data_collection_group(cursor, group_params.values())
@@ -36,11 +20,12 @@ def test_insert_motion_correction():
     params["dataCollectionId"] = dc_id
     params["dosePerFrame"] = 20
     motion_cor_id = emacquisition.insert_motion_correction(cursor, params.values())
+    conn.disconnect()
     assert motion_cor_id is not None
 
-@with_setup(get_cursor, close_cursor)
 def test_insert_ctf():
-    global cursor
+    conn = get_connection()
+    cursor = conn.get_cursor()
     group_params = mxacquisition.get_data_collection_group_params()
     group_params['parentid'] = 55168
     group_id = mxacquisition.insert_data_collection_group(cursor, group_params.values())
@@ -56,4 +41,5 @@ def test_insert_ctf():
     params = emacquisition.get_ctf_params()
     params['motionCorrectionId'] = motion_cor_id
     ctf_id = emacquisition.insert_ctf(cursor, params.values())
+    conn.disconnect()
     assert ctf_id is not None

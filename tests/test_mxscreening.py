@@ -1,31 +1,15 @@
 #!/usr/bin/env python
 
 import context
-from ispyb.connection import Connection, get_driver
+from ispyb.connection import Connection, get_connection_class
 from ispyb.core import core
 from ispyb.mxacquisition import mxacquisition
 from ispyb.mxscreening import mxscreening
 from datetime import datetime
 from nose import with_setup
+from testtools import get_connection
 
 test_session = 'cm14451-2'
-
-def get_dict_cursor():
-    global conn
-    global cursor
-    ConnClass = get_driver(Connection.ISPYBMYSQLSP)
-    conn = ConnClass(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
-
-def get_cursor():
-    global conn
-    global cursor
-    ConnClass = get_driver(Connection.ISPYBMYSQLSP)
-    conn = ConnClass(conf='dev', dict_cursor=False, conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
-
-def close_cursor():
-    conn.disconnect()
 
 def insert_dcgroup(c, session_id):
     params = mxacquisition.get_data_collection_group_params()
@@ -41,7 +25,7 @@ def insert_dcgroup(c, session_id):
 
 def insert_screening(c, session_id = None):
     if session_id is None:
-        session_id = core.retrieve_visit_id(cursor, test_session)
+        session_id = core.retrieve_visit_id(c, test_session)
 
     dcg_id = insert_dcgroup(c, session_id)
 
@@ -57,7 +41,7 @@ def insert_screening(c, session_id = None):
     return id
 
 def insert_screening_input(c):
-    session_id = core.retrieve_visit_id(cursor, test_session)
+    session_id = core.retrieve_visit_id(c, test_session)
     s_id = insert_screening(c, session_id)
 
     params = mxscreening.get_screening_input_params()
@@ -76,7 +60,7 @@ def insert_screening_input(c):
 
 def insert_screening_output(c, session_id = None):
     if session_id is None:
-        session_id = core.retrieve_visit_id(cursor, test_session)
+        session_id = core.retrieve_visit_id(c, test_session)
     s_id = insert_screening(c, session_id)
 
     params = mxscreening.get_screening_output_params()
@@ -99,7 +83,7 @@ def insert_screening_output(c, session_id = None):
     return id
 
 def insert_screening_output_lattice(c):
-    session_id = core.retrieve_visit_id(cursor, test_session)
+    session_id = core.retrieve_visit_id(c, test_session)
     so_id = insert_screening_output(c, session_id)
 
     params = mxscreening.get_screening_output_lattice_params()
@@ -122,7 +106,7 @@ def insert_screening_output_lattice(c):
 
 def insert_screening_strategy(c, session_id = None):
     if session_id is None:
-        session_id = core.retrieve_visit_id(cursor, test_session)
+        session_id = core.retrieve_visit_id(c, test_session)
     so_id = insert_screening_output(c, session_id)
 
     params = mxscreening.get_screening_strategy_params()
@@ -136,7 +120,7 @@ def insert_screening_strategy(c, session_id = None):
 
 def insert_screening_strategy_wedge(c, session_id = None):
     if session_id is None:
-        session_id = core.retrieve_visit_id(cursor, test_session)
+        session_id = core.retrieve_visit_id(c, test_session)
     ss_id = insert_screening_strategy(c, session_id)
 
     params = mxscreening.get_screening_strategy_wedge_params()
@@ -148,7 +132,7 @@ def insert_screening_strategy_wedge(c, session_id = None):
     return id
 
 def insert_screening_strategy_sub_wedge(c):
-    session_id = core.retrieve_visit_id(cursor, test_session)
+    session_id = core.retrieve_visit_id(c, test_session)
     ssw_id = insert_screening_strategy_wedge(c, session_id)
 
     params = mxscreening.get_screening_strategy_sub_wedge_params()
@@ -162,46 +146,46 @@ def insert_screening_strategy_sub_wedge(c):
 
 # ---- Tests with normal cursor
 
-@with_setup(get_cursor, close_cursor)
 def test_insert_screening():
-    global cursor
+    conn = get_connection()
+    cursor = conn.get_cursor()
     insert_screening(cursor)
+    conn.disconnect()
 
-@with_setup(get_cursor, close_cursor)
 def test_insert_screening_input():
-    global cursor
+    conn = get_connection()
+    cursor = conn.get_cursor()
     insert_screening_input(cursor)
+    conn.disconnect()
 
-@with_setup(get_cursor, close_cursor)
 def test_insert_screening_output():
-    global cursor
+    conn = get_connection()
+    cursor = conn.get_cursor()
     insert_screening_output(cursor)
+    conn.disconnect()
 
-@with_setup(get_cursor, close_cursor)
 def test_insert_screening_output_lattice():
-    global cursor
+    conn = get_connection()
+    cursor = conn.get_cursor()
     insert_screening_output_lattice(cursor)
+    conn.disconnect()
 
-@with_setup(get_cursor, close_cursor)
 def test_insert_screening_strategy():
-    global cursor
+    conn = get_connection()
+    cursor = conn.get_cursor()
     insert_screening_strategy(cursor)
+    conn.disconnect()
 
-@with_setup(get_cursor, close_cursor)
 def test_insert_screening_strategy_wedge():
-    global cursor
+    conn = get_connection()
+    cursor = conn.get_cursor()
     insert_screening_strategy_wedge(cursor)
+    conn.disconnect()
 
-@with_setup(get_cursor, close_cursor)
 def test_insert_screening_strategy_sub_wedge():
-    global cursor
+    conn = get_connection()
+    cursor = conn.get_cursor()
     insert_screening_strategy_sub_wedge(cursor)
-
-
+    conn.disconnect()
 
 # ---- Tests with dict_cursor - NOT WORKING
-
-#@with_setup(get_dict_cursor, close_cursor)
-#def test_dict_insert_screening():
-#    global cursor
-#    insert_screening(cursor)

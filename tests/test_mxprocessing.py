@@ -1,28 +1,12 @@
 #!/usr/bin/env python
 
 import context
-from ispyb.connection import Connection, get_driver
+from ispyb.connection import Connection, get_connection_class
 from ispyb.core import core
 from ispyb.mxprocessing import mxprocessing
 from datetime import datetime
 from nose import with_setup
-
-def get_dict_cursor():
-    global conn
-    global cursor
-    ConnClass = get_driver(Connection.ISPYBMYSQLSP)
-    conn = ConnClass(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
-
-def get_cursor():
-    global conn
-    global cursor
-    ConnClass = get_driver(Connection.ISPYBMYSQLSP)
-    conn = ConnClass(conf='dev', dict_cursor=False, conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
-
-def close_cursor():
-    conn.disconnect()
+from testtools import get_connection
 
 def insert_integration_and_processing(c):
     params = mxprocessing.get_program_params()
@@ -121,7 +105,8 @@ def insert_integration_and_processing(c):
 
 # ---- Test with dict_cursor
 
-@with_setup(get_cursor, close_cursor)
 def test_insert_integration_and_processing():
-    global cursor
+    conn = get_connection()
+    cursor = conn.get_cursor()
     insert_integration_and_processing(cursor)
+    conn.disconnect()

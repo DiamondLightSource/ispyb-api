@@ -1,26 +1,9 @@
 from __future__ import absolute_import, division
 import context
-from ispyb.connection import Connection, get_driver
 from ispyb.core import core
 from datetime import datetime
 from nose import with_setup
-
-def get_dict_cursor():
-    global conn
-    global cursor
-    ConnClass = get_driver(Connection.ISPYBMYSQLSP)
-    conn = ConnClass(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
-
-def get_cursor():
-    global conn
-    global cursor
-    ConnClass = get_driver(Connection.ISPYBMYSQLSP)
-    conn = ConnClass(conf='dev', dict_cursor=False, conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
-
-def close_cursor():
-    conn.disconnect()
+from testtools import get_connection
 
 def retrieve_visit_id(c):
     id = core.retrieve_visit_id(c, 'cm14451-2')
@@ -61,83 +44,83 @@ def put_sample(c):
 
 # ---- Test with dict_cursor
 
-@with_setup(get_dict_cursor, close_cursor)
 def test_dict_retrieve_visit_id():
-    global cursor
-    retrieve_visit_id(cursor)
+    conn = get_connection(True)
+    retrieve_visit_id(conn.get_cursor())
+    conn.disconnect()
 
-@with_setup(get_dict_cursor, close_cursor)
 def test_dict_retrieve_proposal_title():
-    global cursor
-    retrieve_proposal_title(cursor)
+    conn = get_connection(True)
+    retrieve_proposal_title(conn.get_cursor())
+    conn.disconnect()
 
-@with_setup(get_dict_cursor, close_cursor)
 def test_dict_retrieve_current_sessions():
-    global cursor
-    retrieve_current_sessions(cursor)
+    conn = get_connection(True)
+    retrieve_current_sessions(conn.get_cursor())
+    conn.disconnect()
 
-@with_setup(get_dict_cursor, close_cursor)
 def test_dict_retrieve_most_recent_session():
-    global cursor
-    retrieve_most_recent_session(cursor)
+    conn = get_connection(True)
+    retrieve_most_recent_session(conn.get_cursor())
+    conn.disconnect()
 
-@with_setup(get_dict_cursor, close_cursor)
 def test_dict_retrieve_persons_for_proposal():
-    global cursor
-    rs = retrieve_persons_for_proposal(cursor)
+    conn = get_connection(True)
+    rs = retrieve_persons_for_proposal(conn.get_cursor())
+    conn.disconnect()
     login = rs[0]['login']
     assert login is not None
 
-@with_setup(get_dict_cursor, close_cursor)
 def test_dict_retrieve_current_cm_sessions():
-    global cursor
-    retrieve_current_cm_sessions(cursor)
+    conn = get_connection(True)
+    retrieve_current_cm_sessions(conn.get_cursor())
+    conn.disconnect()
 
-@with_setup(get_dict_cursor, close_cursor)
 def test_dict_put_sample():
-    global cursor
-    put_sample(cursor)
+    conn = get_connection(True)
+    put_sample(conn.get_cursor())
+    conn.disconnect()
 
 # ---- Test with regular cursor
 
-@with_setup(get_cursor, close_cursor)
 def test_retrieve_visit_id():
-    global cursor
-    retrieve_visit_id(cursor)
+    conn = get_connection()
+    retrieve_visit_id(conn.get_cursor())
+    conn.disconnect()
 
-@with_setup(get_cursor, close_cursor)
 def test_retrieve_proposal_title():
-    global cursor
-    retrieve_proposal_title(cursor)
+    conn = get_connection()
+    retrieve_proposal_title(conn.get_cursor())
+    conn.disconnect()
 
-@with_setup(get_cursor, close_cursor)
 def test_retrieve_current_sessions():
-    global cursor
-    retrieve_current_sessions(cursor)
+    conn = get_connection()
+    retrieve_current_sessions(conn.get_cursor())
+    conn.disconnect()
 
-@with_setup(get_cursor, close_cursor)
 def test_retrieve_most_recent_session():
-    global cursor
-    retrieve_most_recent_session(cursor)
+    conn = get_connection()
+    retrieve_most_recent_session(conn.get_cursor())
+    conn.disconnect()
 
-@with_setup(get_cursor, close_cursor)
 def test_retrieve_persons_for_proposal():
-    global cursor
-    rs = retrieve_persons_for_proposal(cursor)
+    conn = get_connection()
+    rs = retrieve_persons_for_proposal(conn.get_cursor())
+    conn.disconnect()
     login = rs[0][3]
     assert login is not None
 
-@with_setup(get_cursor, close_cursor)
 def test_retrieve_current_cm_sessions():
-    global cursor
-    retrieve_current_cm_sessions(cursor)
+    conn = get_connection()
+    retrieve_current_cm_sessions(conn.get_cursor())
+    conn.disconnect()
 
-@with_setup(get_cursor, close_cursor)
 def test_retrieve_active_plates():
-    global cursor
-    retrieve_active_plates(cursor)
+    conn = get_connection()
+    retrieve_active_plates(conn.get_cursor())
+    conn.disconnect()
 
-@with_setup(get_cursor, close_cursor)
 def test_dict_put_sample():
-    global cursor
-    put_sample(cursor)
+    conn = get_connection()
+    put_sample(conn.get_cursor())
+    conn.disconnect()

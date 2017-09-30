@@ -2,8 +2,12 @@ from __future__ import absolute_import, division
 from enum import Enum
 
 class Connection(Enum):
-    ISPYBMYSQLSP = ('MySQL/MariaDB database access through stored procedures', 'ispyb.driver.mysqlsp.main', 'ISPyBMySQLSPDriver')
-    ISPYBWS = ('Official ISPyB web services API', 'ispyb.driver.ws.main', 'ISPyBWSDriver')
+    ISPYBMYSQLSP = ('MySQL/MariaDB database access through stored procedures',
+    'ispyb.driver.mysqlsp.main',
+    'ISPyBMySQLSPDriver')
+    ISPYBWS = ('Official ISPyB web services API',
+    'ispyb.driver.ws.main',
+    'ISPyBWSDriver')
 
     def __init__(self, description, module, classname):
         '''Make tuple elements reachable via attribute names.'''
@@ -11,13 +15,13 @@ class Connection(Enum):
         self.module = module
         self.classname = classname
 
-def get_driver(driver):
-  '''Factory function. Given a Backend type imports the relevant module and
-     returns the backend class which can then be instantiated.'''
-  if hasattr(driver, 'module') and hasattr(driver, 'classname'):
-    _mod = __import__(driver.module, globals(), locals(), [driver.classname])
-    return getattr(_mod, driver.classname)
-  raise AttributeError('Driver %s does not exist' % driver)
+def get_connection_class(conn_type):
+  '''Factory function. Given a Connection type imports the relevant module and
+     returns the Connection class which can then be instantiated.'''
+  if hasattr(conn_type, 'module') and hasattr(conn_type, 'classname'):
+    _mod = __import__(conn_type.module, globals(), locals(), [conn_type.classname])
+    return getattr(_mod, conn_type.classname)
+  raise AttributeError('Connection type %s does not exist' % conn_type)
 
 
 # import importlib
