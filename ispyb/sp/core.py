@@ -14,10 +14,12 @@ import sys
 import datetime
 from ispyb.extendedordereddict import ExtendedOrderedDict
 import copy
+
+import ispyb.interface.core
 from ispyb.sp.storedroutines import StoredRoutines
 from ispyb.version import __version__
 
-class Core(StoredRoutines):
+class Core(ispyb.interface.core.IF, StoredRoutines):
   '''Core provides methods to store and retrieve data in the core tables.'''
 
   def __init__(self):
@@ -33,25 +35,8 @@ class Core(StoredRoutines):
     return copy.deepcopy(cls._sample_params)
 
   @classmethod
-  def put_sample(cls, cursor, values):
-    id = None
-    if values[0] is not None:
-        cls.update_sample(cursor, values)
-        id = values[0]
-    else:
-        id = cls.insert_sample(cursor, values)
-    if id != None:
-      return int(id)
-    return None
-
-  @classmethod
-  def insert_sample(cls, cursor, values):
-    '''Store new sample.'''
-    return cls.call_sf(cursor, 'upsert_sample', values)
-
-  @classmethod
-  def update_sample(cls, cursor, values):
-    '''Update existing sample.'''
+  def upsert_sample(cls, cursor, values):
+    '''Insert or update sample.'''
     return cls.call_sf(cursor, 'upsert_sample', values)
 
   @classmethod

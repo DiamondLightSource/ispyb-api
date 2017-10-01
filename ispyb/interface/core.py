@@ -1,6 +1,6 @@
 import abc
 
-class Core(object):
+class IF(object):
   '''Core provides methods to store and retrieve data in the core tables.'''
   __metaclass__ = abc.ABCMeta
 

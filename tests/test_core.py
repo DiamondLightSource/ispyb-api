@@ -34,13 +34,13 @@ def retrieve_active_plates(c):
     rs = core.retrieve_active_plates(c, 'i02-2')
     assert len(rs) >= 0
 
-def put_sample(c):
+def upsert_sample(c):
     params = core.get_sample_params()
     params['containerid'] = 1326
     params['crystalid'] = 3918
     params['name'] = 'Sample-010101'
     params['code'] = 'SAM-010101'
-    id = core.put_sample(c, params.values())
+    id = core.upsert_sample(c, params.values())
 
 # ---- Test with dict_cursor
 
@@ -76,9 +76,9 @@ def test_dict_retrieve_current_cm_sessions():
     retrieve_current_cm_sessions(conn.get_cursor())
     conn.disconnect()
 
-def test_dict_put_sample():
+def test_dict_upsert_sample():
     conn = get_connection(True)
-    put_sample(conn.get_cursor())
+    upsert_sample(conn.get_cursor())
     conn.disconnect()
 
 # ---- Test with regular cursor
@@ -120,7 +120,7 @@ def test_retrieve_active_plates():
     retrieve_active_plates(conn.get_cursor())
     conn.disconnect()
 
-def test_dict_put_sample():
+def test_dict_upsert_sample():
     conn = get_connection()
-    put_sample(conn.get_cursor())
+    upsert_sample(conn.get_cursor())
     conn.disconnect()

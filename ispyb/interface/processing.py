@@ -1,6 +1,6 @@
 import abc
 
-class Processing(object):
+class IF(object):
   __metaclass__ = abc.ABCMeta
 
   @abc.abstractmethod

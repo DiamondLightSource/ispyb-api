@@ -1,6 +1,6 @@
 import abc
 
-class Acquisition(object):
+class IF(object):
   __metaclass__ = abc.ABCMeta
 
   @abc.abstractmethod
