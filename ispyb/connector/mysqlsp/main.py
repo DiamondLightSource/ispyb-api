@@ -6,9 +6,9 @@ import datetime
 import ConfigParser
 import codecs
 from ispyb.version import __version__
-import ispyb.interface.connection.main
+import ispyb.interface.connection
 
-class ISPyBMySQLSPConnector(ispyb.interface.connection.main.IF):
+class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
   '''Provides a connector to an ISPyB MySQL/MariaDB database through stored procedures.
   '''
 
