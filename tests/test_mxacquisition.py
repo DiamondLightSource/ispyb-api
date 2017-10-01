@@ -38,13 +38,13 @@ def mxacquisition_methods(c):
     params = mxacquisition.get_image_params()
     params['parentid'] = id1
     params['img_number'] = 1
-    iid = mxacquisition.insert_image(c, params.values())
+    iid = mxacquisition.upsert_image(c, params.values())
 
     params = mxacquisition.get_image_params()
     params['id'] = iid
     params['parentid'] = id1
     params['comments'] = 'Forgot to comment!'
-    iid = mxacquisition.update_image(c, params.values())
+    iid = mxacquisition.upsert_image(c, params.values())
 
 # ---- Test with dict_cursor
 

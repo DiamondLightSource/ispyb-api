@@ -7,14 +7,10 @@
 # Methods to update data related to shipping of samples
 #
 
-import string
-import logging
 import time
 import os
 import sys
 import datetime
-from logging.handlers import RotatingFileHandler
-from collections import OrderedDict
 import copy
 from ispyb.extendedordereddict import ExtendedOrderedDict
 from ispyb.sp.storedroutines import StoredRoutines

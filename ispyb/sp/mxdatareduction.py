@@ -7,14 +7,10 @@
 # Methods to store data from MX reduction pipelines
 #
 
-import string
-import logging
 import time
 import os
 import sys
 import datetime
-from logging.handlers import RotatingFileHandler
-from collections import OrderedDict
 import copy
 from ispyb.extendedordereddict import ExtendedOrderedDict
 from ispyb.sp.storedroutines import StoredRoutines

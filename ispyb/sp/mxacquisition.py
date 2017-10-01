@@ -7,29 +7,23 @@
 # Methods to store MX acquisition data
 #
 
-try:
-    import mysql.connector
-except ImportError, e:
-  print 'MySQL API module (mysql.connector) not found'
-  raise e
-
-import string
-import logging
 import time
 import os
 import sys
 import datetime
-from logging.handlers import RotatingFileHandler
 from ispyb.extendedordereddict import ExtendedOrderedDict
 import copy
-from ispyb.sp.storedroutines import StoredRoutines
+from ispyb.sp.acquisition import Acquisition
 from ispyb.version import __version__
 
-class MXAcquisition(StoredRoutines):
+class MXAcquisition(Acquisition):
   '''MXAcquisition provides methods to store data in the MX acquisition tables.'''
 
   def __init__(self):
-    pass
+    self.insert_data_collection_group = super(MXAcquisition, self).upsert_data_collection_group
+    self.insert_data_collection = super(MXAcquisition, self).upsert_data_collection
+    self.update_data_collection_group = super(MXAcquisition, self).upsert_data_collection_group
+    self.update_data_collection = super(MXAcquisition, self).upsert_data_collection
 
   _data_collection_group_params =\
     ExtendedOrderedDict([('id',None), ('parentid',None), ('sampleid',None), ('experimenttype',None), ('starttime',None), ('endtime',None),
@@ -74,38 +68,8 @@ class MXAcquisition(StoredRoutines):
     return copy.deepcopy(cls._image_params)
 
   @classmethod
-  def insert_data_collection_group(cls, cursor, values):
-    '''Store new MX data collection group.'''
-    return cls.call_sf(cursor, 'upsert_dcgroup', values)
-
-  @classmethod
-  def update_data_collection_group(cls, cursor, values):
-    '''Update existing data collection group.'''
-    if values[0] is not None:
-        return cls.call_sf(cursor, 'upsert_dcgroup', values)
-
-  @classmethod
-  def put_data_collection_group(cls, cursor, values):
-    return cls.call_sf(cursor, 'upsert_dcgroup', values)
-
-  @classmethod
-  def insert_data_collection(cls, cursor, values):
-    '''Store new data collection.'''
-    return cls.call_sf(cursor, 'upsert_dc', values)
-
-  @classmethod
-  def update_data_collection(cls, cursor, values):
-    '''Update existing data collection.'''
-    return cls.call_sf(cursor, 'upsert_dc', values)
-
-  @classmethod
-  def insert_image(cls, cursor, values):
-    '''Store new MX diffraction image.'''
-    return cls.call_sf(cursor, 'upsert_image', values)
-
-  @classmethod
-  def update_image(cls, cursor, values):
-    '''Update existing diffraction image.'''
+  def upsert_image(cls, cursor, values):
+    '''Insert or update MX diffraction image.'''
     return cls.call_sf(cursor, 'upsert_image', values)
 
 mxacquisition = MXAcquisition()

@@ -7,18 +7,12 @@
 # Methods to store EM acquisition data
 #
 
-try:
-    import mysql.connector
-except ImportError, e:
-    print 'MySQL API module (mysql.connector) not found'
-    raise e
-
 from ispyb.extendedordereddict import ExtendedOrderedDict
 import copy
-from ispyb.sp.storedroutines import StoredRoutines
+from ispyb.sp.acquisition import Acquisition
 from ispyb.version import __version__
 
-class EMAcquisition(StoredRoutines):
+class EMAcquisition(Acquisition):
     '''EMAcquisition provides methods to store data in the MotionCorrection and CTF tables.'''
 
     def __init__(self):

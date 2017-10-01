@@ -7,19 +7,11 @@
 # Methods to store and retrieve data in the core tables
 #
 
-try:
-  import mysql.connector
-except ImportError, e:
-  print 'MySQL API module not found'
-  raise e
-
 import string
-import logging
 import time
 import os
 import sys
 import datetime
-from logging.handlers import RotatingFileHandler
 from ispyb.extendedordereddict import ExtendedOrderedDict
 import copy
 from ispyb.sp.storedroutines import StoredRoutines
