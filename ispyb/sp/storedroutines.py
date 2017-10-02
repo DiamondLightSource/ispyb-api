@@ -25,18 +25,6 @@ class StoredRoutines:
             return rs[0]
 
   @staticmethod
-  def get_sp_resultset(cursor):
-    result = []
-    for recordset in cursor.stored_results():
-        if isinstance(cursor, mysql.connector.cursor.MySQLCursorDict):
-            for row in recordset:
-                result.append(dict(zip(recordset.column_names,row)))
-        else:
-            result = recordset.fetchall()
-    cursor.nextset()
-    return result
-
-  @staticmethod
   def call_sp(conn, procname, args):
     cursor = conn.cursor()
     result_args = cursor.callproc(procname=procname, args=args)
