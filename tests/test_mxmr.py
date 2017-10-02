@@ -34,10 +34,7 @@ def upsert_run(c):
     assert id is not None
     assert id > 0
 
-# ---- Test with dict_cursor
-
 def test_dict_upsert_run():
     conn = get_connection()
-    cursor = conn.get_cursor()
-    upsert_run(cursor)
+    upsert_run(conn)
     conn.disconnect()

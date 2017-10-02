@@ -76,20 +76,20 @@ class MXDataReduction(StoredRoutines):
     return copy.deepcopy(cls._integration_params)
 
   @classmethod
-  def insert_program(cls, cursor, values):
-    return cls.call_sf(cursor, 'upsert_program_run', values)
+  def insert_program(cls, conn, values):
+    return cls.call_sf(conn, 'upsert_program_run', values)
 
   @classmethod
-  def update_program(cls, cursor, values):
-    return cls.call_sf(cursor, 'upsert_program_run', values)
+  def update_program(cls, conn, values):
+    return cls.call_sf(conn, 'upsert_program_run', values)
 
   @classmethod
-  def put_program(cls, cursor, values):
+  def put_program(cls, conn, values):
     id = None
     if values[0] is None:
-        id = cls.insert_program(cursor, values)
+        id = cls.insert_program(conn, values)
     else:
-        cls.update_program(cursor, values)
+        cls.update_program(conn, values)
         id = values[0]
 
     if id != None:
@@ -97,16 +97,16 @@ class MXDataReduction(StoredRoutines):
     return None
 
   @classmethod
-  def insert_processing(cls, cursor, values):
-    return cls.call_sf(cursor, 'upsert_processing', values)
+  def insert_processing(cls, conn, values):
+    return cls.call_sf(conn, 'upsert_processing', values)
 
   @classmethod
-  def insert_scaling(cls, cursor, parent_id, values1, values2, values3):
+  def insert_scaling(cls, conn, parent_id, values1, values2, values3):
     values = [parent_id] + values1 + values2 + values3
-    return cls.call_sf(cursor, 'insert_scaling', values)
+    return cls.call_sf(conn, 'insert_scaling', values)
 
   @classmethod
-  def insert_integration(cls, cursor, values):
-    return cls.call_sf(cursor, 'upsert_integration', values)
+  def insert_integration(cls, conn, values):
+    return cls.call_sf(conn, 'upsert_integration', values)
 
 mxdatareduction = MXDataReduction()

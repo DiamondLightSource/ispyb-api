@@ -144,48 +144,38 @@ def insert_screening_strategy_sub_wedge(c):
     return id
 
 
-# ---- Tests with normal cursor
 
 def test_insert_screening():
     conn = get_connection()
-    cursor = conn.get_cursor()
-    insert_screening(cursor)
+    insert_screening(conn)
     conn.disconnect()
 
 def test_insert_screening_input():
     conn = get_connection()
-    cursor = conn.get_cursor()
-    insert_screening_input(cursor)
+    insert_screening_input(conn)
     conn.disconnect()
 
 def test_insert_screening_output():
     conn = get_connection()
-    cursor = conn.get_cursor()
-    insert_screening_output(cursor)
+    insert_screening_output(conn)
     conn.disconnect()
 
 def test_insert_screening_output_lattice():
     conn = get_connection()
-    cursor = conn.get_cursor()
-    insert_screening_output_lattice(cursor)
+    insert_screening_output_lattice(conn)
     conn.disconnect()
 
 def test_insert_screening_strategy():
     conn = get_connection()
-    cursor = conn.get_cursor()
-    insert_screening_strategy(cursor)
+    insert_screening_strategy(conn)
     conn.disconnect()
 
 def test_insert_screening_strategy_wedge():
     conn = get_connection()
-    cursor = conn.get_cursor()
-    insert_screening_strategy_wedge(cursor)
+    insert_screening_strategy_wedge(conn)
     conn.disconnect()
 
 def test_insert_screening_strategy_sub_wedge():
     conn = get_connection()
-    cursor = conn.get_cursor()
-    insert_screening_strategy_sub_wedge(cursor)
+    insert_screening_strategy_sub_wedge(conn)
     conn.disconnect()
-
-# ---- Tests with dict_cursor - NOT WORKING

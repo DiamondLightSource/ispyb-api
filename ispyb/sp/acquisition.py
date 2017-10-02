@@ -15,11 +15,11 @@ class Acquisition(ispyb.interface.acquisition.IF, StoredRoutines):
     raise NotImplementedError('users must define this method to use this base class')
 
   @classmethod
-  def upsert_data_collection_group(cls, cursor, values):
+  def upsert_data_collection_group(cls, conn, values):
     '''Insert or update MX data collection group.'''
-    return cls.call_sf(cursor, 'upsert_dcgroup', values)
+    return cls.call_sf(conn, 'upsert_dcgroup', values)
 
   @classmethod
-  def upsert_data_collection(cls, cursor, values):
+  def upsert_data_collection(cls, conn, values):
     '''Insert or update data collection.'''
-    return cls.call_sf(cursor, 'upsert_dc', values)
+    return cls.call_sf(conn, 'upsert_dc', values)

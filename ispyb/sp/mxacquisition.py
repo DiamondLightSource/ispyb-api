@@ -68,8 +68,8 @@ class MXAcquisition(Acquisition):
     return copy.deepcopy(cls._image_params)
 
   @classmethod
-  def upsert_image(cls, cursor, values):
+  def upsert_image(cls, conn, values):
     '''Insert or update MX diffraction image.'''
-    return cls.call_sf(cursor, 'upsert_image', values)
+    return cls.call_sf(conn, 'upsert_image', values)
 
 mxacquisition = MXAcquisition()

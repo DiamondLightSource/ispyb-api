@@ -59,31 +59,31 @@ class MXScreening(StoredRoutines):
     return copy.deepcopy(cls._screening_strategy_sub_wedge_params)
 
   @classmethod
-  def insert_screening(cls, cursor, values):
-    return cls.call_sp(cursor, procname='insert_screening', args=(values))[0]
+  def insert_screening(cls, conn, values):
+    return cls.call_sp(conn, procname='insert_screening', args=(values))[0]
 
   @classmethod
-  def insert_screening_input(cls, cursor, values):
-    return cls.call_sp(cursor, procname='insert_screening_input', args=(values))[0]
+  def insert_screening_input(cls, conn, values):
+    return cls.call_sp(conn, procname='insert_screening_input', args=(values))[0]
 
   @classmethod
-  def insert_screening_output(cls, cursor, values):
-    return cls.call_sp(cursor, procname='insert_screening_output', args=(values))[0]
+  def insert_screening_output(cls, conn, values):
+    return cls.call_sp(conn, procname='insert_screening_output', args=(values))[0]
 
   @classmethod
-  def insert_screening_output_lattice(cls, cursor, values):
-    return cls.call_sp(cursor, procname='insert_screening_output_lattice', args=(values))[0]
+  def insert_screening_output_lattice(cls, conn, values):
+    return cls.call_sp(conn, procname='insert_screening_output_lattice', args=(values))[0]
 
   @classmethod
-  def insert_screening_strategy(cls, cursor, values):
-    return cls.call_sp(cursor, procname='insert_screening_strategy', args=(values))[0]
+  def insert_screening_strategy(cls, conn, values):
+    return cls.call_sp(conn, procname='insert_screening_strategy', args=(values))[0]
 
   @classmethod
-  def insert_screening_strategy_wedge(cls, cursor, values):
-    return cls.call_sp(cursor, procname='insert_screening_strategy_wedge', args=(values))[0]
+  def insert_screening_strategy_wedge(cls, conn, values):
+    return cls.call_sp(conn, procname='insert_screening_strategy_wedge', args=(values))[0]
 
   @classmethod
-  def insert_screening_strategy_sub_wedge(cls, cursor, values):
-    return cls.call_sp(cursor, procname='insert_screening_strategy_sub_wedge', args=(values))[0]
+  def insert_screening_strategy_sub_wedge(cls, conn, values):
+    return cls.call_sp(conn, procname='insert_screening_strategy_sub_wedge', args=(values))[0]
 
 mxscreening = MXScreening()

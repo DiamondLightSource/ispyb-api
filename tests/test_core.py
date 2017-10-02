@@ -42,85 +42,44 @@ def upsert_sample(c):
     params['code'] = 'SAM-010101'
     id = core.upsert_sample(c, params.values())
 
-# ---- Test with dict_cursor
-
-def test_dict_retrieve_visit_id():
-    conn = get_connection(True)
-    retrieve_visit_id(conn.get_cursor())
-    conn.disconnect()
-
-def test_dict_retrieve_proposal_title():
-    conn = get_connection(True)
-    retrieve_proposal_title(conn.get_cursor())
-    conn.disconnect()
-
-def test_dict_retrieve_current_sessions():
-    conn = get_connection(True)
-    retrieve_current_sessions(conn.get_cursor())
-    conn.disconnect()
-
-def test_dict_retrieve_most_recent_session():
-    conn = get_connection(True)
-    retrieve_most_recent_session(conn.get_cursor())
-    conn.disconnect()
-
-def test_dict_retrieve_persons_for_proposal():
-    conn = get_connection(True)
-    rs = retrieve_persons_for_proposal(conn.get_cursor())
-    conn.disconnect()
-    login = rs[0]['login']
-    assert login is not None
-
-def test_dict_retrieve_current_cm_sessions():
-    conn = get_connection(True)
-    retrieve_current_cm_sessions(conn.get_cursor())
-    conn.disconnect()
-
-def test_dict_upsert_sample():
-    conn = get_connection(True)
-    upsert_sample(conn.get_cursor())
-    conn.disconnect()
-
-# ---- Test with regular cursor
-
 def test_retrieve_visit_id():
     conn = get_connection()
-    retrieve_visit_id(conn.get_cursor())
+    retrieve_visit_id(conn)
     conn.disconnect()
 
 def test_retrieve_proposal_title():
     conn = get_connection()
-    retrieve_proposal_title(conn.get_cursor())
+    retrieve_proposal_title(conn)
     conn.disconnect()
 
 def test_retrieve_current_sessions():
     conn = get_connection()
-    retrieve_current_sessions(conn.get_cursor())
+    retrieve_current_sessions(conn)
     conn.disconnect()
 
 def test_retrieve_most_recent_session():
     conn = get_connection()
-    retrieve_most_recent_session(conn.get_cursor())
+    retrieve_most_recent_session(conn)
     conn.disconnect()
 
 def test_retrieve_persons_for_proposal():
     conn = get_connection()
-    rs = retrieve_persons_for_proposal(conn.get_cursor())
+    rs = retrieve_persons_for_proposal(conn)
     conn.disconnect()
     login = rs[0][3]
     assert login is not None
 
 def test_retrieve_current_cm_sessions():
     conn = get_connection()
-    retrieve_current_cm_sessions(conn.get_cursor())
+    retrieve_current_cm_sessions(conn)
     conn.disconnect()
 
 def test_retrieve_active_plates():
     conn = get_connection()
-    retrieve_active_plates(conn.get_cursor())
+    retrieve_active_plates(conn)
     conn.disconnect()
 
 def test_dict_upsert_sample():
     conn = get_connection()
-    upsert_sample(conn.get_cursor())
+    upsert_sample(conn)
     conn.disconnect()

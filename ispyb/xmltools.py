@@ -82,7 +82,7 @@ class XmlDictConfig(dict):
             else:
                 self.update({element.tag: element.text})
 
-def mx_data_reduction_xml_to_ispyb(xmldict, dc_id = None, cursor = None):
+def mx_data_reduction_xml_to_ispyb(xmldict, dc_id = None, conn = None):
     # Convenience pointers and sanity checks
     int_containers = xmldict['AutoProcScalingContainer']['AutoProcIntegrationContainer']
     if isinstance(int_containers, dict): # Make it a list regardless
@@ -134,7 +134,7 @@ def mx_data_reduction_xml_to_ispyb(xmldict, dc_id = None, cursor = None):
         params['cmd_line'] = program['processingCommandLine']
     if 'reprocessingId' in program:
         params['reprocessingid'] = program['reprocessingId']
-    app_id = mxprocessing.upsert_program(cursor, params.values())
+    app_id = mxprocessing.upsert_program(conn, params.values())
 
     if attachments != None:
         params = mxprocessing.get_program_attachment_params()
@@ -146,7 +146,7 @@ def mx_data_reduction_xml_to_ispyb(xmldict, dc_id = None, cursor = None):
                 params['file_path'] = attachment['filePath']
             if 'fileType' in attachment:
                 params['file_type'] = attachment['fileType']
-            mxprocessing.upsert_program_attachment(cursor, params.values())
+            mxprocessing.upsert_program_attachment(conn, params.values())
 
     # ...then the top-level processing entry
     params = mxprocessing.get_processing_params()
@@ -158,7 +158,7 @@ def mx_data_reduction_xml_to_ispyb(xmldict, dc_id = None, cursor = None):
     params['refinedcell_alpha'] = proc['refinedCell_alpha']
     params['refinedcell_beta'] = proc['refinedCell_beta']
     params['refinedcell_gamma'] = proc['refinedCell_gamma']
-    ap_id = mxprocessing.upsert_processing(cursor, params.values())
+    ap_id = mxprocessing.upsert_processing(conn, params.values())
 
     # ... then the scaling results
     p = [mxprocessing.get_outer_shell_scaling_params(),
@@ -201,7 +201,7 @@ def mx_data_reduction_xml_to_ispyb(xmldict, dc_id = None, cursor = None):
       if 'rPimAllIPlusIMinus' in s[i]:
           p[i]['r_pim_all_iplusi_minus'] = s[i]['rPimAllIPlusIMinus']
 
-    scaling_id = mxprocessing.insert_scaling(cursor, ap_id, p[0].values(), p[1].values(), p[2].values())
+    scaling_id = mxprocessing.insert_scaling(conn, ap_id, p[0].values(), p[1].values(), p[2].values())
 
     # ... and finally the integration results
     for int_container in int_containers:
@@ -231,6 +231,6 @@ def mx_data_reduction_xml_to_ispyb(xmldict, dc_id = None, cursor = None):
         if 'anomalous' in integration:
             params['anom'] = integration['anomalous']
 
-        integration_id = mxprocessing.upsert_integration(cursor, params.values())
+        integration_id = mxprocessing.upsert_integration(conn, params.values())
 
     return (app_id, ap_id, scaling_id, integration_id)

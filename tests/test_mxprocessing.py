@@ -103,10 +103,7 @@ def insert_integration_and_processing(c):
 
     assert id is not None
 
-# ---- Test with dict_cursor
-
 def test_insert_integration_and_processing():
     conn = get_connection()
-    cursor = conn.get_cursor()
-    insert_integration_and_processing(cursor)
+    insert_integration_and_processing(conn)
     conn.disconnect()

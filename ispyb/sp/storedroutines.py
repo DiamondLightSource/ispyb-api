@@ -37,14 +37,30 @@ class StoredRoutines:
     return result
 
   @staticmethod
-  def call_sp(cursor, procname, args):
+  def call_sp(conn, procname, args):
+    cursor = conn.cursor()
     result_args = cursor.callproc(procname=procname, args=args)
     if result_args is not None and len(result_args) > 0:
         return result_args
     else:
         return [None]
 
+  @staticmethod
+  def call_sp_and_get_resultset(conn, procname, args):
+    cursor = conn.cursor()
+    cursor.callproc(procname=procname, args=args)
+    result = []
+    for recordset in cursor.stored_results():
+        if isinstance(cursor, mysql.connector.cursor.MySQLCursorDict):
+            for row in recordset:
+                result.append(dict(zip(recordset.column_names,row)))
+        else:
+            result = recordset.fetchall()
+    cursor.nextset()
+    return result
+
   @classmethod
-  def call_sf(cls, cursor, funcname, args):
+  def call_sf(cls, conn, funcname, args):
+    cursor = conn.cursor()
     cursor.execute(('select %s' % funcname) + ' (%s)' % ','.join(['%s'] * len(args)), args)
     return cls.first_item_in_cursor( cursor )

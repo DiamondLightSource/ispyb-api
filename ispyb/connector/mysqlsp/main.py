@@ -12,7 +12,7 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
   '''Provides a connector to an ISPyB MySQL/MariaDB database through stored procedures.
   '''
 
-  def __init__(self, conf='dev', dict_cursor=False, conf_file=None):
+  def __init__(self, conf='dev', conf_file=None):
     self.disconnect()
     if not conf_file is None:
         self.config = ConfigParser.ConfigParser(allow_no_value=True)
@@ -30,23 +30,23 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
     if self.conn is not None:
       self.conn.autocommit=True
 
-    if dict_cursor:
-        self.cursor = self.conn.cursor(dictionary=True)
-    else:
-        self.cursor = self.conn.cursor()
+#    if dict_cursor:
+#        self.cursor = self.conn.cursor(dictionary=True)
+#    else:
+#        self.cursor = self.conn.cursor()
 
   def __del__(self):
     self.disconnect()
 
   def disconnect(self):
     '''Release the connection previously created.'''
-    if hasattr(self, 'cursor') and self.cursor is not None:
-    	self.cursor.close()
-	self.cursor = None
+#    if hasattr(self, 'cursor') and self.cursor is not None:
+#    	self.cursor.close()
+#	self.cursor = None
     if hasattr(self, 'conn') and self.conn is not None:
     	self.conn.close()
     self.conn = None
     return
 
-  def get_cursor(self):
-      return self.cursor
+  def cursor(self, dictionary=False):
+      return self.conn.cursor(dictionary=dictionary)

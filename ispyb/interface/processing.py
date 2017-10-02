@@ -18,3 +18,5 @@ class IF(object):
   @abc.abstractmethod
   def get_quality_indicators_params(self):
     raise NotImplementedError('users must define get_quality_indicators_params to use this base class')
+
+    

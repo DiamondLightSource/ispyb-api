@@ -48,8 +48,7 @@ def mxacquisition_methods(c):
 
 # ---- Test with dict_cursor
 
-def test_dict_mxacquisition_methods():
+def test_mxacquisition_methods():
     conn = get_connection()
-    cursor = conn.get_cursor()
-    mxacquisition_methods(cursor)
+    mxacquisition_methods(conn)
     conn.disconnect()

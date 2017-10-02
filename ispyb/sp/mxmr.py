@@ -35,13 +35,13 @@ class MXMR(StoredRoutines):
     return copy.deepcopy(cls._run_blob_params)
 
   @classmethod
-  def upsert_run(cls, cursor, values):
+  def upsert_run(cls, conn, values):
     '''Update or insert new entry with info about an MX molecular replacement run, e.g. Dimple.'''
-    return cls.call_sp(cursor, procname='upsert_mrrun', args=values)[0]
+    return cls.call_sp(conn, procname='upsert_mrrun', args=values)[0]
 
   @classmethod
-  def upsert_run_blob(cls, cursor, values):
+  def upsert_run_blob(cls, conn, values):
     '''Update or insert new entry with info about views (image paths) for an MX molecular replacement run, e.g. Dimple.'''
-    return cls.call_sp(cursor, procname='upsert_mrrun_blob', args=values)[0]
+    return cls.call_sp(conn, procname='upsert_mrrun_blob', args=values)[0]
 
 mxmr = MXMR()

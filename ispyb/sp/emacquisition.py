@@ -73,13 +73,13 @@ class EMAcquisition(Acquisition):
         return copy.deepcopy(cls._ctf_params)
 
     @classmethod
-    def insert_motion_correction(cls, cursor, values):
+    def insert_motion_correction(cls, conn, values):
         '''Store new motion correction params.'''
-        return cls.call_sp(cursor, procname='upsert_motion_correction', args=values)[0]
+        return cls.call_sp(conn, procname='upsert_motion_correction', args=values)[0]
 
     @classmethod
-    def insert_ctf(cls, cursor, values):
+    def insert_ctf(cls, conn, values):
         '''Store new ctf params.'''
-        return cls.call_sp(cursor, procname='upsert_ctf', args=values)[0]
+        return cls.call_sp(conn, procname='upsert_ctf', args=values)[0]
 
 emacquisition = EMAcquisition()

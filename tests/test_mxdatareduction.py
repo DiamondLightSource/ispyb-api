@@ -61,10 +61,7 @@ def insert_integration_and_processing(c):
     assert sid is not None
     assert sid > 0
 
-# ---- Test with dict_cursor
-
-def test_dict_insert_integration_and_processing():
+def test_insert_integration_and_processing():
     conn = get_connection()
-    cursor = conn.get_cursor()
-    insert_integration_and_processing(cursor)
+    insert_integration_and_processing(conn)
     conn.disconnect()

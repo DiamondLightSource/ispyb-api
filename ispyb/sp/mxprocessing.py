@@ -81,26 +81,26 @@ class MXProcessing(ispyb.interface.processing.IF, StoredRoutines):
   def get_quality_indicators_params(self):
     return copy.deepcopy(self._quality_indicators_params)
 
-  def upsert_program(self, cursor, values):
+  def upsert_program(self, conn, values):
     '''Store new or update existing program params.'''
-    return self.call_sp(cursor, procname='upsert_processing_program', args=values)[0] # doesn't work with dict cursors
+    return self.call_sp(conn, procname='upsert_processing_program', args=values)[0] # doesn't work with dict cursors
 
-  def upsert_program_attachment(self, cursor, values):
+  def upsert_program_attachment(self, conn, values):
     '''Store new or update existing program attachment params.'''
-    return self.call_sp(cursor, procname='upsert_processing_program_attachment', args=values)[0]
+    return self.call_sp(conn, procname='upsert_processing_program_attachment', args=values)[0]
 
-  def upsert_processing(self, cursor, values):
-    return self.call_sp(cursor, procname='upsert_processing', args=values)[0]
+  def upsert_processing(self, conn, values):
+    return self.call_sp(conn, procname='upsert_processing', args=values)[0]
 
-  def insert_scaling(self, cursor, parent_id, values1, values2, values3):
+  def insert_scaling(self, conn, parent_id, values1, values2, values3):
     id = None
     values = [id, parent_id] + values1 + values2 + values3
-    return self.call_sp(cursor, procname='insert_processing_scaling', args=values)[0]
+    return self.call_sp(conn, procname='insert_processing_scaling', args=values)[0]
 
-  def upsert_integration(self, cursor, values):
-    return self.call_sp(cursor, procname='upsert_processing_integration', args=values)[0]
+  def upsert_integration(self, conn, values):
+    return self.call_sp(conn, procname='upsert_processing_integration', args=values)[0]
 
-  def insert_quality_indicators(self, cursor, values):
-    return self.call_sp(cursor, procname='insert_quality_indicators', args=values)[0]
+  def insert_quality_indicators(self, conn, values):
+    return self.call_sp(conn, procname='insert_quality_indicators', args=values)[0]
 
 mxprocessing = MXProcessing()
