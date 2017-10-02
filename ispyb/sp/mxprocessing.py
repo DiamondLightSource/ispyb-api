@@ -14,9 +14,10 @@ import datetime
 import copy
 from ispyb.extendedordereddict import ExtendedOrderedDict
 from ispyb.sp.storedroutines import StoredRoutines
+import ispyb.interface.processing
 from ispyb.version import __version__
 
-class MXProcessing(StoredRoutines):
+class MXProcessing(ispyb.interface.processing.IF, StoredRoutines):
   '''MXProcessing provides methods to store MX processing data.'''
 
   def __init__(self):
