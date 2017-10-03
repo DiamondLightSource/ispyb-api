@@ -52,32 +52,32 @@ class Core(ispyb.interface.core.IF, StoredRoutines):
   @classmethod
   def retrieve_current_sessions(cls, conn, beamline, tolerance_mins=0):
     '''Get a result-set with the currently active sessions on the given beamline.'''
-    return cls.call_sp_and_get_resultset(conn, procname='retrieve_current_sessions', args=(beamline,tolerance_mins))
+    return cls.call_sp_retrieve(conn, procname='retrieve_current_sessions', args=(beamline,tolerance_mins))
 
   @classmethod
   def retrieve_current_sessions_for_person(cls, conn, beamline, fed_id, tolerance_mins=0):
     '''Get a result-set with the currently active sessions on the given beamline.'''
-    return cls.call_sp_and_get_resultset(conn, procname='retrieve_current_sessions_for_person', args=(beamline, fed_id, tolerance_mins))
+    return cls.call_sp_retrieve(conn, procname='retrieve_current_sessions_for_person', args=(beamline, fed_id, tolerance_mins))
 
   @classmethod
   def retrieve_most_recent_session(cls, conn, beamline, proposal_code):
     '''Get a result-set with the most recent session on the given beamline for the given proposal code '''
-    return cls.call_sp_and_get_resultset(conn, procname='retrieve_most_recent_session', args=(beamline, proposal_code))
+    return cls.call_sp_retrieve(conn, procname='retrieve_most_recent_session', args=(beamline, proposal_code))
 
   @classmethod
   def retrieve_persons_for_proposal(cls, conn, proposal_code, proposal_number):
     '''Get a result-set with the persons associated with a given proposal specified by proposal code, proposal_number'''
-    return cls.call_sp_and_get_resultset(conn, procname='retrieve_persons_for_proposal', args=(proposal_code, proposal_number))
+    return cls.call_sp_retrieve(conn, procname='retrieve_persons_for_proposal', args=(proposal_code, proposal_number))
 
   @classmethod
   def retrieve_current_cm_sessions(cls, conn, beamline):
     '''Get a result-set with the currently active commissioning (cm) sessions on the given beamline.'''
-    return cls.call_sp_and_get_resultset(conn, procname='retrieve_current_cm_sessions', args=(beamline,))
+    return cls.call_sp_retrieve(conn, procname='retrieve_current_cm_sessions', args=(beamline,))
 
   @classmethod
   def retrieve_active_plates(cls, conn, beamline):
     '''Get a result-set with the submitted plates not yet in local storage on a given beamline'''
-    return cls.call_sp_and_get_resultset(conn, procname="retrieve_containers_submitted_non_ls", args=(beamline,))
+    return cls.call_sp_retrieve(conn, procname="retrieve_containers_submitted_non_ls", args=(beamline,))
 
   @classmethod
   def retrieve_proposal_title(cls, conn, proposal_code, proposal_number):

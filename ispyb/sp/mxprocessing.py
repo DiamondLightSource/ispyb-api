@@ -83,24 +83,24 @@ class MXProcessing(ispyb.interface.processing.IF, StoredRoutines):
 
   def upsert_program(self, conn, values):
     '''Store new or update existing program params.'''
-    return self.call_sp(conn, procname='upsert_processing_program', args=values)[0] # doesn't work with dict cursors
+    return self.call_sp_write(conn, procname='upsert_processing_program', args=values) # doesn't work with dict cursors
 
   def upsert_program_attachment(self, conn, values):
     '''Store new or update existing program attachment params.'''
-    return self.call_sp(conn, procname='upsert_processing_program_attachment', args=values)[0]
+    return self.call_sp_write(conn, procname='upsert_processing_program_attachment', args=values)
 
   def upsert_processing(self, conn, values):
-    return self.call_sp(conn, procname='upsert_processing', args=values)[0]
+    return self.call_sp_write(conn, procname='upsert_processing', args=values)
 
   def insert_scaling(self, conn, parent_id, values1, values2, values3):
     id = None
     values = [id, parent_id] + values1 + values2 + values3
-    return self.call_sp(conn, procname='insert_processing_scaling', args=values)[0]
+    return self.call_sp_write(conn, procname='insert_processing_scaling', args=values)
 
   def upsert_integration(self, conn, values):
-    return self.call_sp(conn, procname='upsert_processing_integration', args=values)[0]
+    return self.call_sp_write(conn, procname='upsert_processing_integration', args=values)
 
   def insert_quality_indicators(self, conn, values):
-    return self.call_sp(conn, procname='insert_quality_indicators', args=values)[0]
+    return self.call_sp_write(conn, procname='insert_quality_indicators', args=values)
 
 mxprocessing = MXProcessing()

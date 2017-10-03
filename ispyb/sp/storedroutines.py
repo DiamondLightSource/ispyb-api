@@ -13,17 +13,15 @@ from ispyb.version import __version__
 class StoredRoutines(object):
 
   @staticmethod
-  def call_sp(conn, procname, args):
+  def call_sp_write(conn, procname, args):
     cursor = conn.cursor()
     result_args = cursor.callproc(procname=procname, args=args)
     cursor.close()
     if result_args is not None and len(result_args) > 0:
-        return result_args
-    else:
-        return [None]
+        return result_args[0]
 
   @staticmethod
-  def call_sp_and_get_resultset(conn, procname, args):
+  def call_sp_retrieve(conn, procname, args):
     cursor = conn.cursor()
     cursor.callproc(procname=procname, args=args)
     result = []
@@ -33,7 +31,7 @@ class StoredRoutines(object):
                 result.append(dict(zip(recordset.column_names,row)))
         else:
             result = recordset.fetchall()
-    cursor.nextset()
+#    cursor.nextset()
     cursor.close()
     return result
 

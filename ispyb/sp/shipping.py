@@ -26,6 +26,6 @@ class Shipping(StoredRoutines):
   @classmethod
   def update_container_assign(cls, conn, beamline, registry_barcode, position):
     '''Assign a container'''
-    result_args = cls.call_sp(conn, procname='update_container_assign', args=(beamline, registry_barcode, position))
+    cls.call_sp_write(conn, procname='update_container_assign', args=(beamline, registry_barcode, position))
 
 shipping = Shipping()

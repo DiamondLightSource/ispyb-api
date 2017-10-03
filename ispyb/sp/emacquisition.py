@@ -75,11 +75,11 @@ class EMAcquisition(Acquisition):
     @classmethod
     def insert_motion_correction(cls, conn, values):
         '''Store new motion correction params.'''
-        return cls.call_sp(conn, procname='upsert_motion_correction', args=values)[0]
+        return cls.call_sp_write(conn, procname='upsert_motion_correction', args=values)
 
     @classmethod
     def insert_ctf(cls, conn, values):
         '''Store new ctf params.'''
-        return cls.call_sp(conn, procname='upsert_ctf', args=values)[0]
+        return cls.call_sp_write(conn, procname='upsert_ctf', args=values)
 
 emacquisition = EMAcquisition()
