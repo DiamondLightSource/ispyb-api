@@ -10,24 +10,13 @@
 import mysql.connector
 from ispyb.version import __version__
 
-class StoredRoutines:
-  @staticmethod
-  def first_item_in_cursor(cursor):
-    rs = cursor.fetchone()
-    if len(rs) == 0:
-        return None
-    elif isinstance(cursor, mysql.connector.cursor.MySQLCursorDict):
-        return rs.iteritems().next()[1]
-    else:
-        try:
-            return int(rs[0])
-        except:
-            return rs[0]
+class StoredRoutines(object):
 
   @staticmethod
   def call_sp(conn, procname, args):
     cursor = conn.cursor()
     result_args = cursor.callproc(procname=procname, args=args)
+    cursor.close()
     if result_args is not None and len(result_args) > 0:
         return result_args
     else:
@@ -45,10 +34,22 @@ class StoredRoutines:
         else:
             result = recordset.fetchall()
     cursor.nextset()
+    cursor.close()
     return result
 
   @classmethod
   def call_sf(cls, conn, funcname, args):
     cursor = conn.cursor()
     cursor.execute(('select %s' % funcname) + ' (%s)' % ','.join(['%s'] * len(args)), args)
-    return cls.first_item_in_cursor( cursor )
+    result = None
+    rs = cursor.fetchone()
+    if len(rs) > 0:
+        if isinstance(cursor, mysql.connector.cursor.MySQLCursorDict):
+            result = rs.iteritems().next()[1]
+        else:
+            try:
+                result = int(rs[0])
+            except:
+                result = rs[0]
+    cursor.close()
+    return result
