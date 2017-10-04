@@ -22,7 +22,7 @@ pip install --user dist/ispyb-${version}-py2-none-any.whl
 
 ### Examples
 ```python
-from ispyb.connection import Connection, get_driver
+from ispyb.connection import Connection, get_connection_class
 from ispyb.core import core
 from ispyb.mxacquisition import mxacquisition
 from datetime import datetime
