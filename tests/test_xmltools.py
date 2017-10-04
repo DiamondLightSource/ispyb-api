@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 
 import context
-from nose import with_setup
 import sys
 import os
 from xml.etree import ElementTree
 from datetime import datetime
-from ispyb.connection import Connection, get_connection_class
 from ispyb.xmltools import XmlDictConfig, mx_data_reduction_xml_to_ispyb
 from testtools import get_connection
 

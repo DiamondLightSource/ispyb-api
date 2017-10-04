@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
 import context
-from ispyb.connection import Connection, get_connection_class
-from nose import with_setup
 from ispyb.sp.mxacquisition import mxacquisition
 from ispyb.sp.emacquisition import emacquisition
 from testtools import get_connection

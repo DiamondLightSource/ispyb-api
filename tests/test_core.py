@@ -1,7 +1,6 @@
 import context
 from ispyb.sp.core import core
 from datetime import datetime
-#from nose import with_setup
 from testtools import get_connection
 
 def test_upsert_sample():

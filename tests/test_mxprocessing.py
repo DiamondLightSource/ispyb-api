@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 
 import context
-from ispyb.connection import Connection, get_connection_class
 from ispyb.sp.core import core
 from ispyb.sp.mxprocessing import mxprocessing
 from datetime import datetime
-from nose import with_setup
 from testtools import get_connection
 
 def insert_integration_and_processing(c):
