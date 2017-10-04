@@ -28,20 +28,19 @@ from ispyb.mxacquisition import mxacquisition
 from datetime import datetime
 
 ConnClass = get_connection_class(Connection.ISPYBMYSQLSP)
-conn = ConnClass(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
-cursor = conn.get_cursor()
+conn = ConnClass(conf='dev', conf_file='config.cfg')
 # Find the id for a given visit
-sessionid = core.retrieve_visit_id(cursor, 'cm14451-2')
-# Create a new data collection entry:
+sessionid = core.retrieve_visit_id(conn, 'cm14451-2')
+# Create a new data collection group entry:
 params = mxacquisition.get_data_collection_group_params()
 params['parentid'] = sessionid
 params['experimenttype'] = 'OSC'
 params['starttime'] = datetime.strptime('2017-09-21 13:00:00', '%Y-%m-%d %H:%M:%S')
 params['endtime'] = datetime.strptime('2017-09-21 13:00:10', '%Y-%m-%d %H:%M:%S')
 params['comments'] = 'This is a test of data collection group.'
-dcg_id = mxacquisition.insert_data_collection_group(cursor, params.values())
+dcg_id = mxacquisition.insert_data_collection_group(conn, params.values())
 conn.disconnect()
-print "dcg_id: %i" % dcg_id
+print("dcg_id: %i" % dcg_id)
 ```
 
 See docs/pipeline2ispyb.py for a more detailed example of how to use the package.
