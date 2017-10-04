@@ -3,7 +3,10 @@ import time
 import os
 import sys
 import datetime
-import ConfigParser
+try:
+    import configparser as ConfigParser
+except ImportError:
+    import ConfigParser
 import codecs
 from ispyb.version import __version__
 import ispyb.interface.connection

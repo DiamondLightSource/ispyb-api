@@ -28,7 +28,7 @@ class StoredRoutines(object):
     for recordset in cursor.stored_results():
         if isinstance(cursor, mysql.connector.cursor.MySQLCursorDict):
             for row in recordset:
-                result.append(dict(zip(recordset.column_names,row)))
+                result.append(dict(list(zip(recordset.column_names,row))))
         else:
             result = recordset.fetchall()
 #    cursor.nextset()
@@ -43,7 +43,7 @@ class StoredRoutines(object):
     rs = cursor.fetchone()
     if len(rs) > 0:
         if isinstance(cursor, mysql.connector.cursor.MySQLCursorDict):
-            result = rs.iteritems().next()[1]
+            result = iter(rs.items()).next()[1]
         else:
             try:
                 result = int(rs[0])

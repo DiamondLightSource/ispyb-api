@@ -19,8 +19,8 @@ class XmlListConfig(list):
                 text = element.text.strip()
                 if text:
                     self.append(text)
-            elif element.items():
-                self.append(OrderedDict(element.items()))
+            elif list(element.items()):
+                self.append(OrderedDict(list(element.items())))
 
 class XmlDictConfig(dict):
     '''
@@ -42,8 +42,8 @@ class XmlDictConfig(dict):
         for child in parent_element.getchildren():
             childrenNames.append(child.tag)
 
-        if parent_element.items():
-            self.update(dict(parent_element.items()))
+        if list(parent_element.items()):
+            self.update(dict(list(parent_element.items())))
         for element in parent_element:
             if len(element):  # was: if element:
                 # treat like dict - we assume that if the first two tags
@@ -58,8 +58,8 @@ class XmlDictConfig(dict):
                     # the value is the list itself
                     aDict = {element[0].tag: XmlListConfig(element)}
                 # if the tag has attributes, add those to the dict
-                if element.items():
-                    aDict.update(dict(element.items()))
+                if list(element.items()):
+                    aDict.update(dict(list(element.items())))
 
                 if childrenNames.count(element.tag) > 1:
                     try:
@@ -75,8 +75,8 @@ class XmlDictConfig(dict):
             # you won't be having any text. This may or may not be a
             # good idea -- time will tell. It works for the way we are
             # currently doing XML configuration files...
-            elif element.items():
-                self.update({element.tag: dict(element.items())})
+            elif list(element.items()):
+                self.update({element.tag: dict(list(element.items()))})
             # finally, if there are no child tags and no attributes, extract
             # the text
             else:
@@ -102,7 +102,7 @@ def mx_data_reduction_xml_to_ispyb(xmldict, dc_id = None, conn = None):
         sys.exit("ERROR - please make sure the XML file contains an AutoProcIntegrationContainer element.")
 
     s = [None, None, None]
-    for i in xrange(0,3):
+    for i in range(0,3):
         stats = xmldict['AutoProcScalingContainer']['AutoProcScalingStatistics'][i]
         if stats['scalingStatisticsType'] == 'outerShell':
             s[0] = stats
@@ -118,7 +118,7 @@ def mx_data_reduction_xml_to_ispyb(xmldict, dc_id = None, conn = None):
         integration = int_container['AutoProcIntegration']
         if 'dataCollectionId' not in integration:
             if dc_id is not None:
-    	       integration['dataCollectionId'] = dc_id
+    	        integration['dataCollectionId'] = dc_id
             else:
                 sys.exit("ERROR - please make sure the XML file's "\
                 "AutoProcIntegration element contains a dataCollectionId "\
@@ -134,7 +134,7 @@ def mx_data_reduction_xml_to_ispyb(xmldict, dc_id = None, conn = None):
         params['cmd_line'] = program['processingCommandLine']
     if 'reprocessingId' in program:
         params['reprocessingid'] = program['reprocessingId']
-    app_id = mxprocessing.upsert_program(conn, params.values())
+    app_id = mxprocessing.upsert_program(conn, list(params.values()))
 
     if attachments != None:
         params = mxprocessing.get_program_attachment_params()
@@ -146,7 +146,7 @@ def mx_data_reduction_xml_to_ispyb(xmldict, dc_id = None, conn = None):
                 params['file_path'] = attachment['filePath']
             if 'fileType' in attachment:
                 params['file_type'] = attachment['fileType']
-            mxprocessing.upsert_program_attachment(conn, params.values())
+            mxprocessing.upsert_program_attachment(conn, list(params.values()))
 
     # ...then the top-level processing entry
     params = mxprocessing.get_processing_params()
@@ -158,7 +158,7 @@ def mx_data_reduction_xml_to_ispyb(xmldict, dc_id = None, conn = None):
     params['refinedcell_alpha'] = proc['refinedCell_alpha']
     params['refinedcell_beta'] = proc['refinedCell_beta']
     params['refinedcell_gamma'] = proc['refinedCell_gamma']
-    ap_id = mxprocessing.upsert_processing(conn, params.values())
+    ap_id = mxprocessing.upsert_processing(conn, list(params.values()))
 
     # ... then the scaling results
     p = [mxprocessing.get_outer_shell_scaling_params(),
@@ -201,7 +201,7 @@ def mx_data_reduction_xml_to_ispyb(xmldict, dc_id = None, conn = None):
       if 'rPimAllIPlusIMinus' in s[i]:
           p[i]['r_pim_all_iplusi_minus'] = s[i]['rPimAllIPlusIMinus']
 
-    scaling_id = mxprocessing.insert_scaling(conn, ap_id, p[0].values(), p[1].values(), p[2].values())
+    scaling_id = mxprocessing.insert_scaling(conn, ap_id, list(p[0].values()), list(p[1].values()), list(p[2].values()))
 
     # ... and finally the integration results
     for int_container in int_containers:
@@ -231,6 +231,6 @@ def mx_data_reduction_xml_to_ispyb(xmldict, dc_id = None, conn = None):
         if 'anomalous' in integration:
             params['anom'] = integration['anomalous']
 
-        integration_id = mxprocessing.upsert_integration(conn, params.values())
+        integration_id = mxprocessing.upsert_integration(conn, list(params.values()))
 
     return (app_id, ap_id, scaling_id, integration_id)

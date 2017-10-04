@@ -1,10 +1,8 @@
-import abc
 from ispyb.sp.storedroutines import StoredRoutines
 import ispyb.interface.acquisition
 
 class Acquisition(ispyb.interface.acquisition.IF, StoredRoutines):
   '''Acquisition provides methods to store data in the acquisition tables.'''
-  __metaclass__ = abc.ABCMeta
 
   @classmethod
   def get_data_collection_group_params(cls):
