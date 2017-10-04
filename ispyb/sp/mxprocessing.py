@@ -51,35 +51,62 @@ class MXProcessing(ispyb.interface.processing.IF, StoredRoutines):
     ('method1_res',None), ('method2_res',None), ('max_unit_cell',None), ('pct_saturation_top_50_peaks',None),
     ('in_resolution_ovrl_spots',None), ('bin_pop_cut_off_method2_res',None), ('total_integrated_signal',None), ('drift_factor',None)])
 
-  def get_program_params(self):
-    return copy.deepcopy(self._program_params)
+  _run_params = ExtendedOrderedDict([('id',None), ('parentid',None),
+  ('success',None), ('message',None), ('pipeline',None),
+  ('input_coord_file',None), ('output_coord_file',None),
+  ('input_MTZ_file',None), ('output_MTZ_file',None), ('run_dir',None),
+  ('log_file',None), ('cmd_line',None), ('r_start',None), ('r_end',None),
+  ('rfree_start',None), ('rfree_end',None), ('starttime',None),
+  ('endtime',None)])
 
-  def get_program_attachment_params(self):
-    return copy.deepcopy(self._program_attachment_params)
+  _run_blob_params = ExtendedOrderedDict([('id',None), ('parentid',None),
+  ('view1',None), ('view2',None), ('view3',None)])
 
-  def get_processing_params(self):
-    return copy.deepcopy(self._processing_params)
+  @classmethod
+  def get_run_params(cls):
+    return copy.deepcopy(cls._run_params)
 
-  def get_inner_shell_scaling_params(self):
-    sp = copy.deepcopy(self._scaling_params)
+  @classmethod
+  def get_run_blob_params(cls):
+    return copy.deepcopy(cls._run_blob_params)
+
+  @classmethod
+  def get_program_params(cls):
+    return copy.deepcopy(cls._program_params)
+
+  @classmethod
+  def get_program_attachment_params(cls):
+    return copy.deepcopy(cls._program_attachment_params)
+
+  @classmethod
+  def get_processing_params(cls):
+    return copy.deepcopy(cls._processing_params)
+
+  @classmethod
+  def get_inner_shell_scaling_params(cls):
+    sp = copy.deepcopy(cls._scaling_params)
     sp['type'] = 'innerShell'
     return sp
 
-  def get_outer_shell_scaling_params(self):
-    sp = copy.deepcopy(self._scaling_params)
+  @classmethod
+  def get_outer_shell_scaling_params(cls):
+    sp = copy.deepcopy(cls._scaling_params)
     sp['type'] = 'outerShell'
     return sp
 
-  def get_overall_scaling_params(self):
-    sp = copy.deepcopy(self._scaling_params)
+  @classmethod
+  def get_overall_scaling_params(cls):
+    sp = copy.deepcopy(cls._scaling_params)
     sp['type'] = 'overall'
     return sp
 
-  def get_integration_params(self):
-    return copy.deepcopy(self._integration_params)
+  @classmethod
+  def get_integration_params(cls):
+    return copy.deepcopy(cls._integration_params)
 
-  def get_quality_indicators_params(self):
-    return copy.deepcopy(self._quality_indicators_params)
+  @classmethod
+  def get_quality_indicators_params(cls):
+    return copy.deepcopy(cls._quality_indicators_params)
 
   def upsert_program(self, conn, values):
     '''Store new or update existing program params.'''
@@ -102,5 +129,16 @@ class MXProcessing(ispyb.interface.processing.IF, StoredRoutines):
 
   def insert_quality_indicators(self, conn, values):
     return self.call_sp_write(conn, procname='insert_quality_indicators', args=values)
+
+  @classmethod
+  def upsert_run(cls, conn, values):
+    '''Update or insert new entry with info about an MX molecular replacement run, e.g. Dimple.'''
+    return cls.call_sp_write(conn, procname='upsert_mrrun', args=values)
+
+  @classmethod
+  def upsert_run_blob(cls, conn, values):
+    '''Update or insert new entry with info about views (image paths) for an MX molecular replacement run, e.g. Dimple.'''
+    return cls.call_sp_write(conn, procname='upsert_mrrun_blob', args=values)
+
 
 mxprocessing = MXProcessing()

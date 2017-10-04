@@ -103,7 +103,38 @@ def insert_integration_and_processing(c):
 
     assert id is not None
 
+def upsert_run(c):
+    params = mxprocessing.get_run_params()
+    params['parentid'] = 596133 # some autoProcScalingId
+    params['message'] = 'Just started ...'
+    params['pipeline'] = 'dimple v2'
+    params['cmd_line'] = 'dimple.sh --input=file.xml'
+    run_id = mxprocessing.upsert_run(c, params.values())
+    assert run_id is not None
+    assert run_id > 0
+
+    params['id'] = run_id
+    params['success'] = True
+    params['message'] = 'Finished'
+    id = mxprocessing.upsert_run(c, params.values())
+    assert id is not None
+    assert id > 0
+
+    params = mxprocessing.get_run_blob_params()
+    params['parentid'] = run_id
+    params['view1'] = 'file1.png'
+    params['view2'] = 'file2.png'
+    params['view3'] = 'file3.png'
+    id = mxprocessing.upsert_run_blob(c, params.values())
+    assert id is not None
+    assert id > 0
+
 def test_insert_integration_and_processing():
     conn = get_connection()
     insert_integration_and_processing(conn)
+    conn.disconnect()
+
+def test_dict_upsert_run():
+    conn = get_connection()
+    upsert_run(conn)
     conn.disconnect()

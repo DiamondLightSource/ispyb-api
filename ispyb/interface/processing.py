@@ -1,22 +1,20 @@
 import abc
+ABC = abc.ABCMeta('ABC', (object,), {'__slots__': ()}) # compatible with Python 2 *and* 3
 
-class IF(object):
-  __metaclass__ = abc.ABCMeta
+class IF(ABC):
 
   @abc.abstractmethod
   def get_program_params(self):
-    raise NotImplementedError('users must define get_program_params to use this base class')
+      pass
 
   @abc.abstractmethod
   def get_program_attachment_params(self):
-    raise NotImplementedError('users must define get_program_attachment_params to use this base class')
+      pass
 
   @abc.abstractmethod
   def get_processing_params(self):
-    raise NotImplementedError('users must define get_processing_params to use this base class')
+      pass
 
   @abc.abstractmethod
   def get_quality_indicators_params(self):
-    raise NotImplementedError('users must define get_quality_indicators_params to use this base class')
-
-    
+      pass

@@ -1,6 +1,7 @@
-from __future__ import absolute_import, division
+import abc
+ABC = abc.ABCMeta('ABC', (object,), {'__slots__': ()}) # compatible with Python 2 *and* 3
 
-class IF(object):
+class IF(ABC):
   '''ISPyB connection interface definition object.'''
 
   def _notimplemented(self):
