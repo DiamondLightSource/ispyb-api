@@ -12,7 +12,6 @@ import os
 import sys
 import datetime
 import copy
-from ispyb.extendedordereddict import ExtendedOrderedDict
 from ispyb.sp.storedroutines import StoredRoutines
 from ispyb.version import __version__
 

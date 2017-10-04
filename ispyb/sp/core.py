@@ -12,7 +12,7 @@ import time
 import os
 import sys
 import datetime
-from ispyb.extendedordereddict import ExtendedOrderedDict
+from ispyb.strictordereddict import StrictOrderedDict
 import copy
 
 import ispyb.interface.core
@@ -26,7 +26,7 @@ class Core(ispyb.interface.core.IF, StoredRoutines):
     pass
 
   _sample_params =\
-    ExtendedOrderedDict([('id',None), ('crystalid',None), ('containerid',None), ('name',None), ('code',None),
+    StrictOrderedDict([('id',None), ('crystalid',None), ('containerid',None), ('name',None), ('code',None),
                          ('location',None), ('holder_length',None), ('loop_length',None), ('loop_type',None),
                          ('wire_width',None), ('comments',None), ('status',None), ('is_in_sc',None)])
 

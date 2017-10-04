@@ -7,7 +7,7 @@
 # Methods to store EM acquisition data
 #
 
-from ispyb.extendedordereddict import ExtendedOrderedDict
+from ispyb.strictordereddict import StrictOrderedDict
 import copy
 from ispyb.sp.acquisition import Acquisition
 from ispyb.version import __version__
@@ -19,7 +19,7 @@ class EMAcquisition(Acquisition):
         pass
 
     _motion_correction_params = \
-        ExtendedOrderedDict(
+        StrictOrderedDict(
             [
                 ('motionCorrectionId', None),
                 ('dataCollectionId', None),
@@ -42,7 +42,7 @@ class EMAcquisition(Acquisition):
         )
 
     _ctf_params = \
-        ExtendedOrderedDict(
+        StrictOrderedDict(
             [
                 ('ctfId', None),
                 ('motionCorrectionId', None),

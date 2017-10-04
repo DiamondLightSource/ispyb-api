@@ -11,7 +11,7 @@ import time
 import os
 import sys
 import datetime
-from ispyb.extendedordereddict import ExtendedOrderedDict
+from ispyb.strictordereddict import StrictOrderedDict
 import copy
 from ispyb.sp.acquisition import Acquisition
 from ispyb.version import __version__
@@ -26,12 +26,12 @@ class MXAcquisition(Acquisition):
     self.update_data_collection = super(MXAcquisition, self).upsert_data_collection
 
   _data_collection_group_params =\
-    ExtendedOrderedDict([('id',None), ('parentid',None), ('sampleid',None), ('experimenttype',None), ('starttime',None), ('endtime',None),
+    StrictOrderedDict([('id',None), ('parentid',None), ('sampleid',None), ('experimenttype',None), ('starttime',None), ('endtime',None),
                          ('crystal_class',None), ('detector_mode',None), ('actual_sample_barcode',None), ('actual_sample_slot_in_container',None),
                          ('actual_container_barcode',None), ('actual_container_slot_in_sc',None), ('comments',None)])
 
   _data_collection_params =\
-    ExtendedOrderedDict([('id',None), ('parentid',None), ('visitid',None), ('sampleid',None), ('detectorid',None), ('positionid',None),
+    StrictOrderedDict([('id',None), ('parentid',None), ('visitid',None), ('sampleid',None), ('detectorid',None), ('positionid',None),
                          ('apertureid',None), ('datacollection_number',None), ('starttime',None), ('endtime',None), ('run_status',None),
                          ('axis_start',None), ('axis_end',None), ('axis_range',None), ('overlap',None), ('n_images',None),
                          ('start_image_number',None), ('n_passes',None), ('exp_time',None),
@@ -51,7 +51,7 @@ class MXAcquisition(Acquisition):
                          ('c2aperture',None), ('c3aperture',None), ('c1lens',None), ('c2lens',None), ('c3lens',None)])
 
   _image_params =\
-    ExtendedOrderedDict([('id',None), ('parentid',None), ('img_number',None), ('filename',None), ('file_location',None),
+    StrictOrderedDict([('id',None), ('parentid',None), ('img_number',None), ('filename',None), ('file_location',None),
                          ('measured_intensity',None), ('jpeg_path',None), ('jpeg_thumb_path',None), ('temperature',None),
                          ('cumulative_intensity',None), ('synchrotron_current',None), ('comments',None), ('machine_msg',None)])
 
