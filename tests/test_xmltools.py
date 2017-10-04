@@ -22,7 +22,7 @@ def test_mx_data_reduction_xml_to_ispyb():
     xml_dir = os.path.split(xml_file)[0]
     try:
         dc_id = int(open(os.path.join(xml_dir, '.dc_id'), 'r').read())
-        print 'Got DC ID %d from file system' % dc_id
+        print('Got DC ID %d from file system' % dc_id)
     except:
         dc_id = None
 

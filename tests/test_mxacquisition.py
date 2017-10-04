@@ -12,7 +12,7 @@ def mxacquisition_methods(c):
     params = mxacquisition.get_data_collection_group_params()
     params['parentid'] = 55168 # sessionId
     params['experimenttype'] = 'OSC'
-    dcgid = mxacquisition.insert_data_collection_group(c, params.values())
+    dcgid = mxacquisition.insert_data_collection_group(c, list(params.values()))
     assert dcgid is not None
     assert dcgid > 0
 
@@ -21,7 +21,7 @@ def mxacquisition_methods(c):
     params['datacollection_number'] = 1
     params['run_status'] = 'DataCollection Successful'
     params['n_images'] = 360
-    id1 = mxacquisition.insert_data_collection(c, params.values())
+    id1 = mxacquisition.insert_data_collection(c, list(params.values()))
     assert id1 is not None
     assert id1 > 0
 
@@ -30,7 +30,7 @@ def mxacquisition_methods(c):
     params['parentid'] = dcgid
     params['axis_start'] = 0
     params['axis_end'] = 90
-    id2 = mxacquisition.update_data_collection(c, params.values())
+    id2 = mxacquisition.update_data_collection(c, list(params.values()))
     assert id2 is not None
     assert id2 > 0
     assert id1 == id2
@@ -38,13 +38,13 @@ def mxacquisition_methods(c):
     params = mxacquisition.get_image_params()
     params['parentid'] = id1
     params['img_number'] = 1
-    iid = mxacquisition.upsert_image(c, params.values())
+    iid = mxacquisition.upsert_image(c, list(params.values()))
 
     params = mxacquisition.get_image_params()
     params['id'] = iid
     params['parentid'] = id1
     params['comments'] = 'Forgot to comment!'
-    iid = mxacquisition.upsert_image(c, params.values())
+    iid = mxacquisition.upsert_image(c, list(params.values()))
 
 # ---- Test with dict_cursor
 

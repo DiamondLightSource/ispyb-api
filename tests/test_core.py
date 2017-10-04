@@ -11,7 +11,7 @@ def test_upsert_sample():
     params['crystalid'] = 3918
     params['name'] = 'Sample-010101'
     params['code'] = 'SAM-010101'
-    id = core.upsert_sample(conn, params.values())
+    id = core.upsert_sample(conn, list(params.values()))
     conn.disconnect()
     assert id is not None
 

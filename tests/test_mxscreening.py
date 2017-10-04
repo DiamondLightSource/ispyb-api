@@ -20,7 +20,7 @@ def insert_dcgroup(c, session_id):
     params['endtime'] = datetime.strptime('2017-03-15 13:00:10', '%Y-%m-%d %H:%M:%S')
     params['comments'] = 'This is a test of data collection group.'
     #params[''] = 'something'
-    id = mxacquisition.insert_data_collection_group(c, params.values())
+    id = mxacquisition.insert_data_collection_group(c, list(params.values()))
     return id
 
 def insert_screening(c, session_id = None):
@@ -35,7 +35,7 @@ def insert_screening(c, session_id = None):
     params['short_comments'] = 'ENDAStrategy1'
     params['comments'] = 'param1 = 1.2, param2 = 2.06'
 
-    id = mxscreening.insert_screening(c, params.values())
+    id = mxscreening.insert_screening(c, list(params.values()))
     assert id is not None
     assert id > 0
     return id
@@ -53,7 +53,7 @@ def insert_screening_input(c):
     params['max_fraction_rejected'] = 0.30
     params['min_signal2noise'] = 0.98
 
-    id = mxscreening.insert_screening_input(c, params.values())
+    id = mxscreening.insert_screening_input(c, list(params.values()))
     assert id is not None
     assert id > 0
     return id
@@ -77,7 +77,7 @@ def insert_screening_output(c, session_id = None):
     params['indexing_success'] = True
     params['strategy_success'] = True
 
-    id = mxscreening.insert_screening_output(c, params.values())
+    id = mxscreening.insert_screening_output(c, list(params.values()))
     assert id is not None
     assert id > 0
     return id
@@ -99,7 +99,7 @@ def insert_screening_output_lattice(c):
     params['unit_cell_gamma'] = 90
     params['labelit_indexing'] = True
 
-    id = mxscreening.insert_screening_output_lattice(c, params.values())
+    id = mxscreening.insert_screening_output_lattice(c, list(params.values()))
     assert id is not None
     assert id > 0
     return id
@@ -113,7 +113,7 @@ def insert_screening_strategy(c, session_id = None):
     params['screening_output_id'] = so_id
     params['anomalous'] = 1.198145
 
-    id = mxscreening.insert_screening_strategy(c, params.values())
+    id = mxscreening.insert_screening_strategy(c, list(params.values()))
     assert id is not None
     assert id > 0
     return id
@@ -126,7 +126,7 @@ def insert_screening_strategy_wedge(c, session_id = None):
     params = mxscreening.get_screening_strategy_wedge_params()
     params['screening_strategy_id'] = ss_id
 
-    id = mxscreening.insert_screening_strategy_wedge(c, params.values())
+    id = mxscreening.insert_screening_strategy_wedge(c, list(params.values()))
     assert id is not None
     assert id > 0
     return id
@@ -138,7 +138,7 @@ def insert_screening_strategy_sub_wedge(c):
     params = mxscreening.get_screening_strategy_sub_wedge_params()
     params['screening_strategy_wedge_id'] = ssw_id
 
-    id = mxscreening.insert_screening_strategy_sub_wedge(c, params.values())
+    id = mxscreening.insert_screening_strategy_sub_wedge(c, list(params.values()))
     assert id is not None
     assert id > 0
     return id
