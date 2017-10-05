@@ -33,19 +33,11 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
     if self.conn is not None:
       self.conn.autocommit=True
 
-#    if dict_cursor:
-#        self.cursor = self.conn.cursor(dictionary=True)
-#    else:
-#        self.cursor = self.conn.cursor()
-
   def __del__(self):
     self.disconnect()
 
   def disconnect(self):
     '''Release the connection previously created.'''
-#    if hasattr(self, 'cursor') and self.cursor is not None:
-#    	self.cursor.close()
-#	self.cursor = None
     if hasattr(self, 'conn') and self.conn is not None:
     	self.conn.close()
     self.conn = None
