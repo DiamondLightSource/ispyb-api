@@ -44,7 +44,7 @@ def test_retrieve_persons_for_proposal():
     rs = core.retrieve_persons_for_proposal(conn, 'cm', 14451)
     conn.disconnect()
     assert len(rs) == 1
-    login = rs[0][3]
+    login = rs[0]['login']
     assert login is not None
 
 def test_retrieve_current_cm_sessions():

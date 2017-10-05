@@ -22,7 +22,7 @@ class StoredRoutines(object):
 
   @staticmethod
   def call_sp_retrieve(conn, procname, args):
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
     cursor.callproc(procname=procname, args=args)
     result = []
     for recordset in cursor.stored_results():
