@@ -6,6 +6,7 @@ from testtools import get_connection
 def test_upsert_sample():
     conn = get_connection()
     params = core.get_sample_params()
+    print(params)
     params['containerid'] = 1326
     params['crystalid'] = 3918
     params['name'] = 'Sample-010101'
