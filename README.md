@@ -23,14 +23,13 @@ pip install --user dist/ispyb-${version}-py2-none-any.whl
 
 ### Examples
 ```python
-from ispyb.factory import get_data_area_object, ConnectionType, DataAreaType
+import ispyb.factory
 from datetime import datetime
 
 # Get the data area objects and set connections
-core = get_data_area_object(DataAreaType.CORE, ConnectionType.ISPYBMYSQLSP)
-core.get_connection().connect('dev', 'config.cfg')
-mxacquisition = get_data_area_object(DataAreaType.MXACQUISITION, ConnectionType.ISPYBMYSQLSP)
-mxacquisition.get_connection().connect('dev', 'config.cfg')
+conn = ispyb.factory.get_connection_object('config.cfg')
+core = ispyb.factory.get_data_area_object(ispyb.factory.DataAreaType.CORE, conn)
+mxacquisition = ispyb.factory.get_data_area_object(ispyb.factory.DataAreaType.MXACQUISITION, conn)
 
 # Find the id for a given visit
 sessionid = core.retrieve_visit_id('cm14451-2')

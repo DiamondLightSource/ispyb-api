@@ -3,11 +3,6 @@ import time
 import os
 import sys
 import datetime
-try:
-    import configparser as ConfigParser
-except ImportError:
-    import ConfigParser
-import codecs
 from ispyb.version import __version__
 import ispyb.interface.connection
 
@@ -15,22 +10,16 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
   '''Provides a connector to an ISPyB MySQL/MariaDB database through stored procedures.
   '''
 
-  def __init__(self, conf_file=None):
-    if not conf_file is None:
-        self.connect(conf_file)
+  def __init__(self, user=None, pw=None, host=None, db=None, port=None):
+    self.connect(user=user, pw=pw, host=host, db=db, port=port)
 
-  def connect(self, conf_file):
+  def connect(self, user=None, pw=None, host=None, db=None, port=None):
     self.disconnect()
-    self.config = ConfigParser.ConfigParser(allow_no_value=True)
-    self.config.readfp(codecs.open(conf_file, "r", "utf8"))
-
-    section = 'db'
-    '''Create a connection to the database using the given parameters.'''
-    self.conn = mysql.connector.connect(user=self.config.get(section, 'user'),
-        password=self.config.get(section, 'pw'), \
-        host=self.config.get(section, 'host'),
-        database=self.config.get(section, 'db'), \
-        port=self.config.getint(section, 'port'))
+    self.conn = mysql.connector.connect(user=user,
+        password=pw,
+        host=host,
+        database=db,
+        port=int(port))
     if self.conn is not None:
       self.conn.autocommit=True
 
@@ -47,3 +36,6 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
     if hasattr(self, 'conn') and self.conn is not None:
         return self.conn.cursor(dictionary=dictionary)
     raise Exception('No database connection')
+
+  def get_data_area_package(self):
+    return 'ispyb.sp'

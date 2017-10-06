@@ -1,34 +1,29 @@
-from ispyb.factory import get_data_area_object, ConnectionType, DataAreaType
+# from ispyb.factory import get_data_area_object, get_connection_object, DataAreaType
+import ispyb.factory
 import os
 
 conf_file = os.path.abspath(os.path.join(os.path.dirname(__file__), '../conf/config.cfg'))
 
 def get_core():
-    core = get_data_area_object(DataAreaType.CORE, ConnectionType.ISPYBMYSQLSP)
-    core.get_connection().connect(conf_file)
-    return core
+    conn = ispyb.factory.get_connection_object(conf_file)
+    return ispyb.factory.get_data_area_object(ispyb.factory.DataAreaType.CORE, conn)
 
 def get_mxacquisition():
-    mxacquisition = get_data_area_object(DataAreaType.MXACQUISITION, ConnectionType.ISPYBMYSQLSP)
-    mxacquisition.get_connection().connect(conf_file)
-    return mxacquisition
+    conn = ispyb.factory.get_connection_object(conf_file)
+    return ispyb.factory.get_data_area_object(ispyb.factory.DataAreaType.MXACQUISITION, conn)
 
 def get_emacquisition():
-    emacquisition = get_data_area_object(DataAreaType.EMACQUISITION, ConnectionType.ISPYBMYSQLSP)
-    emacquisition.get_connection().connect(conf_file)
-    return emacquisition
+    conn = ispyb.factory.get_connection_object(conf_file)
+    return ispyb.factory.get_data_area_object(ispyb.factory.DataAreaType.EMACQUISITION, conn)
 
 def get_mxprocessing():
-    mxprocessing = get_data_area_object(DataAreaType.MXPROCESSING, ConnectionType.ISPYBMYSQLSP)
-    mxprocessing.get_connection().connect(conf_file)
-    return mxprocessing
+    conn = ispyb.factory.get_connection_object(conf_file)
+    return ispyb.factory.get_data_area_object(ispyb.factory.DataAreaType.MXPROCESSING, conn)
 
 def get_mxscreening():
-    mxscreening = get_data_area_object(DataAreaType.MXSCREENING, ConnectionType.ISPYBMYSQLSP)
-    mxscreening.get_connection().connect(conf_file)
-    return mxscreening
+    conn = ispyb.factory.get_connection_object(conf_file)
+    return ispyb.factory.get_data_area_object(ispyb.factory.DataAreaType.MXSCREENING, conn)
 
 def get_shipping():
-    shipping = get_data_area_object(DataAreaType.SHIPPING, ConnectionType.ISPYBMYSQLSP)
-    shipping.get_connection().connect(conf_file)
-    return shipping
+    conn = ispyb.factory.get_connection_object(conf_file)
+    return ispyb.factory.get_data_area_object(ispyb.factory.DataAreaType.SHIPPING, conn)
