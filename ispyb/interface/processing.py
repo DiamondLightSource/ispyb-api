@@ -1,7 +1,7 @@
 import abc
-ABC = abc.ABCMeta('ABC', (object,), {'__slots__': ()}) # compatible with Python 2 *and* 3
+from ispyb.interface.dataarea import DataArea
 
-class IF(ABC):
+class IF(DataArea):
 
   @abc.abstractmethod
   def get_program_params(self):

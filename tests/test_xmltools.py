@@ -6,11 +6,9 @@ import os
 from xml.etree import ElementTree
 from datetime import datetime
 from ispyb.xmltools import XmlDictConfig, mx_data_reduction_xml_to_ispyb
-from testtools import get_connection
+from testtools import get_mxprocessing
 
 def test_mx_data_reduction_xml_to_ispyb():
-    conn = get_connection()
-
     xml_file = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data/mx_data_reduction_pipeline_results.xml'))
     # Convert the XML to a dictionary
     tree = ElementTree.parse(xml_file)
@@ -24,7 +22,7 @@ def test_mx_data_reduction_xml_to_ispyb():
     except:
         dc_id = None
 
-    (app_id, ap_id, scaling_id, integration_id) = mx_data_reduction_xml_to_ispyb(xmldict, dc_id, conn)
+    (app_id, ap_id, scaling_id, integration_id) = mx_data_reduction_xml_to_ispyb(xmldict, dc_id, get_mxprocessing())
 
     # Output results xml
     xml = '<?xml version="1.0" encoding="ISO-8859-1"?>'\
@@ -34,4 +32,3 @@ def test_mx_data_reduction_xml_to_ispyb():
             '<autoProcIntegrationId>%d</autoProcIntegrationId>'\
             '<code>ok</code></dbstatus>' % (app_id, ap_id, scaling_id, integration_id)
     print(xml)
-    conn.disconnect()

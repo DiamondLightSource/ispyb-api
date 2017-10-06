@@ -108,37 +108,32 @@ class MXProcessing(ispyb.interface.processing.IF, StoredRoutines):
   def get_quality_indicators_params(cls):
     return copy.deepcopy(cls._quality_indicators_params)
 
-  def upsert_program(self, conn, values):
+  def upsert_program(self, values):
     '''Store new or update existing program params.'''
-    return self.call_sp_write(conn, procname='upsert_processing_program', args=values) # doesn't work with dict cursors
+    return self.call_sp_write(self.get_connection(), procname='upsert_processing_program', args=values) # doesn't work with dict cursors
 
-  def upsert_program_attachment(self, conn, values):
+  def upsert_program_attachment(self, values):
     '''Store new or update existing program attachment params.'''
-    return self.call_sp_write(conn, procname='upsert_processing_program_attachment', args=values)
+    return self.call_sp_write(self.get_connection(), procname='upsert_processing_program_attachment', args=values)
 
-  def upsert_processing(self, conn, values):
-    return self.call_sp_write(conn, procname='upsert_processing', args=values)
+  def upsert_processing(self, values):
+    return self.call_sp_write(self.get_connection(), procname='upsert_processing', args=values)
 
-  def insert_scaling(self, conn, parent_id, values1, values2, values3):
+  def insert_scaling(self, parent_id, values1, values2, values3):
     id = None
     values = [id, parent_id] + values1 + values2 + values3
-    return self.call_sp_write(conn, procname='insert_processing_scaling', args=values)
+    return self.call_sp_write(self.get_connection(), procname='insert_processing_scaling', args=values)
 
-  def upsert_integration(self, conn, values):
-    return self.call_sp_write(conn, procname='upsert_processing_integration', args=values)
+  def upsert_integration(self, values):
+    return self.call_sp_write(self.get_connection(), procname='upsert_processing_integration', args=values)
 
-  def insert_quality_indicators(self, conn, values):
-    return self.call_sp_write(conn, procname='insert_quality_indicators', args=values)
+  def insert_quality_indicators(self, values):
+    return self.call_sp_write(self.get_connection(), procname='insert_quality_indicators', args=values)
 
-  @classmethod
-  def upsert_run(cls, conn, values):
+  def upsert_run(self, values):
     '''Update or insert new entry with info about an MX molecular replacement run, e.g. Dimple.'''
-    return cls.call_sp_write(conn, procname='upsert_mrrun', args=values)
+    return self.call_sp_write(self.get_connection(), procname='upsert_mrrun', args=values)
 
-  @classmethod
-  def upsert_run_blob(cls, conn, values):
+  def upsert_run_blob(self, values):
     '''Update or insert new entry with info about views (image paths) for an MX molecular replacement run, e.g. Dimple.'''
-    return cls.call_sp_write(conn, procname='upsert_mrrun_blob', args=values)
-
-
-mxprocessing = MXProcessing()
+    return self.call_sp_write(self.get_connection(), procname='upsert_mrrun_blob', args=values)

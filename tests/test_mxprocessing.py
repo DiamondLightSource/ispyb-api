@@ -1,23 +1,22 @@
 #!/usr/bin/env python
 
 import context
-from ispyb.sp.core import core
-from ispyb.sp.mxprocessing import mxprocessing
 from datetime import datetime
-from testtools import get_connection
+from testtools import get_mxprocessing
 
-def insert_integration_and_processing(c):
+def test_insert_integration_and_processing():
+    mxprocessing = get_mxprocessing()
     params = mxprocessing.get_program_params()
     params['cmd_line'] = 'ls -ltr'
     params['message'] = 'Just started ...'
-    id = mxprocessing.upsert_program(c, list(params.values()))
+    id = mxprocessing.upsert_program(list(params.values()))
     assert id is not None
     assert id > 0
 
     params['id'] = id
     params['status'] = True
     params['message'] = 'Finished'
-    programid = mxprocessing.upsert_program(c, list(params.values()))
+    programid = mxprocessing.upsert_program(list(params.values()))
     assert programid is not None
     assert programid > 0
 
@@ -26,7 +25,7 @@ def insert_integration_and_processing(c):
     params['file_name'] = 'file.log'
     params['file_path'] = '/tmp'
     params['file_type'] = 'Log' # should be one of Log, Result, Graph
-    id = mxprocessing.upsert_program_attachment(c, list(params.values()))
+    id = mxprocessing.upsert_program_attachment(list(params.values()))
     assert id is not None
     assert id > 0
 
@@ -50,7 +49,7 @@ def insert_integration_and_processing(c):
     params['cell_beta'] = 90.0
     params['cell_gamma'] = 90.0
 
-    id = mxprocessing.upsert_integration(c, list(params.values()))
+    id = mxprocessing.upsert_integration(list(params.values()))
     assert id is not None
     assert id > 0
 
@@ -64,7 +63,7 @@ def insert_integration_and_processing(c):
     params['refinedcell_beta'] = 90
     params['refinedcell_gamma'] = 90
 
-    id = mxprocessing.upsert_processing(c, list(params.values()))
+    id = mxprocessing.upsert_processing(list(params.values()))
     assert id is not None
     assert id > 0
 
@@ -87,7 +86,7 @@ def insert_integration_and_processing(c):
     params3['r_merge'] = 2.1
     params3['cc_half'] = 49.2
     params3['cc_anom'] = 56.0
-    id = mxprocessing.insert_scaling(c, parentid, list(params1.values()), list(params2.values()), list(params3.values()))
+    id = mxprocessing.insert_scaling(parentid, list(params1.values()), list(params2.values()), list(params3.values()))
 
     assert id is not None
 
@@ -96,25 +95,26 @@ def insert_integration_and_processing(c):
     params['image_number'] = 1
     params['spot_total'] = 130
     params['programid'] = programid
-    id = mxprocessing.insert_quality_indicators(c, list(params.values()))
+    id = mxprocessing.insert_quality_indicators(list(params.values()))
     print(id)
 
     assert id is not None
 
-def upsert_run(c):
+def test_upsert_run():
+    mxprocessing = get_mxprocessing()
     params = mxprocessing.get_run_params()
     params['parentid'] = 596133 # some autoProcScalingId
     params['message'] = 'Just started ...'
     params['pipeline'] = 'dimple v2'
     params['cmd_line'] = 'dimple.sh --input=file.xml'
-    run_id = mxprocessing.upsert_run(c, list(params.values()))
+    run_id = mxprocessing.upsert_run(list(params.values()))
     assert run_id is not None
     assert run_id > 0
 
     params['id'] = run_id
     params['success'] = True
     params['message'] = 'Finished'
-    id = mxprocessing.upsert_run(c, list(params.values()))
+    id = mxprocessing.upsert_run(list(params.values()))
     assert id is not None
     assert id > 0
 
@@ -123,16 +123,6 @@ def upsert_run(c):
     params['view1'] = 'file1.png'
     params['view2'] = 'file2.png'
     params['view3'] = 'file3.png'
-    id = mxprocessing.upsert_run_blob(c, list(params.values()))
+    id = mxprocessing.upsert_run_blob(list(params.values()))
     assert id is not None
     assert id > 0
-
-def test_insert_integration_and_processing():
-    conn = get_connection()
-    insert_integration_and_processing(conn)
-    conn.disconnect()
-
-def test_dict_upsert_run():
-    conn = get_connection()
-    upsert_run(conn)
-    conn.disconnect()

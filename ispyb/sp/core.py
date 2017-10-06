@@ -34,54 +34,42 @@ class Core(ispyb.interface.core.IF, StoredRoutines):
   def get_sample_params(cls):
     return copy.deepcopy(cls._sample_params)
 
-  @classmethod
-  def upsert_sample(cls, conn, values):
+  def upsert_sample(self, values):
     '''Insert or update sample.'''
-    return cls.call_sf(conn, 'upsert_sample', values)
+    return self.call_sf(self.get_connection(), 'upsert_sample', values)
 
-  @classmethod
-  def retrieve_visit_id(cls, conn, visit):
+  def retrieve_visit_id(self, visit):
     '''Get the database ID for a visit on the form mx1234-5.'''
-    return cls.call_sf(conn, 'retrieve_visit_id', [visit])
+    return self.call_sf(self.get_connection(), 'retrieve_visit_id', [visit])
 
-  @classmethod
-  def retrieve_datacollection_id(cls, conn, img_filename, img_fileloc):
+  def retrieve_datacollection_id(self, img_filename, img_fileloc):
     '''Get the database ID for the data collection corresponding to the given diffraction image file.'''
-    return cls.call_sf(conn, 'retrieve_datacollection_id', [img_filename, img_fileloc])
+    return self.call_sf(self.get_connection(), 'retrieve_datacollection_id', [img_filename, img_fileloc])
 
-  @classmethod
-  def retrieve_current_sessions(cls, conn, beamline, tolerance_mins=0):
+  def retrieve_current_sessions(self, beamline, tolerance_mins=0):
     '''Get a result-set with the currently active sessions on the given beamline.'''
-    return cls.call_sp_retrieve(conn, procname='retrieve_current_sessions', args=(beamline,tolerance_mins))
+    return self.call_sp_retrieve(self.get_connection(), procname='retrieve_current_sessions', args=(beamline,tolerance_mins))
 
-  @classmethod
-  def retrieve_current_sessions_for_person(cls, conn, beamline, fed_id, tolerance_mins=0):
+  def retrieve_current_sessions_for_person(self, beamline, fed_id, tolerance_mins=0):
     '''Get a result-set with the currently active sessions on the given beamline.'''
-    return cls.call_sp_retrieve(conn, procname='retrieve_current_sessions_for_person', args=(beamline, fed_id, tolerance_mins))
+    return self.call_sp_retrieve(self.get_connection(), procname='retrieve_current_sessions_for_person', args=(beamline, fed_id, tolerance_mins))
 
-  @classmethod
-  def retrieve_most_recent_session(cls, conn, beamline, proposal_code):
+  def retrieve_most_recent_session(self, beamline, proposal_code):
     '''Get a result-set with the most recent session on the given beamline for the given proposal code '''
-    return cls.call_sp_retrieve(conn, procname='retrieve_most_recent_session', args=(beamline, proposal_code))
+    return self.call_sp_retrieve(self.get_connection(), procname='retrieve_most_recent_session', args=(beamline, proposal_code))
 
-  @classmethod
-  def retrieve_persons_for_proposal(cls, conn, proposal_code, proposal_number):
+  def retrieve_persons_for_proposal(self, proposal_code, proposal_number):
     '''Get a result-set with the persons associated with a given proposal specified by proposal code, proposal_number'''
-    return cls.call_sp_retrieve(conn, procname='retrieve_persons_for_proposal', args=(proposal_code, proposal_number))
+    return self.call_sp_retrieve(self.get_connection(), procname='retrieve_persons_for_proposal', args=(proposal_code, proposal_number))
 
-  @classmethod
-  def retrieve_current_cm_sessions(cls, conn, beamline):
+  def retrieve_current_cm_sessions(self, beamline):
     '''Get a result-set with the currently active commissioning (cm) sessions on the given beamline.'''
-    return cls.call_sp_retrieve(conn, procname='retrieve_current_cm_sessions', args=(beamline,))
+    return self.call_sp_retrieve(self.get_connection(), procname='retrieve_current_cm_sessions', args=(beamline,))
 
-  @classmethod
-  def retrieve_active_plates(cls, conn, beamline):
+  def retrieve_active_plates(self, beamline):
     '''Get a result-set with the submitted plates not yet in local storage on a given beamline'''
-    return cls.call_sp_retrieve(conn, procname="retrieve_containers_submitted_non_ls", args=(beamline,))
+    return self.call_sp_retrieve(self.get_connection(), procname="retrieve_containers_submitted_non_ls", args=(beamline,))
 
-  @classmethod
-  def retrieve_proposal_title(cls, conn, proposal_code, proposal_number):
+  def retrieve_proposal_title(self, proposal_code, proposal_number):
     '''Get the title of a given proposal'''
-    return cls.call_sf(conn, 'retrieve_proposal_title', [proposal_code, proposal_number])
-
-core = Core()
+    return self.call_sf(self.get_connection(), 'retrieve_proposal_title', [proposal_code, proposal_number])

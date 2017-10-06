@@ -2,12 +2,13 @@
 [![Coverage Status](https://coveralls.io/repos/github/DiamondLightSource/ispyb-api/badge.svg?branch=v3.0.0)](https://coveralls.io/github/DiamondLightSource/ispyb-api?branch=v3.0.0)
 # ISPyB API
 
-This API is intended to be used server-side only as it connects directly to the
-DB. The DB user has privileges to connect to the DB and execute certain
-stored routines.
+This package provides a way to write acquisition and processing results into
+an ISPyB database. Currently, the only supported method is through stored
+procedures, but the package is designed to allow for other methods as well, such  
+as webservices.
 
 ### Requirements
-* Python 2.7 or later 2.x
+* Python 2.7 or 3.x
 * The mysql.connector Python package.
 * An ISPyB database on either MariaDB 10.0+ or MySQL 5.6+
 * If binary logging is enabled in the DB system, then execute this before
@@ -22,15 +23,18 @@ pip install --user dist/ispyb-${version}-py2-none-any.whl
 
 ### Examples
 ```python
-from ispyb.connection import Connection, get_connection_class
-from ispyb.core import core
-from ispyb.mxacquisition import mxacquisition
+from ispyb.factory import get_data_area_object, ConnectionType, DataAreaType
 from datetime import datetime
 
-ConnClass = get_connection_class(Connection.ISPYBMYSQLSP)
-conn = ConnClass(conf='dev', conf_file='config.cfg')
+# Get the data area objects and set connections
+core = get_data_area_object(DataAreaType.CORE, ConnectionType.ISPYBMYSQLSP)
+core.get_connection().connect('dev', 'config.cfg')
+mxacquisition = get_data_area_object(DataAreaType.MXACQUISITION, ConnectionType.ISPYBMYSQLSP)
+mxacquisition.get_connection().connect('dev', 'config.cfg')
+
 # Find the id for a given visit
-sessionid = core.retrieve_visit_id(conn, 'cm14451-2')
+sessionid = core.retrieve_visit_id('cm14451-2')
+
 # Create a new data collection group entry:
 params = mxacquisition.get_data_collection_group_params()
 params['parentid'] = sessionid
@@ -38,8 +42,7 @@ params['experimenttype'] = 'OSC'
 params['starttime'] = datetime.strptime('2017-09-21 13:00:00', '%Y-%m-%d %H:%M:%S')
 params['endtime'] = datetime.strptime('2017-09-21 13:00:10', '%Y-%m-%d %H:%M:%S')
 params['comments'] = 'This is a test of data collection group.'
-dcg_id = mxacquisition.insert_data_collection_group(conn, params.values())
-conn.disconnect()
+dcg_id = mxacquisition.insert_data_collection_group(params.values())
 print("dcg_id: %i" % dcg_id)
 ```
 

@@ -1,7 +1,7 @@
 import abc
-ABC = abc.ABCMeta('ABC', (object,), {'__slots__': ()}) # compatible with Python 2 *and* 3
+from ispyb.interface.dataarea import DataArea
 
-class IF(ABC):
+class IF(DataArea):
 
   @abc.abstractmethod
   def get_data_collection_group_params(cls):
@@ -12,11 +12,11 @@ class IF(ABC):
     pass
 
   @abc.abstractmethod
-  def upsert_data_collection_group(cls, cursor, values):
+  def upsert_data_collection_group(self, cursor, values):
     '''Store new MX data collection group.'''
     pass
 
   @abc.abstractmethod
-  def upsert_data_collection(cls, cursor, values):
+  def upsert_data_collection(self, cursor, values):
     '''Store new data collection.'''
     pass

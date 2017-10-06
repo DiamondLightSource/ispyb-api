@@ -16,7 +16,10 @@ class EMAcquisition(Acquisition):
     '''EMAcquisition provides methods to store data in the MotionCorrection and CTF tables.'''
 
     def __init__(self):
-        pass
+      self.insert_data_collection_group = super(EMAcquisition, self).upsert_data_collection_group
+      self.insert_data_collection = super(EMAcquisition, self).upsert_data_collection
+      self.update_data_collection_group = super(EMAcquisition, self).upsert_data_collection_group
+      self.update_data_collection = super(EMAcquisition, self).upsert_data_collection
 
     _motion_correction_params = \
         StrictOrderedDict(
@@ -72,14 +75,10 @@ class EMAcquisition(Acquisition):
     def get_ctf_params(cls):
         return copy.deepcopy(cls._ctf_params)
 
-    @classmethod
-    def insert_motion_correction(cls, conn, values):
+    def insert_motion_correction(self, values):
         '''Store new motion correction params.'''
-        return cls.call_sp_write(conn, procname='upsert_motion_correction', args=values)
+        return self.call_sp_write(self.get_connection(), procname='upsert_motion_correction', args=values)
 
-    @classmethod
-    def insert_ctf(cls, conn, values):
+    def insert_ctf(self, values):
         '''Store new ctf params.'''
-        return cls.call_sp_write(conn, procname='upsert_ctf', args=values)
-
-emacquisition = EMAcquisition()
+        return self.call_sp_write(self.get_connection(), procname='upsert_ctf', args=values)

@@ -14,9 +14,10 @@ import datetime
 import copy
 from ispyb.strictordereddict import StrictOrderedDict
 from ispyb.sp.storedroutines import StoredRoutines
+import ispyb.interface.screening
 from ispyb.version import __version__
 
-class MXScreening(StoredRoutines):
+class MXScreening(ispyb.interface.screening.IF, StoredRoutines):
   '''MXScreening provides methods to store MX characterisations and strategies.'''
 
   def __init__(self):
@@ -58,32 +59,23 @@ class MXScreening(StoredRoutines):
   def get_screening_strategy_sub_wedge_params(cls):
     return copy.deepcopy(cls._screening_strategy_sub_wedge_params)
 
-  @classmethod
-  def insert_screening(cls, conn, values):
-    return cls.call_sp_write(conn, procname='insert_screening', args=(values))
+  def insert_screening(self, values):
+    return self.call_sp_write(self.get_connection(), procname='insert_screening', args=(values))
 
-  @classmethod
-  def insert_screening_input(cls, conn, values):
-    return cls.call_sp_write(conn, procname='insert_screening_input', args=(values))
+  def insert_screening_input(self, values):
+    return self.call_sp_write(self.get_connection(), procname='insert_screening_input', args=(values))
 
-  @classmethod
-  def insert_screening_output(cls, conn, values):
-    return cls.call_sp_write(conn, procname='insert_screening_output', args=(values))
+  def insert_screening_output(self, values):
+    return self.call_sp_write(self.get_connection(), procname='insert_screening_output', args=(values))
 
-  @classmethod
-  def insert_screening_output_lattice(cls, conn, values):
-    return cls.call_sp_write(conn, procname='insert_screening_output_lattice', args=(values))
+  def insert_screening_output_lattice(self, values):
+    return self.call_sp_write(self.get_connection(), procname='insert_screening_output_lattice', args=(values))
 
-  @classmethod
-  def insert_screening_strategy(cls, conn, values):
-    return cls.call_sp_write(conn, procname='insert_screening_strategy', args=(values))
+  def insert_screening_strategy(self, values):
+    return self.call_sp_write(self.get_connection(), procname='insert_screening_strategy', args=(values))
 
-  @classmethod
-  def insert_screening_strategy_wedge(cls, conn, values):
-    return cls.call_sp_write(conn, procname='insert_screening_strategy_wedge', args=(values))
+  def insert_screening_strategy_wedge(self, values):
+    return self.call_sp_write(self.get_connection(), procname='insert_screening_strategy_wedge', args=(values))
 
-  @classmethod
-  def insert_screening_strategy_sub_wedge(cls, conn, values):
-    return cls.call_sp_write(conn, procname='insert_screening_strategy_sub_wedge', args=(values))
-
-mxscreening = MXScreening()
+  def insert_screening_strategy_sub_wedge(self, values):
+    return self.call_sp_write(self.get_connection(), procname='insert_screening_strategy_sub_wedge', args=(values))
