@@ -24,20 +24,13 @@ def create_connection(conf_file):
     config = ConfigParser.ConfigParser(allow_no_value=True)
     config.readfp(codecs.open(conf_file, "r", "utf8"))
 
+    section = None
     module_str = None
     class_str = None
-    credentials = {}
     if config.has_section('ispyb_mysql_sp'):
         section = 'ispyb_mysql_sp'
         module_str = 'ispyb.connector.mysqlsp.main'
         class_str = 'ISPyBMySQLSPConnector'
-        user=config.get(section, 'user')
-        pw=config.get(section, 'pw')
-        host=config.get(section, 'host')
-        db=config.get(section, 'db')
-        port=config.getint(section, 'port')
-        credentials = {'user': user, 'pw': pw, 'host': host, 'db': db, 'port': port}
-
     elif config.has_section('ispyb_ws'):
         section = 'ispyb_ws'
         module_str = 'ispyb.connector.ws.main'
@@ -48,6 +41,7 @@ def create_connection(conf_file):
 
     conn_mod = importlib.import_module(module_str)
     ConnClass = getattr(conn_mod, class_str)
+    credentials = dict(config.items(section))
     return ConnClass(**credentials)
 
 def create_data_area(data_area_type, conn):
