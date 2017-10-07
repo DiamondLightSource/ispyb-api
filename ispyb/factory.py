@@ -20,33 +20,17 @@ class DataAreaType(Enum):
         self.module = module
         self.classname = classname
 
-class ConnectionType(Enum):
-    ISPYBMYSQLSP = ('MySQL/MariaDB database access through stored procedures',
-    'ispyb.sp',
-    'ispyb.connector.mysqlsp.main',
-    'ISPyBMySQLSPConnector')
-    ISPYBWS = ('Official ISPyB web services API',
-    'ispyb.ws',
-    'ispyb.connector.ws.main',
-    'ISPyBWSConnector')
-
-    def __init__(self, description, data_area_package, module, classname):
-        '''Make tuple elements reachable via attribute names.'''
-        self.description = description
-        self.data_area_package = data_area_package
-        self.module = module
-        self.classname = classname
-
 def create_connection(conf_file):
     config = ConfigParser.ConfigParser(allow_no_value=True)
     config.readfp(codecs.open(conf_file, "r", "utf8"))
 
-    conn_type = None
+    module_str = None
+    class_str = None
     credentials = {}
     if config.has_section('ispyb_mysql_sp'):
         section = 'ispyb_mysql_sp'
-        conn_type = ConnectionType.ISPYBMYSQLSP
-
+        module_str = 'ispyb.connector.mysqlsp.main'
+        class_str = 'ISPyBMySQLSPConnector'
         user=config.get(section, 'user')
         pw=config.get(section, 'pw')
         host=config.get(section, 'host')
@@ -54,10 +38,16 @@ def create_connection(conf_file):
         port=config.getint(section, 'port')
         credentials = {'user': user, 'pw': pw, 'host': host, 'db': db, 'port': port}
 
-    if not hasattr(conn_type, 'data_area_package') or not hasattr(conn_type, 'module') or not hasattr(conn_type, 'classname'):
-        raise AttributeError('Connection type %s does not exist' % conn_type)
-    conn_mod = importlib.import_module(conn_type.module)
-    ConnClass = getattr(conn_mod, conn_type.classname)
+    elif config.has_section('ispyb_ws'):
+        section = 'ispyb_ws'
+        module_str = 'ispyb.connector.ws.main'
+        class_str = 'ISPyBWSConnector'
+        raise NotImplementedError('Connection type ispyb_ws not implemented')
+    else:
+        raise AttributeError('No supported connection type found in %s' % conf_file)
+
+    conn_mod = importlib.import_module(module_str)
+    ConnClass = getattr(conn_mod, class_str)
     return ConnClass(**credentials)
 
 def create_data_area(data_area_type, conn):
