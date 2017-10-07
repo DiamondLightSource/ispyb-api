@@ -27,9 +27,9 @@ import ispyb.factory
 from datetime import datetime
 
 # Get the data area objects and set connections
-conn = ispyb.factory.get_connection_object('config.cfg')
-core = ispyb.factory.get_data_area_object(ispyb.factory.DataAreaType.CORE, conn)
-mxacquisition = ispyb.factory.get_data_area_object(ispyb.factory.DataAreaType.MXACQUISITION, conn)
+conn = ispyb.factory.create_connection('config.cfg')
+core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
+mxacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXACQUISITION, conn)
 
 # Find the id for a given visit
 sessionid = core.retrieve_visit_id('cm14451-2')

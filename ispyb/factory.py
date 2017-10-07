@@ -37,14 +37,14 @@ class ConnectionType(Enum):
         self.module = module
         self.classname = classname
 
-def get_connection_object(conf_file):
+def create_connection(conf_file):
     config = ConfigParser.ConfigParser(allow_no_value=True)
     config.readfp(codecs.open(conf_file, "r", "utf8"))
 
     conn_type = None
     credentials = {}
-    if config.has_section('ispybmysqlsp'):
-        section = 'ispybmysqlsp'
+    if config.has_section('ispyb_mysql_sp'):
+        section = 'ispyb_mysql_sp'
         conn_type = ConnectionType.ISPYBMYSQLSP
 
         user=config.get(section, 'user')
@@ -60,7 +60,7 @@ def get_connection_object(conf_file):
     ConnClass = getattr(conn_mod, conn_type.classname)
     return ConnClass(**credentials)
 
-def get_data_area_object(data_area_type, conn):
+def create_data_area(data_area_type, conn):
   '''Factory function. Given a DataArea type and a Connection object imports the relevant data area module and
      returns the correct type of Data Area object with its connection as the Connection object.'''
   if not hasattr(data_area_type, 'module') or not hasattr(data_area_type, 'classname'):
