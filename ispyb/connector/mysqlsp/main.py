@@ -10,10 +10,10 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
   '''Provides a connector to an ISPyB MySQL/MariaDB database through stored procedures.
   '''
 
-  def __init__(self, user=None, pw=None, host=None, db=None, port=None):
+  def __init__(self, user=None, pw=None, host='localhost', db=None, port=3306):
     self.connect(user=user, pw=pw, host=host, db=db, port=port)
 
-  def connect(self, user=None, pw=None, host=None, db=None, port=None):
+  def connect(self, user=None, pw=None, host='localhost', db=None, port=3306):
     self.disconnect()
     self.conn = mysql.connector.connect(user=user,
         password=pw,
