@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/DiamondLightSource/ispyb-api.svg?branch=v3.0.0)](https://travis-ci.org/DiamondLightSource/ispyb-api)
-[![Coverage Status](https://coveralls.io/repos/github/DiamondLightSource/ispyb-api/badge.svg?branch=v3.0.0)](https://coveralls.io/github/DiamondLightSource/ispyb-api?branch=v3.0.0)
+[![Build Status](https://travis-ci.org/DiamondLightSource/ispyb-api.svg?branch=master)](https://travis-ci.org/DiamondLightSource/ispyb-api)
+[![Coverage Status](https://coveralls.io/repos/github/DiamondLightSource/ispyb-api/badge.svg?branch=master)](https://coveralls.io/github/DiamondLightSource/ispyb-api?branch=master)
 # ISPyB API
 
 This package provides a way to write acquisition and processing results into
@@ -26,7 +26,7 @@ pip install --user dist/ispyb-${version}-py2-none-any.whl
 import ispyb.factory
 from datetime import datetime
 
-# Get the data area objects and set connections
+# Get a connection and data area objects
 conn = ispyb.factory.create_connection('config.cfg')
 core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
 mxacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXACQUISITION, conn)
