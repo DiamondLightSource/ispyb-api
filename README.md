@@ -46,3 +46,6 @@ print("dcg_id: %i" % dcg_id)
 ```
 
 See docs/pipeline2ispyb.py for a more detailed example of how to use the package.
+
+### Tests
+Unit tests (nosetests) are run by Travis against a real MariaDB ISPyB database schema. 
