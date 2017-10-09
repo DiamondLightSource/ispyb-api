@@ -1,142 +1,64 @@
-#!/usr/bin/env python
-
 import context
-from ispyb.dbconnection import DBConnection
-from ispyb.core import core
 from datetime import datetime
-from nose import with_setup
+from testtools import get_core
 
-def get_dict_cursor():
-    global conn
-    global cursor
-    conn = DBConnection(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
-
-def get_cursor():
-    global conn
-    global cursor
-    conn = DBConnection(conf='dev', conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
-
-def close_cursor():
-    conn.disconnect()
-
-def retrieve_visit_id(c):
-    id = core.retrieve_visit_id(c, 'cm14451-2')
-    assert id == 55168
-
-def retrieve_proposal_title(c):
-    title = core.retrieve_proposal_title(c, 'cm', 14451)
-    assert title.strip() == 'I03 Commissioning Directory 2016'
-
-def retrieve_current_sessions(c):
-    rs = core.retrieve_current_sessions(c, 'i03', 24*60*30000)
-    assert len(rs) > 0
-
-def retrieve_most_recent_session(c):
-    rs = core.retrieve_most_recent_session(c, 'i03', 'cm')
-    assert len(rs) == 1
-
-def retrieve_persons_for_proposal(c):
-    rs = core.retrieve_persons_for_proposal(c, 'cm', 14451)
-    assert len(rs) == 1
-    return rs
-
-def retrieve_current_cm_sessions(c):
-    rs = core.retrieve_current_cm_sessions(c, 'i03')
-    assert len(rs) > 0
-
-def retrieve_active_plates(c):
-    rs = core.retrieve_active_plates(c, 'i02-2')
-    assert len(rs) >= 0
-
-def put_sample(c):
+def test_upsert_sample():
+    core = get_core()
     params = core.get_sample_params()
     params['containerid'] = 1326
     params['crystalid'] = 3918
     params['name'] = 'Sample-010101'
     params['code'] = 'SAM-010101'
-    id = core.put_sample(c, params.values())
+    id = core.upsert_sample(list(params.values()))
+    # conn.disconnect()
+    assert id is not None
 
-# ---- Test with dict_cursor
+def test_retrieve_visit_id():
+    core = get_core()
+    id = core.retrieve_visit_id('cm14451-2')
+    # conn.disconnect()
+    assert id == 55168
 
-@with_setup(get_dict_cursor, close_cursor)
-def test_dict_retrieve_visit_id():
-    global cursor
-    retrieve_visit_id(cursor)
+def test_retrieve_current_sessions():
+    core = get_core()
+    rs = core.retrieve_current_sessions('i03', 24*60*30000)
+    # conn.disconnect()
+    assert len(rs) > 0
 
-@with_setup(get_dict_cursor, close_cursor)
-def test_dict_retrieve_proposal_title():
-    global cursor
-    retrieve_proposal_title(cursor)
+def test_retrieve_current_sessions_for_person():
+    core = get_core()
+    rs = core.retrieve_current_sessions_for_person('i03', 'boaty', tolerance_mins=24*60*30000)
+    # conn.disconnect()
+    assert len(rs) > 0
 
-@with_setup(get_dict_cursor, close_cursor)
-def test_dict_retrieve_current_sessions():
-    global cursor
-    retrieve_current_sessions(cursor)
+def test_retrieve_most_recent_session():
+    core = get_core()
+    rs = core.retrieve_most_recent_session('i03', 'cm')
+    # conn.disconnect()
+    assert len(rs) == 1
 
-@with_setup(get_dict_cursor, close_cursor)
-def test_dict_retrieve_most_recent_session():
-    global cursor
-    retrieve_most_recent_session(cursor)
-
-@with_setup(get_dict_cursor, close_cursor)
-def test_dict_retrieve_persons_for_proposal():
-    global cursor
-    rs = retrieve_persons_for_proposal(cursor)
+def test_retrieve_persons_for_proposal():
+    core = get_core()
+    rs = core.retrieve_persons_for_proposal('cm', 14451)
+    # conn.disconnect()
+    assert len(rs) == 1
     login = rs[0]['login']
     assert login is not None
 
-@with_setup(get_dict_cursor, close_cursor)
-def test_dict_retrieve_current_cm_sessions():
-    global cursor
-    retrieve_current_cm_sessions(cursor)
-
-@with_setup(get_dict_cursor, close_cursor)
-def test_dict_put_sample():
-    global cursor
-    put_sample(cursor)
-
-# ---- Test with regular cursor
-
-@with_setup(get_cursor, close_cursor)
-def test_retrieve_visit_id():
-    global cursor
-    retrieve_visit_id(cursor)
-
-@with_setup(get_cursor, close_cursor)
-def test_retrieve_proposal_title():
-    global cursor
-    retrieve_proposal_title(cursor)
-
-@with_setup(get_cursor, close_cursor)
-def test_retrieve_current_sessions():
-    global cursor
-    retrieve_current_sessions(cursor)
-
-@with_setup(get_cursor, close_cursor)
-def test_retrieve_most_recent_session():
-    global cursor
-    retrieve_most_recent_session(cursor)
-
-@with_setup(get_cursor, close_cursor)
-def test_retrieve_persons_for_proposal():
-    global cursor
-    rs = retrieve_persons_for_proposal(cursor)
-    login = rs[0][3]
-    assert login is not None
-
-@with_setup(get_cursor, close_cursor)
 def test_retrieve_current_cm_sessions():
-    global cursor
-    retrieve_current_cm_sessions(cursor)
+    core = get_core()
+    rs = core.retrieve_current_cm_sessions('i03')
+    # conn.disconnect()
+    assert len(rs) > 0
 
-@with_setup(get_cursor, close_cursor)
 def test_retrieve_active_plates():
-    global cursor
-    retrieve_active_plates(cursor)
+    core = get_core()
+    rs = core.retrieve_active_plates('i02-2')
+    # conn.disconnect()
+    assert len(rs) >= 0
 
-@with_setup(get_cursor, close_cursor)
-def test_dict_put_sample():
-    global cursor
-    put_sample(cursor)
+def test_retrieve_proposal_title():
+    core = get_core()
+    title = core.retrieve_proposal_title('cm', 14451)
+    # conn.disconnect()
+    assert title.strip() == 'I03 Commissioning Directory 2016'

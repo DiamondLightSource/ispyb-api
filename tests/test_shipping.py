@@ -1,31 +1,8 @@
 #!/usr/bin/env python
 
 import context
-from ispyb.dbconnection import DBConnection
-from ispyb.shipping import shipping
-from nose import with_setup
+from testtools import get_shipping
 
-def get_dict_cursor():
-    global conn
-    global cursor
-    conn = DBConnection(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
-
-def get_cursor():
-    global conn
-    global cursor
-    conn = DBConnection(conf='dev', conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
-
-def close_cursor():
-    conn.disconnect()
-
-def update_container_assign(c):
-    shipping.update_container_assign(c, 'i04', 'DLS-0001', 10)
-
-# ---- Test with regular cursor
-
-@with_setup(get_cursor, close_cursor)
-def test_retrieve_active_plates():
-    global cursor
-    update_container_assign(cursor)
+def test_update_container_assign():
+    shipping = get_shipping()
+    shipping.update_container_assign('i04', 'DLS-0001', 10)

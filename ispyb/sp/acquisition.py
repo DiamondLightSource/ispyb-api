@@ -1,44 +1,18 @@
-#!/usr/bin/env python
-# mxacquisition.py
-#
-#    Copyright (C) 2014 Diamond Light Source, Karl Levik
-#
-# 2014-09-24
-#
-# Methods to store MX acquisition data
-#
-
-try:
-    import mysql.connector
-except ImportError, e:
-  print 'MySQL API module (mysql.connector) not found'
-  raise e
-
-import string
-import logging
-import time
-import os
-import sys
-import datetime
-from logging.handlers import RotatingFileHandler
-from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
 import copy
-from ispyb.storedroutines import StoredRoutines
-from version import __version__
+from ispyb.sp.storedroutines import StoredRoutines
+from ispyb.strictordereddict import StrictOrderedDict
+import ispyb.interface.acquisition
 
-class MXAcquisition(StoredRoutines):
-  '''MXAcquisition provides methods to store data in the MX acquisition tables.'''
-
-  def __init__(self):
-    pass
+class Acquisition(ispyb.interface.acquisition.IF, StoredRoutines):
+  '''Acquisition provides methods to store data in the acquisition tables.'''
 
   _data_collection_group_params =\
-    ExtendedOrderedDict([('id',None), ('parentid',None), ('sampleid',None), ('experimenttype',None), ('starttime',None), ('endtime',None),
+    StrictOrderedDict([('id',None), ('parentid',None), ('sampleid',None), ('experimenttype',None), ('starttime',None), ('endtime',None),
                          ('crystal_class',None), ('detector_mode',None), ('actual_sample_barcode',None), ('actual_sample_slot_in_container',None),
                          ('actual_container_barcode',None), ('actual_container_slot_in_sc',None), ('comments',None)])
 
   _data_collection_params =\
-    ExtendedOrderedDict([('id',None), ('parentid',None), ('visitid',None), ('sampleid',None), ('detectorid',None), ('positionid',None),
+    StrictOrderedDict([('id',None), ('parentid',None), ('visitid',None), ('sampleid',None), ('detectorid',None), ('positionid',None),
                          ('apertureid',None), ('datacollection_number',None), ('starttime',None), ('endtime',None), ('run_status',None),
                          ('axis_start',None), ('axis_end',None), ('axis_range',None), ('overlap',None), ('n_images',None),
                          ('start_image_number',None), ('n_passes',None), ('exp_time',None),
@@ -57,11 +31,6 @@ class MXAcquisition(StoredRoutines):
                          ('extract_size',None), ('bg_radius',None), ('voltage',None), ('obj_aperture',None), ('c1aperture',None),
                          ('c2aperture',None), ('c3aperture',None), ('c1lens',None), ('c2lens',None), ('c3lens',None)])
 
-  _image_params =\
-    ExtendedOrderedDict([('id',None), ('parentid',None), ('img_number',None), ('filename',None), ('file_location',None),
-                         ('measured_intensity',None), ('jpeg_path',None), ('jpeg_thumb_path',None), ('temperature',None),
-                         ('cumulative_intensity',None), ('synchrotron_current',None), ('comments',None), ('machine_msg',None)])
-
   @classmethod
   def get_data_collection_group_params(cls):
     return copy.deepcopy(cls._data_collection_group_params)
@@ -70,43 +39,10 @@ class MXAcquisition(StoredRoutines):
   def get_data_collection_params(cls):
     return copy.deepcopy(cls._data_collection_params)
 
-  @classmethod
-  def get_image_params(cls):
-    return copy.deepcopy(cls._image_params)
+  def upsert_data_collection_group(self, values):
+    '''Insert or update MX data collection group.'''
+    return self.call_sf(self.get_connection(), 'upsert_dcgroup', values)
 
-  @classmethod
-  def insert_data_collection_group(cls, cursor, values):
-    '''Store new MX data collection group.'''
-    return cls.call_sf(cursor, 'upsert_dcgroup', values)
-
-  @classmethod
-  def update_data_collection_group(cls, cursor, values):
-    '''Update existing data collection group.'''
-    if values[0] is not None:
-        return cls.call_sf(cursor, 'upsert_dcgroup', values)
-
-  @classmethod
-  def put_data_collection_group(cls, cursor, values):
-    return cls.call_sf(cursor, 'upsert_dcgroup', values)
-
-  @classmethod
-  def insert_data_collection(cls, cursor, values):
-    '''Store new data collection.'''
-    return cls.call_sf(cursor, 'upsert_dc', values)
-
-  @classmethod
-  def update_data_collection(cls, cursor, values):
-    '''Update existing data collection.'''
-    return cls.call_sf(cursor, 'upsert_dc', values)
-
-  @classmethod
-  def insert_image(cls, cursor, values):
-    '''Store new MX diffraction image.'''
-    return cls.call_sf(cursor, 'upsert_image', values)
-
-  @classmethod
-  def update_image(cls, cursor, values):
-    '''Update existing diffraction image.'''
-    return cls.call_sf(cursor, 'upsert_image', values)
-
-mxacquisition = MXAcquisition()
+  def upsert_data_collection(self, values):
+    '''Insert or update data collection.'''
+    return self.call_sf(self.get_connection(), 'upsert_dc', values)

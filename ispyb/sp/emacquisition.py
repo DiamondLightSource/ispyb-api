@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # emacquisition.py
 #
 #    Copyright (C) 2014 Diamond Light Source, Karl Levik
@@ -8,25 +7,22 @@
 # Methods to store EM acquisition data
 #
 
-try:
-    import mysql.connector
-except ImportError, e:
-    print 'MySQL API module (mysql.connector) not found'
-    raise e
-
-from ispyb.ExtendedOrderedDict import ExtendedOrderedDict
+from ispyb.strictordereddict import StrictOrderedDict
 import copy
-from ispyb.storedroutines import StoredRoutines
-from version import __version__
+from ispyb.sp.acquisition import Acquisition
+from ispyb.version import __version__
 
-class EMAcquisition(StoredRoutines):
+class EMAcquisition(Acquisition):
     '''EMAcquisition provides methods to store data in the MotionCorrection and CTF tables.'''
 
     def __init__(self):
-        pass
+      self.insert_data_collection_group = super(EMAcquisition, self).upsert_data_collection_group
+      self.insert_data_collection = super(EMAcquisition, self).upsert_data_collection
+      self.update_data_collection_group = super(EMAcquisition, self).upsert_data_collection_group
+      self.update_data_collection = super(EMAcquisition, self).upsert_data_collection
 
     _motion_correction_params = \
-        ExtendedOrderedDict(
+        StrictOrderedDict(
             [
                 ('motionCorrectionId', None),
                 ('dataCollectionId', None),
@@ -49,7 +45,7 @@ class EMAcquisition(StoredRoutines):
         )
 
     _ctf_params = \
-        ExtendedOrderedDict(
+        StrictOrderedDict(
             [
                 ('ctfId', None),
                 ('motionCorrectionId', None),
@@ -79,14 +75,10 @@ class EMAcquisition(StoredRoutines):
     def get_ctf_params(cls):
         return copy.deepcopy(cls._ctf_params)
 
-    @classmethod
-    def insert_motion_correction(cls, cursor, values):
+    def insert_motion_correction(self, values):
         '''Store new motion correction params.'''
-        return cls.call_sp(cursor, procname='upsert_motion_correction', args=values)[0]
+        return self.call_sp_write(self.get_connection(), procname='upsert_motion_correction', args=values)
 
-    @classmethod
-    def insert_ctf(cls, cursor, values):
+    def insert_ctf(self, values):
         '''Store new ctf params.'''
-        return cls.call_sp(cursor, procname='upsert_ctf', args=values)[0]
-
-emacquisition = EMAcquisition()
+        return self.call_sp_write(self.get_connection(), procname='upsert_ctf', args=values)

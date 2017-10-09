@@ -1,31 +1,20 @@
 #!/usr/bin/env python
 
 import context
-from ispyb.dbconnection import DBConnection
-from ispyb.core import core
-from ispyb.mxacquisition import mxacquisition
-from ispyb.mxscreening import mxscreening
 from datetime import datetime
-from nose import with_setup
+from testtools import get_mxscreening, get_mxacquisition, get_core
 
-test_session = 'cm14451-2'
+def test_insert_all_screening():
+    core = get_core()
+    mxscreening = get_mxscreening()
+    mxacquisition = get_mxacquisition()
 
-def get_dict_cursor():
-    global conn
-    global cursor
-    conn = DBConnection(conf='dev', dict_cursor=True, conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
+    test_session = 'cm14451-2'
+    session_id = core.retrieve_visit_id(test_session)
 
-def get_cursor():
-    global conn
-    global cursor
-    conn = DBConnection(conf='dev', conf_file='../conf/config.cfg')
-    cursor = conn.get_cursor()
+    assert session_id is not None
+    assert session_id > 0
 
-def close_cursor():
-    conn.disconnect()
-
-def insert_dcgroup(c, session_id):
     params = mxacquisition.get_data_collection_group_params()
     params['parentid'] = session_id
     # experimenttype must be one of the allowed values: None, 'SAD', 'SAD - Inverse Beam', 'OSC', 'Collect - Multiwedge', 'MAD', 'Helical', 'Multi-positional', 'Mesh',  'Burn', 'MAD - Inverse Beam', 'Screening'
@@ -34,14 +23,7 @@ def insert_dcgroup(c, session_id):
     params['endtime'] = datetime.strptime('2017-03-15 13:00:10', '%Y-%m-%d %H:%M:%S')
     params['comments'] = 'This is a test of data collection group.'
     #params[''] = 'something'
-    id = mxacquisition.insert_data_collection_group(c, params.values())
-    return id
-
-def insert_screening(c, session_id = None):
-    if session_id is None:
-        session_id = core.retrieve_visit_id(cursor, test_session)
-
-    dcg_id = insert_dcgroup(c, session_id)
+    dcg_id = mxacquisition.insert_data_collection_group(list(params.values()))
 
     params = mxscreening.get_screening_params()
     params['dcgid'] = dcg_id
@@ -49,14 +31,9 @@ def insert_screening(c, session_id = None):
     params['short_comments'] = 'ENDAStrategy1'
     params['comments'] = 'param1 = 1.2, param2 = 2.06'
 
-    id = mxscreening.insert_screening(c, params.values())
-    assert id is not None
-    assert id > 0
-    return id
-
-def insert_screening_input(c):
-    session_id = core.retrieve_visit_id(cursor, test_session)
-    s_id = insert_screening(c, session_id)
+    s_id = mxscreening.insert_screening(list(params.values()))
+    assert s_id is not None
+    assert s_id > 0
 
     params = mxscreening.get_screening_input_params()
     params['screening_id'] = s_id
@@ -67,15 +44,9 @@ def insert_screening_input(c):
     params['max_fraction_rejected'] = 0.30
     params['min_signal2noise'] = 0.98
 
-    id = mxscreening.insert_screening_input(c, params.values())
-    assert id is not None
-    assert id > 0
-    return id
-
-def insert_screening_output(c, session_id = None):
-    if session_id is None:
-        session_id = core.retrieve_visit_id(cursor, test_session)
-    s_id = insert_screening(c, session_id)
+    si_id = mxscreening.insert_screening_input(list(params.values()))
+    assert si_id is not None
+    assert si_id > 0
 
     params = mxscreening.get_screening_output_params()
     params['screening_id'] = s_id
@@ -91,14 +62,9 @@ def insert_screening_output(c, session_id = None):
     params['indexing_success'] = True
     params['strategy_success'] = True
 
-    id = mxscreening.insert_screening_output(c, params.values())
-    assert id is not None
-    assert id > 0
-    return id
-
-def insert_screening_output_lattice(c):
-    session_id = core.retrieve_visit_id(cursor, test_session)
-    so_id = insert_screening_output(c, session_id)
+    so_id = mxscreening.insert_screening_output(list(params.values()))
+    assert so_id is not None
+    assert so_id > 0
 
     params = mxscreening.get_screening_output_lattice_params()
     params['screening_output_id'] = so_id
@@ -113,93 +79,28 @@ def insert_screening_output_lattice(c):
     params['unit_cell_gamma'] = 90
     params['labelit_indexing'] = True
 
-    id = mxscreening.insert_screening_output_lattice(c, params.values())
-    assert id is not None
-    assert id > 0
-    return id
-
-def insert_screening_strategy(c, session_id = None):
-    if session_id is None:
-        session_id = core.retrieve_visit_id(cursor, test_session)
-    so_id = insert_screening_output(c, session_id)
+    sol_id = mxscreening.insert_screening_output_lattice(list(params.values()))
+    assert sol_id is not None
+    assert sol_id > 0
 
     params = mxscreening.get_screening_strategy_params()
     params['screening_output_id'] = so_id
     params['anomalous'] = 1.198145
 
-    id = mxscreening.insert_screening_strategy(c, params.values())
-    assert id is not None
-    assert id > 0
-    return id
-
-def insert_screening_strategy_wedge(c, session_id = None):
-    if session_id is None:
-        session_id = core.retrieve_visit_id(cursor, test_session)
-    ss_id = insert_screening_strategy(c, session_id)
+    ss_id = mxscreening.insert_screening_strategy(list(params.values()))
+    assert ss_id is not None
+    assert ss_id > 0
 
     params = mxscreening.get_screening_strategy_wedge_params()
     params['screening_strategy_id'] = ss_id
 
-    id = mxscreening.insert_screening_strategy_wedge(c, params.values())
-    assert id is not None
-    assert id > 0
-    return id
-
-def insert_screening_strategy_sub_wedge(c):
-    session_id = core.retrieve_visit_id(cursor, test_session)
-    ssw_id = insert_screening_strategy_wedge(c, session_id)
+    ssw_id = mxscreening.insert_screening_strategy_wedge(list(params.values()))
+    assert ssw_id is not None
+    assert ssw_id > 0
 
     params = mxscreening.get_screening_strategy_sub_wedge_params()
     params['screening_strategy_wedge_id'] = ssw_id
 
-    id = mxscreening.insert_screening_strategy_sub_wedge(c, params.values())
+    id = mxscreening.insert_screening_strategy_sub_wedge(list(params.values()))
     assert id is not None
     assert id > 0
-    return id
-
-
-# ---- Tests with normal cursor
-
-@with_setup(get_cursor, close_cursor)
-def test_insert_screening():
-    global cursor
-    insert_screening(cursor)
-
-@with_setup(get_cursor, close_cursor)
-def test_insert_screening_input():
-    global cursor
-    insert_screening_input(cursor)
-
-@with_setup(get_cursor, close_cursor)
-def test_insert_screening_output():
-    global cursor
-    insert_screening_output(cursor)
-
-@with_setup(get_cursor, close_cursor)
-def test_insert_screening_output_lattice():
-    global cursor
-    insert_screening_output_lattice(cursor)
-
-@with_setup(get_cursor, close_cursor)
-def test_insert_screening_strategy():
-    global cursor
-    insert_screening_strategy(cursor)
-
-@with_setup(get_cursor, close_cursor)
-def test_insert_screening_strategy_wedge():
-    global cursor
-    insert_screening_strategy_wedge(cursor)
-
-@with_setup(get_cursor, close_cursor)
-def test_insert_screening_strategy_sub_wedge():
-    global cursor
-    insert_screening_strategy_sub_wedge(cursor)
-
-
-
-# ---- Tests with dict_cursor - NOT WORKING
-
-#@with_setup(get_dict_cursor, close_cursor)
-#def test_dict_insert_screening():
-#    global cursor
-#    insert_screening(cursor)
