@@ -2,7 +2,7 @@
 --
 -- Host: cs04r-sc-vserv-88    Database: ispybstage
 -- ------------------------------------------------------
--- Server version	10.1.26-MariaDB
+-- Server version	10.2.9-MariaDB-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -299,7 +299,7 @@ CREATE TABLE `AutoProcIntegration` (
   `cell_beta` float DEFAULT NULL COMMENT 'Unit cell',
   `cell_gamma` float DEFAULT NULL COMMENT 'Unit cell',
   `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
-  `anomalous` tinyint(1) DEFAULT '0' COMMENT 'boolean type:0 noanoum - 1 anoum',
+  `anomalous` tinyint(1) DEFAULT 0 COMMENT 'boolean type:0 noanoum - 1 anoum',
   PRIMARY KEY (`autoProcIntegrationId`),
   KEY `AutoProcIntegrationIdx1` (`dataCollectionId`),
   KEY `AutoProcIntegration_FKIndex1` (`autoProcProgramId`),
@@ -335,10 +335,10 @@ CREATE TABLE `AutoProcProgram` (
   `processingEndTime` datetime DEFAULT NULL COMMENT 'Processing end time',
   `processingEnvironment` varchar(255) DEFAULT NULL COMMENT 'Cpus, Nodes,...',
   `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
-  `reprocessingId` int(11) unsigned DEFAULT NULL COMMENT 'Which reprocessing triggered this auto processing',
+  `processingJobId` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`autoProcProgramId`),
-  KEY `AutoProcProgram_FK2` (`reprocessingId`),
-  CONSTRAINT `AutoProcProgram_FK2` FOREIGN KEY (`reprocessingId`) REFERENCES `Reprocessing` (`reprocessingId`)
+  KEY `AutoProcProgram_FK2` (`processingJobId`),
+  CONSTRAINT `AutoProcProgram_FK2` FOREIGN KEY (`processingJobId`) REFERENCES `ProcessingJob` (`processingJobId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=56986674 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -348,7 +348,7 @@ CREATE TABLE `AutoProcProgram` (
 
 LOCK TABLES `AutoProcProgram` WRITE;
 /*!40000 ALTER TABLE `AutoProcProgram` DISABLE KEYS */;
-INSERT INTO `AutoProcProgram` VALUES (56425592,'/dls_sw/apps/fast_dp/2395/src/fast_dp.py -a S -j 0 -J 18 /dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/tlys_jan_4_1_0001.cbf','fast_dp',NULL,NULL,NULL,NULL,NULL,'2016-01-14 12:46:22',NULL),(56425944,'xia2 min_images=3 -3dii -xparallel -1 -atom s -blend -project cm14451v1 -crystal xtlysjan41 -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/tlys_jan_4_1_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-14 13:09:51',NULL),(56425952,'xia2 min_images=3 -dials -xparallel -1 -atom s -blend -project cm14451v1 -crystal xtlysjan41 -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/tlys_jan_4_1_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-14 13:24:22',NULL),(56425963,'/dls_sw/apps/GPhL/autoPROC/20151214/autoPROC/bin/linux64/process -xml -Id xtlysjan41,/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/,tlys_jan_4_1_####.cbf,1,3600 autoPROC_XdsKeyword_MAXIMUM_NUMBER_OF_PROCESSORS=12 autoPROC_XdsKeyword_MAXIMUM_NUMBER_OF_J','autoPROC 1.0.4 (see: http://www.globalphasing.com/autoproc/)',NULL,NULL,NULL,NULL,NULL,'2016-01-14 13:34:34',NULL),(56426286,'xia2 min_images=3 -dials -atom s -blend -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/linediffraction_1_0001.cbf image=/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/tlys_jan_4_1_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-14 14:01:57',NULL),(56426287,'xia2 min_images=3 -3dii -atom s -blend -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/linediffraction_1_0001.cbf image=/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/tlys_jan_4_1_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-14 14:13:57',NULL),(56983954,'/dls_sw/apps/fast_dp/2395/src/fast_dp.py -a S -j 0 -J 18 /dls/i03/data/2016/cm14451-1/20160122/gw/ins2/001/ins2_2_0001.cbf','fast_dp',NULL,NULL,NULL,NULL,NULL,'2016-01-22 11:34:03',NULL),(56985584,'xia2 min_images=3 -3d -xparallel -1 -atom s -blend -project cm14451v1 -crystal xins22 -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160122/gw/ins2/001/ins2_2_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-22 11:52:36',NULL),(56985589,'/dls_sw/apps/GPhL/autoPROC/20151214/autoPROC/bin/linux64/process -xml -Id xins22,/dls/i03/data/2016/cm14451-1/20160122/gw/ins2/001/,ins2_2_####.cbf,1,7200 autoPROC_XdsKeyword_MAXIMUM_NUMBER_OF_PROCESSORS=12 autoPROC_XdsKeyword_MAXIMUM_NUMBER_OF_JOBS=4 Sto','autoPROC 1.0.4 (see: http://www.globalphasing.com/autoproc/)',NULL,NULL,NULL,NULL,NULL,'2016-01-22 11:53:38',NULL),(56985592,'xia2 min_images=3 -3dii -xparallel -1 -atom s -blend -project cm14451v1 -crystal xins22 -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160122/gw/ins2/001/ins2_2_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-22 11:54:01',NULL),(56986673,'xia2 min_images=3 -dials -xparallel -1 -atom s -blend -project cm14451v1 -crystal xins22 -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160122/gw/ins2/001/ins2_2_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-22 12:01:59',NULL);
+INSERT INTO `AutoProcProgram` VALUES (56425592,'/dls_sw/apps/fast_dp/2395/src/fast_dp.py -a S -j 0 -J 18 /dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/tlys_jan_4_1_0001.cbf','fast_dp',NULL,NULL,NULL,NULL,NULL,'2016-01-14 12:46:22',NULL),(56425944,'xia2 min_images=3 -3dii -xparallel -1 -atom s -blend -project cm14451v1 -crystal xtlysjan41 -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/tlys_jan_4_1_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-14 13:09:51',NULL),(56425952,'xia2 min_images=3 -dials -xparallel -1 -atom s -blend -project cm14451v1 -crystal xtlysjan41 -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/tlys_jan_4_1_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-14 13:24:22',NULL),(56425963,'/dls_sw/apps/GPhL/autoPROC/20151214/autoPROC/bin/linux64/process -xml -Id xtlysjan41,/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/,tlys_jan_4_1_####.cbf,1,3600 autoPROC_XdsKeyword_MAXIMUM_NUMBER_OF_PROCESSORS=12 autoPROC_XdsKeyword_MAXIMUM_NUMBER_OF_J','autoPROC 1.0.4 (see: http://www.globalphasing.com/autoproc/)',NULL,NULL,NULL,NULL,NULL,'2016-01-14 13:34:34',NULL),(56426286,'xia2 min_images=3 -dials -atom s -blend -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/linediffraction_1_0001.cbf image=/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/tlys_jan_4_1_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-14 14:01:57',NULL),(56426287,'xia2 min_images=3 -3dii -atom s -blend -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/linediffraction_1_0001.cbf image=/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/tlys_jan_4_1_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-14 14:13:57',NULL),(56983954,'/dls_sw/apps/fast_dp/2395/src/fast_dp.py -a S -j 0 -J 18 /dls/i03/data/2016/cm14451-1/20160122/gw/ins2/001/ins2_2_0001.cbf','fast_dp',NULL,NULL,NULL,NULL,NULL,'2016-01-22 11:34:03',NULL),(56985584,'xia2 min_images=3 -3d -xparallel -1 -atom s -blend -project cm14451v1 -crystal xins22 -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160122/gw/ins2/001/ins2_2_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-22 11:52:36',NULL),(56985589,'/dls_sw/apps/GPhL/autoPROC/20151214/autoPROC/bin/linux64/process -xml -Id xins22,/dls/i03/data/2016/cm14451-1/20160122/gw/ins2/001/,ins2_2_####.cbf,1,7200 autoPROC_XdsKeyword_MAXIMUM_NUMBER_OF_PROCESSORS=12 autoPROC_XdsKeyword_MAXIMUM_NUMBER_OF_JOBS=4 Sto','autoPROC 1.0.4 (see: http://www.globalphasing.com/autoproc/)',NULL,NULL,NULL,NULL,NULL,'2016-01-22 11:53:38',NULL),(56985592,'xia2 min_images=3 -3dii -xparallel -1 -atom s -blend -project cm14451v1 -crystal xins22 -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160122/gw/ins2/001/ins2_2_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-22 11:54:01',NULL),(56986673,'xia2 min_images=3 -dials -xparallel -1 -atom s -blend -project cm14451v1 -crystal xins22 -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160122/gw/ins2/001/ins2_2_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-22 12:01:59',5);
 /*!40000 ALTER TABLE `AutoProcProgram` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -438,7 +438,7 @@ CREATE TABLE `AutoProcScalingStatistics` (
   `anomalousCompleteness` float DEFAULT NULL COMMENT 'Anomalous completeness',
   `anomalousMultiplicity` float DEFAULT NULL COMMENT 'Anomalous multiplicity',
   `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
-  `anomalous` tinyint(1) DEFAULT '0' COMMENT 'boolean type:0 noanoum - 1 anoum',
+  `anomalous` tinyint(1) DEFAULT 0 COMMENT 'boolean type:0 noanoum - 1 anoum',
   `ccHalf` float DEFAULT NULL COMMENT 'information from XDS',
   `ccAnomalous` float DEFAULT NULL,
   PRIMARY KEY (`autoProcScalingStatisticsId`),
@@ -502,7 +502,7 @@ CREATE TABLE `AutoProcStatus` (
   `step` enum('Indexing','Integration','Correction','Scaling','Importing') NOT NULL COMMENT 'autoprocessing step',
   `status` enum('Launched','Successful','Failed') NOT NULL COMMENT 'autoprocessing status',
   `comments` varchar(1024) DEFAULT NULL COMMENT 'comments',
-  `bltimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `bltimeStamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`autoProcStatusId`),
   KEY `AutoProcStatus_FKIndex1` (`autoProcIntegrationId`),
   CONSTRAINT `AutoProcStatus_ibfk_1` FOREIGN KEY (`autoProcIntegrationId`) REFERENCES `AutoProcIntegration` (`autoProcIntegrationId`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -589,9 +589,9 @@ CREATE TABLE `BF_fault` (
   `beamtimelost_starttime` datetime DEFAULT NULL,
   `beamtimelost_endtime` datetime DEFAULT NULL,
   `title` varchar(200) DEFAULT NULL,
-  `description` text,
+  `description` text DEFAULT NULL,
   `resolved` tinyint(1) DEFAULT NULL,
-  `resolution` text,
+  `resolution` text DEFAULT NULL,
   `attachment` varchar(200) DEFAULT NULL,
   `eLogId` int(11) DEFAULT NULL,
   `assignee` varchar(50) DEFAULT NULL,
@@ -731,7 +731,7 @@ DROP TABLE IF EXISTS `BLSample`;
 CREATE TABLE `BLSample` (
   `blSampleId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `diffractionPlanId` int(10) unsigned DEFAULT NULL,
-  `crystalId` int(10) unsigned DEFAULT '0',
+  `crystalId` int(10) unsigned DEFAULT 0,
   `containerId` int(10) unsigned DEFAULT NULL,
   `name` varchar(45) DEFAULT NULL,
   `code` varchar(45) DEFAULT NULL,
@@ -749,7 +749,7 @@ CREATE TABLE `BLSample` (
   `isInSampleChanger` tinyint(1) DEFAULT NULL,
   `lastKnownCenteringPosition` varchar(255) DEFAULT NULL,
   `POSITIONID` int(11) unsigned DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
+  `recordTimeStamp` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Creation or last update date/time',
   `SMILES` varchar(400) DEFAULT NULL COMMENT 'the symbolic description of the structure of a chemical compound',
   `blSubSampleId` int(11) unsigned DEFAULT NULL,
   `lastImageURL` varchar(255) DEFAULT NULL,
@@ -826,7 +826,7 @@ DROP TABLE IF EXISTS `BLSampleGroup_has_BLSample`;
 CREATE TABLE `BLSampleGroup_has_BLSample` (
   `blSampleGroupId` int(11) unsigned NOT NULL,
   `blSampleId` int(11) unsigned NOT NULL,
-  `order` mediumint(9) DEFAULT NULL,
+  `groupOrder` mediumint(9) DEFAULT NULL,
   `type` enum('background','container','sample','calibrant') DEFAULT NULL,
   PRIMARY KEY (`blSampleGroupId`,`blSampleId`),
   KEY `BLSampleGroup_has_BLSample_ibfk2` (`blSampleId`),
@@ -898,7 +898,7 @@ CREATE TABLE `BLSampleImageAnalysis` (
   `goodnessOfFit` float DEFAULT NULL,
   `scaleFactor` float DEFAULT NULL,
   `resultCode` varchar(15) DEFAULT NULL,
-  `matchStartTimeStamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `matchStartTimeStamp` timestamp NULL DEFAULT current_timestamp(),
   `matchEndTimeStamp` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`blSampleImageAnalysisId`),
   KEY `BLSampleImageAnalysis_ibfk1` (`blSampleImageId`),
@@ -1011,7 +1011,7 @@ DROP TABLE IF EXISTS `BLSample_has_DataCollectionPlan`;
 CREATE TABLE `BLSample_has_DataCollectionPlan` (
   `blSampleId` int(11) unsigned NOT NULL,
   `dataCollectionPlanId` int(11) unsigned NOT NULL,
-  `order` tinyint(3) unsigned DEFAULT NULL,
+  `planOrder` tinyint(3) DEFAULT NULL,
   PRIMARY KEY (`blSampleId`,`dataCollectionPlanId`),
   KEY `BLSample_has_DataCollectionPlan_ibfk2` (`dataCollectionPlanId`),
   CONSTRAINT `BLSample_has_DataCollectionPlan_ibfk1` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`),
@@ -1037,8 +1037,8 @@ DROP TABLE IF EXISTS `BLSample_has_EnergyScan`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `BLSample_has_EnergyScan` (
-  `blSampleId` int(10) unsigned NOT NULL DEFAULT '0',
-  `energyScanId` int(10) unsigned NOT NULL DEFAULT '0',
+  `blSampleId` int(10) unsigned NOT NULL DEFAULT 0,
+  `energyScanId` int(10) unsigned NOT NULL DEFAULT 0,
   `blSampleHasEnergyScanId` int(10) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`blSampleHasEnergyScanId`),
   KEY `BLSample_has_EnergyScan_FKIndex1` (`blSampleId`),
@@ -1067,7 +1067,7 @@ DROP TABLE IF EXISTS `BLSession`;
 CREATE TABLE `BLSession` (
   `sessionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `beamLineSetupId` int(10) unsigned DEFAULT NULL,
-  `proposalId` int(10) unsigned NOT NULL DEFAULT '0',
+  `proposalId` int(10) unsigned NOT NULL DEFAULT 0,
   `projectCode` varchar(45) DEFAULT NULL,
   `startDate` datetime DEFAULT NULL,
   `endDate` datetime DEFAULT NULL,
@@ -1076,8 +1076,8 @@ CREATE TABLE `BLSession` (
   `nbShifts` int(10) unsigned DEFAULT NULL,
   `comments` varchar(2000) DEFAULT NULL,
   `beamLineOperator` varchar(45) DEFAULT NULL,
-  `bltimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `visit_number` int(10) unsigned DEFAULT '0',
+  `bltimeStamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `visit_number` int(10) unsigned DEFAULT 0,
   `usedFlag` tinyint(1) DEFAULT NULL COMMENT 'indicates if session has Datacollections or XFE or EnergyScans attached',
   `sessionTitle` varchar(255) DEFAULT NULL COMMENT 'fx accounts only',
   `structureDeterminations` float DEFAULT NULL,
@@ -1157,7 +1157,7 @@ CREATE TABLE `BLSubSample` (
   `imgFileName` varchar(255) DEFAULT NULL COMMENT 'image filename',
   `imgFilePath` varchar(1024) DEFAULT NULL COMMENT 'url image',
   `comments` varchar(1024) DEFAULT NULL COMMENT 'comments',
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
+  `recordTimeStamp` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Creation or last update date/time',
   PRIMARY KEY (`blSubSampleId`),
   KEY `BLSubSample_FKIndex1` (`blSampleId`),
   KEY `BLSubSample_FKIndex2` (`diffractionPlanId`),
@@ -1293,7 +1293,7 @@ CREATE TABLE `BeamLineSetup` (
   `goniostatMaxOscillationSpeed` double DEFAULT NULL,
   `goniostatMinOscillationWidth` double DEFAULT NULL,
   `minTransmission` double DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
+  `recordTimeStamp` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Creation or last update date/time',
   `CS` float DEFAULT NULL COMMENT 'Spherical Aberration, Units: mm?',
   `beamlineName` varchar(50) DEFAULT NULL COMMENT 'Beamline that this setup relates to',
   PRIMARY KEY (`beamLineSetupId`)
@@ -1320,7 +1320,7 @@ DROP TABLE IF EXISTS `BeamlineAction`;
 CREATE TABLE `BeamlineAction` (
   `beamlineActionId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `sessionId` int(11) unsigned DEFAULT NULL,
-  `startTimestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `startTimestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `endTimestamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `message` varchar(255) DEFAULT NULL,
   `parameter` varchar(50) DEFAULT NULL,
@@ -1390,7 +1390,7 @@ CREATE TABLE `Buffer` (
   `pH` varchar(45) DEFAULT NULL,
   `composition` varchar(45) DEFAULT NULL,
   `comments` varchar(512) DEFAULT NULL,
-  `proposalId` int(10) NOT NULL DEFAULT '-1',
+  `proposalId` int(10) NOT NULL DEFAULT -1,
   PRIMARY KEY (`bufferId`),
   KEY `BufferToSafetyLevel` (`safetyLevelId`),
   CONSTRAINT `BufferToSafetyLevel` FOREIGN KEY (`safetyLevelId`) REFERENCES `SafetyLevel` (`safetyLevelId`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -1549,7 +1549,7 @@ DROP TABLE IF EXISTS `ComponentSubType`;
 CREATE TABLE `ComponentSubType` (
   `componentSubTypeId` int(11) unsigned NOT NULL,
   `name` varchar(31) NOT NULL,
-  `hasPh` tinyint(1) DEFAULT '0',
+  `hasPh` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`componentSubTypeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1660,7 +1660,7 @@ CREATE TABLE `Container` (
   `sessionId` int(10) unsigned DEFAULT NULL,
   `ownerId` int(10) unsigned DEFAULT NULL,
   `requestedImagerId` int(11) unsigned DEFAULT NULL,
-  `requestedReturn` tinyint(1) DEFAULT '0' COMMENT 'True for requesting return, False means container will be disposed',
+  `requestedReturn` tinyint(1) DEFAULT 0 COMMENT 'True for requesting return, False means container will be disposed',
   `comments` varchar(255) DEFAULT NULL,
   `experimentType` varchar(20) DEFAULT NULL,
   `storageTemperature` float DEFAULT NULL,
@@ -1709,7 +1709,7 @@ CREATE TABLE `ContainerHistory` (
   `containerHistoryId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `containerId` int(10) unsigned DEFAULT NULL,
   `location` varchar(45) DEFAULT NULL,
-  `blTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `blTimeStamp` timestamp NOT NULL DEFAULT current_timestamp(),
   `status` varchar(45) DEFAULT NULL,
   `beamlineName` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`containerHistoryId`),
@@ -1780,7 +1780,7 @@ CREATE TABLE `ContainerQueue` (
   `containerQueueId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `containerId` int(10) unsigned DEFAULT NULL,
   `personId` int(10) unsigned DEFAULT NULL,
-  `createdTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdTimeStamp` timestamp NOT NULL DEFAULT current_timestamp(),
   `completedTimeStamp` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`containerQueueId`),
   KEY `ContainerQueue_ibfk1` (`containerId`),
@@ -1840,7 +1840,7 @@ CREATE TABLE `ContainerRegistry` (
   `containerRegistryId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `barcode` varchar(20) DEFAULT NULL,
   `comments` varchar(255) DEFAULT NULL,
-  `recordTimestamp` datetime DEFAULT CURRENT_TIMESTAMP,
+  `recordTimestamp` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`containerRegistryId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1867,7 +1867,7 @@ CREATE TABLE `ContainerRegistry_has_Proposal` (
   `containerRegistryId` int(11) unsigned DEFAULT NULL,
   `proposalId` int(10) unsigned DEFAULT NULL,
   `personId` int(10) unsigned DEFAULT NULL COMMENT 'Person registering the container',
-  `recordTimestamp` datetime DEFAULT CURRENT_TIMESTAMP,
+  `recordTimestamp` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`containerRegistryHasProposalId`),
   UNIQUE KEY `containerRegistryId` (`containerRegistryId`,`proposalId`),
   KEY `ContainerRegistry_has_Proposal_ibfk2` (`proposalId`),
@@ -1898,7 +1898,7 @@ CREATE TABLE `ContainerReport` (
   `containerReportId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `containerRegistryId` int(11) unsigned DEFAULT NULL,
   `personId` int(10) unsigned DEFAULT NULL COMMENT 'Person making report',
-  `report` text,
+  `report` text DEFAULT NULL,
   `attachmentFilePath` varchar(255) DEFAULT NULL,
   `recordTimestamp` datetime DEFAULT NULL,
   PRIMARY KEY (`containerReportId`),
@@ -1930,7 +1930,7 @@ CREATE TABLE `CourierTermsAccepted` (
   `proposalId` int(10) unsigned NOT NULL,
   `personId` int(10) unsigned NOT NULL,
   `shippingName` varchar(100) DEFAULT NULL,
-  `timestamp` datetime DEFAULT CURRENT_TIMESTAMP,
+  `timestamp` datetime DEFAULT current_timestamp(),
   `shippingId` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`courierTermsAcceptedId`),
   KEY `CourierTermsAccepted_ibfk_1` (`proposalId`),
@@ -1961,7 +1961,7 @@ DROP TABLE IF EXISTS `Crystal`;
 CREATE TABLE `Crystal` (
   `crystalId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `diffractionPlanId` int(10) unsigned DEFAULT NULL,
-  `proteinId` int(10) unsigned NOT NULL DEFAULT '0',
+  `proteinId` int(10) unsigned NOT NULL DEFAULT 0,
   `crystalUUID` varchar(45) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `spaceGroup` varchar(20) DEFAULT NULL,
@@ -1979,7 +1979,7 @@ CREATE TABLE `Crystal` (
   `comments` varchar(255) DEFAULT NULL,
   `pdbFileName` varchar(255) DEFAULT NULL COMMENT 'pdb file name',
   `pdbFilePath` varchar(1024) DEFAULT NULL COMMENT 'pdb file path',
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
+  `recordTimeStamp` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Creation or last update date/time',
   `abundance` float DEFAULT NULL,
   `theoreticalDensity` float DEFAULT NULL,
   PRIMARY KEY (`crystalId`),
@@ -2065,7 +2065,7 @@ DROP TABLE IF EXISTS `DataCollection`;
 CREATE TABLE `DataCollection` (
   `dataCollectionId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
   `BLSAMPLEID` int(11) unsigned DEFAULT NULL,
-  `SESSIONID` int(11) unsigned DEFAULT '0',
+  `SESSIONID` int(11) unsigned DEFAULT 0,
   `experimenttype` varchar(24) DEFAULT NULL,
   `dataCollectionNumber` int(10) unsigned DEFAULT NULL,
   `startTime` datetime DEFAULT NULL COMMENT 'Start time of the dataCollection',
@@ -2089,7 +2089,7 @@ CREATE TABLE `DataCollection` (
   `xBeam` float DEFAULT NULL,
   `yBeam` float DEFAULT NULL,
   `comments` varchar(1024) DEFAULT NULL,
-  `printableForReport` tinyint(1) unsigned DEFAULT '1',
+  `printableForReport` tinyint(1) unsigned DEFAULT 1,
   `CRYSTALCLASS` varchar(20) DEFAULT NULL,
   `slitGapVertical` float DEFAULT NULL,
   `slitGapHorizontal` float DEFAULT NULL,
@@ -2139,7 +2139,7 @@ CREATE TABLE `DataCollection` (
   `datFullPath` varchar(255) DEFAULT NULL,
   `magnification` float unsigned DEFAULT NULL COMMENT 'Calibrated magnification, Units: dimensionless',
   `totalAbsorbedDose` float DEFAULT NULL COMMENT 'Unit: e-/A^2 for EM',
-  `binning` tinyint(1) DEFAULT '1' COMMENT '1 or 2. Number of pixels to process as 1. (Use mean value.)',
+  `binning` tinyint(1) DEFAULT 1 COMMENT '1 or 2. Number of pixels to process as 1. (Use mean value.)',
   `particleDiameter` float DEFAULT NULL COMMENT 'Unit: nm',
   `boxSize_CTF` float DEFAULT NULL COMMENT 'Unit: pixels',
   `minResolution` float DEFAULT NULL COMMENT 'Unit: A',
@@ -2208,7 +2208,7 @@ CREATE TABLE `DataCollectionComment` (
   `dataCollectionId` int(11) unsigned NOT NULL,
   `personId` int(10) unsigned NOT NULL,
   `comments` varchar(4000) DEFAULT NULL,
-  `createTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createTime` datetime NOT NULL DEFAULT current_timestamp(),
   `modTime` date DEFAULT NULL,
   PRIMARY KEY (`dataCollectionCommentId`),
   KEY `dataCollectionComment_fk1` (`dataCollectionId`),
@@ -2239,7 +2239,7 @@ CREATE TABLE `DataCollectionFileAttachment` (
   `dataCollectionId` int(11) unsigned NOT NULL,
   `fileFullPath` varchar(255) NOT NULL,
   `fileType` enum('snapshot','log','xy','recip') DEFAULT NULL COMMENT 'snapshot: image file, usually of the sample. \nlog: a text file with logging info. \nxy: x and y data in text format. \nrecip: a compressed csv file with reciprocal space coordinates.',
-  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createTime` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`dataCollectionFileAttachmentId`),
   KEY `_dataCollectionFileAttachmentId_fk1` (`dataCollectionId`),
   CONSTRAINT `_dataCollectionFileAttachmentId_fk1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -2413,11 +2413,11 @@ CREATE TABLE `Dewar` (
   `dewarId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `shippingId` int(10) unsigned DEFAULT NULL,
   `code` varchar(45) DEFAULT NULL,
-  `comments` tinytext,
+  `comments` tinytext DEFAULT NULL,
   `storageLocation` varchar(45) DEFAULT NULL,
   `dewarStatus` varchar(45) DEFAULT NULL,
   `bltimeStamp` datetime DEFAULT NULL,
-  `isStorageDewar` tinyint(1) DEFAULT '0',
+  `isStorageDewar` tinyint(1) DEFAULT 0,
   `barCode` varchar(45) DEFAULT NULL,
   `firstExperimentId` int(10) unsigned DEFAULT NULL,
   `customsValue` int(11) unsigned DEFAULT NULL,
@@ -2512,7 +2512,7 @@ CREATE TABLE `DewarRegistry` (
   `proposalId` int(11) unsigned NOT NULL,
   `labContactId` int(11) unsigned NOT NULL,
   `purchaseDate` datetime DEFAULT NULL,
-  `bltimestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `bltimestamp` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`facilityCode`),
   KEY `DewarRegistry_ibfk_1` (`proposalId`),
   KEY `DewarRegistry_ibfk_2` (`labContactId`),
@@ -2540,9 +2540,9 @@ DROP TABLE IF EXISTS `DewarReport`;
 CREATE TABLE `DewarReport` (
   `dewarReportId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `facilityCode` varchar(20) NOT NULL,
-  `report` text,
+  `report` text DEFAULT NULL,
   `attachment` varchar(255) DEFAULT NULL,
-  `bltimestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `bltimestamp` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`dewarReportId`),
   KEY `DewarReportIdx1` (`facilityCode`),
   CONSTRAINT `DewarReport_ibfk_1` FOREIGN KEY (`facilityCode`) REFERENCES `DewarRegistry` (`facilityCode`) ON DELETE CASCADE
@@ -2614,9 +2614,9 @@ CREATE TABLE `DiffractionPlan` (
   `aimedIOverSigmaAtHighestRes` double DEFAULT NULL,
   `aimedMultiplicity` double DEFAULT NULL,
   `aimedResolution` double DEFAULT NULL,
-  `anomalousData` tinyint(1) DEFAULT '0',
+  `anomalousData` tinyint(1) DEFAULT 0,
   `complexity` varchar(45) DEFAULT NULL,
-  `estimateRadiationDamage` tinyint(1) DEFAULT '0',
+  `estimateRadiationDamage` tinyint(1) DEFAULT 0,
   `forcedSpaceGroup` varchar(45) DEFAULT NULL,
   `requiredCompleteness` double DEFAULT NULL,
   `requiredMultiplicity` double DEFAULT NULL,
@@ -2629,7 +2629,7 @@ CREATE TABLE `DiffractionPlan` (
   `radiationSensitivityBeta` double DEFAULT NULL,
   `radiationSensitivityGamma` double DEFAULT NULL,
   `minOscWidth` float DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
+  `recordTimeStamp` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Creation or last update date/time',
   `monochromator` varchar(8) DEFAULT NULL COMMENT 'DMM or DCM',
   `energy` float DEFAULT NULL COMMENT 'eV',
   `transmission` float DEFAULT NULL COMMENT 'Decimal fraction in range [0,1]',
@@ -2989,7 +2989,7 @@ CREATE TABLE `GridInfo` (
   `steps_x` double DEFAULT NULL,
   `steps_y` double DEFAULT NULL,
   `meshAngle` double DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
+  `recordTimeStamp` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Creation or last update date/time',
   `workflowMeshId` int(11) unsigned DEFAULT NULL,
   `orientation` enum('vertical','horizontal') DEFAULT 'horizontal',
   `dataCollectionGroupId` int(11) DEFAULT NULL,
@@ -2997,7 +2997,7 @@ CREATE TABLE `GridInfo` (
   `pixelsPerMicronY` float DEFAULT NULL,
   `snapshot_offsetXPixel` float DEFAULT NULL,
   `snapshot_offsetYPixel` float DEFAULT NULL,
-  `snaked` tinyint(1) DEFAULT '0' COMMENT 'True: The images associated with the DCG were collected in a snaked pattern',
+  `snaked` tinyint(1) DEFAULT 0 COMMENT 'True: The images associated with the DCG were collected in a snaked pattern',
   PRIMARY KEY (`gridInfoId`),
   KEY `workflowMeshId` (`workflowMeshId`),
   KEY `GridInfo_ibfk_2` (`dataCollectionGroupId`),
@@ -3024,7 +3024,7 @@ DROP TABLE IF EXISTS `Image`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Image` (
   `imageId` int(12) unsigned NOT NULL AUTO_INCREMENT,
-  `dataCollectionId` int(11) unsigned NOT NULL DEFAULT '0',
+  `dataCollectionId` int(11) unsigned NOT NULL DEFAULT 0,
   `imageNumber` int(10) unsigned DEFAULT NULL,
   `fileName` varchar(255) DEFAULT NULL,
   `fileLocation` varchar(255) DEFAULT NULL,
@@ -3036,9 +3036,9 @@ CREATE TABLE `Image` (
   `synchrotronCurrent` float DEFAULT NULL,
   `comments` varchar(1024) DEFAULT NULL,
   `machineMessage` varchar(1024) DEFAULT NULL,
-  `BLTIMESTAMP` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `BLTIMESTAMP` timestamp NOT NULL DEFAULT current_timestamp(),
   `motorPositionId` int(11) unsigned DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
+  `recordTimeStamp` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Creation or last update date/time',
   PRIMARY KEY (`imageId`),
   KEY `Image_FKIndex1` (`dataCollectionId`),
   KEY `Image_FKIndex2` (`imageNumber`),
@@ -3241,7 +3241,7 @@ CREATE TABLE `IspybReference` (
   `referenceId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
   `referenceName` varchar(255) DEFAULT NULL COMMENT 'reference name',
   `referenceUrl` varchar(1024) DEFAULT NULL COMMENT 'url of the reference',
-  `referenceBibtext` blob COMMENT 'bibtext value of the reference',
+  `referenceBibtext` blob DEFAULT NULL COMMENT 'bibtext value of the reference',
   `beamline` enum('All','ID14-4','ID23-1','ID23-2','ID29','XRF','AllXRF','Mesh') DEFAULT NULL COMMENT 'beamline involved',
   PRIMARY KEY (`referenceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -3271,9 +3271,9 @@ CREATE TABLE `LabContact` (
   `defaultCourrierCompany` varchar(45) DEFAULT NULL,
   `courierAccount` varchar(45) DEFAULT NULL,
   `billingReference` varchar(45) DEFAULT NULL,
-  `dewarAvgCustomsValue` int(10) unsigned NOT NULL DEFAULT '0',
-  `dewarAvgTransportValue` int(10) unsigned NOT NULL DEFAULT '0',
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
+  `dewarAvgCustomsValue` int(10) unsigned NOT NULL DEFAULT 0,
+  `dewarAvgTransportValue` int(10) unsigned NOT NULL DEFAULT 0,
+  `recordTimeStamp` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Creation or last update date/time',
   PRIMARY KEY (`labContactId`),
   UNIQUE KEY `cardNameAndProposal` (`cardName`,`proposalId`),
   UNIQUE KEY `personAndProposal` (`personId`,`proposalId`),
@@ -3308,7 +3308,7 @@ CREATE TABLE `Laboratory` (
   `country` varchar(45) DEFAULT NULL,
   `url` varchar(255) DEFAULT NULL,
   `organization` varchar(45) DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
+  `recordTimeStamp` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Creation or last update date/time',
   `laboratoryPk` int(10) DEFAULT NULL,
   `postcode` varchar(15) DEFAULT NULL,
   PRIMARY KEY (`laboratoryId`)
@@ -3362,7 +3362,7 @@ DROP TABLE IF EXISTS `MXMRRun`;
 CREATE TABLE `MXMRRun` (
   `mxMRRunId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `autoProcScalingId` int(11) unsigned NOT NULL,
-  `success` tinyint(1) DEFAULT '0' COMMENT 'Indicates whether the program completed. 1 for success, 0 for failure.',
+  `success` tinyint(1) DEFAULT 0 COMMENT 'Indicates whether the program completed. 1 for success, 0 for failure.',
   `message` varchar(255) DEFAULT NULL COMMENT 'A short summary of the findings, success or failure.',
   `pipeline` varchar(50) DEFAULT NULL,
   `inputCoordFile` varchar(255) DEFAULT NULL,
@@ -3751,8 +3751,8 @@ CREATE TABLE `MotionCorrection` (
   `fftCorrectedFullPath` varchar(255) DEFAULT NULL COMMENT 'Full path to the jpg image of the drift corrected micrograph FFT',
   `comments` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`motionCorrectionId`),
-  KEY `MotionCorrection_ibfk2` (`autoProcProgramId`),
   KEY `_MotionCorrection_ibfk1` (`dataCollectionId`),
+  KEY `MotionCorrection_ibfk2` (`autoProcProgramId`),
   CONSTRAINT `MotionCorrection_ibfk2` FOREIGN KEY (`autoProcProgramId`) REFERENCES `AutoProcProgram` (`autoProcProgramId`),
   CONSTRAINT `_MotionCorrection_ibfk1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -3815,7 +3815,7 @@ CREATE TABLE `MotorPosition` (
   `chi` double DEFAULT NULL,
   `gridIndexY` int(11) DEFAULT NULL,
   `gridIndexZ` int(11) DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
+  `recordTimeStamp` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Creation or last update date/time',
   PRIMARY KEY (`motorPositionId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -3839,7 +3839,7 @@ DROP TABLE IF EXISTS `PDB`;
 CREATE TABLE `PDB` (
   `pdbId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
-  `contents` mediumtext,
+  `contents` mediumtext DEFAULT NULL,
   `code` varchar(4) DEFAULT NULL,
   PRIMARY KEY (`pdbId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -4021,8 +4021,8 @@ CREATE TABLE `Person` (
   `phoneNumber` varchar(45) DEFAULT NULL,
   `login` varchar(45) DEFAULT NULL,
   `faxNumber` varchar(45) DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
-  `cache` text,
+  `recordTimeStamp` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Creation or last update date/time',
+  `cache` text DEFAULT NULL,
   `externalId` binary(16) DEFAULT NULL,
   PRIMARY KEY (`personId`),
   UNIQUE KEY `Person_FKIndex_Login` (`login`),
@@ -4060,7 +4060,7 @@ CREATE TABLE `Phasing` (
   `enantiomorph` tinyint(1) DEFAULT NULL COMMENT '0 or 1',
   `lowRes` double DEFAULT NULL,
   `highRes` double DEFAULT NULL,
-  `recordTimeStamp` datetime DEFAULT CURRENT_TIMESTAMP,
+  `recordTimeStamp` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`phasingId`),
   KEY `Phasing_FKIndex1` (`phasingAnalysisId`),
   KEY `Phasing_FKIndex2` (`phasingProgramRunId`),
@@ -4148,7 +4148,7 @@ CREATE TABLE `PhasingProgramRun` (
   `phasingStartTime` datetime DEFAULT NULL COMMENT 'Processing start time',
   `phasingEndTime` datetime DEFAULT NULL COMMENT 'Processing end time',
   `phasingEnvironment` varchar(255) DEFAULT NULL COMMENT 'Cpus, Nodes,...',
-  `recordTimeStamp` datetime DEFAULT CURRENT_TIMESTAMP,
+  `recordTimeStamp` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`phasingProgramRunId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -4181,7 +4181,7 @@ CREATE TABLE `PhasingStatistics` (
   `metric` enum('Rcullis','Average Fragment Length','Chain Count','Residues Count','CC','PhasingPower','FOM','<d"/sig>','Best CC','CC(1/2)','Weak CC','CFOM','Pseudo_free_CC','CC of partial model') DEFAULT NULL COMMENT 'metric',
   `statisticsValue` double DEFAULT NULL COMMENT 'the statistics value',
   `nReflections` int(11) DEFAULT NULL,
-  `recordTimeStamp` datetime DEFAULT CURRENT_TIMESTAMP,
+  `recordTimeStamp` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`phasingStatisticsId`),
   KEY `PhasingStatistics_FKIndex1` (`phasingHasScalingId1`),
   KEY `PhasingStatistics_FKIndex2` (`phasingHasScalingId2`),
@@ -4221,7 +4221,7 @@ CREATE TABLE `PhasingStep` (
   `enantiomorph` varchar(45) DEFAULT NULL,
   `lowRes` varchar(45) DEFAULT NULL,
   `highRes` varchar(45) DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `recordTimeStamp` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`phasingStepId`),
   KEY `FK_programRun_id` (`programRunId`),
   KEY `FK_spacegroup_id` (`spaceGroupId`),
@@ -4254,7 +4254,7 @@ CREATE TABLE `Phasing_has_Scaling` (
   `phasingAnalysisId` int(11) unsigned NOT NULL COMMENT 'Related phasing analysis item',
   `autoProcScalingId` int(10) unsigned NOT NULL COMMENT 'Related autoProcScaling item',
   `datasetNumber` int(11) DEFAULT NULL COMMENT 'serial number of the dataset and always reserve 0 for the reference',
-  `recordTimeStamp` datetime DEFAULT CURRENT_TIMESTAMP,
+  `recordTimeStamp` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`phasingHasScalingId`),
   KEY `PhasingHasScaling_FKIndex1` (`phasingAnalysisId`),
   KEY `PhasingHasScaling_FKIndex2` (`autoProcScalingId`),
@@ -4340,9 +4340,9 @@ CREATE TABLE `Position` (
   `posZ` double DEFAULT NULL,
   `scale` double DEFAULT NULL,
   `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
-  `X` double AS (posX) VIRTUAL,
-  `Y` double AS (posY) VIRTUAL,
-  `Z` double AS (posZ) VIRTUAL,
+  `X` double GENERATED ALWAYS AS (`posX`) VIRTUAL,
+  `Y` double GENERATED ALWAYS AS (`posY`) VIRTUAL,
+  `Z` double GENERATED ALWAYS AS (`posZ`) VIRTUAL,
   PRIMARY KEY (`positionId`),
   KEY `Position_FKIndex1` (`relativePositionId`),
   CONSTRAINT `Position_relativePositionfk_1` FOREIGN KEY (`relativePositionId`) REFERENCES `Position` (`positionId`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -4391,6 +4391,96 @@ CREATE TABLE `PreparePhasingData` (
 LOCK TABLES `PreparePhasingData` WRITE;
 /*!40000 ALTER TABLE `PreparePhasingData` DISABLE KEYS */;
 /*!40000 ALTER TABLE `PreparePhasingData` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ProcessingJob`
+--
+
+DROP TABLE IF EXISTS `ProcessingJob`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ProcessingJob` (
+  `processingJobId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `dataCollectionId` int(11) unsigned DEFAULT NULL,
+  `displayName` varchar(80) DEFAULT NULL COMMENT 'xia2, fast_dp, dimple, etc',
+  `comments` varchar(255) DEFAULT NULL COMMENT 'For users to annotate the job and see the motivation for the job',
+  `recordTimestamp` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'When job was submitted',
+  `recipe` varchar(50) DEFAULT NULL COMMENT 'What we want to run (xia, dimple, etc).',
+  `automatic` tinyint(1) DEFAULT NULL COMMENT 'Whether this processing job was triggered automatically or not',
+  PRIMARY KEY (`processingJobId`),
+  KEY `ProcessingJob_ibfk1` (`dataCollectionId`),
+  CONSTRAINT `ProcessingJob_ibfk1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1 COMMENT='From this we get both job times and lag times';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ProcessingJob`
+--
+
+LOCK TABLES `ProcessingJob` WRITE;
+/*!40000 ALTER TABLE `ProcessingJob` DISABLE KEYS */;
+INSERT INTO `ProcessingJob` VALUES (5,1052503,'test job 01','Testing the job submission system','2017-10-16 11:02:12','DIALS/xia2',0);
+/*!40000 ALTER TABLE `ProcessingJob` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ProcessingJobImageSweep`
+--
+
+DROP TABLE IF EXISTS `ProcessingJobImageSweep`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ProcessingJobImageSweep` (
+  `processingJobImageSweepId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `processingJobId` int(11) unsigned DEFAULT NULL,
+  `dataCollectionId` int(11) unsigned DEFAULT NULL,
+  `startImage` mediumint(8) unsigned DEFAULT NULL,
+  `endImage` mediumint(8) unsigned DEFAULT NULL,
+  PRIMARY KEY (`processingJobImageSweepId`),
+  KEY `ProcessingJobImageSweep_ibfk1` (`processingJobId`),
+  KEY `ProcessingJobImageSweep_ibfk2` (`dataCollectionId`),
+  CONSTRAINT `ProcessingJobImageSweep_ibfk1` FOREIGN KEY (`processingJobId`) REFERENCES `ProcessingJob` (`processingJobId`),
+  CONSTRAINT `ProcessingJobImageSweep_ibfk2` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COMMENT='This allows multiple sweeps per processing job for multi-xia2';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ProcessingJobImageSweep`
+--
+
+LOCK TABLES `ProcessingJobImageSweep` WRITE;
+/*!40000 ALTER TABLE `ProcessingJobImageSweep` DISABLE KEYS */;
+INSERT INTO `ProcessingJobImageSweep` VALUES (5,5,1052503,1,270),(8,5,1052503,271,360);
+/*!40000 ALTER TABLE `ProcessingJobImageSweep` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ProcessingJobParameter`
+--
+
+DROP TABLE IF EXISTS `ProcessingJobParameter`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ProcessingJobParameter` (
+  `processingJobParameterId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `processingJobId` int(11) unsigned DEFAULT NULL,
+  `parameterKey` varchar(80) DEFAULT NULL COMMENT 'E.g. resolution, spacegroup, pipeline',
+  `parameterValue` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`processingJobParameterId`),
+  KEY `ProcessingJobParameter_ibfk1` (`processingJobId`),
+  CONSTRAINT `ProcessingJobParameter_ibfk1` FOREIGN KEY (`processingJobId`) REFERENCES `ProcessingJob` (`processingJobId`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ProcessingJobParameter`
+--
+
+LOCK TABLES `ProcessingJobParameter` WRITE;
+/*!40000 ALTER TABLE `ProcessingJobParameter` DISABLE KEYS */;
+INSERT INTO `ProcessingJobParameter` VALUES (5,5,'vortex factor','1.8*10^102'),(8,5,'80s factor','0.87*10^-93');
+/*!40000 ALTER TABLE `ProcessingJobParameter` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -4664,11 +4754,11 @@ DROP TABLE IF EXISTS `Proposal`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Proposal` (
   `proposalId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `personId` int(10) unsigned NOT NULL DEFAULT '0',
+  `personId` int(10) unsigned NOT NULL DEFAULT 0,
   `title` varchar(200) DEFAULT NULL,
   `proposalCode` varchar(45) DEFAULT NULL,
   `proposalNumber` varchar(45) DEFAULT NULL,
-  `bltimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `bltimeStamp` timestamp NOT NULL DEFAULT current_timestamp(),
   `proposalType` varchar(2) DEFAULT NULL COMMENT 'Proposal type: MX, BX',
   `externalId` binary(16) DEFAULT NULL,
   PRIMARY KEY (`proposalId`),
@@ -4727,19 +4817,19 @@ DROP TABLE IF EXISTS `Protein`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Protein` (
   `proteinId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `proposalId` int(10) unsigned NOT NULL DEFAULT '0',
+  `proposalId` int(10) unsigned NOT NULL DEFAULT 0,
   `name` varchar(255) DEFAULT NULL,
   `acronym` varchar(45) DEFAULT NULL,
   `molecularMass` double DEFAULT NULL,
   `proteinType` varchar(45) DEFAULT NULL,
   `personId` int(10) unsigned DEFAULT NULL,
-  `bltimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `isCreatedBySampleSheet` tinyint(1) DEFAULT '0',
-  `sequence` text,
+  `bltimeStamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `isCreatedBySampleSheet` tinyint(1) DEFAULT 0,
+  `sequence` text DEFAULT NULL,
   `MOD_ID` varchar(20) DEFAULT NULL,
   `componentTypeId` int(11) unsigned DEFAULT NULL,
   `concentrationTypeId` int(11) unsigned DEFAULT NULL,
-  `global` tinyint(1) DEFAULT '0',
+  `global` tinyint(1) DEFAULT 0,
   `externalId` binary(16) DEFAULT NULL,
   `density` float DEFAULT NULL,
   `abundance` float DEFAULT NULL COMMENT 'Deprecated',
@@ -4806,7 +4896,7 @@ CREATE TABLE `Reprocessing` (
   `dataCollectionId` int(11) unsigned DEFAULT NULL,
   `displayName` varchar(80) DEFAULT NULL COMMENT 'xia2, fast_dp, dimple, etc',
   `comments` varchar(255) DEFAULT NULL COMMENT 'For users to annotate the job and see the motivation for the job',
-  `recordTimestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When job was submitted',
+  `recordTimestamp` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'When job was submitted',
   `recipe` varchar(50) DEFAULT NULL COMMENT 'What we want to run (xia, dimple, etc) ',
   `automatic` tinyint(1) DEFAULT NULL COMMENT 'Whether this processing was triggered automatically or not',
   PRIMARY KEY (`reprocessingId`),
@@ -4893,7 +4983,7 @@ CREATE TABLE `RobotAction` (
   `blsessionId` int(11) unsigned NOT NULL,
   `blsampleId` int(11) unsigned DEFAULT NULL,
   `actionType` enum('LOAD','UNLOAD','DISPOSE','STORE','WASH','ANNEAL') DEFAULT NULL,
-  `startTimestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `startTimestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `endTimestamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `status` enum('SUCCESS','ERROR','CRITICAL','WARNING','EPICSFAIL','COMMANDNOTSENT') DEFAULT NULL,
   `message` varchar(255) DEFAULT NULL,
@@ -5076,7 +5166,7 @@ CREATE TABLE `SW_onceToken` (
   `personId` int(10) unsigned DEFAULT NULL,
   `proposalId` int(10) unsigned DEFAULT NULL,
   `validity` varchar(200) DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `recordTimeStamp` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`onceTokenId`),
   KEY `SW_onceToken_fk1` (`personId`),
   KEY `SW_onceToken_fk2` (`proposalId`),
@@ -5228,7 +5318,7 @@ CREATE TABLE `ScanParametersModel` (
   `start` double DEFAULT NULL,
   `stop` double DEFAULT NULL,
   `step` double DEFAULT NULL,
-  `array` text,
+  `array` text DEFAULT NULL,
   `duration` mediumint(8) unsigned DEFAULT NULL COMMENT 'Duration for parameter change in seconds',
   PRIMARY KEY (`scanParametersModelId`),
   KEY `PDF_Model_ibfk1` (`scanParametersServiceId`),
@@ -5337,7 +5427,7 @@ CREATE TABLE `SchemaStatus` (
   `schemaStatusId` int(11) NOT NULL AUTO_INCREMENT,
   `scriptName` varchar(100) NOT NULL,
   `schemaStatus` varchar(10) DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `recordTimeStamp` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`schemaStatusId`),
   UNIQUE KEY `scriptName` (`scriptName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -5445,13 +5535,13 @@ DROP TABLE IF EXISTS `Screening`;
 CREATE TABLE `Screening` (
   `screeningId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `dataCollectionId` int(11) unsigned DEFAULT NULL,
-  `bltimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `bltimeStamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `programVersion` varchar(45) DEFAULT NULL,
   `comments` varchar(255) DEFAULT NULL,
   `shortComments` varchar(20) DEFAULT NULL,
   `diffractionPlanId` int(10) unsigned DEFAULT NULL COMMENT 'references DiffractionPlan',
   `dataCollectionGroupId` int(11) DEFAULT NULL,
-  `xmlSampleInformation` longblob,
+  `xmlSampleInformation` longblob DEFAULT NULL,
   PRIMARY KEY (`screeningId`),
   KEY `Screening_FKIndexDiffractionPlanId` (`diffractionPlanId`),
   KEY `dcgroupId` (`dataCollectionGroupId`),
@@ -5480,7 +5570,7 @@ DROP TABLE IF EXISTS `ScreeningInput`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ScreeningInput` (
   `screeningInputId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `screeningId` int(10) unsigned NOT NULL DEFAULT '0',
+  `screeningId` int(10) unsigned NOT NULL DEFAULT 0,
   `beamX` float DEFAULT NULL,
   `beamY` float DEFAULT NULL,
   `rmsErrorLimits` float DEFAULT NULL,
@@ -5488,7 +5578,7 @@ CREATE TABLE `ScreeningInput` (
   `maximumFractionRejected` float DEFAULT NULL,
   `minimumSignalToNoise` float DEFAULT NULL,
   `diffractionPlanId` int(10) DEFAULT NULL COMMENT 'references DiffractionPlan table',
-  `xmlSampleInformation` longblob,
+  `xmlSampleInformation` longblob DEFAULT NULL,
   PRIMARY KEY (`screeningInputId`),
   KEY `ScreeningInput_FKIndex1` (`screeningId`),
   CONSTRAINT `ScreeningInput_ibfk_1` FOREIGN KEY (`screeningId`) REFERENCES `Screening` (`screeningId`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -5514,7 +5604,7 @@ DROP TABLE IF EXISTS `ScreeningOutput`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ScreeningOutput` (
   `screeningOutputId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `screeningId` int(10) unsigned NOT NULL DEFAULT '0',
+  `screeningId` int(10) unsigned NOT NULL DEFAULT 0,
   `statusDescription` varchar(1024) DEFAULT NULL,
   `rejectedReflections` int(10) unsigned DEFAULT NULL,
   `resolutionObtained` float DEFAULT NULL,
@@ -5528,8 +5618,8 @@ CREATE TABLE `ScreeningOutput` (
   `mosaicity` float DEFAULT NULL,
   `iOverSigma` float DEFAULT NULL,
   `diffractionRings` tinyint(1) DEFAULT NULL,
-  `SCREENINGSUCCESS` tinyint(1) DEFAULT '0' COMMENT 'Column to be deleted',
-  `mosaicityEstimated` tinyint(1) NOT NULL DEFAULT '0',
+  `SCREENINGSUCCESS` tinyint(1) DEFAULT 0 COMMENT 'Column to be deleted',
+  `mosaicityEstimated` tinyint(1) NOT NULL DEFAULT 0,
   `rankingResolution` double DEFAULT NULL,
   `program` varchar(45) DEFAULT NULL,
   `doseTotal` double DEFAULT NULL,
@@ -5537,8 +5627,8 @@ CREATE TABLE `ScreeningOutput` (
   `totalRotationRange` double DEFAULT NULL,
   `totalNumberOfImages` int(11) DEFAULT NULL,
   `rFriedel` double DEFAULT NULL,
-  `indexingSuccess` tinyint(1) NOT NULL DEFAULT '0',
-  `strategySuccess` tinyint(1) NOT NULL DEFAULT '0',
+  `indexingSuccess` tinyint(1) NOT NULL DEFAULT 0,
+  `strategySuccess` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`screeningOutputId`),
   KEY `ScreeningOutput_FKIndex1` (`screeningId`),
   CONSTRAINT `ScreeningOutput_ibfk_1` FOREIGN KEY (`screeningId`) REFERENCES `Screening` (`screeningId`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -5564,7 +5654,7 @@ DROP TABLE IF EXISTS `ScreeningOutputLattice`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ScreeningOutputLattice` (
   `screeningOutputLatticeId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `screeningOutputId` int(10) unsigned NOT NULL DEFAULT '0',
+  `screeningOutputId` int(10) unsigned NOT NULL DEFAULT 0,
   `spaceGroup` varchar(45) DEFAULT NULL,
   `pointGroup` varchar(45) DEFAULT NULL,
   `bravaisLattice` varchar(45) DEFAULT NULL,
@@ -5583,8 +5673,8 @@ CREATE TABLE `ScreeningOutputLattice` (
   `unitCell_alpha` float DEFAULT NULL,
   `unitCell_beta` float DEFAULT NULL,
   `unitCell_gamma` float DEFAULT NULL,
-  `bltimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `labelitIndexing` tinyint(1) DEFAULT '0',
+  `bltimeStamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `labelitIndexing` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`screeningOutputLatticeId`),
   KEY `ScreeningOutputLattice_FKIndex1` (`screeningOutputId`),
   CONSTRAINT `ScreeningOutputLattice_ibfk_1` FOREIGN KEY (`screeningOutputId`) REFERENCES `ScreeningOutput` (`screeningOutputId`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -5609,8 +5699,8 @@ DROP TABLE IF EXISTS `ScreeningRank`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ScreeningRank` (
   `screeningRankId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `screeningRankSetId` int(10) unsigned NOT NULL DEFAULT '0',
-  `screeningId` int(10) unsigned NOT NULL DEFAULT '0',
+  `screeningRankSetId` int(10) unsigned NOT NULL DEFAULT 0,
+  `screeningId` int(10) unsigned NOT NULL DEFAULT 0,
   `rankValue` float DEFAULT NULL,
   `rankInformation` varchar(1024) DEFAULT NULL,
   PRIMARY KEY (`screeningRankId`),
@@ -5664,7 +5754,7 @@ DROP TABLE IF EXISTS `ScreeningStrategy`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ScreeningStrategy` (
   `screeningStrategyId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `screeningOutputId` int(10) unsigned NOT NULL DEFAULT '0',
+  `screeningOutputId` int(10) unsigned NOT NULL DEFAULT 0,
   `phiStart` float DEFAULT NULL,
   `phiEnd` float DEFAULT NULL,
   `rotation` float DEFAULT NULL,
@@ -5672,7 +5762,7 @@ CREATE TABLE `ScreeningStrategy` (
   `resolution` float DEFAULT NULL,
   `completeness` float DEFAULT NULL,
   `multiplicity` float DEFAULT NULL,
-  `anomalous` tinyint(1) NOT NULL DEFAULT '0',
+  `anomalous` tinyint(1) NOT NULL DEFAULT 0,
   `program` varchar(45) DEFAULT NULL,
   `rankingResolution` float DEFAULT NULL,
   `transmission` float DEFAULT NULL COMMENT 'Transmission for the strategy as given by the strategy program.',
@@ -5802,10 +5892,10 @@ DROP TABLE IF EXISTS `Session_has_Person`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Session_has_Person` (
-  `sessionId` int(10) unsigned NOT NULL DEFAULT '0',
-  `personId` int(10) unsigned NOT NULL DEFAULT '0',
+  `sessionId` int(10) unsigned NOT NULL DEFAULT 0,
+  `personId` int(10) unsigned NOT NULL DEFAULT 0,
   `role` enum('Local Contact','Local Contact 2','Staff','Team Leader','Co-Investigator','Principal Investigator','Alternate Contact','Data Access','Team Member') DEFAULT NULL,
-  `remote` tinyint(1) DEFAULT '0',
+  `remote` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`sessionId`,`personId`),
   KEY `Session_has_Person_FKIndex1` (`sessionId`),
   KEY `Session_has_Person_FKIndex2` (`personId`),
@@ -5833,7 +5923,7 @@ DROP TABLE IF EXISTS `Shipping`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Shipping` (
   `shippingId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `proposalId` int(10) unsigned NOT NULL DEFAULT '0',
+  `proposalId` int(10) unsigned NOT NULL DEFAULT 0,
   `shippingName` varchar(45) DEFAULT NULL,
   `deliveryAgent_agentName` varchar(45) DEFAULT NULL,
   `deliveryAgent_shippingDate` date DEFAULT NULL,
@@ -5843,7 +5933,7 @@ CREATE TABLE `Shipping` (
   `shippingStatus` varchar(45) DEFAULT NULL,
   `bltimeStamp` datetime DEFAULT NULL,
   `laboratoryId` int(10) unsigned DEFAULT NULL,
-  `isStorageShipping` tinyint(1) DEFAULT '0',
+  `isStorageShipping` tinyint(1) DEFAULT 0,
   `creationDate` datetime DEFAULT NULL,
   `comments` varchar(255) DEFAULT NULL,
   `sendingLabContactId` int(10) unsigned DEFAULT NULL,
@@ -5853,7 +5943,7 @@ CREATE TABLE `Shipping` (
   `shippingType` varchar(45) DEFAULT NULL,
   `SAFETYLEVEL` varchar(8) DEFAULT NULL,
   `deliveryAgent_flightCodeTimestamp` timestamp NULL DEFAULT NULL COMMENT 'Date flight code created, if automatic',
-  `deliveryAgent_label` text COMMENT 'Base64 encoded pdf of airway label',
+  `deliveryAgent_label` text DEFAULT NULL COMMENT 'Base64 encoded pdf of airway label',
   `readyByTime` time DEFAULT NULL COMMENT 'Time shipment will be ready',
   `closeTime` time DEFAULT NULL COMMENT 'Time after which shipment cannot be picked up',
   `physicalLocation` varchar(50) DEFAULT NULL COMMENT 'Where shipment can be picked up from: i.e. Stores',
@@ -5933,7 +6023,7 @@ CREATE TABLE `SpaceGroup` (
   `bravaisLatticeName` varchar(45) DEFAULT NULL COMMENT 'verbose name',
   `pointGroup` varchar(45) DEFAULT NULL COMMENT 'point group',
   `geometryClassnameId` int(11) unsigned DEFAULT NULL,
-  `MX_used` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1 if used in the crystal form',
+  `MX_used` tinyint(1) NOT NULL DEFAULT 0 COMMENT '1 if used in the crystal form',
   PRIMARY KEY (`spaceGroupId`),
   KEY `geometryClassnameId` (`geometryClassnameId`),
   KEY `SpaceGroup_FKShortName` (`spaceGroupShortName`),
@@ -6014,7 +6104,7 @@ CREATE TABLE `StockSolution` (
   `volume` varchar(55) DEFAULT NULL,
   `concentration` varchar(55) DEFAULT NULL,
   `comments` varchar(255) DEFAULT NULL,
-  `proposalId` int(10) NOT NULL DEFAULT '-1',
+  `proposalId` int(10) NOT NULL DEFAULT -1,
   PRIMARY KEY (`stockSolutionId`),
   KEY `StockSolutionToBuffer` (`bufferId`),
   KEY `StockSolutionToInstructionSet` (`instructionSetId`),
@@ -6329,7 +6419,7 @@ CREATE TABLE `WorkflowMesh` (
   `value3` double DEFAULT NULL COMMENT 'N value',
   `value4` double DEFAULT NULL,
   `cartographyPath` varchar(255) DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
+  `recordTimeStamp` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Creation or last update date/time',
   PRIMARY KEY (`workflowMeshId`),
   KEY `bestImageId` (`bestImageId`),
   KEY `bestPositionId` (`bestPositionId`),
@@ -7812,7 +7902,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `clear_container_error`(IN p_barcode varchar(10))
     MODIFIES SQL DATA
-    COMMENT 'Sets error for p_barcode in automation fault table to resolved state'
+    COMMENT 'Sets error for p_barcode in automation fault table to resolved s'
 BEGIN
   IF NOT (p_barcode IS NULL) THEN
 	UPDATE BF_automationFault af 
@@ -7840,7 +7930,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `finish_container`(IN p_barcode varchar(45))
     MODIFIES SQL DATA
-    COMMENT 'Set the completedTimeStamp in the ContainerQueue table for the container with this barcode'
+    COMMENT 'Set the completedTimeStamp in the ContainerQueue table for the c'
 BEGIN
   IF NOT (p_barcode IS NULL) THEN
     UPDATE ContainerQueue 
@@ -7879,7 +7969,7 @@ CREATE PROCEDURE `insert_beamline_action`(
      p_status enum('PAUSED','RUNNING','TERMINATED','COMPLETE','ERROR','EPICSFAIL')
 )
     MODIFIES SQL DATA
-    COMMENT 'Insert a beamline action row for session p_proposalCode + p_proposalNumber + p_sessionNumber. Returns ID of row in p_id'
+    COMMENT 'Insert a beamline action row for session p_proposalCode + p_prop'
 BEGIN
 	DECLARE row_session_id int(10) unsigned DEFAULT NULL;
 	DECLARE row_proposal_id int(10) unsigned DEFAULT NULL;
@@ -7916,7 +8006,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `insert_container_error`(IN p_barcode varchar(45), p_error varchar(255), p_severity int, p_stack_trace text)
     MODIFIES SQL DATA
-    COMMENT 'Inserts row with info about container loading-related error into the automation fault table'
+    COMMENT 'Inserts row with info about container loading-related error into'
 BEGIN
   IF NOT (p_barcode IS NULL) THEN
     INSERT INTO BF_automationFault (automationErrorId, containerId, severity, stacktrace) 
@@ -8009,7 +8099,7 @@ CREATE PROCEDURE `insert_processing_scaling`(
      p_ccAnomalous3 float
   )
     MODIFIES SQL DATA
-    COMMENT 'Inserts 1 row in AutoProcScaling, 3 rows in AutoProcScalingStatistics. Id for AutoProcScaling row is returned in p_id.'
+    COMMENT 'Inserts 1 row in AutoProcScaling, 3 rows in AutoProcScalingStati'
 BEGIN
     IF p_parentid IS NULL THEN
       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_program_id is NULL';
@@ -8123,7 +8213,7 @@ CREATE PROCEDURE `insert_screening`(
      p_comments varchar(255)
 )
     MODIFIES SQL DATA
-    COMMENT 'Insert a row with info about a screening. Returns the ID in p_id.'
+    COMMENT 'Insert a row with info about a screening. Returns the ID in p_id'
 BEGIN
 	  IF p_dcgId IS NULL AND p_dcId IS NOT NULL THEN
 		SELECT dataCollectionGroupId INTO p_dcgId FROM DataCollection WHERE dataCollectionId = p_dcId;
@@ -8163,7 +8253,7 @@ CREATE PROCEDURE `insert_screening_input`(
      p_minSignalToNoise float
 )
     MODIFIES SQL DATA
-    COMMENT 'Insert a row with info about a screening input. Returns the ID in p_id.'
+    COMMENT 'Insert a row with info about a screening input. Returns the ID i'
 BEGIN
       INSERT INTO ScreeningInput (screeningId, beamX, beamY, rmsErrorLimits, minimumFractionIndexed, maximumFractionRejected, minimumSignalToNoise) 
         VALUES (p_screeningId, p_beamX, p_beamY, p_rmsErrorLimits, p_minFractionIndexed, p_maxFractionRejected, p_minSignalToNoise);
@@ -8215,7 +8305,7 @@ CREATE PROCEDURE `insert_screening_output`(
      p_strategySuccess boolean
 )
     MODIFIES SQL DATA
-    COMMENT 'Insert a row with info about a screening output. Returns the ID in p_id.'
+    COMMENT 'Insert a row with info about a screening output. Returns the ID'
 BEGIN
       INSERT INTO ScreeningOutput (screeningId, statusDescription, rejectedReflections, resolutionObtained, spotDeviationR, spotDeviationTheta, 
         beamShiftX, beamShiftY, numSpotsFound, numSpotsUsed, numSpotsRejected, mosaicity, iOverSigma, 
@@ -8269,7 +8359,7 @@ CREATE PROCEDURE `insert_screening_output_lattice`(
      p_labelitIndexing boolean
 )
     MODIFIES SQL DATA
-    COMMENT 'Insert a row with info about a screening output lattice. Returns the ID in p_id.'
+    COMMENT 'Insert a row with info about a screening output lattice. Returns'
 BEGIN
       INSERT INTO ScreeningOutputLattice (screeningOutputId, spaceGroup, pointGroup, bravaisLattice, 
         rawOrientationMatrix_a_x, rawOrientationMatrix_a_y, rawOrientationMatrix_a_z,
@@ -8317,7 +8407,7 @@ CREATE PROCEDURE `insert_screening_strategy`(
      p_transmission float
 )
     MODIFIES SQL DATA
-    COMMENT 'Insert a row with info about a screening strategy. Returns the ID in p_id.'
+    COMMENT 'Insert a row with info about a screening strategy. Returns the I'
 BEGIN
       INSERT INTO ScreeningStrategy (
         screeningOutputId, phiStart, phiEnd, rotation, exposureTime, 
@@ -8363,7 +8453,7 @@ CREATE PROCEDURE `insert_screening_strategy_sub_wedge`(
      p_comments varchar(255)
      )
     MODIFIES SQL DATA
-    COMMENT 'Insert a row with info about a screening strategy sub-wedge. Returns the ID in p_id.'
+    COMMENT 'Insert a row with info about a screening strategy sub-wedge. Ret'
 BEGIN
       INSERT INTO ScreeningStrategySubWedge (
         screeningStrategyWedgeId, subWedgeNumber, rotationAxis, axisStart, axisEnd, exposureTime, transmission, 
@@ -8407,7 +8497,7 @@ CREATE PROCEDURE `insert_screening_strategy_wedge`(
      p_wavelength	double
      )
     MODIFIES SQL DATA
-    COMMENT 'Insert a row with info about a screening strategy wedge. Returns the ID in p_id.'
+    COMMENT 'Insert a row with info about a screening strategy wedge. Returns'
 BEGIN
       INSERT INTO ScreeningStrategyWedge (
         screeningStrategyId, wedgeNumber, resolution, completeness, multiplicity, doseTotal, numberOfImages, 
@@ -8505,7 +8595,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_components_for_sample_type`(IN p_sampleTypeId int unsigned)
     READS SQL DATA
-    COMMENT 'Return multi-row result-set with component ID and other info about components associated with sample type p_sampleTypeId'
+    COMMENT 'Return multi-row result-set with component ID and other info abo'
 BEGIN
     IF NOT (p_sampleTypeId IS NULL) THEN
       SELECT
@@ -8542,7 +8632,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_component_lattices_for_component`(IN p_componentId int unsigned)
     READS SQL DATA
-    COMMENT 'Return multi-row result-set with component lattices for component p_componentId'
+    COMMENT 'Return multi-row result-set with component lattices for componen'
 BEGIN
     IF NOT (p_componentId IS NULL) THEN
 		SELECT spaceGroup "spaceGroup", cell_a "a", cell_b "b", cell_c "c", cell_alpha "alpha", cell_beta "beta", cell_gamma "gamma"
@@ -8570,7 +8660,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_containers_on_beamline_with_status`(IN p_beamline varchar(20), IN p_status varchar(40))
     READS SQL DATA
-    COMMENT 'Returns a multi-row result-set with info about when containers on p_beamline were given status p_status'
+    COMMENT 'Returns a multi-row result-set with info about when containers o'
 BEGIN
   IF NOT (p_status IS NULL) AND NOT (p_beamline IS NULL) THEN
     SELECT c.barcode "barcode", c.sampleChangerLocation "location", max(ch.blTimeStamp) "added"
@@ -8600,7 +8690,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_containers_submitted_non_ls`(IN p_beamline varchar(15))
     READS SQL DATA
-    COMMENT 'Returns multi-row result-set with info about submitted, not completed in_storage containers + subsamples'
+    COMMENT 'Returns multi-row result-set with info about submitted, not comp'
 BEGIN
 SELECT
   c.barcode "containerBarcode",
@@ -8652,7 +8742,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_container_info`(IN p_barcode varchar(45))
     READS SQL DATA
-    COMMENT 'Returns single row result-set with info about the container with barcode = p_barcode'
+    COMMENT 'Returns single row result-set with info about the container with'
 BEGIN
     IF NOT (p_barcode IS NULL) THEN 
 	  SELECT c.code as "name", c.barcode "barcode", c.containerStatus as "status", c.containerType "type", c.capacity "capacity",
@@ -8687,7 +8777,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_container_ls_position`(IN p_barcode varchar(45))
     READS SQL DATA
-    COMMENT 'Returns single row, single column result-set with the position of the container with barcode = p_barcode and containerStatus = in_localstorage'
+    COMMENT 'Returns single row, single column result-set with the position o'
 BEGIN
     IF NOT (p_barcode IS NULL) THEN 
 	  SELECT sampleChangerLocation "position"
@@ -8716,7 +8806,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_container_ls_queue`(IN p_beamline varchar(45))
     READS SQL DATA
-    COMMENT 'Returns a multi-row result-set with info about when containers on p_beamline were given status in_localstorage'
+    COMMENT 'Returns a multi-row result-set with info about when containers o'
 BEGIN
   IF NOT (p_beamline IS NULL) THEN
     SELECT c.barcode "barcode", c.sampleChangerLocation "location", max(ch.blTimeStamp) "added"
@@ -8746,7 +8836,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_container_on_gonio`(IN p_beamline varchar(45))
     READS SQL DATA
-    COMMENT 'Returns multi-row result-set with info about the containers on p_beamline with containerStatus = processing'
+    COMMENT 'Returns multi-row result-set with info about the containers on p'
 BEGIN
   IF NOT (p_beamline IS NULL) THEN
 	  SELECT c.code as "name", c.barcode "barcode", c.containerStatus as "status", c.containerType "type", c.capacity "capacity",
@@ -8780,7 +8870,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_container_queue_most_recent_completed_timestamp`(IN p_barcode varchar(45))
     READS SQL DATA
-    COMMENT 'Returns a single-row result-set with the most recent timestamp of when p_barcode in container queue was completed'
+    COMMENT 'Returns a single-row result-set with the most recent timestamp o'
 BEGIN
   IF NOT (p_barcode IS NULL) THEN
 	SELECT max(cq.completedTimeStamp) "completedTimeStamp"
@@ -8809,7 +8899,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_container_queue_timestamp`(IN p_barcode varchar(45))
     READS SQL DATA
-    COMMENT 'Returns a single-column, single-row result-set with timestamp of when container p_barcode entered container queue'
+    COMMENT 'Returns a single-column, single-row result-set with timestamp of'
 BEGIN
   IF NOT (p_barcode IS NULL) THEN
 	SELECT cq.createdTimeStamp "createdTimeStamp"
@@ -8839,7 +8929,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_container_subsamples`(IN p_barcode varchar(45))
     READS SQL DATA
-    COMMENT 'Returns a mutli-row result-set with general info about submitted subsamples on submitted container p_barcode'
+    COMMENT 'Returns a mutli-row result-set with general info about submitted'
 BEGIN
   IF NOT (p_barcode IS NULL) THEN
     SELECT blss.blSubSampleId "id", bls.location "sampleLocation", pos1.posX "ROIPos1x", pos1.posY "ROIPos1y", pos1.posZ "ROIPos1z", pos2.posX "ROIPos2x", pos2.posY "ROIPos2y", pos2.posZ "ROIPos2z", 
@@ -8987,6 +9077,51 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_dc_main` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_dc_main`(p_id int unsigned)
+    READS SQL DATA
+    COMMENT 'Returns a single-row result-set with the main data collection info for the given ID'
+BEGIN
+    IF p_id IS NOT NULL THEN
+		SELECT dataCollectionGroupId "groupId",
+			detectorId "detectorId",
+			blSubSampleId "blSubSampleId",
+			dataCollectionNumber "dcNumber",
+			startTime "startTime",
+			endTime "endTime",
+			runStatus "status",
+			numberOfImages "noImages",
+			startImageNumber "startImgNumber",
+			numberOfPasses "noPasses",
+			imageDirectory "imgDir",
+			imagePrefix "imgPrefix",
+			imageSuffix "imgSuffix",
+			fileTemplate "fileTemplate",
+			xtalSnapshotFullPath1 "snapshot1",
+			xtalSnapshotFullPath2 "snapshot2",
+			xtalSnapshotFullPath3 "snapshot3",
+			xtalSnapshotFullPath4 "snapshot4",
+			comments "comments"
+		FROM DataCollection 
+		WHERE dataCollectionId = p_id;
+    ELSE
+	  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory arguments p_id can not be NULL';
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `retrieve_dc_plans_for_sample` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -8999,7 +9134,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_dc_plans_for_sample`(IN p_sampleId int unsigned)
     READS SQL DATA
-    COMMENT 'Return multi-row result-set with info about data collection plans associated with sample p_sampleId'
+    COMMENT 'Return multi-row result-set with info about data collection plan'
 BEGIN
     IF NOT (p_sampleId IS NULL) THEN
     SELECT dp.diffractionPlanId "dcPlanId", dp.name "name", dp.experimentKind "experimentKind", 
@@ -9192,7 +9327,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_persons_for_proposal`(p_proposal_code varchar(5), p_proposal_number int)
     READS SQL DATA
-    COMMENT 'Returns a multi-row result-set with info about the persons for \nproposal p_proposal_code + p_proposal_number'
+    COMMENT 'Returns a multi-row result-set with info about the persons for \n'
 BEGIN
     IF p_proposal_code IS NOT NULL AND p_proposal_number IS NOT NULL THEN
       SELECT per.title, per.givenName, per.familyName, per.login, php.role
@@ -9202,6 +9337,93 @@ BEGIN
 	  WHERE p.proposalCode = p_proposal_code AND p.proposalNumber = p_proposal_number;
     ELSE
 	  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory arguments p_proposalCode + p_proposalNumber can not be NULL';
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_processing_job` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_processing_job`(p_id int unsigned)
+    READS SQL DATA
+    COMMENT 'Returns a single-row result-set with info about the processing job for the given ID'
+BEGIN
+    IF p_id IS NOT NULL THEN
+      SELECT dataCollectionId "dataCollectionId", displayName "displayName", comments "comments", 
+        recordTimestamp "recordTimestamp", recipe "recipe", automatic "automatic"
+      FROM ProcessingJob  
+	  WHERE processingJobId = p_id
+      LIMIT 1;
+    ELSE
+	  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory arguments p_id can not be NULL';
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_processing_job_image_sweeps` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_processing_job_image_sweeps`(p_id int unsigned)
+    READS SQL DATA
+    COMMENT 'Returns a multi-row result-set with sweep info for the given processing job ID'
+BEGIN
+    IF p_id IS NOT NULL THEN
+      SELECT processingJobImageSweepId "sweepId", dataCollectionId "dataCollectionId", startImage "startImage", endImage "endImage"
+      FROM ProcessingJobImageSweep  
+	  WHERE processingJobId = p_id
+      ORDER BY processingJobImageSweepId ASC
+      LIMIT 1000;
+    ELSE
+	  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory arguments p_id can not be NULL';
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_processing_job_parameters` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_processing_job_parameters`(p_id int unsigned)
+    READS SQL DATA
+    COMMENT 'Returns a multi-row result-set (max 1000) with parameters for the given processing job ID'
+BEGIN
+    IF p_id IS NOT NULL THEN
+      SELECT processingJobParameterId "parameterId", parameterKey "parameterKey", parameterValue "parameterValue"
+      FROM ProcessingJobParameter  
+	  WHERE processingJobId = p_id
+      ORDER BY processingJobParameterId ASC
+      LIMIT 1000;
+    ELSE
+	  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory arguments p_id can not be NULL';
 	END IF;
 END ;;
 DELIMITER ;
@@ -9223,7 +9445,7 @@ CREATE PROCEDURE `retrieve_reprocessing_by_dc`(
      p_dcId int(11) unsigned 
 )
     READS SQL DATA
-    COMMENT 'Retrieves reprocessing requests for a data collection (p_dcId). Two result-sets are returned. \nThe first r.s. contains the main reprocessing joined with any parameters.\nThe second r.s. contains its sweeps, if any.'
+    COMMENT 'Retrieves reprocessing requests for a data collection (p_dcId).'
 BEGIN
 	IF NOT p_dcId IS NULL THEN
 
@@ -9263,7 +9485,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_samples_assigned_for_proposal`(IN p_proposalCode varchar(3), IN p_proposalNumber int)
     READS SQL DATA
-    COMMENT 'Retrieve the user friendly name and ID of all assigned instances which have datacollection plans associated with them'
+    COMMENT 'Retrieve the user friendly name and ID of all assigned instances'
 BEGIN
     IF NOT (p_proposalCode IS NULL) AND NOT (p_proposalNumber IS NULL) THEN
         SELECT bls.blSampleId "sampleId", bls.name "sampleName", bls.code "sampleCode", bls.comments "sampleComments", bls.location "sampleLocation",
@@ -9306,7 +9528,7 @@ CREATE PROCEDURE `retrieve_samples_for_sample_group`(IN p_sampleGroupId int unsi
     COMMENT 'Return multi-row result set with sample IDs, order in the group and type for sample group p_sampleGroupId'
 BEGIN
     IF NOT (p_sampleGroupId IS NULL) THEN
-		SELECT blSampleId "sampleId", `type` "type", `order` "order"
+		SELECT blSampleId "sampleId", `type` "type", groupOrder "order"
         FROM BLSampleGroup_has_BLSample 
         WHERE blSampleGroupId = p_sampleGroupId
         ORDER BY blSampleId;
@@ -9334,7 +9556,7 @@ CREATE PROCEDURE `retrieve_sample_groups_for_sample`(IN p_sampleId int unsigned)
     COMMENT 'Return multi-row result-set with sample group IDs, order in the group and type for sample p_sampleId'
 BEGIN
     IF NOT (p_sampleId IS NULL) THEN
-        SELECT blSampleGroupId "sampleGroupId", `order`, `type` 
+        SELECT blSampleGroupId "sampleGroupId", groupOrder "order", `type` 
         FROM BLSampleGroup_has_BLSample 
         WHERE blSampleId=p_sampleId;
 	ELSE
@@ -9400,15 +9622,16 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `update_container_assign`(IN p_beamline varchar(20), IN p_registry_barcode varchar(45), IN p_position int)
     MODIFIES SQL DATA
-    COMMENT 'Toggles the assign status of a container with barcode = p_barcode by updating sampleChangerLocation, beamlineLocation, containerStatus'
+    COMMENT 'Toggles the assign status of a container with barcode = p_barcod'
 BEGIN
     DECLARE row_containerId int(10) unsigned DEFAULT NULL;
     DECLARE row_containerStatus varchar(45) DEFAULT NULL;
+    DECLARE row_dewarId int(10) unsigned DEFAULT NULL;
 
     IF NOT (p_registry_barcode IS NULL) THEN
         START TRANSACTION;
 
-        SELECT c.containerId, c.containerStatus INTO row_containerId, row_containerStatus
+        SELECT c.containerId, c.containerStatus, c.dewarId INTO row_containerId, row_containerStatus, row_dewarId
         FROM Container c
             INNER JOIN ContainerRegistry cr ON c.containerRegistryId = cr.containerRegistryId
         WHERE cr.barcode = p_registry_barcode
@@ -9424,6 +9647,16 @@ BEGIN
             containerStatus = IF(row_containerStatus='processing', 'at DLS', 'processing')
           WHERE
             containerId = row_containerId;
+
+		  IF row_containerStatus <> 'processing' THEN
+          -- Assign the dewar as well
+            UPDATE Dewar 
+            SET dewarStatus = 'processing', storageLocation = p_beamline
+            WHERE dewarId = row_dewarId;
+            
+            INSERT INTO DewarTransportHistory (dewarId, dewarStatus, storageLocation, arrivalDate) 
+              VALUES (row_dewarId, 'processing', p_beamline, NOW());
+          END IF;
 
           -- Add to history
           INSERT INTO ContainerHistory (containerId, location, status, beamlineName)
@@ -9454,7 +9687,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `update_container_ls_position`(IN p_barcode varchar(45), IN p_position int)
     MODIFIES SQL DATA
-    COMMENT 'Updates container sampleChangerLocation for barcode = p_barcode, then calls update_container_status(p_barcode, in_localstorage)'
+    COMMENT 'Updates container sampleChangerLocation for barcode = p_barcode,'
 BEGIN
 	IF NOT (p_barcode IS NULL) THEN
 	  UPDATE Container
@@ -9483,7 +9716,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `update_container_status`(IN p_barcode varchar(45), IN p_status varchar(45))
     MODIFIES SQL DATA
-    COMMENT 'Set container containerStatus = p_status for barcode = p_barcode. Only a defined range of statuses are accepted.'
+    COMMENT 'Set container containerStatus = p_status for barcode = p_barcode'
 BEGIN
   DECLARE row_containerId int(11) unsigned DEFAULT NULL;
   DECLARE row_scLoc varchar(20) DEFAULT NULL;
@@ -10253,7 +10486,7 @@ CREATE PROCEDURE `upsert_dc_main_v2`(
      p_comments varchar(1024)                                        
 )
     MODIFIES SQL DATA
-    COMMENT 'Inserts (if p_id not provided) or updates a row in DataCollection, returns ID in p_id. '
+    COMMENT 'Inserts (if p_id not provided) or updates a row in DataCollectio'
 BEGIN
     INSERT INTO DataCollection (dataCollectionId, dataCollectionGroupId, sessionId, blSampleId, blSubSampleId, detectorId, datacollectionNumber, startTime, endTime, 
         runStatus, numberOfImages, startImageNumber, numberOfPasses, imageDirectory, imagePrefix, imageSuffix, fileTemplate, 
@@ -10387,7 +10620,7 @@ CREATE PROCEDURE `upsert_mrrun`(
      p_endtime datetime
      )
     MODIFIES SQL DATA
-    COMMENT 'Update or insert new entry with info about a MX molecular replacements run, e.g. Dimple'
+    COMMENT 'Update or insert new entry with info about a MX molecular replac'
 BEGIN
     IF p_parentId IS NOT NULL THEN
       INSERT INTO MXMRRun (mxMRRunId, autoProcScalingId, success, message, pipeline, inputCoordFile, outputCoordFile, inputMTZFile, outputMTZFile, 
@@ -10460,7 +10693,7 @@ CREATE PROCEDURE `upsert_mrrun_blob`(
      p_view3 varchar(255) 
   )
     MODIFIES SQL DATA
-    COMMENT 'Update or insert new entry with info about views (image paths) for an MX molecular replacement run, e.g. Dimple.'
+    COMMENT 'Update or insert new entry with info about views (image paths) f'
 BEGIN
   IF p_parentId IS NOT NULL THEN
     INSERT INTO MXMRRunBlob (mxMRRunBlobId, mxMRRunId, view1, view2, view3) 
@@ -10563,7 +10796,7 @@ CREATE PROCEDURE `upsert_processing_integration`(
      p_anomalous float
   )
     MODIFIES SQL DATA
-    COMMENT 'Inserts/updates row in AutoProcIntegration, ID returned in p_id. Also creates/updates link to AutoProcScaling.'
+    COMMENT 'Inserts/updates row in AutoProcIntegration, ID returned in p_id.'
 BEGIN
       INSERT INTO AutoProcIntegration (autoProcIntegrationId, datacollectionId, autoProcProgramId, startImageNumber, endImageNumber, 
         refinedDetectorDistance, refinedXBeam, refinedYBeam, rotationAxisX, rotationAxisY, rotationAxisZ, beamVectorX, beamVectorY, beamVectorZ, 
@@ -10633,7 +10866,7 @@ CREATE PROCEDURE `upsert_processing_program`(
      p_startTimestamp datetime,
      p_updateTimestamp datetime,
      p_environment varchar(255),
-	 p_reprocessingId int(11) unsigned,
+	 p_processingJobId int(11) unsigned,
 	 p_recordTimestamp datetime
   )
     MODIFIES SQL DATA
@@ -10645,15 +10878,15 @@ BEGIN
     -- DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
     
 	IF p_id IS NULL THEN
-        -- creates a new row in AutoProcProgram with reprocessingID set, and all the other values populated with the given values,
-	    INSERT INTO AutoProcProgram (processingStatus, processingStartTime, processingEndTime, processingMessage, reprocessingId,
+        -- creates a new row in AutoProcProgram with processingJobId set, and all the other values populated with the given values,
+	    INSERT INTO AutoProcProgram (processingStatus, processingStartTime, processingEndTime, processingMessage, processingJobId,
 		  processingCommandLine, processingPrograms, processingEnvironment, recordTimestamp)
 		  VALUES (
               p_status, 
               p_startTimestamp,
               p_updateTimestamp,
               p_updateMessage, 
-              p_reprocessingId, 
+              p_processingJobId, 
               p_commandLine,
               p_programs,
               p_environment,
@@ -10686,7 +10919,7 @@ BEGIN
               processingEndTime = IFNULL(p_updateTimestamp, NOW()), 
               -- If update message is not NULL then write update message to processingMessage.
               processingMessage = IFNULL(p_updateMessage, processingMessage), 
-              reprocessingId = IFNULL(p_recordTimestamp, reprocessingId),
+              processingJobId = IFNULL(p_processingJobId, processingJobId),
               processingCommandLine = IFNULL(p_commandLine, processingCommandLine),
               processingPrograms = IFNULL(p_programs, processingPrograms),
 			  processingEnvironment = IFNULL(p_environment, processingEnvironment)
@@ -10720,7 +10953,7 @@ CREATE PROCEDURE `upsert_processing_program_attachment`(
      p_type enum('Log','Result','Graph')
   )
     MODIFIES SQL DATA
-    COMMENT 'Inserts or updates existing row in AutoProcProgramAttachment. Param p_parentid is mandatory.'
+    COMMENT 'Inserts or updates existing row in AutoProcProgramAttachment. Pa'
 BEGIN
 	IF NOT (p_parentid IS NULL) THEN
       INSERT INTO AutoProcProgramAttachment (autoProcProgramAttachmentId, autoProcProgramId, filename, filepath, filetype, recordtimestamp)
@@ -10768,7 +11001,7 @@ CREATE PROCEDURE `upsert_sample_image_analysis`(
      p_matchEndTS timestamp
      )
     MODIFIES SQL DATA
-    COMMENT 'Insert or update info about the sample image analysis for the most recent sample image on \ncontainer p_containerBarcode in location p_sampleLocation. \nFor updates, specify the ID of the row in p_id. \nFor inserts, the ID is returned in p_id.'
+    COMMENT 'Insert or update info about the sample image analysis for the mo'
 BEGIN
       DECLARE row_sampleImageId int(11) unsigned;
       
@@ -10828,7 +11061,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_Log4Stat` AS select `s`.`id` AS `id`,`s`.`priority` AS `priority`,`s`.`timestamp` AS `timestamp`,`s`.`msg` AS `msg`,`s`.`detail` AS `detail`,`s`.`value` AS `value` from `Log4Stat` `s` where (((`s`.`detail` like 'fx%') or (`s`.`detail` like 'ifx%') or (`s`.`detail` like 'mx%') or (`s`.`detail` like 'ix%') or (`s`.`detail` like 'bm14u%') or (`s`.`detail` like 'bm161%') or (`s`.`detail` like 'bm162%')) and (`s`.`detail` <> 'fx999') and (`s`.`detail` <> 'ifx999') and (`s`.`detail` <> 'mx415')) */;
+/*!50001 VIEW `v_Log4Stat` AS select `s`.`id` AS `id`,`s`.`priority` AS `priority`,`s`.`timestamp` AS `timestamp`,`s`.`msg` AS `msg`,`s`.`detail` AS `detail`,`s`.`value` AS `value` from `Log4Stat` `s` where (`s`.`detail` like 'fx%' or `s`.`detail` like 'ifx%' or `s`.`detail` like 'mx%' or `s`.`detail` like 'ix%' or `s`.`detail` like 'bm14u%' or `s`.`detail` like 'bm161%' or `s`.`detail` like 'bm162%') and `s`.`detail` <> 'fx999' and `s`.`detail` <> 'ifx999' and `s`.`detail` <> 'mx415' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -10847,7 +11080,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_dewar` AS select `p`.`proposalId` AS `proposalId`,`s`.`shippingId` AS `shippingId`,`s`.`shippingName` AS `shippingName`,`d`.`dewarId` AS `dewarId`,`d`.`code` AS `dewarName`,`d`.`dewarStatus` AS `dewarStatus`,`p`.`proposalCode` AS `proposalCode`,`p`.`proposalNumber` AS `proposalNumber`,`s`.`creationDate` AS `creationDate`,`s`.`shippingType` AS `shippingType`,`d`.`barCode` AS `barCode`,`s`.`shippingStatus` AS `shippingStatus`,`ss`.`beamLineName` AS `beamLineName`,count(distinct `h1`.`DewarTransportHistoryId`) AS `nbEvents`,count(distinct `h2`.`DewarTransportHistoryId`) AS `storesin`,count(if((`bls`.`code` is not null),1,NULL)) AS `nbSamples` from (((((((`Proposal` `p` join `Shipping` `s` on((`s`.`proposalId` = `p`.`proposalId`))) join `Dewar` `d` on((`d`.`shippingId` = `s`.`shippingId`))) left join `Container` `c` on((`c`.`dewarId` = `d`.`dewarId`))) left join `BLSession` `ss` on((`ss`.`sessionId` = `d`.`firstExperimentId`))) left join `BLSample` `bls` on((`bls`.`containerId` = `c`.`containerId`))) left join `DewarTransportHistory` `h1` on(((`h1`.`dewarId` = `d`.`dewarId`) and ((`h1`.`dewarStatus` = 'at ESRF') or (`h1`.`dewarStatus` = 'sent to User'))))) left join `DewarTransportHistory` `h2` on(((`h2`.`dewarId` = `d`.`dewarId`) and (`h2`.`storageLocation` = 'STORES-IN')))) where (((`p`.`proposalCode` like 'MX%') or (`p`.`proposalCode` like 'FX%') or (`p`.`proposalCode` like 'IFX%') or (`p`.`proposalCode` like 'IX%') or (`p`.`proposalCode` like 'BM14U%') or (`p`.`proposalCode` like 'bm161%') or (`p`.`proposalCode` like 'bm162%')) and ((`p`.`proposalCode` <> 'FX') or (`p`.`proposalNumber` <> '999')) and ((`p`.`proposalCode` <> 'IFX') or (`p`.`proposalNumber` <> '999')) and ((`p`.`proposalCode` <> 'MX') or (`p`.`proposalNumber` <> '415')) and (`d`.`type` = 'Dewar') and (`s`.`creationDate` is not null)) group by `d`.`dewarId` */;
+/*!50001 VIEW `v_dewar` AS select `p`.`proposalId` AS `proposalId`,`s`.`shippingId` AS `shippingId`,`s`.`shippingName` AS `shippingName`,`d`.`dewarId` AS `dewarId`,`d`.`code` AS `dewarName`,`d`.`dewarStatus` AS `dewarStatus`,`p`.`proposalCode` AS `proposalCode`,`p`.`proposalNumber` AS `proposalNumber`,`s`.`creationDate` AS `creationDate`,`s`.`shippingType` AS `shippingType`,`d`.`barCode` AS `barCode`,`s`.`shippingStatus` AS `shippingStatus`,`ss`.`beamLineName` AS `beamLineName`,count(distinct `h1`.`DewarTransportHistoryId`) AS `nbEvents`,count(distinct `h2`.`DewarTransportHistoryId`) AS `storesin`,count(if(`bls`.`code` is not null,1,NULL)) AS `nbSamples` from (((((((`Proposal` `p` join `Shipping` `s` on(`s`.`proposalId` = `p`.`proposalId`)) join `Dewar` `d` on(`d`.`shippingId` = `s`.`shippingId`)) left join `Container` `c` on(`c`.`dewarId` = `d`.`dewarId`)) left join `BLSession` `ss` on(`ss`.`sessionId` = `d`.`firstExperimentId`)) left join `BLSample` `bls` on(`bls`.`containerId` = `c`.`containerId`)) left join `DewarTransportHistory` `h1` on(`h1`.`dewarId` = `d`.`dewarId` and (`h1`.`dewarStatus` = 'at ESRF' or `h1`.`dewarStatus` = 'sent to User'))) left join `DewarTransportHistory` `h2` on(`h2`.`dewarId` = `d`.`dewarId` and `h2`.`storageLocation` = 'STORES-IN')) where (`p`.`proposalCode` like 'MX%' or `p`.`proposalCode` like 'FX%' or `p`.`proposalCode` like 'IFX%' or `p`.`proposalCode` like 'IX%' or `p`.`proposalCode` like 'BM14U%' or `p`.`proposalCode` like 'bm161%' or `p`.`proposalCode` like 'bm162%') and (`p`.`proposalCode` <> 'FX' or `p`.`proposalNumber` <> '999') and (`p`.`proposalCode` <> 'IFX' or `p`.`proposalNumber` <> '999') and (`p`.`proposalCode` <> 'MX' or `p`.`proposalNumber` <> '415') and `d`.`type` = 'Dewar' and `s`.`creationDate` is not null group by `d`.`dewarId` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -10866,7 +11099,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_dewarBeamline` AS select `d`.`beamLineName` AS `beamLineName`,count(0) AS `COUNT(*)` from `v_dewar` `d` where (`d`.`beamLineName` is not null) group by `d`.`beamLineName` */;
+/*!50001 VIEW `v_dewarBeamline` AS select `d`.`beamLineName` AS `beamLineName`,count(0) AS `COUNT(*)` from `v_dewar` `d` where `d`.`beamLineName` is not null group by `d`.`beamLineName` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -10885,7 +11118,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_dewarBeamlineByWeek` AS select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`beamLineName` like 'ID14%'),1,NULL)) AS `ID14`,count(if((`d`.`beamLineName` like 'ID23%'),1,NULL)) AS `ID23`,count(if((`d`.`beamLineName` like 'ID29%'),1,NULL)) AS `ID29`,count(if((`d`.`beamLineName` like 'BM14%'),1,NULL)) AS `BM14` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%x-%v')))) group by `w`.`num` order by `w`.`num` */;
+/*!50001 VIEW `v_dewarBeamlineByWeek` AS select substr(`w`.`num`,6) AS `Week`,count(if(`d`.`beamLineName` like 'ID14%',1,NULL)) AS `ID14`,count(if(`d`.`beamLineName` like 'ID23%',1,NULL)) AS `ID23`,count(if(`d`.`beamLineName` like 'ID29%',1,NULL)) AS `ID29`,count(if(`d`.`beamLineName` like 'BM14%',1,NULL)) AS `BM14` from (`v_week` `w` left join `v_dewar` `d` on(`w`.`num` = date_format(`d`.`creationDate`,'%x-%v'))) group by `w`.`num` order by `w`.`num` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -10904,7 +11137,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_dewarByWeek` AS select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`shippingType` = 'DewarTracking'),1,NULL)) AS `Dewars Tracked`,count(if(((`d`.`proposalCode` is not null) and ((`d`.`shippingType` <> 'DewarTracking') or isnull(`d`.`shippingType`))),1,NULL)) AS `Dewars Non-Tracked` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by `w`.`num` */;
+/*!50001 VIEW `v_dewarByWeek` AS select substr(`w`.`num`,6) AS `Week`,count(if(`d`.`shippingType` = 'DewarTracking',1,NULL)) AS `Dewars Tracked`,count(if(`d`.`proposalCode` is not null and (`d`.`shippingType` <> 'DewarTracking' or `d`.`shippingType` is null),1,NULL)) AS `Dewars Non-Tracked` from (`v_week` `w` left join `v_dewar` `d` on(`w`.`num` = date_format(`d`.`creationDate`,'%Y-%v'))) group by substr(`w`.`num`,6) order by `w`.`num` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -10923,7 +11156,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_dewarByWeekTotal` AS select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`shippingType` = 'DewarTracking'),1,NULL)) AS `Dewars Tracked`,count(if(((`d`.`proposalCode` is not null) and ((`d`.`shippingType` <> 'DewarTracking') or isnull(`d`.`shippingType`))),1,NULL)) AS `Dewars Non-Tracked`,count(if((`d`.`proposalCode` is not null),1,NULL)) AS `Total` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by substr(`w`.`num`,6) */;
+/*!50001 VIEW `v_dewarByWeekTotal` AS select substr(`w`.`num`,6) AS `Week`,count(if(`d`.`shippingType` = 'DewarTracking',1,NULL)) AS `Dewars Tracked`,count(if(`d`.`proposalCode` is not null and (`d`.`shippingType` <> 'DewarTracking' or `d`.`shippingType` is null),1,NULL)) AS `Dewars Non-Tracked`,count(if(`d`.`proposalCode` is not null,1,NULL)) AS `Total` from (`v_week` `w` left join `v_dewar` `d` on(`w`.`num` = date_format(`d`.`creationDate`,'%Y-%v'))) group by substr(`w`.`num`,6) order by substr(`w`.`num`,6) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -10942,7 +11175,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_dewarList` AS select concat(`d`.`proposalCode`,`d`.`proposalNumber`) AS `proposal`,`d`.`shippingName` AS `shippingName`,`d`.`dewarName` AS `dewarName`,`d`.`barCode` AS `barCode`,date_format(`d`.`creationDate`,'%d/%m/%Y') AS `creationDate`,`d`.`shippingType` AS `shippingType`,count(distinct `h`.`DewarTransportHistoryId`) AS `nbEvents`,`d`.`dewarStatus` AS `dewarStatus`,`d`.`shippingStatus` AS `shippingStatus`,count(if((`bls`.`blSampleId` is not null),1,NULL)) AS `nbSamples` from (((`v_dewar` `d` left join `Container` `c` on((`c`.`dewarId` = `d`.`dewarId`))) left join `BLSample` `bls` on((`bls`.`containerId` = `c`.`containerId`))) left join `DewarTransportHistory` `h` on((`h`.`dewarId` = `d`.`dewarId`))) group by `d`.`dewarId` order by `d`.`creationDate` desc */;
+/*!50001 VIEW `v_dewarList` AS select concat(`d`.`proposalCode`,`d`.`proposalNumber`) AS `proposal`,`d`.`shippingName` AS `shippingName`,`d`.`dewarName` AS `dewarName`,`d`.`barCode` AS `barCode`,date_format(`d`.`creationDate`,'%d/%m/%Y') AS `creationDate`,`d`.`shippingType` AS `shippingType`,count(distinct `h`.`DewarTransportHistoryId`) AS `nbEvents`,`d`.`dewarStatus` AS `dewarStatus`,`d`.`shippingStatus` AS `shippingStatus`,count(if(`bls`.`blSampleId` is not null,1,NULL)) AS `nbSamples` from (((`v_dewar` `d` left join `Container` `c` on(`c`.`dewarId` = `d`.`dewarId`)) left join `BLSample` `bls` on(`bls`.`containerId` = `c`.`containerId`)) left join `DewarTransportHistory` `h` on(`h`.`dewarId` = `d`.`dewarId`)) group by `d`.`dewarId` order by `d`.`creationDate` desc */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -10980,7 +11213,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_dewarProposalCodeByWeek` AS select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`proposalCode` = 'MX'),1,NULL)) AS `MX`,count(if((`d`.`proposalCode` = 'FX'),1,NULL)) AS `FX`,count(if((`d`.`proposalCode` = 'BM14U'),1,NULL)) AS `BM14U`,count(if((`d`.`proposalCode` = 'BM161'),1,NULL)) AS `BM161`,count(if((`d`.`proposalCode` = 'BM162'),1,NULL)) AS `BM162`,count(if(((`d`.`proposalCode` <> 'MX') and (`d`.`proposalCode` <> 'FX') and (`d`.`proposalCode` <> 'BM14U') and (`d`.`proposalCode` <> 'BM161') and (`d`.`proposalCode` <> 'BM162')),1,NULL)) AS `Others` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by substr(`w`.`num`,6) */;
+/*!50001 VIEW `v_dewarProposalCodeByWeek` AS select substr(`w`.`num`,6) AS `Week`,count(if(`d`.`proposalCode` = 'MX',1,NULL)) AS `MX`,count(if(`d`.`proposalCode` = 'FX',1,NULL)) AS `FX`,count(if(`d`.`proposalCode` = 'BM14U',1,NULL)) AS `BM14U`,count(if(`d`.`proposalCode` = 'BM161',1,NULL)) AS `BM161`,count(if(`d`.`proposalCode` = 'BM162',1,NULL)) AS `BM162`,count(if(`d`.`proposalCode` <> 'MX' and `d`.`proposalCode` <> 'FX' and `d`.`proposalCode` <> 'BM14U' and `d`.`proposalCode` <> 'BM161' and `d`.`proposalCode` <> 'BM162',1,NULL)) AS `Others` from (`v_week` `w` left join `v_dewar` `d` on(`w`.`num` = date_format(`d`.`creationDate`,'%Y-%v'))) group by substr(`w`.`num`,6) order by substr(`w`.`num`,6) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -10999,7 +11232,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_hour` AS select date_format((now() - interval 23 hour),_utf8'%Y-%m-%d %H') AS `num` union select date_format((now() - interval 22 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 22 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 21 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 21 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 20 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 20 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 19 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 19 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 18 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 18 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 17 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 17 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 16 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 16 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 15 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 15 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 14 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 14 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 13 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 13 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 12 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 12 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 11 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 11 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 10 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 10 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 9 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 9 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 8 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 8 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 7 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 7 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 6 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 6 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 5 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 4 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 3 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 2 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 1 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 0 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 HOUR),'%Y-%m-%d %H')` */;
+/*!50001 VIEW `v_hour` AS select date_format(current_timestamp() - interval 23 hour,_utf8'%Y-%m-%d %H') AS `num` union select date_format(current_timestamp() - interval 22 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 22 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 21 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 21 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 20 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 20 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 19 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 19 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 18 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 18 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 17 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 17 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 16 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 16 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 15 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 15 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 14 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 14 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 13 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 13 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 12 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 12 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 11 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 11 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 10 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 10 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 9 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 9 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 8 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 8 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 7 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 7 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 6 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 6 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 5 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 4 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 3 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 2 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 1 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 HOUR),'%Y-%m-%d %H')` union select date_format(current_timestamp() - interval 0 hour,_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 HOUR),'%Y-%m-%d %H')` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -11018,7 +11251,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_logonByHour` AS select date_format(`w`.`num`,'%H') AS `Hour`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_hour` `w` left join `v_Log4Stat` `s` on(((`w`.`num` = date_format(`s`.`timestamp`,'%Y-%m-%d %H')) and (`s`.`msg` = 'LOGON')))) group by date_format(`w`.`num`,'%H') order by `w`.`num` */;
+/*!50001 VIEW `v_logonByHour` AS select date_format(`w`.`num`,'%H') AS `Hour`,count(distinct `s`.`detail`) AS `Distinct logins`,count(`s`.`detail`) - count(distinct `s`.`detail`) AS `Total logins` from (`v_hour` `w` left join `v_Log4Stat` `s` on(`w`.`num` = date_format(`s`.`timestamp`,'%Y-%m-%d %H') and `s`.`msg` = 'LOGON')) group by date_format(`w`.`num`,'%H') order by `w`.`num` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -11037,7 +11270,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_logonByHour2` AS select date_format(`w`.`num`,'%H') AS `Hour`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_hour` `w` left join `v_Log4Stat` `s` on(((`w`.`num` = date_format(`s`.`timestamp`,'%Y-%m-%d %H')) and (`s`.`msg` = 'LOGON') and (`s`.`priority` = 'ISPYB2_STAT')))) group by date_format(`w`.`num`,'%H') order by `w`.`num` */;
+/*!50001 VIEW `v_logonByHour2` AS select date_format(`w`.`num`,'%H') AS `Hour`,count(distinct `s`.`detail`) AS `Distinct logins`,count(`s`.`detail`) - count(distinct `s`.`detail`) AS `Total logins` from (`v_hour` `w` left join `v_Log4Stat` `s` on(`w`.`num` = date_format(`s`.`timestamp`,'%Y-%m-%d %H') and `s`.`msg` = 'LOGON' and `s`.`priority` = 'ISPYB2_STAT')) group by date_format(`w`.`num`,'%H') order by `w`.`num` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -11056,7 +11289,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_logonByMonthDay` AS select date_format(`w`.`num`,'%d/%m') AS `Day`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_monthDay` `w` left join `v_Log4Stat` `s` on(((`w`.`num` = date_format(`s`.`timestamp`,'%Y-%m-%d')) and (`s`.`msg` = 'LOGON')))) group by date_format(`w`.`num`,'%d/%m') order by `w`.`num` */;
+/*!50001 VIEW `v_logonByMonthDay` AS select date_format(`w`.`num`,'%d/%m') AS `Day`,count(distinct `s`.`detail`) AS `Distinct logins`,count(`s`.`detail`) - count(distinct `s`.`detail`) AS `Total logins` from (`v_monthDay` `w` left join `v_Log4Stat` `s` on(`w`.`num` = date_format(`s`.`timestamp`,'%Y-%m-%d') and `s`.`msg` = 'LOGON')) group by date_format(`w`.`num`,'%d/%m') order by `w`.`num` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -11075,7 +11308,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_logonByMonthDay2` AS select date_format(`w`.`num`,'%d/%m') AS `Day`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_monthDay` `w` left join `v_Log4Stat` `s` on(((`w`.`num` = date_format(`s`.`timestamp`,'%Y-%m-%d')) and (`s`.`msg` = 'LOGON') and (`s`.`priority` = 'ISPYB2_STAT')))) group by date_format(`w`.`num`,'%d/%m') order by `w`.`num` */;
+/*!50001 VIEW `v_logonByMonthDay2` AS select date_format(`w`.`num`,'%d/%m') AS `Day`,count(distinct `s`.`detail`) AS `Distinct logins`,count(`s`.`detail`) - count(distinct `s`.`detail`) AS `Total logins` from (`v_monthDay` `w` left join `v_Log4Stat` `s` on(`w`.`num` = date_format(`s`.`timestamp`,'%Y-%m-%d') and `s`.`msg` = 'LOGON' and `s`.`priority` = 'ISPYB2_STAT')) group by date_format(`w`.`num`,'%d/%m') order by `w`.`num` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -11094,7 +11327,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_logonByWeek` AS select substr(`w`.`num`,6) AS `Week`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_week` `w` left join `v_Log4Stat` `s` on(((`w`.`num` = date_format(`s`.`timestamp`,'%Y-%v')) and (`s`.`msg` = 'LOGON')))) group by substr(`w`.`num`,6) order by `w`.`num` */;
+/*!50001 VIEW `v_logonByWeek` AS select substr(`w`.`num`,6) AS `Week`,count(distinct `s`.`detail`) AS `Distinct logins`,count(`s`.`detail`) - count(distinct `s`.`detail`) AS `Total logins` from (`v_week` `w` left join `v_Log4Stat` `s` on(`w`.`num` = date_format(`s`.`timestamp`,'%Y-%v') and `s`.`msg` = 'LOGON')) group by substr(`w`.`num`,6) order by `w`.`num` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -11113,7 +11346,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_logonByWeek2` AS select substr(`w`.`num`,6) AS `Week`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_week` `w` left join `v_Log4Stat` `s` on(((`w`.`num` = date_format(`s`.`timestamp`,'%Y-%v')) and (`s`.`msg` = 'LOGON') and (`s`.`priority` = 'ISPYB2_STAT')))) group by substr(`w`.`num`,6) order by `w`.`num` */;
+/*!50001 VIEW `v_logonByWeek2` AS select substr(`w`.`num`,6) AS `Week`,count(distinct `s`.`detail`) AS `Distinct logins`,count(`s`.`detail`) - count(distinct `s`.`detail`) AS `Total logins` from (`v_week` `w` left join `v_Log4Stat` `s` on(`w`.`num` = date_format(`s`.`timestamp`,'%Y-%v') and `s`.`msg` = 'LOGON' and `s`.`priority` = 'ISPYB2_STAT')) group by substr(`w`.`num`,6) order by `w`.`num` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -11132,7 +11365,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_logonByWeekDay` AS select date_format(`w`.`day`,'%W') AS `Day`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_weekDay` `w` left join `v_Log4Stat` `s` on(((`w`.`day` = date_format(`s`.`timestamp`,'%Y-%m-%d')) and (`s`.`msg` = 'LOGON')))) group by `w`.`day` order by `w`.`day` */;
+/*!50001 VIEW `v_logonByWeekDay` AS select date_format(`w`.`day`,'%W') AS `Day`,count(distinct `s`.`detail`) AS `Distinct logins`,count(`s`.`detail`) - count(distinct `s`.`detail`) AS `Total logins` from (`v_weekDay` `w` left join `v_Log4Stat` `s` on(`w`.`day` = date_format(`s`.`timestamp`,'%Y-%m-%d') and `s`.`msg` = 'LOGON')) group by `w`.`day` order by `w`.`day` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -11151,7 +11384,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_logonByWeekDay2` AS select date_format(`w`.`day`,'%W') AS `Day`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_weekDay` `w` left join `v_Log4Stat` `s` on(((`w`.`day` = date_format(`s`.`timestamp`,'%Y-%m-%d')) and (`s`.`msg` = 'LOGON') and (`s`.`priority` = 'ISPYB2_STAT')))) group by `w`.`day` order by `w`.`day` */;
+/*!50001 VIEW `v_logonByWeekDay2` AS select date_format(`w`.`day`,'%W') AS `Day`,count(distinct `s`.`detail`) AS `Distinct logins`,count(`s`.`detail`) - count(distinct `s`.`detail`) AS `Total logins` from (`v_weekDay` `w` left join `v_Log4Stat` `s` on(`w`.`day` = date_format(`s`.`timestamp`,'%Y-%m-%d') and `s`.`msg` = 'LOGON' and `s`.`priority` = 'ISPYB2_STAT')) group by `w`.`day` order by `w`.`day` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -11170,7 +11403,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_monthDay` AS select date_format((now() - interval 31 day),_utf8'%Y-%m-%d') AS `num` union select date_format((now() - interval 30 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 30 DAY),'%Y-%m-%d')` union select date_format((now() - interval 29 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 29 DAY),'%Y-%m-%d')` union select date_format((now() - interval 28 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 28 DAY),'%Y-%m-%d')` union select date_format((now() - interval 27 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 27 DAY),'%Y-%m-%d')` union select date_format((now() - interval 26 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 26 DAY),'%Y-%m-%d')` union select date_format((now() - interval 25 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 25 DAY),'%Y-%m-%d')` union select date_format((now() - interval 24 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 24 DAY),'%Y-%m-%d')` union select date_format((now() - interval 23 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 23 DAY),'%Y-%m-%d')` union select date_format((now() - interval 22 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 22 DAY),'%Y-%m-%d')` union select date_format((now() - interval 21 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 21 DAY),'%Y-%m-%d')` union select date_format((now() - interval 20 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 20 DAY),'%Y-%m-%d')` union select date_format((now() - interval 19 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 19 DAY),'%Y-%m-%d')` union select date_format((now() - interval 18 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 18 DAY),'%Y-%m-%d')` union select date_format((now() - interval 17 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 17 DAY),'%Y-%m-%d')` union select date_format((now() - interval 16 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 16 DAY),'%Y-%m-%d')` union select date_format((now() - interval 15 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 15 DAY),'%Y-%m-%d')` union select date_format((now() - interval 14 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 14 DAY),'%Y-%m-%d')` union select date_format((now() - interval 13 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 13 DAY),'%Y-%m-%d')` union select date_format((now() - interval 12 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 12 DAY),'%Y-%m-%d')` union select date_format((now() - interval 11 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 11 DAY),'%Y-%m-%d')` union select date_format((now() - interval 10 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 10 DAY),'%Y-%m-%d')` union select date_format((now() - interval 9 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 9 DAY),'%Y-%m-%d')` union select date_format((now() - interval 8 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 8 DAY),'%Y-%m-%d')` union select date_format((now() - interval 7 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 7 DAY),'%Y-%m-%d')` union select date_format((now() - interval 6 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 6 DAY),'%Y-%m-%d')` union select date_format((now() - interval 5 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 DAY),'%Y-%m-%d')` union select date_format((now() - interval 4 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 DAY),'%Y-%m-%d')` union select date_format((now() - interval 3 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 DAY),'%Y-%m-%d')` union select date_format((now() - interval 2 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 DAY),'%Y-%m-%d')` union select date_format((now() - interval 1 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')` union select date_format((now() - interval 0 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 DAY),'%Y-%m-%d')` */;
+/*!50001 VIEW `v_monthDay` AS select date_format(current_timestamp() - interval 31 day,_utf8'%Y-%m-%d') AS `num` union select date_format(current_timestamp() - interval 30 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 30 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 29 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 29 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 28 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 28 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 27 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 27 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 26 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 26 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 25 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 25 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 24 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 24 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 23 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 23 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 22 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 22 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 21 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 21 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 20 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 20 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 19 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 19 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 18 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 18 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 17 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 17 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 16 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 16 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 15 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 15 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 14 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 14 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 13 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 13 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 12 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 12 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 11 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 11 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 10 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 10 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 9 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 9 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 8 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 8 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 7 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 7 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 6 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 6 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 5 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 4 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 3 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 2 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 1 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 0 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 DAY),'%Y-%m-%d')` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -11208,7 +11441,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_sample` AS select `d`.`proposalId` AS `proposalId`,`d`.`shippingId` AS `shippingId`,`d`.`dewarId` AS `dewarId`,`c`.`containerId` AS `containerId`,`bls`.`blSampleId` AS `blSampleId`,`d`.`proposalCode` AS `proposalCode`,`d`.`proposalNumber` AS `proposalNumber`,`d`.`creationDate` AS `creationDate`,`d`.`shippingType` AS `shippingType`,`d`.`barCode` AS `barCode`,`d`.`shippingStatus` AS `shippingStatus` from ((`BLSample` `bls` join `Container` `c` on((`c`.`containerId` = `bls`.`containerId`))) join `v_dewar` `d` on((`d`.`dewarId` = `c`.`dewarId`))) */;
+/*!50001 VIEW `v_sample` AS select `d`.`proposalId` AS `proposalId`,`d`.`shippingId` AS `shippingId`,`d`.`dewarId` AS `dewarId`,`c`.`containerId` AS `containerId`,`bls`.`blSampleId` AS `blSampleId`,`d`.`proposalCode` AS `proposalCode`,`d`.`proposalNumber` AS `proposalNumber`,`d`.`creationDate` AS `creationDate`,`d`.`shippingType` AS `shippingType`,`d`.`barCode` AS `barCode`,`d`.`shippingStatus` AS `shippingStatus` from ((`BLSample` `bls` join `Container` `c` on(`c`.`containerId` = `bls`.`containerId`)) join `v_dewar` `d` on(`d`.`dewarId` = `c`.`dewarId`)) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -11227,7 +11460,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_sampleByWeek` AS select substr(`w`.`num`,6) AS `Week`,if((`w`.`num` <= date_format(now(),'%Y-%v')),count(if((`bls`.`proposalCode` is not null),1,NULL)),NULL) AS `Samples` from (`v_week` `w` left join `v_sample` `bls` on((`w`.`num` = date_format(`bls`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by substr(`w`.`num`,6) */;
+/*!50001 VIEW `v_sampleByWeek` AS select substr(`w`.`num`,6) AS `Week`,if(`w`.`num` <= date_format(current_timestamp(),'%Y-%v'),count(if(`bls`.`proposalCode` is not null,1,NULL)),NULL) AS `Samples` from (`v_week` `w` left join `v_sample` `bls` on(`w`.`num` = date_format(`bls`.`creationDate`,'%Y-%v'))) group by substr(`w`.`num`,6) order by substr(`w`.`num`,6) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -11246,7 +11479,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_week` AS select date_format((now() - interval 52 week),_utf8'%x-%v') AS `num` union select date_format((now() - interval 51 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 51 WEEK),'%x-%v')` union select date_format((now() - interval 50 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 50 WEEK),'%x-%v')` union select date_format((now() - interval 49 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 49 WEEK),'%x-%v')` union select date_format((now() - interval 48 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 48 WEEK),'%x-%v')` union select date_format((now() - interval 47 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 47 WEEK),'%x-%v')` union select date_format((now() - interval 46 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 46 WEEK),'%x-%v')` union select date_format((now() - interval 45 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 45 WEEK),'%x-%v')` union select date_format((now() - interval 44 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 44 WEEK),'%x-%v')` union select date_format((now() - interval 43 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 43 WEEK),'%x-%v')` union select date_format((now() - interval 42 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 42 WEEK),'%x-%v')` union select date_format((now() - interval 41 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 41 WEEK),'%x-%v')` union select date_format((now() - interval 40 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 40 WEEK),'%x-%v')` union select date_format((now() - interval 39 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 39 WEEK),'%x-%v')` union select date_format((now() - interval 38 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 38 WEEK),'%x-%v')` union select date_format((now() - interval 37 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 37 WEEK),'%x-%v')` union select date_format((now() - interval 36 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 36 WEEK),'%x-%v')` union select date_format((now() - interval 35 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 35 WEEK),'%x-%v')` union select date_format((now() - interval 34 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 34 WEEK),'%x-%v')` union select date_format((now() - interval 33 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 33 WEEK),'%x-%v')` union select date_format((now() - interval 32 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 32 WEEK),'%x-%v')` union select date_format((now() - interval 31 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 31 WEEK),'%x-%v')` union select date_format((now() - interval 30 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 30 WEEK),'%x-%v')` union select date_format((now() - interval 29 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 29 WEEK),'%x-%v')` union select date_format((now() - interval 28 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 28 WEEK),'%x-%v')` union select date_format((now() - interval 27 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 27 WEEK),'%x-%v')` union select date_format((now() - interval 26 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 26 WEEK),'%x-%v')` union select date_format((now() - interval 25 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 25 WEEK),'%x-%v')` union select date_format((now() - interval 24 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 24 WEEK),'%x-%v')` union select date_format((now() - interval 23 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 23 WEEK),'%x-%v')` union select date_format((now() - interval 22 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 22 WEEK),'%x-%v')` union select date_format((now() - interval 21 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 21 WEEK),'%x-%v')` union select date_format((now() - interval 20 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 20 WEEK),'%x-%v')` union select date_format((now() - interval 19 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 19 WEEK),'%x-%v')` union select date_format((now() - interval 18 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 18 WEEK),'%x-%v')` union select date_format((now() - interval 17 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 17 WEEK),'%x-%v')` union select date_format((now() - interval 16 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 16 WEEK),'%x-%v')` union select date_format((now() - interval 15 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 15 WEEK),'%x-%v')` union select date_format((now() - interval 14 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 14 WEEK),'%x-%v')` union select date_format((now() - interval 13 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 13 WEEK),'%x-%v')` union select date_format((now() - interval 12 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 12 WEEK),'%x-%v')` union select date_format((now() - interval 11 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 11 WEEK),'%x-%v')` union select date_format((now() - interval 10 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 10 WEEK),'%x-%v')` union select date_format((now() - interval 9 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 9 WEEK),'%x-%v')` union select date_format((now() - interval 8 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 8 WEEK),'%x-%v')` union select date_format((now() - interval 7 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 7 WEEK),'%x-%v')` union select date_format((now() - interval 6 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 6 WEEK),'%x-%v')` union select date_format((now() - interval 5 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 WEEK),'%x-%v')` union select date_format((now() - interval 4 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 WEEK),'%x-%v')` union select date_format((now() - interval 3 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 WEEK),'%x-%v')` union select date_format((now() - interval 2 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 WEEK),'%x-%v')` union select date_format((now() - interval 1 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 WEEK),'%x-%v')` union select date_format((now() - interval 0 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 WEEK),'%x-%v')` */;
+/*!50001 VIEW `v_week` AS select date_format(current_timestamp() - interval 52 week,_utf8'%x-%v') AS `num` union select date_format(current_timestamp() - interval 51 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 51 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 50 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 50 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 49 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 49 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 48 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 48 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 47 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 47 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 46 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 46 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 45 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 45 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 44 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 44 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 43 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 43 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 42 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 42 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 41 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 41 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 40 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 40 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 39 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 39 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 38 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 38 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 37 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 37 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 36 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 36 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 35 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 35 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 34 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 34 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 33 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 33 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 32 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 32 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 31 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 31 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 30 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 30 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 29 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 29 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 28 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 28 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 27 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 27 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 26 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 26 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 25 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 25 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 24 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 24 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 23 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 23 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 22 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 22 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 21 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 21 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 20 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 20 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 19 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 19 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 18 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 18 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 17 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 17 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 16 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 16 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 15 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 15 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 14 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 14 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 13 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 13 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 12 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 12 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 11 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 11 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 10 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 10 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 9 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 9 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 8 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 8 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 7 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 7 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 6 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 6 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 5 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 4 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 3 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 2 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 1 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 WEEK),'%x-%v')` union select date_format(current_timestamp() - interval 0 week,_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 WEEK),'%x-%v')` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -11265,7 +11498,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 SQL SECURITY INVOKER */
-/*!50001 VIEW `v_weekDay` AS select date_format((now() - interval 6 day),_utf8'%Y-%m-%d') AS `day` union select date_format((now() - interval 5 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 DAY),'%Y-%m-%d')` union select date_format((now() - interval 4 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 DAY),'%Y-%m-%d')` union select date_format((now() - interval 3 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 DAY),'%Y-%m-%d')` union select date_format((now() - interval 2 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 DAY),'%Y-%m-%d')` union select date_format((now() - interval 1 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')` union select date_format((now() - interval 0 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 DAY),'%Y-%m-%d')` */;
+/*!50001 VIEW `v_weekDay` AS select date_format(current_timestamp() - interval 6 day,_utf8'%Y-%m-%d') AS `day` union select date_format(current_timestamp() - interval 5 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 4 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 3 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 2 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 1 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')` union select date_format(current_timestamp() - interval 0 day,_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 DAY),'%Y-%m-%d')` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -11279,4 +11512,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-09-21 10:02:23
+-- Dump completed on 2017-10-16 14:12:50

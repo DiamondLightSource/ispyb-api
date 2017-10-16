@@ -137,3 +137,15 @@ class MXProcessing(ispyb.interface.processing.IF, StoredRoutines):
   def upsert_run_blob(self, values):
     '''Update or insert new entry with info about views (image paths) for an MX molecular replacement run, e.g. Dimple.'''
     return self.call_sp_write(self.get_connection(), procname='upsert_mrrun_blob', args=values)
+
+  def retrieve_job(self, id):
+    '''Retrieve info about the processing job with id=id'''
+    return self.call_sp_retrieve(self.get_connection(), procname='retrieve_processing_job', args=(id,))
+
+  def retrieve_job_parameters(self, id):
+    '''Retrieve info about the parameters for processing job with id=id'''
+    return self.call_sp_retrieve(self.get_connection(), procname='retrieve_processing_job_parameters', args=(id,))
+
+  def retrieve_job_image_sweeps(self, id):
+    '''Retrieve info about the image sweeps for job with id=id'''
+    return self.call_sp_retrieve(self.get_connection(), procname='retrieve_processing_job_image_sweeps', args=(id,))

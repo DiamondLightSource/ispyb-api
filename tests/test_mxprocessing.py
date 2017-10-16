@@ -4,7 +4,22 @@ import context
 from datetime import datetime
 from testtools import get_mxprocessing
 
-def test_insert_integration_and_processing():
+def test_processing_jobs():
+    mxprocessing = get_mxprocessing()
+
+    job = mxprocessing.retrieve_job(5)
+    assert job[0]['displayName'] is not None
+    assert job[0]['dataCollectionId'] is not None
+
+    job_params = mxprocessing.retrieve_job_parameters(5)
+    assert job_params[0]['parameterKey'] is not None
+    assert job_params[0]['parameterKey'] is not None
+
+    job_image_sweep = mxprocessing.retrieve_job_image_sweeps(5)
+    assert job_image_sweep[0]['startImage'] is not None
+    assert job_image_sweep[0]['endImage'] is not None
+
+def test_processing():
     mxprocessing = get_mxprocessing()
     params = mxprocessing.get_program_params()
     params['cmd_line'] = 'ls -ltr'
@@ -100,7 +115,7 @@ def test_insert_integration_and_processing():
 
     assert id is not None
 
-def test_upsert_run():
+def test_post_processing():
     mxprocessing = get_mxprocessing()
     params = mxprocessing.get_run_params()
     params['parentid'] = 596133 # some autoProcScalingId
