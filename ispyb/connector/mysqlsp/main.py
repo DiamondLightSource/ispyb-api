@@ -10,6 +10,7 @@ import ispyb.interface.connection
 class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
   '''Provides a connector to an ISPyB MySQL/MariaDB database through stored procedures.
   '''
+  CONN_INACTIVITY = 360
 
   def __init__(self, user=None, pw=None, host='localhost', db=None, port=3306):
     self.lock = threading.Lock()
@@ -17,6 +18,12 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
 
   def connect(self, user=None, pw=None, host='localhost', db=None, port=3306):
     self.disconnect()
+    self.user = user
+    self.pw = pw
+    self.host = host
+    self.db = db
+    self.port = port
+
     self.conn = mysql.connector.connect(user=user,
         password=pw,
         host=host,
@@ -24,6 +31,7 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
         port=int(port))
     if self.conn is not None:
       self.conn.autocommit=True
+    self.last_activity_ts = time.time()
 
   def __del__(self):
     self.disconnect()
@@ -37,9 +45,16 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
   def get_data_area_package(self):
     return 'ispyb.sp'
 
+  def create_cursor(self, dictionary=False):
+      if time.time() - self.last_activity_ts > self.CONN_INACTIVITY:
+          # re-connect:
+          self.connect(self.user, self.pw, self.host, self.db, self.port)
+      self.last_activity_ts = time.time()
+      return self.conn.cursor(dictionary=dictionary)
+
   def call_sp_write(self, procname, args):
     with self.lock:
-        cursor = self.conn.cursor()
+        cursor = self.create_cursor()
         result_args = cursor.callproc(procname=procname, args=args)
         cursor.close()
     if result_args is not None and len(result_args) > 0:
@@ -47,7 +62,7 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
 
   def call_sp_retrieve(self, procname, args):
     with self.lock:
-        cursor = self.conn.cursor(dictionary=True)
+        cursor = self.create_cursor(dictionary=True)
         cursor.callproc(procname=procname, args=args)
         result = []
         for recordset in cursor.stored_results():
@@ -61,7 +76,7 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
 
   def call_sf(self, funcname, args):
     with self.lock:
-        cursor = self.conn.cursor()
+        cursor = self.create_cursor()
         cursor.execute(('select %s' % funcname) + ' (%s)' % ','.join(['%s'] * len(args)), args)
         result = None
         rs = cursor.fetchone()
