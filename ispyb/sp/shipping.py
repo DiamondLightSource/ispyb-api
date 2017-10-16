@@ -12,11 +12,10 @@ import os
 import sys
 import datetime
 import copy
-from ispyb.sp.storedroutines import StoredRoutines
 import ispyb.interface.shipping
 from ispyb.version import __version__
 
-class Shipping(ispyb.interface.shipping.IF, StoredRoutines):
+class Shipping(ispyb.interface.shipping.IF):
   '''Shipping provides methods to update shipments and samples.'''
 
   def __init__(self):
@@ -24,4 +23,4 @@ class Shipping(ispyb.interface.shipping.IF, StoredRoutines):
 
   def update_container_assign(self, beamline, registry_barcode, position):
     '''Assign a container'''
-    self.call_sp_write(self.get_connection(), procname='update_container_assign', args=(beamline, registry_barcode, position))
+    self.get_connection().call_sp_write(procname='update_container_assign', args=(beamline, registry_barcode, position))

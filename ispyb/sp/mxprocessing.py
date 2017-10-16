@@ -13,11 +13,10 @@ import sys
 import datetime
 import copy
 from ispyb.strictordereddict import StrictOrderedDict
-from ispyb.sp.storedroutines import StoredRoutines
 import ispyb.interface.processing
 from ispyb.version import __version__
 
-class MXProcessing(ispyb.interface.processing.IF, StoredRoutines):
+class MXProcessing(ispyb.interface.processing.IF):
   '''MXProcessing provides methods to store MX processing data.'''
 
   def __init__(self):
@@ -110,42 +109,42 @@ class MXProcessing(ispyb.interface.processing.IF, StoredRoutines):
 
   def upsert_program(self, values):
     '''Store new or update existing program params.'''
-    return self.call_sp_write(self.get_connection(), procname='upsert_processing_program', args=values) # doesn't work with dict cursors
+    return self.get_connection().call_sp_write(procname='upsert_processing_program', args=values) # doesn't work with dict cursors
 
   def upsert_program_attachment(self, values):
     '''Store new or update existing program attachment params.'''
-    return self.call_sp_write(self.get_connection(), procname='upsert_processing_program_attachment', args=values)
+    return self.get_connection().call_sp_write(procname='upsert_processing_program_attachment', args=values)
 
   def upsert_processing(self, values):
-    return self.call_sp_write(self.get_connection(), procname='upsert_processing', args=values)
+    return self.get_connection().call_sp_write(procname='upsert_processing', args=values)
 
   def insert_scaling(self, parent_id, values1, values2, values3):
     id = None
     values = [id, parent_id] + values1 + values2 + values3
-    return self.call_sp_write(self.get_connection(), procname='insert_processing_scaling', args=values)
+    return self.get_connection().call_sp_write(procname='insert_processing_scaling', args=values)
 
   def upsert_integration(self, values):
-    return self.call_sp_write(self.get_connection(), procname='upsert_processing_integration', args=values)
+    return self.get_connection().call_sp_write(procname='upsert_processing_integration', args=values)
 
   def insert_quality_indicators(self, values):
-    return self.call_sp_write(self.get_connection(), procname='insert_quality_indicators', args=values)
+    return self.get_connection().call_sp_write(procname='insert_quality_indicators', args=values)
 
   def upsert_run(self, values):
     '''Update or insert new entry with info about an MX molecular replacement run, e.g. Dimple.'''
-    return self.call_sp_write(self.get_connection(), procname='upsert_mrrun', args=values)
+    return self.get_connection().call_sp_write(procname='upsert_mrrun', args=values)
 
   def upsert_run_blob(self, values):
     '''Update or insert new entry with info about views (image paths) for an MX molecular replacement run, e.g. Dimple.'''
-    return self.call_sp_write(self.get_connection(), procname='upsert_mrrun_blob', args=values)
+    return self.get_connection().call_sp_write(procname='upsert_mrrun_blob', args=values)
 
   def retrieve_job(self, id):
     '''Retrieve info about the processing job with id=id'''
-    return self.call_sp_retrieve(self.get_connection(), procname='retrieve_processing_job', args=(id,))
+    return self.get_connection().call_sp_retrieve(procname='retrieve_processing_job', args=(id,))
 
   def retrieve_job_parameters(self, id):
     '''Retrieve info about the parameters for processing job with id=id'''
-    return self.call_sp_retrieve(self.get_connection(), procname='retrieve_processing_job_parameters', args=(id,))
+    return self.get_connection().call_sp_retrieve(procname='retrieve_processing_job_parameters', args=(id,))
 
   def retrieve_job_image_sweeps(self, id):
     '''Retrieve info about the image sweeps for job with id=id'''
-    return self.call_sp_retrieve(self.get_connection(), procname='retrieve_processing_job_image_sweeps', args=(id,))
+    return self.get_connection().call_sp_retrieve(procname='retrieve_processing_job_image_sweeps', args=(id,))

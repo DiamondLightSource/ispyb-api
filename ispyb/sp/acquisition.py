@@ -1,9 +1,8 @@
 import copy
-from ispyb.sp.storedroutines import StoredRoutines
 from ispyb.strictordereddict import StrictOrderedDict
 import ispyb.interface.acquisition
 
-class Acquisition(ispyb.interface.acquisition.IF, StoredRoutines):
+class Acquisition(ispyb.interface.acquisition.IF):
   '''Acquisition provides methods to store data in the acquisition tables.'''
 
   _data_collection_group_params =\
@@ -41,8 +40,8 @@ class Acquisition(ispyb.interface.acquisition.IF, StoredRoutines):
 
   def upsert_data_collection_group(self, values):
     '''Insert or update MX data collection group.'''
-    return self.call_sf(self.get_connection(), 'upsert_dcgroup', values)
+    return self.get_connection().call_sf('upsert_dcgroup', values)
 
   def upsert_data_collection(self, values):
     '''Insert or update data collection.'''
-    return self.call_sf(self.get_connection(), 'upsert_dc', values)
+    return self.get_connection().call_sf('upsert_dc', values)

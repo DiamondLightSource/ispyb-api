@@ -36,4 +36,4 @@ class MXAcquisition(Acquisition):
 
   def upsert_image(self, values):
     '''Insert or update MX diffraction image.'''
-    return self.call_sf(self.get_connection(), 'upsert_image', values)
+    return self.get_connection().call_sf('upsert_image', values)

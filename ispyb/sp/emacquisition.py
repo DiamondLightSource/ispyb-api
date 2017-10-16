@@ -77,8 +77,8 @@ class EMAcquisition(Acquisition):
 
     def insert_motion_correction(self, values):
         '''Store new motion correction params.'''
-        return self.call_sp_write(self.get_connection(), procname='upsert_motion_correction', args=values)
+        return self.get_connection().call_sp_write(procname='upsert_motion_correction', args=values)
 
     def insert_ctf(self, values):
         '''Store new ctf params.'''
-        return self.call_sp_write(self.get_connection(), procname='upsert_ctf', args=values)
+        return self.get_connection().call_sp_write(procname='upsert_ctf', args=values)
