@@ -106,13 +106,11 @@ def test_processing():
     assert id is not None
 
     params = mxprocessing.get_quality_indicators_params()
-    params['datacollectionid'] = 993677 # only works on dev
+    params['datacollectionid'] = 993677
     params['image_number'] = 1
     params['spot_total'] = 130
     params['programid'] = programid
     id = mxprocessing.insert_quality_indicators(list(params.values()))
-    print(id)
-
     assert id is not None
 
 def test_post_processing():
