@@ -36,8 +36,8 @@ def test_multi_threads_upsert():
 def test_retrieve_failure():
     mxacquisition = get_mxacquisition()
     try:
-        rs = mxacquisition.retrieve_data_collection_main(-1)
-    except ispyb.exception.ISPyBRetrieveFailed:
+        rs = mxacquisition.retrieve_data_collection_main(0)
+    except ispyb.exception.ISPyBNoResultException:
         assert True
     else:
         assert False
