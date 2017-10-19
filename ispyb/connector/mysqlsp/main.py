@@ -6,7 +6,7 @@ import sys
 import datetime
 from ispyb.version import __version__
 import ispyb.interface.connection
-from ispyb.exception import ISPyBNoResultException, ISPyBUpdateFailed, ISPyBInsertFailed, ISPyBUpsertFailed, ISPyBRetrieveFailed
+from ispyb.exception import ISPyBNoResultException, ISPyBWriteFailed, ISPyBRetrieveFailed
 from mysql.connector.errors import Error, DatabaseError, DataError
 
 class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
@@ -24,7 +24,7 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
     self.host = host
     self.db = db
     self.port = port
-    self.conn_inactivity = conn_inactivity
+    self.conn_inactivity = int(conn_inactivity)
 
     self.conn = mysql.connector.connect(user=user,
         password=pw,
@@ -57,7 +57,10 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
   def call_sp_write(self, procname, args):
     with self.lock:
         cursor = self.create_cursor()
-        result_args = cursor.callproc(procname=procname, args=args)
+        try:
+            result_args = cursor.callproc(procname=procname, args=args)
+        except DataError:
+            raise ISPyBWriteFailed
         cursor.close()
     if result_args is not None and len(result_args) > 0:
         return result_args[0]
@@ -82,19 +85,35 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
         raise ISPyBNoResultException
     return result
 
-  def call_sf(self, funcname, args):
+  def call_sf_retrieve(self, funcname, args):
     with self.lock:
-        cursor = self.create_cursor()
-        cursor.execute(('select %s' % funcname) + ' (%s)' % ','.join(['%s'] * len(args)), args)
+        cursor = self.create_cursor(dictionary=True)
+        try:
+            cursor.execute(('select %s' % funcname) + ' (%s)' % ','.join(['%s'] * len(args)), args)
+        except DataError:
+            raise ISPyBRetrieveFailed
         result = None
         rs = cursor.fetchone()
         if len(rs) > 0:
-            if isinstance(cursor, mysql.connector.cursor.MySQLCursorDict):
-                result = iter(rs.items()).next()[1]
-            else:
-                try:
-                    result = int(rs[0])
-                except:
-                    result = rs[0]
+            result = next(iter(rs.items()))[1]  #iter(rs.items()).next()[1]
+        cursor.close()
+    if result is None:
+        raise ISPyBNoResultException
+    return result
+
+  def call_sf_write(self, funcname, args):
+    with self.lock:
+        cursor = self.create_cursor()
+        try:
+            cursor.execute(('select %s' % funcname) + ' (%s)' % ','.join(['%s'] * len(args)), args)
+        except DataError:
+            raise ISPyBWriteFailed
+        result = None
+        rs = cursor.fetchone()
+        if len(rs) > 0:
+            try:
+                result = int(rs[0])
+            except:
+                result = rs[0]
         cursor.close()
     return result
