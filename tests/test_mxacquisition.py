@@ -33,10 +33,7 @@ def test_mxacquisition_methods():
     assert id1 == id2
 
     rs = mxacquisition.retrieve_data_collection_main(id1)
-    print(rs)
     assert rs[0]['groupId'] == dcgid
-#    assert rs[0]['axis_start'] == 0
-#    assert rs[0]['axis_end'] == 90
 
     params = mxacquisition.get_image_params()
     params['parentid'] = id1
