@@ -19,3 +19,7 @@ class StrictOrderedDict(OrderedDict):
       raise KeyError('New keys not allowed in StrictOrderedDict.')
     else:
       OrderedDict.__setitem__(self, sane_key, value)
+
+  def __getitem__(self, key):
+    sane_key = key.replace('_', '').lower()
+    return OrderedDict.__getitem__(self, sane_key)
