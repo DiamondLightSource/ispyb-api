@@ -1,6 +1,6 @@
 -- MySQL dump 10.15  Distrib 10.0.17-MariaDB, for Linux (x86_64)
 --
--- Host: cs04r-sc-vserv-88    Database: ispybstage
+-- Host: cs04r-sc-vserv-87    Database: ispybstage
 -- ------------------------------------------------------
 -- Server version	10.2.9-MariaDB-log
 
@@ -4411,7 +4411,7 @@ CREATE TABLE `ProcessingJob` (
   PRIMARY KEY (`processingJobId`),
   KEY `ProcessingJob_ibfk1` (`dataCollectionId`),
   CONSTRAINT `ProcessingJob_ibfk1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1 COMMENT='From this we get both job times and lag times';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='From this we get both job times and lag times';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4442,7 +4442,7 @@ CREATE TABLE `ProcessingJobImageSweep` (
   KEY `ProcessingJobImageSweep_ibfk2` (`dataCollectionId`),
   CONSTRAINT `ProcessingJobImageSweep_ibfk1` FOREIGN KEY (`processingJobId`) REFERENCES `ProcessingJob` (`processingJobId`),
   CONSTRAINT `ProcessingJobImageSweep_ibfk2` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COMMENT='This allows multiple sweeps per processing job for multi-xia2';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 COMMENT='This allows multiple sweeps per processing job for multi-xia2';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4470,7 +4470,7 @@ CREATE TABLE `ProcessingJobParameter` (
   PRIMARY KEY (`processingJobParameterId`),
   KEY `ProcessingJobParameter_ibfk1` (`processingJobId`),
   CONSTRAINT `ProcessingJobParameter_ibfk1` FOREIGN KEY (`processingJobId`) REFERENCES `ProcessingJob` (`processingJobId`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -9431,6 +9431,37 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_processing_programs_for_job_id` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_processing_programs_for_job_id`(p_id int unsigned)
+    READS SQL DATA
+    COMMENT 'Returns a multi-row result-set with processing program instances for the given processing job ID'
+BEGIN
+    IF p_id IS NOT NULL THEN
+      SELECT autoProcProgramId "id", processingCommandLine "commandLine", processingPrograms "programs", processingMessage "message",
+          processingStartTime "startTime", processingEndTime "endTime", processingEnvironment "environment", 
+          recordTimeStamp "recordTimeStamp", processingJobId "jobId"
+      FROM AutoProcProgram  
+	  WHERE processingJobId = p_id
+      ORDER BY autoProcProgramId ASC
+      LIMIT 1000;
+    ELSE
+	  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory arguments p_id can not be NULL';
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `retrieve_reprocessing_by_dc` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -10976,6 +11007,79 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_quality_indicators` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_quality_indicators`(
+  OUT p_id int(11) unsigned,
+  p_dataCollectionId int(11) unsigned, 
+  p_autoProcProgramId int(10) unsigned, 
+  p_imageNumber mediumint(8) unsigned,
+  p_spotTotal int(10),
+  p_inResTotal int(10),
+  p_goodBraggCandidates int(10),
+  p_iceRings int(10),
+  p_method1Res float,
+  p_method2Res float,
+  p_maxUnitCell float,
+  p_pctSaturationTop50Peaks float,
+  p_inResolutionOvrlSpots int(10),
+  p_binPopCutOffMethod2Res float,
+  p_totalIntegratedSignal double,
+  p_dozorScore double,
+  p_driftFactor float
+)
+    MODIFIES SQL DATA
+    COMMENT 'Inserts into or updates a row in the image quality indicators table'
+BEGIN
+
+  IF p_id IS NOT NULL OR (p_id IS NULL AND p_dataCollectionId IS NOT NULL AND p_imageNumber IS NOT NULL) THEN
+    INSERT INTO ImageQualityIndicators (
+      dataCollectionId, autoProcProgramId, imageNumber, spotTotal, inResTotal, goodBraggCandidates, iceRings, 
+	  method1Res, method2Res, maxUnitCell, pctSaturationTop50Peaks,
+	  inResolutionOvrlSpots, binPopCutOffMethod2Res, totalIntegratedSignal, dozor_score, driftFactor) 
+      VALUES (
+        p_dataCollectionId, p_autoProcProgramId, p_imageNumber, p_spotTotal, p_inResTotal, p_goodBraggCandidates, p_iceRings,
+        p_method1Res, p_method2Res, p_maxUnitCell, p_pctSaturationTop50Peaks, 
+        p_inResolutionOvrlSpots, p_binPopCutOffMethod2Res, p_totalIntegratedSignal, p_dozorScore, p_driftFactor
+      )
+      ON DUPLICATE KEY UPDATE
+        dataCollectionId = IFNULL(p_dataCollectionId, dataCollectionId),
+        autoProcProgramId = IFNULL(p_autoProcProgramId, autoProcProgramId),
+        imageNumber = IFNULL(p_imageNumber, imageNumber),
+        spotTotal = IFNULL(p_spotTotal, spotTotal),
+        inResTotal = IFNULL(p_inResTotal, inResTotal),
+        goodBraggCandidates = IFNULL(p_goodBraggCandidates, goodBraggCandidates),
+        iceRings = IFNULL(p_iceRings, iceRings),
+        method1Res = IFNULL(p_method1Res, method1Res),
+        method2Res = IFNULL(p_method2Res, method2Res),
+        maxUnitCell = IFNULL(p_maxUnitCell, maxUnitCell),
+        pctSaturationTop50Peaks = IFNULL(p_pctSaturationTop50Peaks, pctSaturationTop50Peaks),
+        inResolutionOvrlSpots = IFNULL(p_inResolutionOvrlSpots, inResolutionOvrlSpots),
+        binPopCutOffMethod2Res = IFNULL(p_binPopCutOffMethod2Res, binPopCutOffMethod2Res),
+        totalIntegratedSignal = IFNULL(p_totalIntegratedSignal, totalIntegratedSignal),
+        dozor_score = IFNULL(p_dozorScore, dozor_score),
+        driftFactor = IFNULL(p_driftFactor, driftFactor);
+      
+    IF p_id IS NULL THEN 
+      SET p_id = LAST_INSERT_ID();
+    END IF;      
+  ELSE
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) p_id or (p_dataCollectionId and p_imageNumber) are NULL';  
+  END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `upsert_sample_image_analysis` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -11512,4 +11616,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-10-16 14:12:50
+-- Dump completed on 2017-10-19 10:18:59
