@@ -24,9 +24,14 @@ def test_processing():
     params = mxprocessing.get_program_params()
     params['cmd_line'] = 'ls -ltr'
     params['message'] = 'Just started ...'
+    params['processing_job_id'] = 5
     id = mxprocessing.upsert_program(list(params.values()))
     assert id is not None
     assert id > 0
+
+    rs = mxprocessing.retrieve_programs_for_job_id(5)
+    assert rs is not None
+    assert len(rs) > 0
 
     params['id'] = id
     params['status'] = True
@@ -110,7 +115,7 @@ def test_processing():
     params['image_number'] = 1
     params['spot_total'] = 130
     params['programid'] = programid
-    id = mxprocessing.insert_quality_indicators(list(params.values()))
+    id = mxprocessing.upsert_quality_indicators(list(params.values()))
     assert id is not None
 
 def test_post_processing():

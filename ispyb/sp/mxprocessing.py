@@ -23,7 +23,7 @@ class MXProcessing(ispyb.interface.processing.IF):
     pass
 
   _program_params = StrictOrderedDict([('id',None), ('cmd_line',None), ('programs',None),
-    ('status',None), ('message',None), ('starttime',None), ('updatetime',None), ('environment',None), ('reprocessingid',None),
+    ('status',None), ('message',None), ('starttime',None), ('updatetime',None), ('environment',None), ('processing_job_id',None),
     ('recordtime',None)])
 
   _program_attachment_params = StrictOrderedDict([('id',None), ('parentid', None), ('file_name',None), ('file_path',None), ('file_type',None)])
@@ -48,7 +48,8 @@ class MXProcessing(ispyb.interface.processing.IF):
   _quality_indicators_params = StrictOrderedDict([ ('id',None), ('datacollectionid',None), ('programid',None),
     ('image_number',None), ('spot_total',None), ('in_res_total',None), ('good_bragg_candidates',None), ('ice_rings',None),
     ('method1_res',None), ('method2_res',None), ('max_unit_cell',None), ('pct_saturation_top_50_peaks',None),
-    ('in_resolution_ovrl_spots',None), ('bin_pop_cut_off_method2_res',None), ('total_integrated_signal',None), ('drift_factor',None)])
+    ('in_resolution_ovrl_spots',None), ('bin_pop_cut_off_method2_res',None), ('total_integrated_signal',None),
+    ('dozor_score',None), ('drift_factor',None)])
 
   _run_params = StrictOrderedDict([('id',None), ('parentid',None),
   ('success',None), ('message',None), ('pipeline',None),
@@ -126,8 +127,8 @@ class MXProcessing(ispyb.interface.processing.IF):
   def upsert_integration(self, values):
     return self.get_connection().call_sp_write(procname='upsert_processing_integration', args=values)
 
-  def insert_quality_indicators(self, values):
-    return self.get_connection().call_sp_write(procname='insert_quality_indicators', args=values)
+  def upsert_quality_indicators(self, values):
+    return self.get_connection().call_sp_write(procname='upsert_quality_indicators', args=values)
 
   def upsert_run(self, values):
     '''Update or insert new entry with info about an MX molecular replacement run, e.g. Dimple.'''
@@ -148,3 +149,7 @@ class MXProcessing(ispyb.interface.processing.IF):
   def retrieve_job_image_sweeps(self, id):
     '''Retrieve info about the image sweeps for job with id=id'''
     return self.get_connection().call_sp_retrieve(procname='retrieve_processing_job_image_sweeps', args=(id,))
+
+  def retrieve_programs_for_job_id(self, id):
+    '''Retrieve the processing instances associated with the given processing job ID'''
+    return self.get_connection().call_sp_retrieve(procname='retrieve_processing_programs_for_job_id', args=(id,))
