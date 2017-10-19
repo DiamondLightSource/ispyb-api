@@ -6,6 +6,8 @@ import sys
 import datetime
 from ispyb.version import __version__
 import ispyb.interface.connection
+from ispyb.exception import ISPyBNoResultException, ISPyBUpdateFailed, ISPyBInsertFailed, ISPyBUpsertFailed, ISPyBRetrieveFailed
+from mysql.connector.errors import Error, DatabaseError, DataError
 
 class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
   '''Provides a connector to an ISPyB MySQL/MariaDB database through stored procedures.
@@ -63,7 +65,11 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
   def call_sp_retrieve(self, procname, args):
     with self.lock:
         cursor = self.create_cursor(dictionary=True)
-        cursor.callproc(procname=procname, args=args)
+        try:
+            cursor.callproc(procname=procname, args=args)
+        except DataError:
+            raise ISPyBRetrieveFailed
+
         result = []
         for recordset in cursor.stored_results():
             if isinstance(cursor, mysql.connector.cursor.MySQLCursorDict):
@@ -72,6 +78,8 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
             else:
                 result = recordset.fetchall()
         cursor.close()
+    if result == []:
+        raise ISPyBNoResultException
     return result
 
   def call_sf(self, funcname, args):
