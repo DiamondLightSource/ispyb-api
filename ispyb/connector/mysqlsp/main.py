@@ -12,19 +12,19 @@ from mysql.connector.errors import Error, DatabaseError, DataError
 class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
   '''Provides a connector to an ISPyB MySQL/MariaDB database through stored procedures.
   '''
-  CONN_INACTIVITY = 360
 
-  def __init__(self, user=None, pw=None, host='localhost', db=None, port=3306):
+  def __init__(self, user=None, pw=None, host='localhost', db=None, port=3306, conn_inactivity=360):
     self.lock = threading.Lock()
-    self.connect(user=user, pw=pw, host=host, db=db, port=port)
+    self.connect(user=user, pw=pw, host=host, db=db, port=port, conn_inactivity=conn_inactivity)
 
-  def connect(self, user=None, pw=None, host='localhost', db=None, port=3306):
+  def connect(self, user=None, pw=None, host='localhost', db=None, port=3306, conn_inactivity=360):
     self.disconnect()
     self.user = user
     self.pw = pw
     self.host = host
     self.db = db
     self.port = port
+    self.conn_inactivity = conn_inactivity
 
     self.conn = mysql.connector.connect(user=user,
         password=pw,
@@ -48,7 +48,7 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
     return 'ispyb.sp'
 
   def create_cursor(self, dictionary=False):
-      if time.time() - self.last_activity_ts > self.CONN_INACTIVITY:
+      if time.time() - self.last_activity_ts > self.conn_inactivity:
           # re-connect:
           self.connect(self.user, self.pw, self.host, self.db, self.port)
       self.last_activity_ts = time.time()
