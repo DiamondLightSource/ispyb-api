@@ -23,11 +23,12 @@ def test_order():
         assert False
 
 def test_case_insensivity_and_underscore():
-    d = StrictOrderedDict([('CELL_A',None), ('cell_B',None), ('cell_c',None)])
+    d = StrictOrderedDict([('CELL_A',None), ('cell_B',None), ('cell_c',None), ('cellAlpha',None)])
     try:
         d['cell_a'] = 4
         d['cell_b'] = 5
         d['cell_c'] = 6.01
+        d['cell_alpha'] = 7.02
     except KeyError:
         assert False
     else:
@@ -47,3 +48,4 @@ def test_case_insensivity_and_underscore():
     assert d['CELLA'] == 5
     assert d['cellb'] == 5
     assert d['cell_C'] == 6.01
+    assert d['Cell_Alpha'] == 7.02
