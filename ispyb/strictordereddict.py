@@ -14,7 +14,8 @@ class StrictOrderedDict(OrderedDict):
     return StrictOrderedDict(d)
 
   def __setitem__(self, key, value):
-    if hasattr(self, 'initialized') and key not in self:
+    sane_key = key.replace('_', '').lower()
+    if hasattr(self, 'initialized') and sane_key not in self:
       raise KeyError('New keys not allowed in StrictOrderedDict.')
     else:
-      OrderedDict.__setitem__(self, key, value)
+      OrderedDict.__setitem__(self, sane_key, value)

@@ -21,3 +21,23 @@ def test_order():
         assert True
     else:
         assert False
+
+def test_case_insensivity():
+    d = StrictOrderedDict([('CELL_A',None), ('cell_B',None), ('cell_c',None)])
+    try:
+        d['cell_a'] = 'some value'
+        d['cell_b'] = 'some value'
+        d['cell_c'] = 'some value'
+    except KeyError:
+        assert False
+    else:
+        assert True
+
+def test_underscore():
+    d = StrictOrderedDict([('cell_a',None), ('cell_b',None), ('cell_c',None)])
+    try:
+        d['cella'] = 'some value'
+    except KeyError:
+        assert False
+    else:
+        assert True
