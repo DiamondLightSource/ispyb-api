@@ -45,3 +45,7 @@ class Acquisition(ispyb.interface.acquisition.IF):
   def upsert_data_collection(self, values):
     '''Insert or update data collection.'''
     return self.get_connection().call_sf('upsert_dc', values)
+
+  def retrieve_data_collection_main(self, id):
+    '''Retrieve main data collection parameters for row with given id'''
+    return self.get_connection().call_sp_retrieve(procname='retrieve_dc_main', args=(id,))
