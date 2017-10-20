@@ -1,4 +1,3 @@
-# from ispyb.factory import create_data_area, create_connection, DataAreaType
 import ispyb.factory
 import os
 
