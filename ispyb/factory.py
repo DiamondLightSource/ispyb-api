@@ -35,7 +35,6 @@ def create_connection(conf_file):
         section = 'ispyb_ws'
         module_str = 'ispyb.connector.ws.main'
         class_str = 'ISPyBWSConnector'
-        raise NotImplementedError('Connection type ispyb_ws not implemented')
     else:
         raise AttributeError('No supported connection type found in %s' % conf_file)
 
