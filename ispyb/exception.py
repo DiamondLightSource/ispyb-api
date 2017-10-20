@@ -12,3 +12,6 @@ class ISPyBWriteFailed(ISPyBException):
 class ISPyBRetrieveFailed(ISPyBException):
   '''Record(s) could not be retrieved. This could be due to invalid argument
   values, or a database failure. '''
+
+class ISPyBKeyProblem(ISPyBException):
+  '''A mandatory key is missing or its value is None.'''
