@@ -10,12 +10,9 @@
 
 import sys
 import os
-from xml.etree import ElementTree
 from datetime import datetime
-from ispyb.xmltools import XmlDictConfig, mx_data_reduction_xml_to_ispyb
-from ispyb.dbconnection import DBConnection
-from ispyb.core import core
-from ispyb.mxprocessing import mxprocessing
+import ispyb.factory
+from ispyb.xmltools import mx_data_reduction_to_ispyb, xml_file_to_dict
 
 if len(sys.argv) not in (3,4):
     print("Usage:")
@@ -25,25 +22,20 @@ if len(sys.argv) not in (3,4):
 
 conf_file = sys.argv[1]
 
-# Convert the XML to a dictionary
-tree = ElementTree.parse(sys.argv[2])
-xmldict = XmlDictConfig( tree.getroot() )
+conn = ispyb.factory.create_connection(conf_file)
+mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
 
-# Get a database cursor
-conn = DBConnection('prod', conf_file = conf_file)
-cursor = conn.get_cursor()
-
+xml_file = sys.argv[2]
+xml_dir = os.path.split(xml_file)[0]
 # Find the datacollection associated with this data reduction run
-xml_dir = os.path.split(sys.argv[2])[0]
 try:
     dc_id = int(open(os.path.join(xml_dir, '.dc_id'), 'r').read())
-    print 'Got DC ID %d from file system' % dc_id
+    print('Got DC ID %d from file system' % dc_id)
 except:
     dc_id = None
 
-(app_id, ap_id, scaling_id, integration_id) = mx_data_reduction_xml_to_ispyb(xmldict, dc_id, cursor)
-
-conn.disconnect()
+mx_data_reduction_dict = xml_file_to_dict(xml_file)
+(app_id, ap_id, scaling_id, integration_id) = mx_data_reduction_to_ispyb(mx_data_reduction_dict, dc_id, mxprocessing)
 
 # Write results to xml_out_file
 if len(sys.argv) > 3:

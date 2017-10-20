@@ -3,6 +3,7 @@
 
 import sys
 from ispyb.version import __version__
+from xml.etree import ElementTree
 
 class XmlListConfig(list):
     def __init__(self, aList):
@@ -81,7 +82,12 @@ class XmlDictConfig(dict):
             else:
                 self.update({element.tag: element.text})
 
-def mx_data_reduction_xml_to_ispyb(xmldict, dc_id = None, mxprocessing = None):
+def xml_file_to_dict(xml_file):
+    '''Convert the XML file to a dictionary'''
+    tree = ElementTree.parse(xml_file)
+    return XmlDictConfig( tree.getroot() )
+
+def mx_data_reduction_to_ispyb(xmldict, dc_id = None, mxprocessing = None):
     # Convenience pointers and sanity checks
     int_containers = xmldict['AutoProcScalingContainer']['AutoProcIntegrationContainer']
     if isinstance(int_containers, dict): # Make it a list regardless
