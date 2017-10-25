@@ -1,6 +1,7 @@
 import copy
-from ispyb.strictordereddict import StrictOrderedDict
+
 import ispyb.interface.acquisition
+from ispyb.strictordereddict import StrictOrderedDict
 
 class Acquisition(ispyb.interface.acquisition.IF):
   '''Acquisition provides methods to store data in the acquisition tables.'''

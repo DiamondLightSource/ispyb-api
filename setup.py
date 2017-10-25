@@ -4,7 +4,7 @@ import io
 import os
 import re
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 # cf.
 # https://packaging.python.org/guides/single-sourcing-package-version/#single-sourcing-the-version

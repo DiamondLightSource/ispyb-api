@@ -12,19 +12,18 @@
 
 #
 
-import string
-import logging
-from logging.handlers import RotatingFileHandler
-import time
-import os
-import sys
 import datetime
-
-from ispyb.dbconnection import DBConnection
-from ispyb.core import core
-from ispyb.mxacquisition import mxacquisition
-
+import logging
+import os
+import string
+import sys
+import time
 from datetime import datetime
+from logging.handlers import RotatingFileHandler
+
+from ispyb.core import core
+from ispyb.dbconnection import DBConnection
+from ispyb.mxacquisition import mxacquisition
 
 if __name__ == '__main__' :
 

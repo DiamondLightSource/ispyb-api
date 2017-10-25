@@ -7,13 +7,14 @@
 # Usage example:
 # python put_program.py --....
 
-import cx_Oracle
-import string
 import logging
-from logging.handlers import RotatingFileHandler
-import time
 import os
+import string
 import sys
+import time
+from logging.handlers import RotatingFileHandler
+
+import cx_Oracle
 
 # AutoProcProgram.processingStatus: 
 # no row = didn't run
@@ -89,5 +90,3 @@ if __name__ == '__main__' :
     if p_id is None:
         exit(1, "ERROR: p_id is None.") # exit code 1 - indicates error
     exit(0, "--p_id=%d" % p_id)
-    
-    

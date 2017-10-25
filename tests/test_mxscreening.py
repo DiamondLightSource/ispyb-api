@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-import context
 from datetime import datetime
-from testtools import get_mxscreening, get_mxacquisition, get_core
+
+import context
+from testtools import get_core, get_mxacquisition, get_mxscreening
 
 def test_insert_all_screening():
     core = get_core()

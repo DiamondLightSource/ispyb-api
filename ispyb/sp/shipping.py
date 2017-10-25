@@ -7,11 +7,12 @@
 # Methods to update data related to shipping of samples
 #
 
-import time
+import copy
+import datetime
 import os
 import sys
-import datetime
-import copy
+import time
+
 import ispyb.interface.shipping
 
 class Shipping(ispyb.interface.shipping.IF):

@@ -1,4 +1,5 @@
 import abc
+
 from ispyb.interface.dataarea import DataArea
 
 class IF(DataArea):

@@ -7,13 +7,14 @@
 # Methods to store data from MX screening pipelines
 #
 
-import time
+import copy
+import datetime
 import os
 import sys
-import datetime
-import copy
-from ispyb.strictordereddict import StrictOrderedDict
+import time
+
 import ispyb.interface.screening
+from ispyb.strictordereddict import StrictOrderedDict
 
 class MXScreening(ispyb.interface.screening.IF):
   '''MXScreening provides methods to store MX characterisations and strategies.'''

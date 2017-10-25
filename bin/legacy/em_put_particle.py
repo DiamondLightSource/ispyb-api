@@ -7,13 +7,14 @@
 # Usage example:
 # python em_put_particle.py --movieid=1 --x=123.4 --y=50.02
 
-import cx_Oracle
-import string
 import logging
-from logging.handlers import RotatingFileHandler
-import time
 import os
+import string
 import sys
+import time
+from logging.handlers import RotatingFileHandler
+
+import cx_Oracle
 
 if __name__ == '__main__' :
 
@@ -57,4 +58,3 @@ if __name__ == '__main__' :
         
     p_id = em.put_particle(cursor, opts.particleid, opts.dcid, opts.x, opts.y)
     exit(0, "--particleid=%d" % p_id)
-    

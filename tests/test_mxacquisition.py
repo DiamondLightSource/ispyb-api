@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-import context
 from datetime import datetime
+
+import context
 from testtools import get_mxacquisition
 
 def test_mxacquisition_methods():

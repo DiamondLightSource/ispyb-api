@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-import context
 import os
-from ispyb.xmltools import xml_file_to_dict, mx_data_reduction_to_ispyb
+
+import context
+from ispyb.xmltools import mx_data_reduction_to_ispyb, xml_file_to_dict
 from testtools import get_mxprocessing
 
 def test_mx_data_reduction_xml_to_ispyb():

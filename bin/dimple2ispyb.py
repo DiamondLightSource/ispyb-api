@@ -1,21 +1,19 @@
 #!/usr/bin/env python
 
+import ConfigParser
+import logging
 import os
-import sys
 import pickle
 import pipes
-import time
 import re
-import logging
+import sys
+import time
 import traceback
-import ConfigParser
-
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
 
 from ispyb.dbconnection import DBConnection
 from ispyb.mxmr import mxmr
-
 
 def get_logical_arg(job, name):
     return job.args[job.args.index(name)+1]

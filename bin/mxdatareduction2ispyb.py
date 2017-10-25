@@ -8,9 +8,10 @@
 # Script to store e.g. xia2 and fast_dp results using the ispyb_api.
 #
 
-import sys
 import os
+import sys
 from datetime import datetime
+
 import ispyb.factory
 from ispyb.xmltools import mx_data_reduction_to_ispyb, xml_file_to_dict
 

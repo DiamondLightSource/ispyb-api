@@ -1,17 +1,16 @@
 #!/usr/bin/env python
 
-import os
-import sys
-import pipes
-import time
-import re
 import logging
+import os
+import pipes
+import re
+import sys
+import time
 import traceback
-
 from datetime import datetime
 
-from ispyb_api.dbconnection import dbconnection
 from ispyb_api.core import core
+from ispyb_api.dbconnection import dbconnection
 from ispyb_api.tomo import tomo
 
 def store_dc(cursor, parentid):

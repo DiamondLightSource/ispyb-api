@@ -1,10 +1,11 @@
-from enum import Enum
+import codecs
 import importlib
+from enum import Enum
+
 try:
     import configparser as ConfigParser
 except ImportError:
     import ConfigParser
-import codecs
 
 class DataAreaType(Enum):
     CORE = ('Core part of the database schema', 'core', 'Core')
