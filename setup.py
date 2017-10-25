@@ -29,7 +29,16 @@ setup(
     description='ISPyB library based on stored procedures',
     url='https://github.com/DiamondLightSource/ispyb-api',
     author='Karl Erik Levik',
+    author_email='scientificsoftware@diamond.ac.uk',
     keywords = ['ISPyB', 'database'],
     packages=find_packages(),
-    install_requires=['mysql-connector']
+    install_requires=[
+      'mysql-connector<2.2.3'
+    ],
+    classifiers = [
+      'Programming Language :: Python :: 2',
+      'Programming Language :: Python :: 2.7',
+      'Operating System :: OS Independent',
+      'Topic :: Software Development :: Libraries :: Python Modules',
+    ],
 )
