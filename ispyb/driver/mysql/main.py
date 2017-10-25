@@ -20,7 +20,7 @@ class ISPyBMySQLDriver(ispyb.interface.main.IF,
   def __init__(self, host=None, port=None, database=None,
                username=None, password=None, config_file=None):
     if config_file:
-      cfgparser = configparser.ConfigParser()
+      cfgparser = configparser.RawConfigParser()
       if not cfgparser.read(config_file):
         raise RuntimeError('Could not read from configuration file %s' %
                            config_file)
