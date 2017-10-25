@@ -33,7 +33,14 @@ setup(
     keywords = ['ISPyB', 'database'],
     packages=find_packages(),
     install_requires=[
-      'mysql-connector<2.2.3'
+      'mysql-connector<2.2.3',
+    ],
+    setup_requires=[
+      'pytest-runner',
+    ],
+    tests_require=[
+      'mock',
+      'pytest',
     ],
     classifiers = [
       'Programming Language :: Python :: 2',

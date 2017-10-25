@@ -15,10 +15,10 @@ before_script:
 - cp conf/config.example.cfg conf/config.cfg
 - cp conf/ws_config.example.cfg conf/ws_config.cfg
 
-# command to install dependencies
 install:
 - pip install .
 - pip install coveralls
 
 script:
-- cd tests && nosetests -v --with-coverage --cover-package=ispyb && coveralls
+- coverage run --source=ispyb setup.py test
+after_success: coveralls
