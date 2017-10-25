@@ -1,5 +1,4 @@
 from collections import OrderedDict
-from ispyb.version import __version__
 
 class StrictOrderedDict(OrderedDict):
   def __init__(self, *args, **kwargs):

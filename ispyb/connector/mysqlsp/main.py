@@ -4,7 +4,6 @@ import time
 import os
 import sys
 import datetime
-from ispyb.version import __version__
 import ispyb.interface.connection
 from ispyb.exception import ISPyBNoResultException, ISPyBWriteFailed, ISPyBRetrieveFailed
 from mysql.connector.errors import Error, DatabaseError, DataError

@@ -10,7 +10,6 @@
 from ispyb.strictordereddict import StrictOrderedDict
 import copy
 from ispyb.sp.acquisition import Acquisition
-from ispyb.version import __version__
 
 class EMAcquisition(Acquisition):
     '''EMAcquisition provides methods to store data in the MotionCorrection and CTF tables.'''
