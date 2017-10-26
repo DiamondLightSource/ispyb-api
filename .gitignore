@@ -111,3 +111,7 @@ ENV/
 # Change notification emails
 .git-notifier*
 git-notifier.log
+
+# Eclipse
+.project
+.pydevproject
