@@ -7,15 +7,15 @@
 # Methods to store and retrieve data in the core tables
 #
 
-import string
-import time
-import os
-import sys
-import datetime
-from ispyb.strictordereddict import StrictOrderedDict
 import copy
+import datetime
+import os
+import string
+import sys
+import time
 
 import ispyb.interface.core
+from ispyb.strictordereddict import StrictOrderedDict
 
 class Core(ispyb.interface.core.IF):
   '''Core provides methods to store and retrieve data in the core tables.'''

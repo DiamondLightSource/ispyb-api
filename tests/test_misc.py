@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-from datetime import datetime
-import context
-from testtools import get_mxprocessing, get_mxacquisition
-from testtools import get_core
 import threading
+from datetime import datetime
+
+import context
 import ispyb.exception
+from testtools import get_core, get_mxacquisition, get_mxprocessing
 
 def test_multi_threads_upsert():
     mxprocessing = get_mxprocessing()

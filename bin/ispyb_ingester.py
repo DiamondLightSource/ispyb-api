@@ -11,18 +11,20 @@
 # DONE
 # - logging and error handling (including logging to graylog)
 
+import logging
+import os
+import sys
+import time
 from optparse import OptionParser
+
+import ispyb.factory
+from ispyb.xmltools import mx_data_reduction_to_ispyb, xml_file_to_dict
+from workflows.transport.stomp_transport import StompTransport
+
 try:
     import configparser as ConfigParser
 except ImportError:
     import ConfigParser
-from workflows.transport.stomp_transport import StompTransport
-import time
-import sys
-import os
-import logging
-import ispyb.factory
-from ispyb.xmltools import xml_file_to_dict, mx_data_reduction_to_ispyb
 
 # Disable Python output buffering
 sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)

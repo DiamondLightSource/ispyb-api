@@ -1,8 +1,9 @@
 # XML-to-dict code from here:
 # http://code.activestate.com/recipes/410469-xml-as-dictionary/
 
-from ispyb.exception import ISPyBKeyProblem
 from xml.etree import ElementTree
+
+from ispyb.exception import ISPyBKeyProblem
 
 class XmlListConfig(list):
     def __init__(self, aList):

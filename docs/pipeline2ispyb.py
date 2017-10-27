@@ -10,15 +10,15 @@
 # data acquisition and processing pipeline.
 #
 
-from ispyb.dbconnection import DBConnection
-from ispyb.core import core
-from ispyb.mxacquisition import mxacquisition
-from ispyb.mxscreening import mxscreening
-from ispyb.mxprocessing import mxprocessing
-from ispyb.mxmr import mxmr
-
-from datetime import datetime
 import sys
+from datetime import datetime
+
+from ispyb.core import core
+from ispyb.dbconnection import DBConnection
+from ispyb.mxacquisition import mxacquisition
+from ispyb.mxmr import mxmr
+from ispyb.mxprocessing import mxprocessing
+from ispyb.mxscreening import mxscreening
 
 conn = DBConnection.connect('dev', conf_file=sys.argv[1])
 cursor = conn.get_cursor()

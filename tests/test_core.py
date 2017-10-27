@@ -1,5 +1,6 @@
-import context
 from datetime import datetime
+
+import context
 from testtools import get_core
 
 def test_upsert_sample():

@@ -7,15 +7,14 @@
 # Usage example:
 # python put_dcgroup.py --movieid=1 --x=123.4 --y=50.02
 
-import cx_Oracle
-import string
 import logging
-from logging.handlers import RotatingFileHandler
-import time
 import os
+import string
 import sys
+import time
+from logging.handlers import RotatingFileHandler
 
-
+import cx_Oracle
 
 if __name__ == '__main__' :
 
@@ -86,5 +85,3 @@ if __name__ == '__main__' :
     if dcg_id is None:
         exit(1, "ERROR: dc_group is None.") # exit code 1 - indicates error
     exit(0, "--dcg_id=%d" % dcg_id)
-    
-    

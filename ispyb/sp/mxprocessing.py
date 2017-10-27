@@ -7,13 +7,14 @@
 # Methods to store data from MX processing
 #
 
-import time
+import copy
+import datetime
 import os
 import sys
-import datetime
-import copy
-from ispyb.strictordereddict import StrictOrderedDict
+import time
+
 import ispyb.interface.processing
+from ispyb.strictordereddict import StrictOrderedDict
 
 class MXProcessing(ispyb.interface.processing.IF):
   '''MXProcessing provides methods to store MX processing data.'''

@@ -7,13 +7,14 @@
 # Methods to store MX acquisition data
 #
 
-import time
+import copy
+import datetime
 import os
 import sys
-import datetime
-from ispyb.strictordereddict import StrictOrderedDict
-import copy
+import time
+
 from ispyb.sp.acquisition import Acquisition
+from ispyb.strictordereddict import StrictOrderedDict
 
 class MXAcquisition(Acquisition):
   '''MXAcquisition provides methods to store data in the MX acquisition tables.'''

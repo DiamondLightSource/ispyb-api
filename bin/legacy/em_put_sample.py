@@ -7,13 +7,14 @@
 # Usage example:
 # python em_put_sample.py --proposal=em1234 --x=123.4 --y=50.02
 
-import cx_Oracle
-import string
 import logging
-from logging.handlers import RotatingFileHandler
-import time
 import os
+import string
 import sys
+import time
+from logging.handlers import RotatingFileHandler
+
+import cx_Oracle
 
 if __name__ == '__main__' :
 
@@ -61,4 +62,3 @@ if __name__ == '__main__' :
         
     s_id = core.put_sample(cursor, params.values())
     exit(0, "--sampleid=%d" % s_id)
-    

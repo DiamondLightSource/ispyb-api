@@ -7,9 +7,10 @@
 # Methods to store EM acquisition data
 #
 
-from ispyb.strictordereddict import StrictOrderedDict
 import copy
+
 from ispyb.sp.acquisition import Acquisition
+from ispyb.strictordereddict import StrictOrderedDict
 
 class EMAcquisition(Acquisition):
     '''EMAcquisition provides methods to store data in the MotionCorrection and CTF tables.'''

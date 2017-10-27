@@ -1,12 +1,14 @@
-import mysql.connector
-import threading
-import time
+import datetime
 import os
 import sys
-import datetime
+import threading
+import time
+
 import ispyb.interface.connection
-from ispyb.exception import ISPyBNoResultException, ISPyBWriteFailed, ISPyBRetrieveFailed
-from mysql.connector.errors import Error, DatabaseError, DataError
+import mysql.connector
+from ispyb.exception import (ISPyBNoResultException, ISPyBRetrieveFailed,
+                             ISPyBWriteFailed)
+from mysql.connector.errors import DatabaseError, DataError, Error
 
 class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
   '''Provides a connector to an ISPyB MySQL/MariaDB database through stored procedures.

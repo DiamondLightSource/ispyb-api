@@ -1,4 +1,5 @@
 import abc
+
 ABC = abc.ABCMeta('ABC', (object,), {'__slots__': ()}) # compatible with Python 2 *and* 3
 
 class IF(ABC):
