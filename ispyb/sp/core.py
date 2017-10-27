@@ -16,7 +16,6 @@ from ispyb.strictordereddict import StrictOrderedDict
 import copy
 
 import ispyb.interface.core
-from ispyb.version import __version__
 
 class Core(ispyb.interface.core.IF):
   '''Core provides methods to store and retrieve data in the core tables.'''

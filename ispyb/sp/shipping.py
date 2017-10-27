@@ -13,7 +13,6 @@ import sys
 import datetime
 import copy
 import ispyb.interface.shipping
-from ispyb.version import __version__
 
 class Shipping(ispyb.interface.shipping.IF):
   '''Shipping provides methods to update shipments and samples.'''

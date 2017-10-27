@@ -1,7 +1,6 @@
 # XML-to-dict code from here:
 # http://code.activestate.com/recipes/410469-xml-as-dictionary/
 
-from ispyb.version import __version__
 from ispyb.exception import ISPyBKeyProblem
 from xml.etree import ElementTree
 

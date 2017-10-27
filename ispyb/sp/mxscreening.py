@@ -14,7 +14,6 @@ import datetime
 import copy
 from ispyb.strictordereddict import StrictOrderedDict
 import ispyb.interface.screening
-from ispyb.version import __version__
 
 class MXScreening(ispyb.interface.screening.IF):
   '''MXScreening provides methods to store MX characterisations and strategies.'''

@@ -14,7 +14,6 @@ import datetime
 from ispyb.strictordereddict import StrictOrderedDict
 import copy
 from ispyb.sp.acquisition import Acquisition
-from ispyb.version import __version__
 
 class MXAcquisition(Acquisition):
   '''MXAcquisition provides methods to store data in the MX acquisition tables.'''
