@@ -49,6 +49,7 @@ params['starttime'] = datetime.strptime('2017-09-21 13:00:00', '%Y-%m-%d %H:%M:%
 params['endtime'] = datetime.strptime('2017-09-21 13:00:10', '%Y-%m-%d %H:%M:%S')
 params['comments'] = 'This is a test of data collection group.'
 dcg_id = mxacquisition.insert_data_collection_group(list(params.values()))
+conn.disconnect()
 print("dcg_id: %i" % dcg_id)
 ```
 
