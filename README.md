@@ -15,11 +15,18 @@ as webservices.
 importing the test schema: set global log_bin_trust_function_creators=ON;
 
 ### Installation
+From the source core:
 ```bash
 python setup.py clean --all
 python setup.py bdist_wheel
 pip2.7 install --user dist/ispyb-3.0.0-py2-none-any.whl
 ```
+
+From PyPI:
+```bash
+pip2.7 install --user ispyb
+```
+(The --user option installs the package for your own user only.)
 
 ### Examples
 ```python
