@@ -16,9 +16,9 @@ importing the test schema: set global log_bin_trust_function_creators=ON;
 
 ### Installation
 ```bash
-pip install --user wheel
-./build_wheel.sh
-pip install --user dist/ispyb-${version}-py2-none-any.whl
+python setup.py clean --all
+python setup.py bdist_wheel
+pip2.7 install --user dist/ispyb-3.0.0-py2-none-any.whl
 ```
 
 ### Examples
@@ -41,11 +41,11 @@ params['experimenttype'] = 'OSC'
 params['starttime'] = datetime.strptime('2017-09-21 13:00:00', '%Y-%m-%d %H:%M:%S')
 params['endtime'] = datetime.strptime('2017-09-21 13:00:10', '%Y-%m-%d %H:%M:%S')
 params['comments'] = 'This is a test of data collection group.'
-dcg_id = mxacquisition.insert_data_collection_group(params.values())
+dcg_id = mxacquisition.insert_data_collection_group(list(params.values()))
 print("dcg_id: %i" % dcg_id)
 ```
 
 See docs/pipeline2ispyb.py for a more detailed example of how to use the package.
 
 ### Tests
-Unit tests (nosetests) are run by Travis against a real MariaDB ISPyB database schema. 
+Unit tests (pytests) are run by Travis against a real MariaDB ISPyB database schema.
