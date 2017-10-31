@@ -7,15 +7,15 @@ class Backend(Enum):
 
   API = \
      ('Official ISPyB web services API',
-      'ispyb.driver.api', 'ISPyBAPIDriver')
+      'ispyb.legacy.driver.api', 'ISPyBAPIDriver')
 
   DATABASE_MYSQL = \
      ('Direct MySQL/MariaDB database access',
-      'ispyb.driver.mysql.main', 'ISPyBMySQLDriver')
+      'ispyb.legacy.driver.mysql.main', 'ISPyBMySQLDriver')
 
   DUMMY = \
      ('Dummy driver',
-      'ispyb.driver.dummy', 'ISPyBDummyDriver')
+      'ispyb.legacy.driver.dummy', 'ISPyBDummyDriver')
 
   def __init__(self, description, module, classname):
     '''Make tuple elements reachable via attribute names.'''

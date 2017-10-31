@@ -1,12 +1,12 @@
 from __future__ import absolute_import, division
 
-import ispyb.interface.datacollection
-import ispyb.interface.processing
-import ispyb.interface.reprocessing
+import ispyb.legacy.interface.datacollection
+import ispyb.legacy.interface.processing
+import ispyb.legacy.interface.reprocessing
 
-class IF(ispyb.interface.datacollection.IF,
-         ispyb.interface.processing.IF,
-         ispyb.interface.reprocessing.IF):
+class IF(ispyb.legacy.interface.datacollection.IF,
+         ispyb.legacy.interface.processing.IF,
+         ispyb.legacy.interface.reprocessing.IF):
   '''ISPyB interface definition object.'''
 
   def _notimplemented(self):

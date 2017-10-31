@@ -2,19 +2,19 @@ from __future__ import absolute_import, division
 
 import inspect
 
-import ispyb.driver.api
-import ispyb.driver.dummy
-import ispyb.driver.mysql.main
-import ispyb.interface.main
+import ispyb.legacy.driver.api
+import ispyb.legacy.driver.dummy
+import ispyb.legacy.driver.mysql.main
+import ispyb.legacy.interface.main
 import pytest
 
 @pytest.mark.incremental
 class TestInterfaceImplementation(object):
   def test_create_main_interface_object(self):
-    ispyb.interface.main.IF()
+    ispyb.legacy.interface.main.IF()
 
   def check_interface(self, implementation):
-    interface = ispyb.interface.main.IF()
+    interface = ispyb.legacy.interface.main.IF()
     public_names = filter(lambda name: not name.startswith('_'), dir(interface))
     implemented_functions = dir(implementation)
 
@@ -25,10 +25,10 @@ class TestInterfaceImplementation(object):
              "match function signature in interface definition" % fn
 
   def test_that_the_API_driver_implementation_matches_the_interface_function_signatures(self):
-    self.check_interface(ispyb.driver.api.ISPyBAPIDriver)
+    self.check_interface(ispyb.legacy.driver.api.ISPyBAPIDriver)
 
   def test_that_the_database_driver_implementation_matches_the_interface_function_signatures(self):
-    self.check_interface(ispyb.driver.mysql.main.ISPyBMySQLDriver)
+    self.check_interface(ispyb.legacy.driver.mysql.main.ISPyBMySQLDriver)
 
   def test_that_the_dummy_driver_implementation_matches_the_interface_function_signatures(self):
-    self.check_interface(ispyb.driver.dummy.ISPyBDummyDriver)
+    self.check_interface(ispyb.legacy.driver.dummy.ISPyBDummyDriver)

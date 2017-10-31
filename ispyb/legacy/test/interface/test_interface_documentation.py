@@ -1,16 +1,16 @@
 import inspect
 import pkgutil
 
-import ispyb.interface.main
+import ispyb.legacy.interface.main
 import pytest
 
 @pytest.mark.incremental
 class TestAPIDocumentation(object):
   def test_create_main_interface_object(self):
-    ispyb.interface.main.IF()
+    ispyb.legacy.interface.main.IF()
 
   def test_that_all_public_interface_functions_are_documented(self):
-    interfaceobj = ispyb.interface.main.IF()
+    interfaceobj = ispyb.legacy.interface.main.IF()
     function_names = dir(interfaceobj)
     public_fn_names = filter(lambda name: not name.startswith('_'),
                              function_names)

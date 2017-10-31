@@ -1,6 +1,6 @@
 from __future__ import absolute_import, division
 
-import ispyb.driver.mysql.cursors as cursors
+import ispyb.legacy.driver.mysql.cursors as cursors
 import mock
 import pytest
 

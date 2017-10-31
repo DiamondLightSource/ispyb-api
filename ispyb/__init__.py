@@ -1,8 +1,8 @@
-from __future__ import division, absolute_import
+from __future__ import absolute_import, division, print_function
 
-import ispyb.common.driver
+__version__ = "0.16"
 
-__version__ = "0.15"
+import ispyb.legacy.common.driver
 
-get_driver = ispyb.common.driver.get_driver
-Backend = ispyb.common.driver.Backend
+legacy_get_driver = ispyb.legacy.common.driver.get_driver
+legacy_Backend = ispyb.legacy.common.driver.Backend
