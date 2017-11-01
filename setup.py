@@ -36,6 +36,7 @@ setup(
     packages=find_packages(),
     license='Apache License, Version 2.0',
     install_requires=[
+      'enum-compat',
       'mysql-connector<2.2.3',
     ],
     setup_requires=[
