@@ -22,7 +22,7 @@ class DataAreaType(Enum):
         self.classname = classname
 
 def create_connection(conf_file):
-    config = ConfigParser.ConfigParser(allow_no_value=True)
+    config = ConfigParser.RawConfigParser(allow_no_value=True)
     config.readfp(codecs.open(conf_file, "r", "utf8"))
 
     section = None
