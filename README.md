@@ -1,5 +1,9 @@
 [![Build Status](https://travis-ci.org/DiamondLightSource/ispyb-api.svg?branch=master)](https://travis-ci.org/DiamondLightSource/ispyb-api)
 [![Coverage Status](https://coveralls.io/repos/github/DiamondLightSource/ispyb-api/badge.svg?branch=master)](https://coveralls.io/github/DiamondLightSource/ispyb-api?branch=master)
+[![PyPI version](https://img.shields.io/pypi/v/ispyb.svg)](https://pypi.python.org/pypi/ispyb)
+[![Development status](https://img.shields.io/pypi/status/ispyb.svg)](https://pypi.python.org/pypi/ispyb)
+[![Python versions](https://img.shields.io/pypi/pyversions/ispyb.svg)](https://pypi.python.org/pypi/ispyb)
+
 # ISPyB API
 
 This package provides a way to write acquisition and processing results into
@@ -53,7 +57,7 @@ conn.disconnect()
 print("dcg_id: %i" % dcg_id)
 ```
 
-See docs/pipeline2ispyb.py for a more detailed example of how to use the package.
+See [```docs/pipeline2ispyb.py```](https://github.com/DiamondLightSource/ispyb-api/blob/master/docs/pipeline2ispyb.py) for a more detailed example of how to use the package.
 
 ### Tests
 Unit tests (pytests) are run by Travis against a real MariaDB ISPyB database schema.
