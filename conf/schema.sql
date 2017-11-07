@@ -10878,6 +10878,132 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_processing_job` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_processing_job`(
+     INOUT p_id int(11) unsigned,
+	 p_dataCollectionId int(11) unsigned,
+     p_displayName varchar(80),
+     p_comments varchar(255),
+     p_recipe varchar(50),
+     p_automatic tinyint(1)
+  )
+    MODIFIES SQL DATA
+    COMMENT 'If p_id is not provided, inserts new row. Otherwise updates existing row.'
+BEGIN
+  IF p_id IS NOT NULL OR p_dataCollectionId IS NOT NULL THEN
+    INSERT INTO ProcessingJob (
+      processingJobId, dataCollectionId, displayName, comments, recipe, automatic) 
+	VALUES (
+	  p_id, p_dataCollectionId, p_displayName, p_comments, p_recipe, p_automatic)
+	ON DUPLICATE KEY UPDATE
+      dataCollectionId = IFNULL(p_dataCollectionId, dataCollectionId),
+      displayName = IFNULL(p_displayName, displayName),
+      comments = IFNULL(p_comments, comments),
+      recipe = IFNULL(p_recipe, recipe),
+      automatic = IFNULL(p_automatic, automatic);
+	IF p_id IS NULL THEN 
+      SET p_id = LAST_INSERT_ID();
+    END IF;
+  ELSE
+    SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) p_id and/or p_dataCollectionId are NULL';  
+  END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_processing_job_image_sweep` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_processing_job_image_sweep`(
+     INOUT p_id int(11) unsigned,
+	 p_processingJobId int(11) unsigned,
+	 p_dataCollectionId int(11) unsigned,
+     p_startImage mediumint(8) unsigned,
+     p_endImage mediumint(8) unsigned
+  )
+    MODIFIES SQL DATA
+    COMMENT 'If p_id is not provided, inserts new row. Otherwise updates existing row.'
+BEGIN
+  IF p_id IS NOT NULL OR (p_processingJobId IS NOT NULL AND p_dataCollectionId IS NOT NULL) THEN
+    INSERT INTO ProcessingJobImageSweep (
+      processingJobImageSweepId, processingJobId, dataCollectionId, startImage, endImage) 
+	VALUES (
+	  p_id, p_processingJobId, p_dataCollectionId, p_startImage, p_endImage)
+	ON DUPLICATE KEY UPDATE
+      processingJobId = IFNULL(p_processingJobId, processingJobId),
+      dataCollectionId = IFNULL(p_dataCollectionId, dataCollectionId),
+      startImage = IFNULL(p_startImage, startImage),
+      endImage = IFNULL(p_endImage, endImage);
+	IF p_id IS NULL THEN 
+      SET p_id = LAST_INSERT_ID();
+    END IF;
+  ELSE
+	SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) p_id and/or p_processingJobId + p_dataCollectionId are NULL';  
+  END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_processing_job_parameter` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_processing_job_parameter`(
+     INOUT p_id int(11) unsigned,
+	 p_processingJobId int(11) unsigned,
+     p_parameterKey varchar(80),
+     p_parameterValue varchar(255)
+  )
+    MODIFIES SQL DATA
+    COMMENT 'If p_id is not provided, inserts new row. Otherwise updates existing row.'
+BEGIN
+  IF p_id IS NOT NULL OR p_processingJobId IS NOT NULL THEN
+    INSERT INTO ProcessingJobParameter (
+      processingJobParameterId, processingJobId, parameterKey, parameterValue) 
+	VALUES (
+	  p_id, p_processingJobId, p_parameterKey, p_parameterValue)
+	ON DUPLICATE KEY UPDATE
+      processingJobId = IFNULL(p_processingJobId, processingJobId),
+      parameterKey = IFNULL(p_parameterKey, parameterKey),
+      parameterValue = IFNULL(p_parameterValue, parameterValue);
+	IF p_id IS NULL THEN 
+      SET p_id = LAST_INSERT_ID();
+    END IF;
+  ELSE
+    SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) p_id and/or p_processingJobId are NULL';  
+  END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `upsert_processing_program` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -11042,11 +11168,11 @@ BEGIN
 
   IF p_id IS NOT NULL OR (p_id IS NULL AND p_dataCollectionId IS NOT NULL AND p_imageNumber IS NOT NULL) THEN
     INSERT INTO ImageQualityIndicators (
-      dataCollectionId, autoProcProgramId, imageNumber, spotTotal, inResTotal, goodBraggCandidates, iceRings, 
+      imageQualityIndicatorsId, dataCollectionId, autoProcProgramId, imageNumber, spotTotal, inResTotal, goodBraggCandidates, iceRings, 
 	  method1Res, method2Res, maxUnitCell, pctSaturationTop50Peaks,
 	  inResolutionOvrlSpots, binPopCutOffMethod2Res, totalIntegratedSignal, dozor_score, driftFactor) 
       VALUES (
-        p_dataCollectionId, p_autoProcProgramId, p_imageNumber, p_spotTotal, p_inResTotal, p_goodBraggCandidates, p_iceRings,
+        p_id, p_dataCollectionId, p_autoProcProgramId, p_imageNumber, p_spotTotal, p_inResTotal, p_goodBraggCandidates, p_iceRings,
         p_method1Res, p_method2Res, p_maxUnitCell, p_pctSaturationTop50Peaks, 
         p_inResolutionOvrlSpots, p_binPopCutOffMethod2Res, p_totalIntegratedSignal, p_dozorScore, p_driftFactor
       )
@@ -11616,4 +11742,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-10-19 14:37:15
+-- Dump completed on 2017-11-06 11:11:45

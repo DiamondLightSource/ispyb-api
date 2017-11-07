@@ -8,17 +8,48 @@ from testtools import get_mxprocessing
 def test_processing_jobs():
     mxprocessing = get_mxprocessing()
 
-    job = mxprocessing.retrieve_job(5)
+    params = mxprocessing.get_job_params()
+    params['datacollectionid'] = 993677
+    params['display_name'] = 'test_job'
+    params['comments'] = 'Test job by the unit test system ...'
+    params['automatic'] = False
+    params['recipe'] = 'xia2 recipe 14'
+    job_id = mxprocessing.upsert_job(list(params.values()))
+    assert job_id is not None
+    assert job_id > 0
+
+    params = mxprocessing.get_job_parameter_params()
+    params['job_id'] = job_id
+    params['parameter_key'] = 'fudge factor'
+    params['parameter_value'] = '3.14'
+    job_parameter_id = mxprocessing.upsert_job_parameter(list(params.values()))
+    assert job_parameter_id is not None
+    assert job_parameter_id > 0
+
+    params = mxprocessing.get_job_image_sweep_params()
+    params['job_id'] = job_id
+    params['datacollectionid'] = 993677
+    params['start_image'] = 1
+    params['end_image'] = 180
+    id = mxprocessing.upsert_job_image_sweep(list(params.values()))
+    assert id is not None
+    assert id > 0
+
+    job = mxprocessing.retrieve_job(job_id)
     assert job[0]['displayName'] is not None
     assert job[0]['dataCollectionId'] is not None
 
-    job_params = mxprocessing.retrieve_job_parameters(5)
+    job_params = mxprocessing.retrieve_job_parameters(job_id)
     assert job_params[0]['parameterKey'] is not None
-    assert job_params[0]['parameterKey'] is not None
+    assert job_params[0]['parameterKey'] == 'fudge factor'
+    assert job_params[0]['parameterValue'] is not None
+    assert job_params[0]['parameterValue'] == '3.14'
 
-    job_image_sweep = mxprocessing.retrieve_job_image_sweeps(5)
+    job_image_sweep = mxprocessing.retrieve_job_image_sweeps(job_id)
     assert job_image_sweep[0]['startImage'] is not None
+    assert job_image_sweep[0]['startImage'] == 1
     assert job_image_sweep[0]['endImage'] is not None
+    assert job_image_sweep[0]['endImage'] == 180
 
 def test_processing():
     mxprocessing = get_mxprocessing()

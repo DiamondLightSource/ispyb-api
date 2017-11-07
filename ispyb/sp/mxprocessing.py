@@ -62,6 +62,12 @@ class MXProcessing(ispyb.interface.processing.IF):
   _run_blob_params = StrictOrderedDict([('id',None), ('parentid',None),
   ('view1',None), ('view2',None), ('view3',None)])
 
+  _job_params = StrictOrderedDict([('id', None), ('datacollectionid', None), ('display_name', None), ('comments', None), ('recipe', None), ('automatic', None)])
+
+  _job_parameter_params = StrictOrderedDict([('id', None), ('job_id', None), ('parameter_key', None), ('parameter_value', None)])
+
+  _job_image_sweep_params = StrictOrderedDict([('id', None), ('job_id', None), ('datacollectionid', None), ('start_image', None), ('end_image', None)])
+
   @classmethod
   def get_run_params(cls):
     return copy.deepcopy(cls._run_params)
@@ -108,6 +114,18 @@ class MXProcessing(ispyb.interface.processing.IF):
   def get_quality_indicators_params(cls):
     return copy.deepcopy(cls._quality_indicators_params)
 
+  @classmethod
+  def get_job_params(cls):
+     return copy.deepcopy(cls._job_params)
+
+  @classmethod
+  def get_job_parameter_params(cls):
+     return copy.deepcopy(cls._job_parameter_params)
+
+  @classmethod
+  def get_job_image_sweep_params(cls):
+     return copy.deepcopy(cls._job_image_sweep_params)
+
   def upsert_program(self, values):
     '''Store new or update existing program params.'''
     return self.get_connection().call_sp_write(procname='upsert_processing_program', args=values) # doesn't work with dict cursors
@@ -153,3 +171,15 @@ class MXProcessing(ispyb.interface.processing.IF):
   def retrieve_programs_for_job_id(self, id):
     '''Retrieve the processing instances associated with the given processing job ID'''
     return self.get_connection().call_sp_retrieve(procname='retrieve_processing_programs_for_job_id', args=(id,))
+
+  def upsert_job(self, values):
+    '''Update or insert a new processing job entry'''
+    return self.get_connection().call_sp_write(procname='upsert_processing_job', args=values)
+
+  def upsert_job_parameter(self, values):
+    '''Update or insert a new processing job parameter entry'''
+    return self.get_connection().call_sp_write(procname='upsert_processing_job_parameter', args=values)
+
+  def upsert_job_image_sweep(self, values):
+    '''Update or insert a new processing job image sweep entry'''
+    return self.get_connection().call_sp_write(procname='upsert_processing_job_image_sweep', args=values)
