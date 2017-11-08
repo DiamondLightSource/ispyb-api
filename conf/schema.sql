@@ -9519,7 +9519,7 @@ CREATE PROCEDURE `retrieve_samples_assigned_for_proposal`(IN p_proposalCode varc
     COMMENT 'Retrieve the user friendly name and ID of all assigned instances'
 BEGIN
     IF NOT (p_proposalCode IS NULL) AND NOT (p_proposalNumber IS NULL) THEN
-        SELECT bls.blSampleId "sampleId", bls.name "sampleName", bls.code "sampleCode", bls.comments "sampleComments", bls.location "sampleLocation",
+        SELECT bls.blSampleId "sampleId", bls.containerId "containerId", bls.name "sampleName", bls.code "sampleCode", bls.comments "sampleComments", bls.location "sampleLocation",
           bls.packingFraction "samplePackingFraction", bls.dimension1 "dimension1", bls.dimension2 "dimension2", bls.dimension3 "dimension3", 
           bls.shape "shape",
           cr.crystalId "sampleTypeId", cr.name "sampleTypeName", cr.comments "sampleTypeComments", cr.spaceGroup "sampleTypeSpaceGroup",
@@ -9559,10 +9559,10 @@ CREATE PROCEDURE `retrieve_samples_for_sample_group`(IN p_sampleGroupId int unsi
     COMMENT 'Return multi-row result set with sample IDs, order in the group and type for sample group p_sampleGroupId'
 BEGIN
     IF NOT (p_sampleGroupId IS NULL) THEN
-		SELECT blSampleId "sampleId", `type` "type", groupOrder "order"
-        FROM BLSampleGroup_has_BLSample 
-        WHERE blSampleGroupId = p_sampleGroupId
-        ORDER BY blSampleId;
+		SELECT bhb.blSampleId "sampleId", bhb.type "type", bhb.groupOrder "order"
+        FROM BLSampleGroup_has_BLSample bhb
+        WHERE bhb.blSampleGroupId = p_sampleGroupId
+        ORDER BY bhb.blSampleId;
     ELSE
         SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument is NULL: p_sampleGroupId';
     END IF;
@@ -10615,6 +10615,48 @@ BEGIN
 	    SET p_motionCorrectionId = LAST_INSERT_ID();
     	END IF;
      END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_motion_correction_drift` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_motion_correction_drift`(
+     INOUT p_id int(11) unsigned,
+	 p_motionCorrectionId int(11) unsigned,
+     p_frameNumber smallint unsigned,
+     p_deltaX float,
+     p_deltaY float
+  )
+    MODIFIES SQL DATA
+    COMMENT 'If p_id is not provided, inserts new row. Otherwise updates existing row.'
+BEGIN
+  IF p_id IS NOT NULL OR p_motionCorrectionId IS NOT NULL THEN
+    INSERT INTO MotionCorrectionDrift (
+      motionCorrectionDriftId, motionCorrectionId, frameNumber, deltaX, deltaY) 
+	VALUES (
+	  p_id, p_motionCorrectionId, p_frameNumber, p_deltaX, p_deltaY)
+	ON DUPLICATE KEY UPDATE
+      motionCorrectionId = IFNULL(p_motionCorrectionId, motionCorrectionId),
+      frameNumber = IFNULL(p_frameNumber, frameNumber),
+      deltaX = IFNULL(p_deltaX, deltaX),
+      deltaY = IFNULL(p_deltaY, deltaY);
+	IF p_id IS NULL THEN 
+      SET p_id = LAST_INSERT_ID();
+    END IF;
+  ELSE
+    SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) p_id and/or p_motionCorrectionId are NULL';  
+  END IF;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -11742,4 +11784,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-06 11:11:45
+-- Dump completed on 2017-11-08 16:34:12
