@@ -67,6 +67,18 @@ class EMAcquisition(Acquisition):
                 ('comments', None)
             ]
         )
+    
+    _motion_correction_drift_params = \
+        StrictOrderedDict(
+            [
+                ('motionCorrectionDriftId', None),
+                ('motionCorrectionId', None),
+                ('frameNumber', None),
+                ('deltaX', None),
+                ('deltaY', None)
+            ]
+        )
+
     @classmethod
     def get_motion_correction_params(cls):
         return copy.deepcopy(cls._motion_correction_params)
@@ -75,6 +87,10 @@ class EMAcquisition(Acquisition):
     def get_ctf_params(cls):
         return copy.deepcopy(cls._ctf_params)
 
+    @classmethod
+    def get_motion_correction_drift_params(cls):
+        return copy.deepcopy(cls._motion_correction_drift_params)
+
     def insert_motion_correction(self, values):
         '''Store new motion correction params.'''
         return self.get_connection().call_sp_write(procname='upsert_motion_correction', args=values)
@@ -82,3 +98,8 @@ class EMAcquisition(Acquisition):
     def insert_ctf(self, values):
         '''Store new ctf params.'''
         return self.get_connection().call_sp_write(procname='upsert_ctf', args=values)
+
+    def insert_motion_correction_drift(self, values):
+        '''Store new motion correction drift params.'''
+        return self.get_connection().call_sp_write(procname='upsert_motion_correction_drift', args=values)
+
