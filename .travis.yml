@@ -9,7 +9,7 @@ python:
   - "3.6"
 
 addons:
-  mariadb: '10.1'
+  mariadb: '10.2'
 
 before_install:
 - mysql -u root -e "CREATE DATABASE ispybtest; SET GLOBAL log_bin_trust_function_creators=ON;"
