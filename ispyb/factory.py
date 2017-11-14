@@ -1,11 +1,8 @@
-import codecs
-import importlib
-from enum import Enum
+from __future__ import absolute_import, division, print_function
 
-try:
-    import configparser as ConfigParser
-except ImportError:
-    import ConfigParser
+import importlib
+import ispyb
+from enum import Enum
 
 class DataAreaType(Enum):
     CORE = ('Core part of the database schema', 'core', 'Core')
@@ -22,27 +19,9 @@ class DataAreaType(Enum):
         self.classname = classname
 
 def create_connection(conf_file):
-    config = ConfigParser.RawConfigParser(allow_no_value=True)
-    config.readfp(codecs.open(conf_file, "r", "utf8"))
-
-    section = None
-    module_str = None
-    class_str = None
-    if config.has_section('ispyb_mysql_sp'):
-        section = 'ispyb_mysql_sp'
-        module_str = 'ispyb.connector.mysqlsp.main'
-        class_str = 'ISPyBMySQLSPConnector'
-    elif config.has_section('ispyb_ws'):
-        section = 'ispyb_ws'
-        module_str = 'ispyb.connector.ws.main'
-        class_str = 'ISPyBWSConnector'
-    else:
-        raise AttributeError('No supported connection type found in %s' % conf_file)
-
-    conn_mod = importlib.import_module(module_str)
-    ConnClass = getattr(conn_mod, class_str)
-    credentials = dict(config.items(section))
-    return ConnClass(**credentials)
+  import warnings
+  warnings.warn("deprecated, use ispyb.open()", DeprecationWarning)
+  return ispyb.open(conf_file)
 
 def create_data_area(data_area_type, conn):
   '''Factory function. Given a DataArea type and a Connection object imports the relevant data area module and
