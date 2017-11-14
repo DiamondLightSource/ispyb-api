@@ -38,7 +38,7 @@ import ispyb.factory
 from datetime import datetime
 
 # Get a connection and data area objects
-conn = ispyb.factory.create_connection('config.cfg')
+conn = ispyb.open('config.cfg')
 core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
 mxacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXACQUISITION, conn)
 

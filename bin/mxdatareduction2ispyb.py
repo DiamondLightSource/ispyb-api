@@ -23,7 +23,7 @@ if len(sys.argv) not in (3,4):
 
 conf_file = sys.argv[1]
 
-conn = ispyb.factory.create_connection(conf_file)
+conn = ispyb.open(conf_file)
 mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
 
 xml_file = sys.argv[2]
@@ -49,3 +49,5 @@ if len(sys.argv) > 3:
     f = open(sys.argv[3], 'w')
     f.write(xml)
     f.close()
+
+conn.disconnect()
