@@ -79,7 +79,7 @@ StompTransport.load_configuration_file(options.stomp_config)
 StompTransport.add_command_line_options(parser)
 
 # Get a database connection
-conn = ispyb.factory.create_connection(options.db_config)
+conn = ispyb.open(options.db_config)
 mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
 
 def receive_message_but_exit_on_error(*args, **kwargs):
@@ -104,3 +104,5 @@ try:
   time.sleep(24 * 3600)
 except KeyboardInterrupt:
   print("Terminating.")
+finally:
+  conn.disconnect()
