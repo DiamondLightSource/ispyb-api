@@ -43,7 +43,7 @@ class ISPyBMySQLDriver(ispyb.legacy.interface.main.IF,
     with self._db_cc() as cursor:
       cursor.run("SELECT * "
                  "FROM AutoProcProgram "
-                 "WHERE reprocessingId = %s "
+                 "WHERE processingJobId = %s "
                  "LIMIT 100;", reprocessing_id)
       result = cursor.fetchall()
 
@@ -61,8 +61,8 @@ class ISPyBMySQLDriver(ispyb.legacy.interface.main.IF,
   def get_reprocessing_id(self, reprocessing_id):
     with self._db_cc() as cursor:
       cursor.run("SELECT * "
-                 "FROM Reprocessing "
-                 "WHERE reprocessingId = %s;", reprocessing_id)
+                 "FROM ProcessingJob "
+                 "WHERE processingJobId = %s;", reprocessing_id)
       result = cursor.fetchone()
     if not result:
       raise ispyb.legacy.exception.ISPyBNoResultException()
@@ -94,8 +94,8 @@ class ISPyBMySQLDriver(ispyb.legacy.interface.main.IF,
     params = {}
     with self._db_cc() as cursor:
       cursor.run("SELECT parameterKey, parameterValue "
-                 "FROM ReprocessingParameter "
-                 "WHERE reprocessingId = %s;", reprocessing_id)
+                 "FROM ProcessingJobParameter "
+                 "WHERE processingJobId = %s;", reprocessing_id)
       while True:
         result = cursor.fetchmany(size=50)
         if not result: break
@@ -107,8 +107,8 @@ class ISPyBMySQLDriver(ispyb.legacy.interface.main.IF,
     sweeps = []
     with self._db_cc() as cursor:
       cursor.run("SELECT dataCollectionId, startImage, endImage "
-                 "FROM ReprocessingImageSweep "
-                 "WHERE reprocessingId = %s;", reprocessing_id)
+                 "FROM ProcessingJobImageSweep "
+                 "WHERE processingJobId = %s;", reprocessing_id)
       while True:
         result = cursor.fetchmany(size=50)
         if not result: break
