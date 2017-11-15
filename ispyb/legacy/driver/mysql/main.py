@@ -8,7 +8,7 @@ import os.path
 
 import ispyb.legacy.driver.mysql.cursors as cursors
 import ispyb.legacy.driver.mysql.stored_procedures
-import ispyb.legacy.exception
+import ispyb.exception
 import ispyb.legacy.interface.main
 import mysql.connector
 
@@ -65,7 +65,7 @@ class ISPyBMySQLDriver(ispyb.legacy.interface.main.IF,
                  "WHERE processingJobId = %s;", reprocessing_id)
       result = cursor.fetchone()
     if not result:
-      raise ispyb.legacy.exception.ISPyBNoResultException()
+      raise ispyb.exception.ISPyBNoResultException()
     return result
 
   def get_datacollection_id(self, dcid):
@@ -77,7 +77,7 @@ class ISPyBMySQLDriver(ispyb.legacy.interface.main.IF,
       result = cursor.fetchone()
     if result:
       return result
-    raise ispyb.legacy.exception.ISPyBNoResultException()
+    raise ispyb.exception.ISPyBNoResultException()
 
   def get_datacollection_template(self, dcid):
     with self._db_cc() as cursor:
@@ -88,7 +88,7 @@ class ISPyBMySQLDriver(ispyb.legacy.interface.main.IF,
       result = cursor.fetchone()
     if result:
       return os.path.join(result['imageDirectory'], result['fileTemplate'])
-    raise ispyb.legacy.exception.ISPyBNoResultException()
+    raise ispyb.exception.ISPyBNoResultException()
 
   def get_reprocessing_parameters(self, reprocessing_id):
     params = {}
@@ -139,7 +139,7 @@ class ISPyBMySQLDriver(ispyb.legacy.interface.main.IF,
       )
     if result and 'program_id' in result:
       return result['program_id']
-    raise ispyb.legacy.exception.UpdateFailed("Could not add processing program (%s)" % str(result))
+    raise ispyb.exception.ISPyBWriteFailed("Could not add processing program (%s)" % str(result))
 
   def update_processing_status(self, program_id, status=None,
                                start_time=None, update_time=None,
@@ -161,4 +161,4 @@ class ISPyBMySQLDriver(ispyb.legacy.interface.main.IF,
 
     if result and 'program_id' in result and result['program_id'] == program_id:
       return result
-    raise ispyb.legacy.exception.UpdateFailed("Processing status update failed (%s)" % str(result))
+    raise ispyb.exception.ISPyBWriteFailed("Processing status update failed (%s)" % str(result))
