@@ -3069,7 +3069,7 @@ DROP TABLE IF EXISTS `ImageQualityIndicators`;
 CREATE TABLE `ImageQualityIndicators` (
   `imageQualityIndicatorsId` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
   `imageId` int(12) DEFAULT NULL,
-  `autoProcProgramId` int(10) unsigned DEFAULT NULL,
+  `autoProcProgramId` int(10) unsigned DEFAULT NULL COMMENT 'Foreign key to the AutoProcProgram table',
   `spotTotal` int(10) DEFAULT NULL COMMENT 'Total number of spots',
   `inResTotal` int(10) DEFAULT NULL COMMENT 'Total number of spots in resolution range',
   `goodBraggCandidates` int(10) DEFAULT NULL COMMENT 'Total number of Bragg diffraction spots',
@@ -3087,11 +3087,8 @@ CREATE TABLE `ImageQualityIndicators` (
   `imageNumber` mediumint(8) unsigned DEFAULT NULL,
   `driftFactor` float DEFAULT NULL COMMENT 'EM movie drift factor',
   PRIMARY KEY (`imageQualityIndicatorsId`),
-  KEY `AutoProcProgramIdx1` (`autoProcProgramId`),
-  KEY `ImageQualityIndicatorsIdx1` (`imageId`),
   KEY `ImageQualityIndicators_ibfk3` (`dataCollectionId`),
-  CONSTRAINT `AutoProcProgramFK1` FOREIGN KEY (`autoProcProgramId`) REFERENCES `AutoProcProgram` (`autoProcProgramId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `ImageQualityIndicators_ibfk3` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`)
+  CONSTRAINT `_ImageQualityIndicators_ibfk3` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=62328700 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -11812,4 +11809,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-21 10:48:25
+-- Dump completed on 2017-11-21 16:41:50
