@@ -6,6 +6,12 @@ class ISPyBWSConnector(ispyb.interface.connection.IF):
   def __init__(self, user=None, pw=None, url='http://localhost'):
     raise NotImplementedError('Connection type ispyb_ws not implemented')
 
+  def __enter__(self):
+    pass
+
+  def __exit__(self, type, value, traceback):
+    pass
+
   def disconnect(self):
       pass
 

@@ -23,31 +23,29 @@ if len(sys.argv) not in (3,4):
 
 conf_file = sys.argv[1]
 
-conn = ispyb.open(conf_file)
-mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
+with ispyb.open(conf_file) as conn:
+    mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
 
-xml_file = sys.argv[2]
-xml_dir = os.path.split(xml_file)[0]
-# Find the datacollection associated with this data reduction run
-try:
-    dc_id = int(open(os.path.join(xml_dir, '.dc_id'), 'r').read())
-    print('Got DC ID %d from file system' % dc_id)
-except:
-    dc_id = None
+    xml_file = sys.argv[2]
+    xml_dir = os.path.split(xml_file)[0]
+    # Find the datacollection associated with this data reduction run
+    try:
+        dc_id = int(open(os.path.join(xml_dir, '.dc_id'), 'r').read())
+        print('Got DC ID %d from file system' % dc_id)
+    except:
+        dc_id = None
 
-mx_data_reduction_dict = xml_file_to_dict(xml_file)
-(app_id, ap_id, scaling_id, integration_id) = mx_data_reduction_to_ispyb(mx_data_reduction_dict, dc_id, mxprocessing)
+    mx_data_reduction_dict = xml_file_to_dict(xml_file)
+    (app_id, ap_id, scaling_id, integration_id) = mx_data_reduction_to_ispyb(mx_data_reduction_dict, dc_id, mxprocessing)
 
-# Write results to xml_out_file
-if len(sys.argv) > 3:
-    xml = '<?xml version="1.0" encoding="ISO-8859-1"?>'\
-        '<dbstatus><autoProcProgramId>%d</autoProcProgramId>'\
-        '<autoProcId>%d</autoProcId>'\
-        '<autoProcScalingId>%d</autoProcScalingId>'\
-        '<autoProcIntegrationId>%d</autoProcIntegrationId>'\
-        '<code>ok</code></dbstatus>' % (app_id, ap_id, scaling_id, integration_id)
-    f = open(sys.argv[3], 'w')
-    f.write(xml)
-    f.close()
-
-conn.disconnect()
+    # Write results to xml_out_file
+    if len(sys.argv) > 3:
+        xml = '<?xml version="1.0" encoding="ISO-8859-1"?>'\
+            '<dbstatus><autoProcProgramId>%d</autoProcProgramId>'\
+            '<autoProcId>%d</autoProcId>'\
+            '<autoProcScalingId>%d</autoProcScalingId>'\
+            '<autoProcIntegrationId>%d</autoProcIntegrationId>'\
+            '<code>ok</code></dbstatus>' % (app_id, ap_id, scaling_id, integration_id)
+        f = open(sys.argv[3], 'w')
+        f.write(xml)
+        f.close()
