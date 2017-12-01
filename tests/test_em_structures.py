@@ -1,11 +1,10 @@
-#!/usr/bin/env python
+from __future__ import division, print_function
 
 import context
-from testtools import conf_file
 import ispyb.factory
 
-def test_insert_motion_correction():
-    with ispyb.open(conf_file) as conn:
+def test_insert_motion_correction(testconfig):
+  with ispyb.open(testconfig) as conn:
         emacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.EMACQUISITION, conn)
         group_params = emacquisition.get_data_collection_group_params()
         group_params['parentid'] = 55168
@@ -19,8 +18,8 @@ def test_insert_motion_correction():
         motion_cor_id = emacquisition.insert_motion_correction(list(params.values()))
         assert motion_cor_id is not None
 
-def test_insert_ctf():
-    with ispyb.open(conf_file) as conn:
+def test_insert_ctf(testconfig):
+  with ispyb.open(testconfig) as conn:
         emacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.EMACQUISITION, conn)
         group_params = emacquisition.get_data_collection_group_params()
         group_params['parentid'] = 55168
@@ -39,8 +38,8 @@ def test_insert_ctf():
         ctf_id = emacquisition.insert_ctf(list(params.values()))
         assert ctf_id is not None
 
-def test_insert_drift():
-    with ispyb.open(conf_file) as conn:
+def test_insert_drift(testconfig):
+  with ispyb.open(testconfig) as conn:
         emacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.EMACQUISITION, conn)
         group_params = emacquisition.get_data_collection_group_params()
         group_params['parentid'] = 55168

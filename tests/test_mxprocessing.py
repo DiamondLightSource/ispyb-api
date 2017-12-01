@@ -1,13 +1,10 @@
-#!/usr/bin/env python
-
-from datetime import datetime
+from __future__ import division, print_function
 
 import context
-from testtools import conf_file
 import ispyb.factory
 
-def test_processing_jobs():
-    with ispyb.open(conf_file) as conn:
+def test_processing_jobs(testconfig):
+  with ispyb.open(testconfig) as conn:
         mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
 
         params = mxprocessing.get_job_params()
@@ -53,8 +50,8 @@ def test_processing_jobs():
         assert job_image_sweep[0]['endImage'] is not None
         assert job_image_sweep[0]['endImage'] == 180
 
-def test_processing():
-    with ispyb.open(conf_file) as conn:
+def test_processing(testconfig):
+  with ispyb.open(testconfig) as conn:
         mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
 
         params = mxprocessing.get_program_params()
@@ -154,8 +151,8 @@ def test_processing():
         id = mxprocessing.upsert_quality_indicators(list(params.values()))
         assert id is not None
 
-def test_post_processing():
-    with ispyb.open(conf_file) as conn:
+def test_post_processing(testconfig):
+  with ispyb.open(testconfig) as conn:
         mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
 
         params = mxprocessing.get_run_params()

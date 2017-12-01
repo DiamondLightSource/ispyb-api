@@ -1,13 +1,9 @@
-import os
+from __future__ import absolute_import, division, print_function
 
-import ispyb.factory
+import ispyb
+import pytest
 
-def test_ws_connection():
-    conf_file = os.path.abspath(os.path.join(os.path.dirname(__file__), '../conf/ws_config.cfg'))
-    try:
-        with ispyb.open(conf_file) as conn:
-            pass
-    except NotImplementedError:
-        assert True
-    else:
-        assert False
+def test_ws_connection(testconfig_ws):
+  with pytest.raises(NotImplementedError):
+     with ispyb.open(testconfig_ws) as conn:
+        pass
