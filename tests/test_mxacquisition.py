@@ -1,13 +1,10 @@
-#!/usr/bin/env python
-
-from datetime import datetime
+from __future__ import division, print_function
 
 import context
-from testtools import conf_file
 import ispyb.factory
 
-def test_mxacquisition_methods():
-    with ispyb.open(conf_file) as conn:
+def test_mxacquisition_methods(testconfig):
+  with ispyb.open(testconfig) as conn:
         mxacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXACQUISITION, conn)
 
         params = mxacquisition.get_data_collection_group_params()

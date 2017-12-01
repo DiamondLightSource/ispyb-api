@@ -1,14 +1,12 @@
-#!/usr/bin/env python
+from __future__ import division, print_function
 
 import threading
-from datetime import datetime
 
 import context
-from testtools import conf_file
 import ispyb.exception
 
-def test_multi_threads_upsert():
-    with ispyb.open(conf_file) as conn:
+def test_multi_threads_upsert(testconfig):
+  with ispyb.open(testconfig) as conn:
         mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
 
         params = mxprocessing.get_program_params()
@@ -39,13 +37,9 @@ def test_multi_threads_upsert():
         for worker in worker_list:
             worker.join()
 
-def test_retrieve_failure():
-    with ispyb.open(conf_file) as conn:
-        mxacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXACQUISITION, conn)
+def test_retrieve_failure(testconfig):
+  with ispyb.open(testconfig) as conn:
+    mxacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXACQUISITION, conn)
 
-        try:
-            rs = mxacquisition.retrieve_data_collection_main(0)
-        except ispyb.exception.ISPyBNoResultException:
-            assert True
-        else:
-            assert False
+    with pytest.raises(ispyb.exception.ISPyBNoResultException):
+      rs = mxacquisition.retrieve_data_collection_main(0)

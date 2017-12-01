@@ -1,14 +1,13 @@
-#!/usr/bin/env python
+from __future__ import division, print_function
 
 import os
 
 import context
 from ispyb.xmltools import mx_data_reduction_to_ispyb, xml_file_to_dict
-from testtools import conf_file
 import ispyb.factory
 
-def test_mx_data_reduction_xml_to_ispyb():
-    with ispyb.open(conf_file) as conn:
+def test_mx_data_reduction_xml_to_ispyb(testconfig):
+  with ispyb.open(testconfig) as conn:
         mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
 
         xml_file = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data/mx_data_reduction_pipeline_results.xml'))
