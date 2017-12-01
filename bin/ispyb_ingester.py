@@ -79,30 +79,29 @@ StompTransport.load_configuration_file(options.stomp_config)
 StompTransport.add_command_line_options(parser)
 
 # Get a database connection
-conn = ispyb.open(options.db_config)
-mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
+mxprocessing = None
+with ispyb.open(options.db_config) as conn:
+    mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
 
-def receive_message_but_exit_on_error(*args, **kwargs):
-  try:
-    receive_message(*args, **kwargs)
-  except KeyboardInterrupt:
-    print("Terminating.")
-    sys.exit(0)
-  except Exception as e:
-    print("Uncaught exception:", e)
-    print("Terminating.")
-    sys.exit(1)
+    def receive_message_but_exit_on_error(*args, **kwargs):
+      try:
+        receive_message(*args, **kwargs)
+      except KeyboardInterrupt:
+        print("Terminating.")
+        sys.exit(0)
+      except Exception as e:
+        print("Uncaught exception:", e)
+        print("Terminating.")
+        sys.exit(1)
 
-stomp = StompTransport()
-stomp.connect()
-stomp.subscribe('processing_ingest', receive_message_but_exit_on_error, acknowledgement=True)
-stomp.subscribe('ispyb.processing_ingest', receive_message_but_exit_on_error, acknowledgement=True, ignore_namespace=True)
-stomp.subscribe('zocalo.ispyb', receive_message_but_exit_on_error, acknowledgement=True, ignore_namespace=True)
+    stomp = StompTransport()
+    stomp.connect()
+    stomp.subscribe('processing_ingest', receive_message_but_exit_on_error, acknowledgement=True)
+    stomp.subscribe('ispyb.processing_ingest', receive_message_but_exit_on_error, acknowledgement=True, ignore_namespace=True)
+    stomp.subscribe('zocalo.ispyb', receive_message_but_exit_on_error, acknowledgement=True, ignore_namespace=True)
 
-# Run for max 24 hrs, then terminate. Service will be restarted automatically.
-try:
-  time.sleep(24 * 3600)
-except KeyboardInterrupt:
-  print("Terminating.")
-finally:
-  conn.disconnect()
+    # Run for max 24 hrs, then terminate. Service will be restarted automatically.
+    try:
+      time.sleep(24 * 3600)
+    except KeyboardInterrupt:
+      print("Terminating.")

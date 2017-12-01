@@ -1,6 +1,9 @@
 class ISPyBException(Exception):
   '''Base class for all exceptions'''
 
+class ISPyBConnectionException(ISPyBException):
+  '''Unable to connect or connection has been closed.'''
+
 class ISPyBNoResultException(ISPyBException):
   '''Query returned no result.'''
 
