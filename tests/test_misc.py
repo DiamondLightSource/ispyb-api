@@ -4,6 +4,7 @@ import threading
 
 import context
 import ispyb.exception
+import pytest
 
 def test_multi_threads_upsert(testconfig):
   with ispyb.open(testconfig) as conn:
