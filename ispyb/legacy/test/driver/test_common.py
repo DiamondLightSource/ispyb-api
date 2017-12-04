@@ -2,8 +2,6 @@ from __future__ import absolute_import, division
 
 import inspect
 
-import ispyb.legacy.driver.api
-import ispyb.legacy.driver.dummy
 import ispyb.legacy.driver.mysql.main
 import ispyb.legacy.interface.main
 import pytest
@@ -24,11 +22,5 @@ class TestInterfaceImplementation(object):
              "Implementation of function %s in database driver does not " \
              "match function signature in interface definition" % fn
 
-  def test_that_the_API_driver_implementation_matches_the_interface_function_signatures(self):
-    self.check_interface(ispyb.legacy.driver.api.ISPyBAPIDriver)
-
   def test_that_the_database_driver_implementation_matches_the_interface_function_signatures(self):
     self.check_interface(ispyb.legacy.driver.mysql.main.ISPyBMySQLDriver)
-
-  def test_that_the_dummy_driver_implementation_matches_the_interface_function_signatures(self):
-    self.check_interface(ispyb.legacy.driver.dummy.ISPyBDummyDriver)
