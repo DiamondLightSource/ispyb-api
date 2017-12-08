@@ -3,6 +3,26 @@ from __future__ import division, print_function
 import context
 import ispyb.factory
 
+def test_insert_movie(testconfig):
+  with ispyb.open(testconfig) as conn:
+        emacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.EMACQUISITION, conn)
+        group_params = emacquisition.get_data_collection_group_params()
+        group_params['parentid'] = 55168
+        group_id = emacquisition.insert_data_collection_group(list(group_params.values()))
+        collection_params = emacquisition.get_data_collection_params()
+        collection_params['parentid'] = group_id
+        dc_id = emacquisition.insert_data_collection(list(collection_params.values()))
+
+        params = emacquisition.get_movie_params()
+        params['dataCollectionId'] = dc_id
+        params['movieNumber'] = 1
+        params['positionX'] = 4.05
+        params['positionY'] = 8.01
+        movie_id = emacquisition.insert_movie(list(params.values()))
+
+        assert movie_id is not None
+        assert movie_id > 0
+
 def test_insert_motion_correction(testconfig):
   with ispyb.open(testconfig) as conn:
         emacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.EMACQUISITION, conn)
@@ -12,8 +32,16 @@ def test_insert_motion_correction(testconfig):
         collection_params = emacquisition.get_data_collection_params()
         collection_params['parentid'] = group_id
         dc_id = emacquisition.insert_data_collection(list(collection_params.values()))
+
+        params = emacquisition.get_movie_params()
+        params['dataCollectionId'] = dc_id
+        params['movieNumber'] = 1
+        params['positionX'] = 4.05
+        params['positionY'] = 8.01
+        movie_id = emacquisition.insert_movie(list(params.values()))
+
         params = emacquisition.get_motion_correction_params()
-        params["dataCollectionId"] = dc_id
+        params["movieId"] = movie_id
         params["dosePerFrame"] = 20
         motion_cor_id = emacquisition.insert_motion_correction(list(params.values()))
         assert motion_cor_id is not None
@@ -28,8 +56,15 @@ def test_insert_ctf(testconfig):
         collection_params['parentid'] = group_id
         dc_id = emacquisition.insert_data_collection(list(collection_params.values()))
 
+        params = emacquisition.get_movie_params()
+        params['dataCollectionId'] = dc_id
+        params['movieNumber'] = 1
+        params['positionX'] = 4.05
+        params['positionY'] = 8.01
+        movie_id = emacquisition.insert_movie(list(params.values()))
+
         params = emacquisition.get_motion_correction_params()
-        params["dataCollectionId"] = dc_id
+        params["movieId"] = movie_id
         params["dosePerFrame"] = 20
         motion_cor_id = emacquisition.insert_motion_correction(list(params.values()))
 
@@ -48,8 +83,15 @@ def test_insert_drift(testconfig):
         collection_params['parentid'] = group_id
         dc_id = emacquisition.insert_data_collection(list(collection_params.values()))
 
+        params = emacquisition.get_movie_params()
+        params['dataCollectionId'] = dc_id
+        params['movieNumber'] = 1
+        params['positionX'] = 4.05
+        params['positionY'] = 8.01
+        movie_id = emacquisition.insert_movie(list(params.values()))
+
         params = emacquisition.get_motion_correction_params()
-        params["dataCollectionId"] = dc_id
+        params["movieId"] = movie_id
         params["dosePerFrame"] = 20
         motion_cor_id = emacquisition.insert_motion_correction(list(params.values()))
 

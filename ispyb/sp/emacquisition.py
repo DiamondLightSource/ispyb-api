@@ -21,11 +21,25 @@ class EMAcquisition(Acquisition):
       self.update_data_collection_group = super(EMAcquisition, self).upsert_data_collection_group
       self.update_data_collection = super(EMAcquisition, self).upsert_data_collection
 
+    _movie_params = \
+        StrictOrderedDict(
+            [
+                ('movieId', None),
+                ('dataCollectionId', None),
+                ('movieNumber', None),
+                ('movieFullPath', None),
+                ('createdTimeStamp', None),
+                ('positionX', None),
+                ('positionY', None),
+                ('nominalDefocus', None)
+            ]
+        )
+
     _motion_correction_params = \
         StrictOrderedDict(
             [
                 ('motionCorrectionId', None),
-                ('dataCollectionId', None),
+                ('movieId', None),
                 ('autoProcProgramId', None),
                 ('imageNumber', None),
                 ('firstFrame', None),
@@ -67,7 +81,7 @@ class EMAcquisition(Acquisition):
                 ('comments', None)
             ]
         )
-    
+
     _motion_correction_drift_params = \
         StrictOrderedDict(
             [
@@ -78,6 +92,10 @@ class EMAcquisition(Acquisition):
                 ('deltaY', None)
             ]
         )
+
+    @classmethod
+    def get_movie_params(cls):
+        return copy.deepcopy(cls._movie_params)
 
     @classmethod
     def get_motion_correction_params(cls):
@@ -91,6 +109,10 @@ class EMAcquisition(Acquisition):
     def get_motion_correction_drift_params(cls):
         return copy.deepcopy(cls._motion_correction_drift_params)
 
+    def insert_movie(self, values):
+        '''Store new movie params.'''
+        return self.get_connection().call_sp_write(procname='upsert_movie', args=values)
+
     def insert_motion_correction(self, values):
         '''Store new motion correction params.'''
         return self.get_connection().call_sp_write(procname='upsert_motion_correction', args=values)
@@ -102,4 +124,3 @@ class EMAcquisition(Acquisition):
     def insert_motion_correction_drift(self, values):
         '''Store new motion correction drift params.'''
         return self.get_connection().call_sp_write(procname='upsert_motion_correction_drift', args=values)
-
