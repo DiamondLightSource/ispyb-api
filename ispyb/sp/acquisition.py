@@ -7,9 +7,13 @@ class Acquisition(ispyb.interface.acquisition.IF):
   '''Acquisition provides methods to store data in the acquisition tables.'''
 
   _data_collection_group_params =\
-    StrictOrderedDict([('id',None), ('parentid',None), ('sampleid',None), ('experimenttype',None), ('starttime',None), ('endtime',None),
-                         ('crystal_class',None), ('detector_mode',None), ('actual_sample_barcode',None), ('actual_sample_slot_in_container',None),
-                         ('actual_container_barcode',None), ('actual_container_slot_in_sc',None), ('comments',None)])
+    StrictOrderedDict([('id',None), ('parentid',None), ('proposal_code',None), ('proposal_number',None), ('session_number',None),
+                         ('sampleid',None), ('sample_barcode',None), ('experimenttype',None),
+                         ('starttime',None), ('endtime',None),
+                         ('crystal_class',None), ('detector_mode',None),
+                         ('actual_sample_barcode',None), ('actual_sample_slot_in_container',None),
+                         ('actual_container_barcode',None), ('actual_container_slot_in_sc',None), ('comments',None),
+                         ('xtal_snapshot_full_path',None)])
 
   _data_collection_params =\
     StrictOrderedDict([('id',None), ('parentid',None), ('visitid',None), ('sampleid',None), ('detectorid',None), ('positionid',None),
@@ -41,7 +45,8 @@ class Acquisition(ispyb.interface.acquisition.IF):
 
   def upsert_data_collection_group(self, values):
     '''Insert or update MX data collection group.'''
-    return self.get_connection().call_sf_write('upsert_dcgroup', values)
+    #return self.get_connection().call_sf_write('upsert_dcgroup', values)
+    return self.get_connection().call_sp_write('upsert_dc_group_v2', values)
 
   def upsert_data_collection(self, values):
     '''Insert or update data collection.'''

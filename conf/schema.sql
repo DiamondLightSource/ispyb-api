@@ -7278,21 +7278,21 @@ CREATE FUNCTION `upsert_dc`(
      p_focalSpotSizeAtSampleY float, 
      p_polarisation float, 
      p_flux float, 
-
+-- new params
      p_processedDataFile varchar(255), 
      p_datFullPath varchar(255),
      p_magnification int(11),
      p_totalAbsorbedDose float,
-     p_binning tinyint(1), 
-     p_particleDiameter float, 
+     p_binning tinyint(1), -- 1x or 2x 
+     p_particleDiameter float, -- in nm
      p_boxSize_CTF float,
-     p_minResolution float, 
-     p_minDefocus float, 
-     p_maxDefocus float, 
-     p_defocusStepSize float, 
-     p_amountAstigmatism float, 
-     p_extractSize float, 
-     p_bgRadius float, 
+     p_minResolution float, -- in A  
+     p_minDefocus float, -- in A
+     p_maxDefocus float, -- in A
+     p_defocusStepSize float, -- in A
+     p_amountAstigmatism float, -- in A
+     p_extractSize float, -- in nm
+     p_bgRadius float, -- in nm
      p_voltage float,
      p_objAperture float,
      p_c1aperture float,
@@ -7400,10 +7400,10 @@ BEGIN
         c2lens = IFNULL(p_c2lens, c2lens),
         c3lens = IFNULL(p_c3lens, c3lens);
 
-	IF LAST_INSERT_ID() = 0 THEN 
-		RETURN p_id;
-    ELSE 
+	IF p_id IS NULL THEN 
 		RETURN LAST_INSERT_ID();
+    ELSE 
+		RETURN p_id;
     END IF;
   END ;;
 DELIMITER ;
@@ -7425,7 +7425,7 @@ CREATE FUNCTION `upsert_dcgroup`(
 	 p_id int(11) unsigned,
      p_parentId int(10) unsigned,
      p_sampleId int(10) unsigned, 
-     p_experimenttype varchar(45), 
+     p_experimenttype varchar(45), -- values controlled by enum on the table
      p_starttime datetime,
      p_endtime datetime,
      p_crystalClass varchar(20),
@@ -7456,10 +7456,10 @@ BEGIN
         actualContainerSlotInSC = IFNULL(p_actualContainerSlotInSC, actualContainerSlotInSC),
         comments = IFNULL(p_comments, comments);
 
-	IF LAST_INSERT_ID() = 0 THEN 
-		RETURN p_id;
-    ELSE 
+	IF p_id IS NULL THEN 
 		RETURN LAST_INSERT_ID();
+    ELSE 
+		RETURN p_id;
     END IF;
   END ;;
 DELIMITER ;
@@ -7512,10 +7512,10 @@ BEGIN
         comments = IFNULL(p_comments, comments), 
         machineMessage = IFNULL(p_machineMessage, machineMessage);
 
-	IF LAST_INSERT_ID() = 0 THEN 
-		RETURN p_id;
-    ELSE 
+	IF p_id IS NULL THEN 
 		RETURN LAST_INSERT_ID();
+    ELSE 
+		RETURN p_id;
     END IF;
   END ;;
 DELIMITER ;
@@ -7645,7 +7645,7 @@ CREATE FUNCTION `upsert_mrrun`(
     MODIFIES SQL DATA
 BEGIN
 
-    
+    --  Insert a new row, using all the parameters
     INSERT INTO MXMRRun (mxMRRunId, autoProcScalingId, success, message, pipeline, inputCoordFile, outputCoordFile, inputMTZFile, outputMTZFile, 
 		runDirectory, logFile, commandLine, rValueStart, rValueEnd, rFreeValueStart, rFreeValueEnd, starttime, endtime) 
       VALUES (
@@ -7686,10 +7686,10 @@ BEGIN
             starttime = IFNULL(p_starttime, starttime), 
             endtime = IFNULL(p_endtime, endtime);
  
- 	IF LAST_INSERT_ID() = 0 THEN 
-		RETURN p_id;
-    ELSE 
+	IF p_id IS NULL THEN 
 		RETURN LAST_INSERT_ID();
+    ELSE 
+		RETURN p_id;
     END IF;
   END ;;
 DELIMITER ;
@@ -7723,10 +7723,10 @@ BEGIN
 			view2 = IFNULL(p_view2, view2),
 			view3 = IFNULL(p_view3, view3);
 
- 	IF LAST_INSERT_ID() = 0 THEN 
-		RETURN p_id;
-    ELSE 
+	IF p_id IS NULL THEN 
 		RETURN LAST_INSERT_ID();
+    ELSE 
+		RETURN p_id;
     END IF;
   END ;;
 DELIMITER ;
@@ -7910,10 +7910,10 @@ BEGIN
         blSampleStatus = IFNULL(p_blSampleStatus, blSampleStatus), 
         isInSampleChanger = IFNULL(p_isInSampleChanger, isInSampleChanger);
 
-	IF LAST_INSERT_ID() = 0 THEN 
-		RETURN p_id;
-    ELSE 
+	IF p_id IS NULL THEN 
 		RETURN LAST_INSERT_ID();
+    ELSE 
+		RETURN p_id;
     END IF;
 END ;;
 DELIMITER ;
@@ -10397,7 +10397,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES' */ ;
+/*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
 CREATE PROCEDURE `upsert_dc_group`(
 	 INOUT p_id int(11) unsigned,
@@ -10418,6 +10418,7 @@ CREATE PROCEDURE `upsert_dc_group`(
      p_comments varchar(1024)
      )
     MODIFIES SQL DATA
+    COMMENT 'Inserts or updates info about data collection group (p_id).\nMandatory columns:\nFor insert: p_proposalCode, p_proposalNumber, p_sessionNumber\nFor update: p_id \nIn order to associate the data collection group with a sample, one of the following sets of parameters are required:\n* p_sampleId\n* p_proposalCode, p_proposalNumber, p_sessionNumber + p_sampleBarcode\n* p_actualContainerBarcode + p_actualSampleSlotInContainer'
 BEGIN
 
 	DECLARE row_session_id int(10) unsigned DEFAULT NULL;
@@ -10467,10 +10468,108 @@ BEGIN
           actualContainerSlotInSC = IFNULL(p_actualContainerSlotInSC, actualContainerSlotInSC),
           comments = IFNULL(p_comments, comments);
 
-	  IF LAST_INSERT_ID() <> 0 THEN 
+	  IF p_id IS NULL THEN 
 		  SET p_id = LAST_INSERT_ID();
       END IF;      
     END IF;
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_dc_group_v2` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_dc_group_v2`(
+	 INOUT p_id int(11) unsigned,
+     p_sessionId int(10) unsigned,
+     p_proposalCode varchar(3),
+     p_proposalNumber int(10),
+     p_sessionNumber int(10),
+     p_sampleId int(10) unsigned, 
+     p_sampleBarcode varchar(45),
+     p_experimenttype varchar(45), -- values controlled by enum on the table
+     p_starttime datetime,
+     p_endtime datetime,
+     p_crystalClass varchar(20),
+     p_detectorMode varchar(255),
+     p_actualSampleBarcode varchar(45),
+     p_actualSampleSlotInContainer integer(10),
+     p_actualContainerBarcode varchar(45),
+     p_actualContainerSlotInSC integer(10),
+     p_comments varchar(1024),
+     p_xtalSnapshotFullPath	varchar(255)
+     )
+    MODIFIES SQL DATA
+    COMMENT 'Inserts or updates info about data collection group (p_id).\nMandatory columns:\nFor insert: Either p_sessionId or a valid session described by (p_proposalCode, p_proposalNumber, p_sessionNumber)\nFor update: p_id \nNote: In order to associate the data collection group with a sample, one of the following sets of parameters are required:\n* p_sampleId\n* p_proposalCode, p_proposalNumber, p_sessionNumber + p_sampleBarcode\n* p_actualContainerBarcode + p_actualSampleSlotInContainer\nReturns: Record ID in p_id.'
+BEGIN
+	DECLARE row_proposal_id int(10) unsigned DEFAULT NULL;
+	DECLARE row_sample_id int(10) unsigned DEFAULT NULL;
+
+	IF p_sessionId IS NULL AND p_proposalCode IS NOT NULL AND p_proposalNumber IS NOT NULL AND p_sessionNumber IS NOT NULL THEN
+      SELECT max(bs.sessionid), p.proposalId INTO p_sessionId, row_proposal_id 
+      FROM Proposal p INNER JOIN BLSession bs ON p.proposalid = bs.proposalid 
+      WHERE p.proposalCode = p_proposalCode AND p.proposalNumber = p_proposalNumber AND bs.visit_number = p_sessionNumber;
+	END IF;
+
+	IF p_id IS NOT NULL OR p_sessionId IS NOT NULL THEN
+	  -- set p_sampleId if not already set
+      IF p_sessionId IS NOT NULL AND p_sampleId IS NULL AND p_sampleBarcode IS NOT NULL THEN
+	    IF row_proposal_id IS NULL THEN
+          SELECT proposalId INTO row_proposal_id 
+          FROM BLSession 
+          WHERE sessionId = p_sessionId;
+	    END IF;
+        SELECT max(bls.blSampleId) INTO p_sampleId
+        FROM BLSample bls
+		  INNER JOIN Container c on c.containerId = bls.containerId
+          INNER JOIN Dewar d on d.dewarId = c.dewarId
+          INNER JOIN Shipping s on s.shippingId = d.shippingId
+        WHERE bls.code = p_sampleBarcode AND s.proposalId = row_proposal_id;
+	  END IF;
+
+	  IF p_sampleId IS NULL AND (p_actualContainerBarcode IS NOT NULL) AND (p_actualSampleSlotInContainer IS NOT NULL) THEN
+	    SELECT max(bls.blSampleId) INTO p_sampleId
+        FROM BLSample bls
+          INNER JOIN Container c on c.containerId = bls.containerId
+	    WHERE c.barcode = p_actualContainerBarcode AND bls.location = p_actualSampleSlotInContainer;
+      END IF;
+
+      INSERT INTO DataCollectionGroup (datacollectionGroupId, sessionId, blsampleId, experimenttype, starttime, endtime, 
+        crystalClass, detectorMode, actualSampleBarcode, actualSampleSlotInContainer, actualContainerBarcode, actualContainerSlotInSC, 
+        comments, xtalSnapshotFullPath) 
+        VALUES (p_id, p_sessionId, p_sampleId, p_experimenttype, p_starttime, p_endtime, p_crystalClass, p_detectorMode, 
+        p_actualSampleBarcode, p_actualSampleSlotInContainer, p_actualContainerBarcode, p_actualContainerSlotInSC, 
+        p_comments, p_xtalSnapshotFullPath)
+	    ON DUPLICATE KEY UPDATE
+		  sessionId = IFNULL(p_sessionId, sessionId),
+          blsampleId = IFNULL(p_sampleId, blsampleId),
+          experimenttype = IFNULL(p_experimenttype, experimenttype),
+          starttime = IFNULL(p_starttime, starttime),
+          endtime = IFNULL(p_endtime, endtime),
+          crystalClass = IFNULL(p_crystalClass, crystalClass),
+          detectorMode = IFNULL(p_detectorMode, detectorMode),
+          actualSampleBarcode = IFNULL(p_actualSampleBarcode, actualSampleBarcode),
+          actualSampleSlotInContainer = IFNULL(p_actualSampleSlotInContainer, actualSampleSlotInContainer),
+          actualContainerBarcode = IFNULL(p_actualContainerBarcode, actualContainerBarcode),
+          actualContainerSlotInSC = IFNULL(p_actualContainerSlotInSC, actualContainerSlotInSC),
+          comments = IFNULL(p_comments, comments),
+          xtalSnapshotFullPath = IFNULL(p_xtalSnapshotFullPath, xtalSnapshotFullPath);
+
+	  IF p_id IS NULL THEN 
+		  SET p_id = LAST_INSERT_ID();
+      END IF;
+    ELSE
+      SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) are NULL: p_id OR p_sessionId OR a valid session described by (p_proposalCode and p_proposalNumber and p_sessionNumber) must be non-NULL.';  
+    END IF;      
   END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -11885,4 +11984,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-07 17:16:16
+-- Dump completed on 2018-01-11 15:02:47
