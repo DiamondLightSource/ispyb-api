@@ -30,6 +30,30 @@ class MXAcquisition(Acquisition):
                          ('measured_intensity',None), ('jpeg_path',None), ('jpeg_thumb_path',None), ('temperature',None),
                          ('cumulative_intensity',None), ('synchrotron_current',None), ('comments',None), ('machine_msg',None)])
 
+  _dcg_grid_params =\
+    StrictOrderedDict([('id',None), ('parentid',None), ('dxInMm',None), ('dyInMm',None), ('stepsX',None), ('stepsY',None),
+        ('meshAngle',None), ('pixelsPerMicronX',None), ('pixelsPerMicronY',None),
+        ('snapshotOffsetXPixel',None), ('snapshotOffsetYPixel',None), ('orientation',None), ('snaked',None) ])
+
+  _dc_position_params =\
+    StrictOrderedDict([('id',None), ('pos_x',None), ('pos_y',None), ('pos_z',None), ('scale',None)])
+
+  @classmethod
+  def get_dc_position_params(cls):
+    return copy.deepcopy(cls._dc_position_params)
+
+  def update_dc_position(self, values):
+    '''Update the position info associated with a data collection'''
+    return self.get_connection().call_sp_write('update_dc_position', values)
+
+  @classmethod
+  def get_dcg_grid_params(cls):
+    return copy.deepcopy(cls._dcg_grid_params)
+
+  def upsert_dcg_grid(self, values):
+    '''Insert or update the grid info associated with a data collection group'''
+    return self.get_connection().call_sp_write('upsert_dcg_grid', values)
+
   @classmethod
   def get_image_params(cls):
     return copy.deepcopy(cls._image_params)

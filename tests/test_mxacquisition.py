@@ -46,3 +46,28 @@ def test_mxacquisition_methods(testconfig):
         params['parentid'] = id1
         params['comments'] = 'Forgot to comment!'
         iid = mxacquisition.upsert_image(list(params.values()))
+
+        params = mxacquisition.get_dcg_grid_params()
+        params['parentid'] = dcgid
+        params['dx_in_mm'] = 1.2
+        params['dy_in_mm'] = 1.3
+        params['steps_x'] = 20
+        params['steps_x'] = 31
+        params['mesh_angle'] = 45.5
+        params['pixelsPerMicronX'] = 11
+        params['pixelsPerMicronY'] = 11
+        params['snapshotOffsetXPixel'] = 2
+        params['snapshotOffsetYPixel'] = 3
+        params['orientation'] = 'horizontal'
+        params['snaked'] = False
+        dcg_grid_id = mxacquisition.upsert_dcg_grid(list(params.values()))
+        assert dcg_grid_id is not None
+        assert dcg_grid_id > 0
+
+        params = mxacquisition.get_dc_position_params()
+        params['id'] = id1
+        params['pos_x'] = 2.1
+        params['pos_y'] = 14.01
+        params['pos_z'] = 0.0
+        params['scale'] = 1.4
+        mxacquisition.update_dc_position(list(params.values()))
