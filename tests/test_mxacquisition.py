@@ -1,6 +1,7 @@
 from __future__ import division, print_function
 
 import context
+from datetime import datetime
 import ispyb.factory
 
 def test_mxacquisition_methods(testconfig):
@@ -71,3 +72,64 @@ def test_mxacquisition_methods(testconfig):
         params['pos_z'] = 0.0
         params['scale'] = 1.4
         mxacquisition.update_dc_position(list(params.values()))
+
+        params = mxacquisition.get_data_collection_file_attachment_params()
+        params['parentid'] = id1
+        params['file_full_path'] = '/dls/mx/data/mx12345/mx12345-6/processed/xia2_run/result.json'
+        params['file_type'] = 'log'
+        dcfa_id = mxacquisition.upsert_data_collection_file_attachment(list(params.values()))
+        assert dcfa_id is not None
+        assert dcfa_id > 0
+
+        params = mxacquisition.get_energy_scan_params()
+        params['session_id'] = 55168
+        params['element'] = 'Fe'
+        params['start_energy'] = 1.5
+        params['end_energy'] = 10.4
+        params['start_time'] = datetime.strptime('2018-03-03 13:00:00', '%Y-%m-%d %H:%M:%S')
+        params['end_time'] = datetime.strptime('2018-03-03 13:00:10', '%Y-%m-%d %H:%M:%S')
+        params['transmission'] = 0.5
+        esid = mxacquisition.upsert_energy_scan(list(params.values()))
+        assert esid is not None
+        assert esid > 0
+
+        params = mxacquisition.get_fluo_spectrum_params()
+        params['session_id'] = 55168
+        params['energy'] = 1.5
+        params['start_time'] = datetime.strptime('2018-03-03 13:00:00', '%Y-%m-%d %H:%M:%S')
+        params['end_time'] = datetime.strptime('2018-03-03 13:00:10', '%Y-%m-%d %H:%M:%S')
+        params['transmission'] = 0.5
+        fsid = mxacquisition.upsert_fluo_spectrum(list(params.values()))
+        assert fsid is not None
+        assert fsid > 0
+
+        params = mxacquisition.get_fluo_mapping_roi_params()
+        params['edge'] = 'K1'
+        params['element'] = 'Mn'
+        params['start_energy'] = 0.05
+        params['end_energy'] = 20.0
+        params['r'] = 127
+        params['g'] = 255
+        params['b'] = 0
+        fmrid = mxacquisition.upsert_fluo_mapping_roi(list(params.values()))
+        assert fmrid is not None
+        assert fmrid > 0
+
+        params = mxacquisition.get_fluo_mapping_params()
+        params['roi_id'] = fmrid
+        params['dc_id'] = id1
+        params['img_number'] = 1
+        params['counts'] = 14
+        fmid = mxacquisition.upsert_fluo_mapping(list(params.values()))
+        assert fmid is not None
+        assert fmid > 0
+
+        params = mxacquisition.get_robot_action_params()
+        params['session_id'] = 55168
+        params['action_type'] = 'LOAD'
+        params['start_timestamp'] = '2018-03-04 10:16:39'
+        params['end_timestamp'] = '2018-03-04 10:16:39'
+        params['status'] = 'SUCCESS'
+        rid = mxacquisition.upsert_robot_action(list(params.values()))
+        assert rid is not None
+        assert rid > 0

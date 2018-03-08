@@ -23,14 +23,28 @@ class Core(ispyb.interface.core.IF):
   def __init__(self):
     pass
 
+  _session_for_proposal_code_number_params =\
+    StrictOrderedDict([('id',None), ('proposal_code',None), ('proposal_number',None), ('visit_number',None),
+        ('beamline_setup_id',None), ('start_date',None), ('end_date',None), ('beamline_name',None),
+        ('title',None), ('beamline_operator',None), ('nb_shifts',None), ('scheduled',None), ('used_flag',None),
+        ('comments',None), ('external_pk_id',None), ('external_pk_uuid',None)])
+
   _sample_params =\
     StrictOrderedDict([('id',None), ('crystalid',None), ('containerid',None), ('name',None), ('code',None),
                          ('location',None), ('holder_length',None), ('loop_length',None), ('loop_type',None),
                          ('wire_width',None), ('comments',None), ('status',None), ('is_in_sc',None)])
 
   @classmethod
+  def get_session_for_proposal_code_number_params(cls):
+    return copy.deepcopy(cls._session_for_proposal_code_number_params)
+
+  @classmethod
   def get_sample_params(cls):
     return copy.deepcopy(cls._sample_params)
+
+  def upsert_session_for_proposal_code_number(self, values):
+    '''Insert a new session for a proposal with given proposal code and number.'''
+    return self.get_connection().call_sp_write('upsert_session_for_proposal_code_number', values)
 
   def upsert_sample(self, values):
     '''Insert or update sample.'''

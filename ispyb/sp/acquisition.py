@@ -35,6 +35,13 @@ class Acquisition(ispyb.interface.acquisition.IF):
                          ('extract_size',None), ('bg_radius',None), ('voltage',None), ('obj_aperture',None), ('c1aperture',None),
                          ('c2aperture',None), ('c3aperture',None), ('c1lens',None), ('c2lens',None), ('c3lens',None)])
 
+  _data_collection_file_attachment_params =\
+    StrictOrderedDict([('id',None), ('parentid',None), ('file_full_path',None), ('file_type',None)])
+
+  _robot_action_params =\
+    StrictOrderedDict([('id',None), ('session_id',None), ('sample_id',None), ('action_type',None), ('start_timestamp',None), ('end_timestamp',None),
+        ('status',None), ('message',None), ('container_location',None), ('dewar_location',None), ('sample_barcode',None), ('snapshot_before',None), ('snapshot_after',None)])
+
   @classmethod
   def get_data_collection_group_params(cls):
     return copy.deepcopy(cls._data_collection_group_params)
@@ -42,6 +49,14 @@ class Acquisition(ispyb.interface.acquisition.IF):
   @classmethod
   def get_data_collection_params(cls):
     return copy.deepcopy(cls._data_collection_params)
+
+  @classmethod
+  def get_data_collection_file_attachment_params(cls):
+    return copy.deepcopy(cls._data_collection_file_attachment_params)
+
+  @classmethod
+  def get_robot_action_params(cls):
+    return copy.deepcopy(cls._robot_action_params)
 
   def upsert_data_collection_group(self, values):
     '''Insert or update MX data collection group.'''
@@ -52,6 +67,14 @@ class Acquisition(ispyb.interface.acquisition.IF):
     '''Insert or update data collection.'''
     return self.get_connection().call_sf_write('upsert_dc', values)
 
+  def upsert_data_collection_file_attachment(self, values):
+    '''Insert or update a data collection file attachment.'''
+    return self.get_connection().call_sp_write('upsert_dc_file_attachment', values)
+
   def retrieve_data_collection_main(self, id):
     '''Retrieve main data collection parameters for row with given id'''
     return self.get_connection().call_sp_retrieve(procname='retrieve_dc_main', args=(id,))
+
+  def upsert_robot_action(self, values):
+    '''Insert or update a robot action event.'''
+    return self.get_connection().call_sp_write('upsert_robot_action', values)
