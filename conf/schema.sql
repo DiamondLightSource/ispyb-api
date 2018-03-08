@@ -2,7 +2,7 @@
 --
 -- Host: cs04r-sc-vserv-87    Database: ispybstage
 -- ------------------------------------------------------
--- Server version	10.2.9-MariaDB-log
+-- Server version	10.2.12-MariaDB-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -766,6 +766,7 @@ CREATE TABLE `BLSample` (
   `blottingForce` float DEFAULT NULL COMMENT 'Force used when blotting sample, Units: N?',
   `blottingDrainTime` int(11) unsigned DEFAULT NULL COMMENT 'Time sample left to drain after blotting, Units: sec',
   `support` varchar(50) DEFAULT NULL COMMENT 'Sample support material',
+  `subLocation` smallint(5) unsigned DEFAULT NULL COMMENT 'Indicates the sample''s location on a multi-sample pin, where 1 is closest to the pin base',
   PRIMARY KEY (`blSampleId`),
   KEY `BLSample_FKIndex1` (`containerId`),
   KEY `BLSample_FKIndex2` (`crystalId`),
@@ -789,7 +790,7 @@ CREATE TABLE `BLSample` (
 
 LOCK TABLES `BLSample` WRITE;
 /*!40000 ALTER TABLE `BLSample` DISABLE KEYS */;
-INSERT INTO `BLSample` VALUES (11550,NULL,3918,1326,'Sample-001','SAM-011550','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:16:11',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11553,NULL,3921,1326,'Sample-002','SAM-011553','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:21:43',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11556,NULL,3924,1326,'Sample-003','SAM-011556','3',NULL,NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11559,NULL,3927,1329,'Sample-004','SAM-011559','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11562,NULL,3930,1329,'Sample-005','SAM-011562','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11565,NULL,3933,1329,'Sample-006','SAM-011565','3',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11568,NULL,3936,1332,'Sample-007','SAM-011568','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11571,NULL,3939,1332,'Sample-008','SAM-011571','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11574,NULL,3942,1332,'Sample-009','SAM-011574','3',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11577,NULL,3942,1335,'Sample-010','SAM-011577','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11580,NULL,3942,1335,'Sample-011','SAM-011580','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11583,NULL,3951,1335,'Sample-012','SAM-011583','3',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11586,NULL,3954,NULL,'Sample-013','SAM-011586',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11589,NULL,3957,NULL,'Sample-014','SAM-011589',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11592,NULL,3960,NULL,'Sample-015','SAM-011592',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(374695,NULL,310037,33049,'tlys_jan_4','HA00AU3712','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-19 22:57:04',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(398810,197784,333301,34864,'thau8','HA00AK8934','8',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-19 22:57:05',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(398816,197784,310037,34874,'thau88','HH00AU3788','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-09-30 14:21:28',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(398819,197784,310037,34877,'thau99','HH00AU3799','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-10-05 10:15:47',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(398824,NULL,333308,34883,'XPDF-1','XPDF-0001',NULL,NULL,NULL,NULL,NULL,'Test sample for XPDF',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-10-26 14:47:58',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(398827,NULL,333308,34883,'XPDF-2','XPDF-0002',NULL,NULL,NULL,NULL,NULL,'Test sample for XPDF',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-10-26 14:51:23',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `BLSample` VALUES (11550,NULL,3918,1326,'Sample-001','SAM-011550','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:16:11',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11553,NULL,3921,1326,'Sample-002','SAM-011553','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:21:43',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11556,NULL,3924,1326,'Sample-003','SAM-011556','3',NULL,NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11559,NULL,3927,1329,'Sample-004','SAM-011559','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11562,NULL,3930,1329,'Sample-005','SAM-011562','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11565,NULL,3933,1329,'Sample-006','SAM-011565','3',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11568,NULL,3936,1332,'Sample-007','SAM-011568','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11571,NULL,3939,1332,'Sample-008','SAM-011571','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11574,NULL,3942,1332,'Sample-009','SAM-011574','3',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11577,NULL,3942,1335,'Sample-010','SAM-011577','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11580,NULL,3942,1335,'Sample-011','SAM-011580','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11583,NULL,3951,1335,'Sample-012','SAM-011583','3',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11586,NULL,3954,NULL,'Sample-013','SAM-011586',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11589,NULL,3957,NULL,'Sample-014','SAM-011589',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11592,NULL,3960,NULL,'Sample-015','SAM-011592',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(374695,NULL,310037,33049,'tlys_jan_4','HA00AU3712','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-19 22:57:04',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(398810,197784,333301,34864,'thau8','HA00AK8934','8',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-19 22:57:05',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(398816,197784,310037,34874,'thau88','HH00AU3788','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-09-30 14:21:28',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(398819,197784,310037,34877,'thau99','HH00AU3799','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-10-05 10:15:47',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(398824,NULL,333308,34883,'XPDF-1','XPDF-0001',NULL,NULL,NULL,NULL,NULL,'Test sample for XPDF',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-10-26 14:47:58',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(398827,NULL,333308,34883,'XPDF-2','XPDF-0002',NULL,NULL,NULL,NULL,NULL,'Test sample for XPDF',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-10-26 14:51:23',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `BLSample` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2177,12 +2178,12 @@ CREATE TABLE `DataCollection` (
   KEY `startPositionId` (`startPositionId`),
   KEY `DataCollection_FKIndex0` (`BLSAMPLEID`),
   KEY `DataCollection_FKIndex00` (`SESSIONID`),
-  CONSTRAINT `DataCollection_ibfk_1` FOREIGN KEY (`strategySubWedgeOrigId`) REFERENCES `ScreeningStrategySubWedge` (`screeningStrategySubWedgeId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `DataCollection_ibfk_2` FOREIGN KEY (`detectorId`) REFERENCES `Detector` (`detectorId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `DataCollection_ibfk_3` FOREIGN KEY (`dataCollectionGroupId`) REFERENCES `DataCollectionGroup` (`dataCollectionGroupId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `DataCollection_ibfk_6` FOREIGN KEY (`startPositionId`) REFERENCES `MotorPosition` (`motorPositionId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `DataCollection_ibfk_7` FOREIGN KEY (`endPositionId`) REFERENCES `MotorPosition` (`motorPositionId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `DataCollection_ibfk_8` FOREIGN KEY (`blSubSampleId`) REFERENCES `BLSubSample` (`blSubSampleId`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `DataCollection_ibfk_1` FOREIGN KEY (`strategySubWedgeOrigId`) REFERENCES `ScreeningStrategySubWedge` (`screeningStrategySubWedgeId`),
+  CONSTRAINT `DataCollection_ibfk_2` FOREIGN KEY (`detectorId`) REFERENCES `Detector` (`detectorId`),
+  CONSTRAINT `DataCollection_ibfk_3` FOREIGN KEY (`dataCollectionGroupId`) REFERENCES `DataCollectionGroup` (`dataCollectionGroupId`),
+  CONSTRAINT `DataCollection_ibfk_6` FOREIGN KEY (`startPositionId`) REFERENCES `MotorPosition` (`motorPositionId`),
+  CONSTRAINT `DataCollection_ibfk_7` FOREIGN KEY (`endPositionId`) REFERENCES `MotorPosition` (`motorPositionId`),
+  CONSTRAINT `DataCollection_ibfk_8` FOREIGN KEY (`blSubSampleId`) REFERENCES `BLSubSample` (`blSubSampleId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1066787 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2238,7 +2239,7 @@ CREATE TABLE `DataCollectionFileAttachment` (
   `dataCollectionFileAttachmentId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `dataCollectionId` int(11) unsigned NOT NULL,
   `fileFullPath` varchar(255) NOT NULL,
-  `fileType` enum('snapshot','log','xy','recip') DEFAULT NULL COMMENT 'snapshot: image file, usually of the sample. \nlog: a text file with logging info. \nxy: x and y data in text format. \nrecip: a compressed csv file with reciprocal space coordinates.',
+  `fileType` enum('snapshot','log','xy','recip','pia') DEFAULT NULL COMMENT 'snapshot: image file, usually of the sample. log: a text file with logging info. xy: x and y data in text format. recip: a reciprocal space viewer file. pia: per image analysis',
   `createTime` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`dataCollectionFileAttachmentId`),
   KEY `_dataCollectionFileAttachmentId_fk1` (`dataCollectionId`),
@@ -3749,9 +3750,9 @@ CREATE TABLE `MotionCorrection` (
   `comments` varchar(255) DEFAULT NULL,
   `movieId` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`motionCorrectionId`),
-  KEY `_MotionCorrection_ibfk1` (`dataCollectionId`),
   KEY `MotionCorrection_ibfk2` (`autoProcProgramId`),
   KEY `MotionCorrection_ibfk3` (`movieId`),
+  KEY `_MotionCorrection_ibfk1` (`dataCollectionId`),
   CONSTRAINT `MotionCorrection_ibfk2` FOREIGN KEY (`autoProcProgramId`) REFERENCES `AutoProcProgram` (`autoProcProgramId`),
   CONSTRAINT `MotionCorrection_ibfk3` FOREIGN KEY (`movieId`) REFERENCES `Movie` (`movieId`),
   CONSTRAINT `_MotionCorrection_ibfk1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`)
@@ -3873,7 +3874,7 @@ CREATE TABLE `PDB` (
   `contents` mediumtext DEFAULT NULL,
   `code` varchar(4) DEFAULT NULL,
   PRIMARY KEY (`pdbId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3882,6 +3883,7 @@ CREATE TABLE `PDB` (
 
 LOCK TABLES `PDB` WRITE;
 /*!40000 ALTER TABLE `PDB` DISABLE KEYS */;
+INSERT INTO `PDB` VALUES (6,'ceo2','\r\ndata_\r\n_chemical_name_mineral ?CeO2?\r\n_cell_length_a  5.411223\r\n_cell_length_b  5.411223\r\n_cell_length_c  5.411223\r\n_cell_angle_alpha 90\r\n_cell_angle_beta  90\r\n_cell_angle_gamma 90\r\n_cell_volume 158.4478\r\n_symmetry_space_group_name_H-M     \'Fm3m\'\r\nloop_\r\n_symmetry_equiv_pos_as_xyz\r\n	\'-x, -y, -z\'\r\n	\'-x, -y, z\'\r\n	\'-x, -y+1/2, -z+1/2\'\r\n	\'-x, -y+1/2, z+1/2\'\r\n	\'-x, -z, -y\'\r\n	\'-x, -z, y\'\r\n	\'-x, -z+1/2, -y+1/2\'\r\n	\'-x, -z+1/2, y+1/2\'\r\n	\'-x, z, -y\'\r\n	\'-x, z, y\'\r\n	\'-x, z+1/2, -y+1/2\'\r\n	\'-x, z+1/2, y+1/2\'\r\n	\'-x, y, -z\'\r\n	\'-x, y, z\'\r\n	\'-x, y+1/2, -z+1/2\'\r\n	\'-x, y+1/2, z+1/2\'\r\n	\'-x+1/2, -y, -z+1/2\'\r\n	\'-x+1/2, -y, z+1/2\'\r\n	\'-x+1/2, -y+1/2, -z\'\r\n	\'-x+1/2, -y+1/2, z\'\r\n	\'-x+1/2, -z, -y+1/2\'\r\n	\'-x+1/2, -z, y+1/2\'\r\n	\'-x+1/2, -z+1/2, -y\'\r\n	\'-x+1/2, -z+1/2, y\'\r\n	\'-x+1/2, z, -y+1/2\'\r\n	\'-x+1/2, z, y+1/2\'\r\n	\'-x+1/2, z+1/2, -y\'\r\n	\'-x+1/2, z+1/2, y\'\r\n	\'-x+1/2, y, -z+1/2\'\r\n	\'-x+1/2, y, z+1/2\'\r\n	\'-x+1/2, y+1/2, -z\'\r\n	\'-x+1/2, y+1/2, z\'\r\n	\'-y, -x, -z\'\r\n	\'-y, -x, z\'\r\n	\'-y, -x+1/2, -z+1/2\'\r\n	\'-y, -x+1/2, z+1/2\'\r\n	\'-y, -z, -x\'\r\n	\'-y, -z, x\'\r\n	\'-y, -z+1/2, -x+1/2\'\r\n	\'-y, -z+1/2, x+1/2\'\r\n	\'-y, z, -x\'\r\n	\'-y, z, x\'\r\n	\'-y, z+1/2, -x+1/2\'\r\n	\'-y, z+1/2, x+1/2\'\r\n	\'-y, x, -z\'\r\n	\'-y, x, z\'\r\n	\'-y, x+1/2, -z+1/2\'\r\n	\'-y, x+1/2, z+1/2\'\r\n	\'-y+1/2, -x, -z+1/2\'\r\n	\'-y+1/2, -x, z+1/2\'\r\n	\'-y+1/2, -x+1/2, -z\'\r\n	\'-y+1/2, -x+1/2, z\'\r\n	\'-y+1/2, -z, -x+1/2\'\r\n	\'-y+1/2, -z, x+1/2\'\r\n	\'-y+1/2, -z+1/2, -x\'\r\n	\'-y+1/2, -z+1/2, x\'\r\n	\'-y+1/2, z, -x+1/2\'\r\n	\'-y+1/2, z, x+1/2\'\r\n	\'-y+1/2, z+1/2, -x\'\r\n	\'-y+1/2, z+1/2, x\'\r\n	\'-y+1/2, x, -z+1/2\'\r\n	\'-y+1/2, x, z+1/2\'\r\n	\'-y+1/2, x+1/2, -z\'\r\n	\'-y+1/2, x+1/2, z\'\r\n	\'-z, -x, -y\'\r\n	\'-z, -x, y\'\r\n	\'-z, -x+1/2, -y+1/2\'\r\n	\'-z, -x+1/2, y+1/2\'\r\n	\'-z, -y, -x\'\r\n	\'-z, -y, x\'\r\n	\'-z, -y+1/2, -x+1/2\'\r\n	\'-z, -y+1/2, x+1/2\'\r\n	\'-z, y, -x\'\r\n	\'-z, y, x\'\r\n	\'-z, y+1/2, -x+1/2\'\r\n	\'-z, y+1/2, x+1/2\'\r\n	\'-z, x, -y\'\r\n	\'-z, x, y\'\r\n	\'-z, x+1/2, -y+1/2\'\r\n	\'-z, x+1/2, y+1/2\'\r\n	\'-z+1/2, -x, -y+1/2\'\r\n	\'-z+1/2, -x, y+1/2\'\r\n	\'-z+1/2, -x+1/2, -y\'\r\n	\'-z+1/2, -x+1/2, y\'\r\n	\'-z+1/2, -y, -x+1/2\'\r\n	\'-z+1/2, -y, x+1/2\'\r\n	\'-z+1/2, -y+1/2, -x\'\r\n	\'-z+1/2, -y+1/2, x\'\r\n	\'-z+1/2, y, -x+1/2\'\r\n	\'-z+1/2, y, x+1/2\'\r\n	\'-z+1/2, y+1/2, -x\'\r\n	\'-z+1/2, y+1/2, x\'\r\n	\'-z+1/2, x, -y+1/2\'\r\n	\'-z+1/2, x, y+1/2\'\r\n	\'-z+1/2, x+1/2, -y\'\r\n	\'-z+1/2, x+1/2, y\'\r\n	\'z, -x, -y\'\r\n	\'z, -x, y\'\r\n	\'z, -x+1/2, -y+1/2\'\r\n	\'z, -x+1/2, y+1/2\'\r\n	\'z, -y, -x\'\r\n	\'z, -y, x\'\r\n	\'z, -y+1/2, -x+1/2\'\r\n	\'z, -y+1/2, x+1/2\'\r\n	\'z, y, -x\'\r\n	\'z, y, x\'\r\n	\'z, y+1/2, -x+1/2\'\r\n	\'z, y+1/2, x+1/2\'\r\n	\'z, x, -y\'\r\n	\'z, x, y\'\r\n	\'z, x+1/2, -y+1/2\'\r\n	\'z, x+1/2, y+1/2\'\r\n	\'z+1/2, -x, -y+1/2\'\r\n	\'z+1/2, -x, y+1/2\'\r\n	\'z+1/2, -x+1/2, -y\'\r\n	\'z+1/2, -x+1/2, y\'\r\n	\'z+1/2, -y, -x+1/2\'\r\n	\'z+1/2, -y, x+1/2\'\r\n	\'z+1/2, -y+1/2, -x\'\r\n	\'z+1/2, -y+1/2, x\'\r\n	\'z+1/2, y, -x+1/2\'\r\n	\'z+1/2, y, x+1/2\'\r\n	\'z+1/2, y+1/2, -x\'\r\n	\'z+1/2, y+1/2, x\'\r\n	\'z+1/2, x, -y+1/2\'\r\n	\'z+1/2, x, y+1/2\'\r\n	\'z+1/2, x+1/2, -y\'\r\n	\'z+1/2, x+1/2, y\'\r\n	\'y, -x, -z\'\r\n	\'y, -x, z\'\r\n	\'y, -x+1/2, -z+1/2\'\r\n	\'y, -x+1/2, z+1/2\'\r\n	\'y, -z, -x\'\r\n	\'y, -z, x\'\r\n	\'y, -z+1/2, -x+1/2\'\r\n	\'y, -z+1/2, x+1/2\'\r\n	\'y, z, -x\'\r\n	\'y, z, x\'\r\n	\'y, z+1/2, -x+1/2\'\r\n	\'y, z+1/2, x+1/2\'\r\n	\'y, x, -z\'\r\n	\'y, x, z\'\r\n	\'y, x+1/2, -z+1/2\'\r\n	\'y, x+1/2, z+1/2\'\r\n	\'y+1/2, -x, -z+1/2\'\r\n	\'y+1/2, -x, z+1/2\'\r\n	\'y+1/2, -x+1/2, -z\'\r\n	\'y+1/2, -x+1/2, z\'\r\n	\'y+1/2, -z, -x+1/2\'\r\n	\'y+1/2, -z, x+1/2\'\r\n	\'y+1/2, -z+1/2, -x\'\r\n	\'y+1/2, -z+1/2, x\'\r\n	\'y+1/2, z, -x+1/2\'\r\n	\'y+1/2, z, x+1/2\'\r\n	\'y+1/2, z+1/2, -x\'\r\n	\'y+1/2, z+1/2, x\'\r\n	\'y+1/2, x, -z+1/2\'\r\n	\'y+1/2, x, z+1/2\'\r\n	\'y+1/2, x+1/2, -z\'\r\n	\'y+1/2, x+1/2, z\'\r\n	\'x, -y, -z\'\r\n	\'x, -y, z\'\r\n	\'x, -y+1/2, -z+1/2\'\r\n	\'x, -y+1/2, z+1/2\'\r\n	\'x, -z, -y\'\r\n	\'x, -z, y\'\r\n	\'x, -z+1/2, -y+1/2\'\r\n	\'x, -z+1/2, y+1/2\'\r\n	\'x, z, -y\'\r\n	\'x, z, y\'\r\n	\'x, z+1/2, -y+1/2\'\r\n	\'x, z+1/2, y+1/2\'\r\n	\'x, y, -z\'\r\n	\'x, y, z\'\r\n	\'x, y+1/2, -z+1/2\'\r\n	\'x, y+1/2, z+1/2\'\r\n	\'x+1/2, -y, -z+1/2\'\r\n	\'x+1/2, -y, z+1/2\'\r\n	\'x+1/2, -y+1/2, -z\'\r\n	\'x+1/2, -y+1/2, z\'\r\n	\'x+1/2, -z, -y+1/2\'\r\n	\'x+1/2, -z, y+1/2\'\r\n	\'x+1/2, -z+1/2, -y\'\r\n	\'x+1/2, -z+1/2, y\'\r\n	\'x+1/2, z, -y+1/2\'\r\n	\'x+1/2, z, y+1/2\'\r\n	\'x+1/2, z+1/2, -y\'\r\n	\'x+1/2, z+1/2, y\'\r\n	\'x+1/2, y, -z+1/2\'\r\n	\'x+1/2, y, z+1/2\'\r\n	\'x+1/2, y+1/2, -z\'\r\n	\'x+1/2, y+1/2, z\'\r\nloop_\r\n_atom_site_label\r\n_atom_site_type_symbol\r\n_atom_site_symmetry_multiplicity\r\n_atom_site_fract_x\r\n_atom_site_fract_y\r\n_atom_site_fract_z\r\n_atom_site_occupancy\r\n_atom_site_B_iso_or_equiv\r\nCe1 Ce   0 0 0 0 1 0.127911\r\nO1 O   0 0.25 0.25 0.25 1 0.07795472',NULL);
 /*!40000 ALTER TABLE `PDB` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -4903,7 +4905,7 @@ CREATE TABLE `Protein_has_PDB` (
   KEY `Protein_Has_PDB_fk2` (`pdbid`),
   CONSTRAINT `Protein_Has_PDB_fk1` FOREIGN KEY (`proteinid`) REFERENCES `Protein` (`proteinId`),
   CONSTRAINT `Protein_Has_PDB_fk2` FOREIGN KEY (`pdbid`) REFERENCES `PDB` (`pdbId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4912,6 +4914,7 @@ CREATE TABLE `Protein_has_PDB` (
 
 LOCK TABLES `Protein_has_PDB` WRITE;
 /*!40000 ALTER TABLE `Protein_has_PDB` DISABLE KEYS */;
+INSERT INTO `Protein_has_PDB` VALUES (5,123497,6);
 /*!40000 ALTER TABLE `Protein_has_PDB` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5461,7 +5464,7 @@ CREATE TABLE `SchemaStatus` (
   `recordTimeStamp` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`schemaStatusId`),
   UNIQUE KEY `scriptName` (`scriptName`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5470,6 +5473,7 @@ CREATE TABLE `SchemaStatus` (
 
 LOCK TABLES `SchemaStatus` WRITE;
 /*!40000 ALTER TABLE `SchemaStatus` DISABLE KEYS */;
+INSERT INTO `SchemaStatus` VALUES (6,'20180213_BLSample_subLocation.sql','DONE','2018-02-13 13:27:19'),(12,'20180213_DataCollectionFileAttachment_fileType.sql','DONE','2018-02-13 15:12:54');
 /*!40000 ALTER TABLE `SchemaStatus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -8000,7 +8004,7 @@ CREATE PROCEDURE `insert_beamline_action`(
      p_status enum('PAUSED','RUNNING','TERMINATED','COMPLETE','ERROR','EPICSFAIL')
 )
     MODIFIES SQL DATA
-    COMMENT 'Insert a beamline action row for session p_proposalCode + p_prop'
+    COMMENT 'Insert a beamline action row for session p_proposalCode + p_proposalNumber + p_sessionNumber. Returns ID of row in p_id'
 BEGIN
 	DECLARE row_session_id int(10) unsigned DEFAULT NULL;
 	DECLARE row_proposal_id int(10) unsigned DEFAULT NULL;
@@ -8013,7 +8017,7 @@ BEGIN
       INSERT INTO BeamlineAction (sessionId, startTimestamp, endTimestamp, message, parameter, `value`, loglevel, `status`) 
           VALUES (row_session_id, p_startTime, p_endTime, p_message, p_parameter, p_value, p_logLevel, p_status);
 
-	  IF LAST_INSERT_ID() <> 0 THEN 
+	  IF p_id IS NULL THEN 
 		  SET p_id = LAST_INSERT_ID();
       END IF;      
     ELSE
@@ -8244,7 +8248,7 @@ CREATE PROCEDURE `insert_screening`(
      p_comments varchar(255)
 )
     MODIFIES SQL DATA
-    COMMENT 'Insert a row with info about a screening. Returns the ID in p_id'
+    COMMENT 'Insert a row with info about a screening. Returns the ID in p_id.'
 BEGIN
 	  IF p_dcgId IS NULL AND p_dcId IS NOT NULL THEN
 		SELECT dataCollectionGroupId INTO p_dcgId FROM DataCollection WHERE dataCollectionId = p_dcId;
@@ -8284,7 +8288,7 @@ CREATE PROCEDURE `insert_screening_input`(
      p_minSignalToNoise float
 )
     MODIFIES SQL DATA
-    COMMENT 'Insert a row with info about a screening input. Returns the ID i'
+    COMMENT 'Insert a row with info about a screening input. Returns the ID in p_id.'
 BEGIN
       INSERT INTO ScreeningInput (screeningId, beamX, beamY, rmsErrorLimits, minimumFractionIndexed, maximumFractionRejected, minimumSignalToNoise) 
         VALUES (p_screeningId, p_beamX, p_beamY, p_rmsErrorLimits, p_minFractionIndexed, p_maxFractionRejected, p_minSignalToNoise);
@@ -8336,7 +8340,7 @@ CREATE PROCEDURE `insert_screening_output`(
      p_strategySuccess boolean
 )
     MODIFIES SQL DATA
-    COMMENT 'Insert a row with info about a screening output. Returns the ID'
+    COMMENT 'Insert a row with info about a screening output. Returns the ID in p_id.'
 BEGIN
       INSERT INTO ScreeningOutput (screeningId, statusDescription, rejectedReflections, resolutionObtained, spotDeviationR, spotDeviationTheta, 
         beamShiftX, beamShiftY, numSpotsFound, numSpotsUsed, numSpotsRejected, mosaicity, iOverSigma, 
@@ -8390,7 +8394,7 @@ CREATE PROCEDURE `insert_screening_output_lattice`(
      p_labelitIndexing boolean
 )
     MODIFIES SQL DATA
-    COMMENT 'Insert a row with info about a screening output lattice. Returns'
+    COMMENT 'Insert a row with info about a screening output lattice. Returns the ID in p_id.'
 BEGIN
       INSERT INTO ScreeningOutputLattice (screeningOutputId, spaceGroup, pointGroup, bravaisLattice, 
         rawOrientationMatrix_a_x, rawOrientationMatrix_a_y, rawOrientationMatrix_a_z,
@@ -8438,7 +8442,7 @@ CREATE PROCEDURE `insert_screening_strategy`(
      p_transmission float
 )
     MODIFIES SQL DATA
-    COMMENT 'Insert a row with info about a screening strategy. Returns the I'
+    COMMENT 'Insert a row with info about a screening strategy. Returns the ID in p_id.'
 BEGIN
       INSERT INTO ScreeningStrategy (
         screeningOutputId, phiStart, phiEnd, rotation, exposureTime, 
@@ -8484,7 +8488,7 @@ CREATE PROCEDURE `insert_screening_strategy_sub_wedge`(
      p_comments varchar(255)
      )
     MODIFIES SQL DATA
-    COMMENT 'Insert a row with info about a screening strategy sub-wedge. Ret'
+    COMMENT 'Insert a row with info about a screening strategy sub-wedge. Returns the ID in p_id.'
 BEGIN
       INSERT INTO ScreeningStrategySubWedge (
         screeningStrategyWedgeId, subWedgeNumber, rotationAxis, axisStart, axisEnd, exposureTime, transmission, 
@@ -8528,7 +8532,7 @@ CREATE PROCEDURE `insert_screening_strategy_wedge`(
      p_wavelength	double
      )
     MODIFIES SQL DATA
-    COMMENT 'Insert a row with info about a screening strategy wedge. Returns'
+    COMMENT 'Insert a row with info about a screening strategy wedge. Returns the ID in p_id.'
 BEGIN
       INSERT INTO ScreeningStrategyWedge (
         screeningStrategyId, wedgeNumber, resolution, completeness, multiplicity, doseTotal, numberOfImages, 
@@ -8626,19 +8630,19 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_components_for_sample_type`(IN p_sampleTypeId int unsigned)
     READS SQL DATA
-    COMMENT 'Return multi-row result-set with component ID and other info abo'
+    COMMENT 'Return multi-row result-set with component ID and other info about components associated with sample type p_sampleTypeId'
 BEGIN
     IF NOT (p_sampleTypeId IS NULL) THEN
       SELECT
           prot.proteinId "componentId", prot.name "componentName", prot.density "componentDensity", prot.sequence "componentContent", prot.molecularMass "componentMolecularMass", 
-          prot.abundance "componentAbundance"
+          c.abundance "componentAbundance"
       FROM Protein prot  
         INNER JOIN Crystal c on prot.proteinId = c.proteinId
       WHERE c.crystalId = p_sampleTypeId
       UNION ALL
       SELECT
           prot.proteinId "componentId", prot.name "componentName", prot.density "componentDensity", prot.sequence "componentContent", prot.molecularMass "componentMolecularMass", 
-          prot.abundance "componentAbundance"
+          bhc.abundance "componentAbundance"
       FROM BLSampleType_has_Component bhc  
         INNER JOIN Protein prot on prot.proteinId = bhc.componentId
       WHERE bhc.blSampleTypeId = p_sampleTypeId;
@@ -9326,6 +9330,87 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_dewars_for_proposal_code_number` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_dewars_for_proposal_code_number`(p_proposalCode varchar(3), p_proposalNumber int unsigned)
+    READS SQL DATA
+    COMMENT 'Return multi-row result-set with dewar ID + other dewar info associated with shipments in a given proposal specified by proposal code, proposal_number'
+BEGIN
+    IF NOT (p_proposalNumber IS NULL) THEN
+      SELECT
+          d.dewarId "id", d.shippingId "shippingId", d.code "name", d.comments "comments", d.storageLocation "storageLocation",
+          d.dewarStatus "status", d.isStorageDewar "isStorageDewar", d.barCode "barCode", d.firstExperimentId "firstSessionId",
+					d.type "type", d.facilityCode "facilityCode", d.weight "weight", d.deliveryAgent_barcode "deliveryAgentBarcode"
+      FROM Dewar d
+        INNER JOIN Shipping s ON s.shippingId = d.shippingId
+				INNER JOIN Proposal p ON p.proposalId = s.proposalId
+      WHERE p.proposalCode = p_proposalCode AND p.proposalNumber = p_proposalNumber;
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_proposalNumber is NULL';
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_grid_info_for_dc_ids` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_grid_info_for_dc_ids`(IN p_dcIds TEXT)
+    READS SQL DATA
+    COMMENT 'Return multi-row result-set with dc ID, grid info and some additional related dc values'
+BEGIN
+    IF NOT (p_dcIds IS NULL) THEN
+      SELECT
+        dc.datacollectionid,
+        gi.dx_mm,
+        gi.dy_mm,
+        gi.steps_x,
+        gi.steps_y,
+        gi.pixelsPerMicronX,
+        gi.pixelsPerMicronY,
+        gi.snapshot_offsetXPixel,
+        gi.snapshot_offsetYPixel,
+        gi.orientation,
+        gi.snaked,
+        dc.beamSizeAtSampleX,
+        dc.beamSizeAtSampleY,
+        dc.imageDirectory,
+        dc.imagePrefix,
+        dc.imageSuffix,
+        dc.fileTemplate,
+        dc.xtalSnapshotFullPath1,
+        dc.xtalSnapshotFullPath2,
+        dc.xtalSnapshotFullPath3,
+        dc.xtalSnapshotFullPath4
+    FROM GridInfo gi
+      INNER JOIN DataCollection dc ON dc.dataCollectionGroupId = gi.dataCollectionGroupId
+    WHERE FIND_IN_SET(dc.dataCollectionId, p_dcIds);
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_dcIds is NULL';
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `retrieve_lcs_for_session` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -9379,6 +9464,35 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_pdbs_for_component` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_pdbs_for_component`(IN p_componentId int unsigned)
+    READS SQL DATA
+    COMMENT 'Return multi-row result set with PDB columns for component p_componentId'
+BEGIN
+    IF NOT (p_componentId IS NULL) THEN
+		SELECT pdb.pdbId "pdbId", pdb.name "name", pdb.contents "contents", pdb.code "code"
+        FROM PDB pdb
+          INNER JOIN Protein_has_PDB php ON pdb.pdbId = php.pdbId
+        WHERE php.proteinId = p_componentId
+        ORDER BY pdb.pdbId;
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument is NULL: p_componentId';
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `retrieve_persons_for_proposal` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -9391,7 +9505,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_persons_for_proposal`(p_proposal_code varchar(5), p_proposal_number int)
     READS SQL DATA
-    COMMENT 'Returns a multi-row result-set with info about the persons for \n'
+    COMMENT 'Returns a multi-row result-set with info about the persons for \nproposal p_proposal_code + p_proposal_number'
 BEGIN
     IF p_proposal_code IS NOT NULL AND p_proposal_number IS NOT NULL THEN
       SELECT per.title, per.givenName, per.familyName, per.login, php.role
@@ -9518,7 +9632,7 @@ BEGIN
       ORDER BY autoProcProgramId ASC
       LIMIT 1000;
     ELSE
-	  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory arguments p_id can not be NULL';
+	  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_id can not be NULL';
 	END IF;
 END ;;
 DELIMITER ;
@@ -9623,8 +9737,16 @@ CREATE PROCEDURE `retrieve_samples_for_sample_group`(IN p_sampleGroupId int unsi
     COMMENT 'Return multi-row result set with sample IDs, order in the group and type for sample group p_sampleGroupId'
 BEGIN
     IF NOT (p_sampleGroupId IS NULL) THEN
-		SELECT bhb.blSampleId "sampleId", bhb.type "type", bhb.groupOrder "order"
-        FROM BLSampleGroup_has_BLSample bhb
+		SELECT bls.blSampleId "sampleId", bls.containerId "containerId", bls.crystalId "sampleTypeId", bls.name "sampleName",
+		  bls.code "sampleCode", bls.comments "sampleComments", bls.location "sampleLocation", 
+          bls.packingFraction "samplePackingFraction", 
+          bls.dimension1 "dimension1", bls.dimension2 "dimension2", bls.dimension3 "dimension3", 
+          bls.shape "shape",
+          c.name "sampleTypeName", c.comments "sampleTypeComments", c.spaceGroup "sampleTypeSpaceGroup", c.proteinId "componentId",
+          bhb.type "typeInGroup", bhb.groupOrder "orderInGroup"
+        FROM BLSampleGroup_has_BLSample bhb 
+          INNER JOIN BLSample bls ON bls.blSampleId = bhb.blSampleId 
+          INNER JOIN Crystal c ON c.crystalId = bls.crystalId
         WHERE bhb.blSampleGroupId = p_sampleGroupId
         ORDER BY bhb.blSampleId;
     ELSE
@@ -9656,6 +9778,35 @@ BEGIN
         WHERE blSampleId=p_sampleId;
 	ELSE
         SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_sampleId is NULL';
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_sample_type_for_sample` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_sample_type_for_sample`(IN p_sampleId int unsigned)
+    READS SQL DATA
+    COMMENT 'Return single-row result set with sample type columns for sample p_sampleId'
+BEGIN
+    IF NOT (p_sampleId IS NULL) THEN
+		SELECT c.crystalId "sampleTypeId", c.proteinId "componentId", c.name "name", c.comments "comments"
+        FROM Crystal c
+          INNER JOIN BLSample bls ON c.crystalId = bls.crystalId
+        WHERE bls.blSampleId = p_sampleId
+        ORDER BY c.crystalId;
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument is NULL: p_sampleId';
     END IF;
 END ;;
 DELIMITER ;
@@ -9717,7 +9868,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `update_container_assign`(IN p_beamline varchar(20), IN p_registry_barcode varchar(45), IN p_position int)
     MODIFIES SQL DATA
-    COMMENT 'Toggles the assign status of a container with barcode = p_barcod'
+    COMMENT 'Toggles the ''assign'' status of a container (barcode = p_barcode) between ''processing'' and ''at DLS''. Sets the sampleChangerLocation, beamlineLocation. If the containerStatus is set to ''processing'' then sets the same status for its dewar and shipping.'
 BEGIN
     DECLARE row_containerId int(10) unsigned DEFAULT NULL;
     DECLARE row_containerStatus varchar(45) DEFAULT NULL;
@@ -9734,26 +9885,27 @@ BEGIN
         LIMIT 1;
 
         IF NOT row_containerId IS NULL THEN
-        -- Assign the container
-          UPDATE Container
+        
+          UPDATE Container c
+          INNER JOIN Dewar d ON d.dewarId = c.dewarId
+          INNER JOIN Shipping s ON s.shippingId = d.shippingId
           SET
-            sampleChangerLocation = IF(row_containerStatus='processing', '', p_position),
-            beamlineLocation = p_beamline,
-            containerStatus = IF(row_containerStatus='processing', 'at DLS', 'processing')
+            c.sampleChangerLocation = IF(row_containerStatus='processing', '', p_position),
+            c.beamlineLocation = p_beamline,
+            c.containerStatus = IF(row_containerStatus='processing', 'at DLS', 'processing'),
+			d.dewarStatus = IF(row_containerStatus='processing', d.dewarStatus, 'processing'), 
+            d.storageLocation = IF(row_containerStatus='processing', d.storageLocation, p_beamline), 
+            s.shippingStatus = IF(row_containerStatus='processing', s.shippingStatus, 'processing')
           WHERE
-            containerId = row_containerId;
+            c.containerId = row_containerId;
 
 		  IF row_containerStatus <> 'processing' THEN
-          -- Assign the dewar as well
-            UPDATE Dewar 
-            SET dewarStatus = 'processing', storageLocation = p_beamline
-            WHERE dewarId = row_dewarId;
-            
+          
             INSERT INTO DewarTransportHistory (dewarId, dewarStatus, storageLocation, arrivalDate) 
               VALUES (row_dewarId, 'processing', p_beamline, NOW());
           END IF;
 
-          -- Add to history
+          
           INSERT INTO ContainerHistory (containerId, location, status, beamlineName)
             VALUES (row_containerId, p_position, IF(row_containerStatus='processing', 'at DLS', 'processing'), p_beamline);
         ELSE
@@ -9782,14 +9934,14 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `update_container_ls_position`(IN p_barcode varchar(45), IN p_position int)
     MODIFIES SQL DATA
-    COMMENT 'Updates container sampleChangerLocation for barcode = p_barcode,'
+    COMMENT 'Updates container sampleChangerLocation for barcode = p_barcode, then calls update_container_status(p_barcode, in_localstorage)'
 BEGIN
 	IF NOT (p_barcode IS NULL) THEN
 	  UPDATE Container
       SET sampleChangerLocation = p_position
       WHERE barcode = p_barcode;
 
-	  CALL update_container_status(p_barcode, 'in_localstorage');
+	  
     ELSE
         SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_barcode is NULL';
     END IF;
@@ -10389,6 +10541,46 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_dc_file_attachment` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_dc_file_attachment`(
+	 INOUT p_id int(11) unsigned,
+     p_dataCollectionId int(11) unsigned,
+     p_fileFullPath varchar(255),
+     p_fileType varchar(45)
+	)
+    MODIFIES SQL DATA
+    COMMENT 'Inserts or updates info about a file attachmet for a data collection. Returns: The PK value in p_id.'
+BEGIN
+	IF p_id IS NOT NULL OR p_dataCollectionId IS NOT NULL THEN
+
+      INSERT INTO DataCollectionFileAttachment (dataCollectionFileAttachmentId, dataCollectionId, fileFullPath, fileType)
+        VALUES (p_id, p_dataCollectionId, p_fileFullPath, p_fileType)
+	    ON DUPLICATE KEY UPDATE
+		  dataCollectionId = IFNULL(p_dataCollectionId, dataCollectionId),
+          fileFullPath = IFNULL(p_fileFullPath, fileFullPath),
+          fileType = IFNULL(p_fileType, fileType);
+
+	  IF p_id IS NULL THEN
+		  SET p_id = LAST_INSERT_ID();
+      END IF;
+    ELSE
+      SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument is NULL: p_id OR p_dataCollectionId must be non-NULL.';
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `upsert_dc_group` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -10406,7 +10598,7 @@ CREATE PROCEDURE `upsert_dc_group`(
      p_sessionNumber int(10),
      p_sampleId int(10) unsigned, 
      p_sampleBarcode varchar(45),
-     p_experimenttype varchar(45), -- values controlled by enum on the table
+     p_experimenttype varchar(45), 
      p_starttime datetime,
      p_endtime datetime,
      p_crystalClass varchar(20),
@@ -10496,7 +10688,7 @@ CREATE PROCEDURE `upsert_dc_group_v2`(
      p_sessionNumber int(10),
      p_sampleId int(10) unsigned, 
      p_sampleBarcode varchar(45),
-     p_experimenttype varchar(45), -- values controlled by enum on the table
+     p_experimenttype varchar(45), 
      p_starttime datetime,
      p_endtime datetime,
      p_crystalClass varchar(20),
@@ -10521,7 +10713,7 @@ BEGIN
 	END IF;
 
 	IF p_id IS NOT NULL OR p_sessionId IS NOT NULL THEN
-	  -- set p_sampleId if not already set
+	  
       IF p_sessionId IS NOT NULL AND p_sampleId IS NULL AND p_sampleBarcode IS NOT NULL THEN
 	    IF row_proposal_id IS NULL THEN
           SELECT proposalId INTO row_proposal_id 
@@ -10722,6 +10914,255 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_dewar` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_dewar`(
+	 INOUT p_id int(10) unsigned,
+	 p_shippingId int(10) unsigned,
+	 p_name varchar(45),
+	 p_comments tinytext,
+	 p_storageLocation varchar(45),
+	 p_status varchar(45),
+	 p_isStorageDewar tinyint(1),
+	 p_barcode varchar(45),
+	 p_firstSessionId int(10) unsigned,
+	 p_customsValue int(11) unsigned,
+	 p_transportValue int(11) unsigned,
+	 p_trackingNumberToSynchrotron varchar(30),
+	 p_trackingNumberFromSynchrotron varchar(30),
+	 p_type varchar(40),
+	 p_facilityCode varchar(20),
+	 p_weight float,
+	 p_deliveryAgentBarcode varchar(30)
+ )
+    MODIFIES SQL DATA
+    COMMENT 'Inserts or updates info about a dewar/parcel (p_id).\nMandatory columns:\nFor insert: none\nFor update: p_id \nReturns: Record ID in p_id.'
+BEGIN
+	IF p_type IS NOT NULL THEN
+  	INSERT INTO Dewar(dewarId,shippingId,code,comments,storageLocation,dewarStatus,isStorageDewar,barCode,firstExperimentId,customsValue,transportValue,
+			trackingNumberToSynchrotron,trackingNumberFromSynchrotron,`type`,FACILITYCODE,weight,deliveryAgent_barcode)
+			VALUES (p_id, p_shippingId, p_name, p_comments, p_storageLocation, p_status, p_isStorageDewar, p_barcode, p_firstSessionId, p_customsValue, p_transportValue,
+				p_trackingNumberToSynchrotron, p_trackingNumberFromSynchrotron, p_type, p_facilityCode, p_weight, p_deliveryAgentBarcode)
+			ON DUPLICATE KEY UPDATE
+				shippingId = IFNULL(p_shippingId, shippingId),
+				code = IFNULL(p_name, code),
+				comments = IFNULL(p_comments, comments),
+				storageLocation = IFNULL(p_storageLocation, storageLocation),
+				dewarStatus = IFNULL(p_status, dewarStatus),
+				isStorageDewar = IFNULL(p_isStorageDewar, isStorageDewar),
+				barCode = IFNULL(p_barcode, barCode),
+				firstExperimentId = IFNULL(p_firstSessionId, firstExperimentId),
+				customsValue = IFNULL(p_customsValue, customsValue),
+				transportValue = IFNULL(p_transportValue, transportValue),
+				trackingNumberToSynchrotron = IFNULL(p_trackingNumberToSynchrotron, trackingNumberToSynchrotron),
+				trackingNumberFromSynchrotron = IFNULL(p_trackingNumberFromSynchrotron, trackingNumberFromSynchrotron),
+				`type` = IFNULL(p_type, `type`),
+				FACILITYCODE = IFNULL(p_facilityCode, FACILITYCODE),
+				weight = IFNULL(p_weight, weight),
+				deliveryAgent_barcode = IFNULL(p_deliveryAgentBarcode, deliveryAgent_barcode);
+
+		IF p_id IS NULL THEN
+			SET p_id = LAST_INSERT_ID();
+		END IF;
+	ELSE
+		SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument is NULL: p_type must be non-NULL.';
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_energy_scan` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_energy_scan`(
+	 INOUT p_id int(11) unsigned,
+	 p_sessionId int(10) unsigned,
+	 p_sampleId int(10) unsigned,
+	 p_subSampleId int(11) unsigned,
+	 p_startTime datetime,
+	 p_endTime datetime,
+	 p_startEnergy float,
+	 p_endEnergy float,
+	 p_detector varchar(40),
+	 p_element varchar(10),
+	 p_edgeEnergy varchar(10),
+	 p_synchrotronCurrent float,
+	 p_temperature float,
+	 p_peakEnergy float,
+	 p_peakFPrime float,
+	 p_peakFDoublePrime float,
+	 p_inflectionEnergy float,
+	 p_inflectionFPrime float,
+	 p_inflectionFDoublePrime float,
+	 p_choochFileFullPath varchar(255),
+	 p_jpegChoochFileFullPath varchar(255),
+	 p_scanFileFullPath varchar(255),
+	 p_beamSizeHorizontal float,
+	 p_beamSizeVertical float,
+	 p_exposureTime float,
+	 p_transmission float,
+	 p_flux double,
+	 p_fluxEnd double,
+	 p_comments varchar(1024))
+    MODIFIES SQL DATA
+    COMMENT 'Inserts or updates info about an energy scan (p_id).\nMandatory columns:\nFor insert: p_sessionId\nFor update: p_id \nReturns: Record ID in p_id.'
+BEGIN
+	IF p_id IS NOT NULL OR p_sessionId IS NOT NULL THEN
+
+      INSERT INTO EnergyScan (energyScanId, sessionId, blSampleId, blSubSampleId, startTime, endTime,
+				startEnergy, endEnergy, fluorescenceDetector, element, edgeEnergy, synchrotronCurrent, temperature,
+				peakEnergy, peakFPrime, peakFDoublePrime, inflectionEnergy, inflectionFPrime, inflectionFDoublePrime,
+		 	 	choochFileFullPath, jpegChoochFileFullPath, scanFileFullPath, beamSizeHorizontal, beamSizeVertical,
+		 	 	exposureTime, transmissionFactor, flux, flux_end, comments)
+        VALUES (p_id, p_sessionId, p_sampleId, p_subSampleId, p_startTime, p_endTime,
+					p_startEnergy, p_endEnergy, p_detector, p_element, p_edgeEnergy, p_synchrotronCurrent, p_temperature,
+					p_peakEnergy, p_peakFPrime, p_peakFDoublePrime, p_inflectionEnergy, p_inflectionFPrime, p_inflectionFDoublePrime,
+			 	 	p_choochFileFullPath, p_jpegChoochFileFullPath, p_scanFileFullPath, p_beamSizeHorizontal, p_beamSizeVertical,
+			 	 	p_exposureTime, p_transmission, p_flux, p_fluxEnd, p_comments)
+	    ON DUPLICATE KEY UPDATE
+		  		sessionId = IFNULL(p_sessionId, sessionId),
+          blSampleId = IFNULL(p_sampleId, blSampleId),
+					blSubSampleId = IFNULL(p_subSampleId, blSubSampleId),
+          startTime = IFNULL(p_startTime, startTime),
+          endTime = IFNULL(p_endTime, endTime),
+					startEnergy = IFNULL(p_startEnergy, startEnergy),
+					endEnergy = IFNULL(p_endEnergy, endEnergy),
+					fluorescenceDetector = IFNULL(p_detector, fluorescenceDetector),
+					element = IFNULL(p_element, element),
+					edgeEnergy = IFNULL(p_edgeEnergy, edgeEnergy),
+					synchrotronCurrent = IFNULL(p_synchrotronCurrent, synchrotronCurrent),
+					temperature = IFNULL(p_temperature, temperature),
+					peakEnergy = IFNULL(p_peakEnergy, peakEnergy),
+					peakFPrime = IFNULL(p_peakFPrime, peakFPrime),
+					peakFDoublePrime = IFNULL(p_peakFDoublePrime, peakFDoublePrime),
+					inflectionEnergy = IFNULL(p_inflectionEnergy, inflectionEnergy),
+					inflectionFPrime = IFNULL(p_inflectionFPrime, inflectionFPrime),
+					inflectionFDoublePrime = IFNULL(p_inflectionFDoublePrime, inflectionFDoublePrime),
+					choochFileFullPath = IFNULL(p_choochFileFullPath, choochFileFullPath),
+					jpegChoochFileFullPath = IFNULL(p_jpegChoochFileFullPath, jpegChoochFileFullPath),
+					scanFileFullPath = IFNULL(p_scanFileFullPath, scanFileFullPath),
+					beamSizeHorizontal = IFNULL(p_beamSizeHorizontal, beamSizeHorizontal),
+					beamSizeVertical = IFNULL(p_beamSizeVertical, beamSizeVertical),
+					exposureTime = IFNULL(p_exposureTime, exposureTime),
+					transmissionFactor = IFNULL(p_transmission, transmissionFactor),
+					flux = IFNULL(p_flux, flux),
+					flux_end = IFNULL(p_fluxEnd, flux_end),
+          comments = IFNULL(p_comments, comments);
+
+	  IF p_id IS NULL THEN
+		  SET p_id = LAST_INSERT_ID();
+    END IF;
+  ELSE
+      SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) are NULL: p_id OR p_sessionId must be non-NULL.';
+  END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_fluo_mapping` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_fluo_mapping`(
+	 INOUT p_id int(11) unsigned,
+	 p_roiId int(11) unsigned,
+	 p_dcId int(11) unsigned,
+	 p_imgNumber int(10) unsigned,
+	 p_counts int(10) unsigned
+ )
+    MODIFIES SQL DATA
+    COMMENT 'Inserts or updates info about a fluorescence spectrum mapping (p_id).\nMandatory columns:\nFor insert: p_sessionId\nFor update: p_id \nReturns: Record ID in p_id.'
+BEGIN
+	IF p_id IS NOT NULL OR (p_roiId IS NOT NULL AND p_dcId IS NOT NULL) THEN
+  	INSERT INTO XRFFluorescenceMapping (xrfFluorescenceMappingId, xrfFluorescenceMappingROIId, dataCollectionId, imageNumber, counts)
+	  	VALUES (p_id, p_roiId, p_dcId, p_imgNumber, p_counts)
+	  	ON DUPLICATE KEY UPDATE
+				xrfFluorescenceMappingROIId = IFNULL(p_roiId, xrfFluorescenceMappingROIId),
+				dataCollectionId = IFNULL(p_dcId, dataCollectionId),
+				imageNumber = IFNULL(p_imgNumber, imageNumber),
+				counts = IFNULL(p_counts, counts);
+
+		IF p_id IS NULL THEN
+			SET p_id = LAST_INSERT_ID();
+		END IF;
+	ELSE
+		SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) are NULL: p_id OR (p_roiId AND p_dcId) must be non-NULL.';
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_fluo_mapping_roi` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_fluo_mapping_roi`(
+	 INOUT p_id int(11) unsigned,
+	 p_startEnergy float,
+	 p_endEnergy float,
+	 p_element varchar(2),
+   p_edge varchar(2),
+   p_r tinyint unsigned,
+   p_g tinyint unsigned,
+   p_b tinyint unsigned
+ )
+    MODIFIES SQL DATA
+    COMMENT 'Inserts or updates info about a fluorescence spectrum mapping region of interest (p_id).\nMandatory columns:\nFor insert: p_sessionId\nFor update: p_id \nReturns: Record ID in p_id.'
+BEGIN
+
+  INSERT INTO XRFFluorescenceMappingROI (xrfFluorescenceMappingROIId, startEnergy, endEnergy, element, edge, r, g, b)
+	  VALUES (p_id, p_startEnergy, p_endEnergy, p_element, p_edge, p_r, p_g, p_b)
+	  ON DUPLICATE KEY UPDATE
+			startEnergy = IFNULL(p_startEnergy, startEnergy),
+			endEnergy = IFNULL(p_endEnergy, endEnergy),
+			element = IFNULL(p_element, element),
+			edge = IFNULL(p_edge, edge),
+			r = IFNULL(p_r, r),
+			g = IFNULL(p_g, g),
+			b = IFNULL(p_b, b);
+
+	IF p_id IS NULL THEN
+		SET p_id = LAST_INSERT_ID();
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `upsert_motion_correction` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -10898,7 +11339,7 @@ CREATE PROCEDURE `upsert_mrrun`(
      p_endtime datetime
      )
     MODIFIES SQL DATA
-    COMMENT 'Update or insert new entry with info about a MX molecular replac'
+    COMMENT 'Update or insert new entry with info about a MX molecular replacements run, e.g. Dimple'
 BEGIN
     IF p_parentId IS NOT NULL THEN
       INSERT INTO MXMRRun (mxMRRunId, autoProcScalingId, success, message, pipeline, inputCoordFile, outputCoordFile, inputMTZFile, outputMTZFile, 
@@ -10971,7 +11412,7 @@ CREATE PROCEDURE `upsert_mrrun_blob`(
      p_view3 varchar(255) 
   )
     MODIFIES SQL DATA
-    COMMENT 'Update or insert new entry with info about views (image paths) f'
+    COMMENT 'Update or insert new entry with info about views (image paths) for an MX molecular replacement run, e.g. Dimple.'
 BEGIN
   IF p_parentId IS NOT NULL THEN
     INSERT INTO MXMRRunBlob (mxMRRunBlobId, mxMRRunId, view1, view2, view3) 
@@ -11279,10 +11720,10 @@ BEGIN
 	DECLARE row_processingStatus tinyint(1) DEFAULT NULL;
 	DECLARE row_processingEndTime datetime DEFAULT NULL;
 	
-    -- DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+    
     
 	IF p_id IS NULL THEN
-        -- creates a new row in AutoProcProgram with processingJobId set, and all the other values populated with the given values,
+        
 	    INSERT INTO AutoProcProgram (processingStatus, processingStartTime, processingEndTime, processingMessage, processingJobId,
 		  processingCommandLine, processingPrograms, processingEnvironment, recordTimestamp)
 		  VALUES (
@@ -11294,7 +11735,7 @@ BEGIN
               p_commandLine,
               p_programs,
               p_environment,
-              -- apart from recordTimeStamp, which, if given as NULL, is populated with NOW()
+              
               IFNULL(p_recordTimestamp, NOW())
 		  );
         SET p_id = LAST_INSERT_ID();
@@ -11304,24 +11745,24 @@ BEGIN
 		FROM AutoProcProgram 
         WHERE autoProcProgramId = p_id;
 
-          -- If the existing value in processingStatus is not NULL then the row must not be updated. Stop reading here.
-          -- If the existing value in processingEndTime is not NULL and update time is not NULL and 
-          -- processingEndTime is greater (>) than update time and the new status value is NULL then the row must not be 
-          -- updated. Stop reading here.
+          
+          
+          
+          
 		IF row_processingStatus IS NULL AND (
             row_processingEndTime IS NULL OR p_updateTimestamp IS NULL OR 
               row_processingEndTime <= p_updateTimestamp OR p_status IS NOT NULL) THEN 
 
 		    UPDATE AutoProcProgram 
             SET 
-              -- Write status to processingStatus
+              
               processingStatus = p_status,
-			  --  If processingStartTime is NULL then write start time to processingStartTime. If start time is also NULL, 
-			  -- then write NOW() instead
+			  
+			  
               processingStartTime = COALESCE(processingStartTime, p_startTimestamp, NOW()),
-              -- Write update time to processingEndTime. If update time is NULL then write NOW() to processingEndTime
+              
               processingEndTime = IFNULL(p_updateTimestamp, NOW()), 
-              -- If update message is not NULL then write update message to processingMessage.
+              
               processingMessage = IFNULL(p_updateMessage, processingMessage), 
               processingJobId = IFNULL(p_processingJobId, processingJobId),
               processingCommandLine = IFNULL(p_commandLine, processingCommandLine),
@@ -11425,8 +11866,8 @@ BEGIN
         );
         SET p_id = LAST_INSERT_ID();
     ELSE
-        -- Not setting dataCollectionId and imageNumber as they are sort of the "primary keys" here
-        -- and have already been used for looking up the row:
+        
+        
         UPDATE ImageQualityIndicators 
         SET
           spotTotal = IFNULL(p_spotTotal, spotTotal),
@@ -11442,6 +11883,102 @@ BEGIN
   ELSE
 	SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory arguments p_dataCollectionId and/or p_imageNumber are NULL';  
   END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_quality_indicators_dozor_score` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_quality_indicators_dozor_score`(
+  OUT p_id int(11) unsigned,
+  p_dataCollectionId int(11) unsigned,
+  p_imageNumber mediumint(8) unsigned,
+  p_dozorScore double
+)
+    MODIFIES SQL DATA
+    COMMENT 'Inserts into or updates a row in the image quality indicators table'
+BEGIN
+    DECLARE iqiId int(11) unsigned DEFAULT NULL;
+    SELECT MAX(imageQualityIndicatorsId) INTO iqiId FROM ImageQualityIndicators WHERE dataCollectionId = p_dataCollectionId AND imageNumber = p_imageNumber;
+    IF iqiId IS NULL THEN
+        INSERT INTO ImageQualityIndicators (dataCollectionId, imageNumber, dozor_score)
+          VALUES (p_dataCollectionId, p_imageNumber, p_dozorScore);
+        SET p_id = LAST_INSERT_ID();
+    ELSE
+        UPDATE ImageQualityIndicators
+          SET dozor_score = p_dozorScore
+        WHERE imageQualityIndicatorsId = iqiId;
+        SET p_id = iqiId;
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_robot_action` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_robot_action`(
+	 INOUT p_id int(11) unsigned,
+	 p_sessionId int(11) unsigned,
+	 p_sampleId int(11) unsigned,
+	 p_actionType varchar(15),
+	 p_startTimestamp timestamp,
+	 p_endTimestamp timestamp,
+	 p_status varchar(24),
+	 p_message varchar(255),
+	 p_containerLocation smallint,
+	 p_dewarLocation smallint,
+	 p_sampleBarcode varchar(45),
+	 p_snapshotBefore varchar(255),
+	 p_snapshotAfter varchar(255)
+ )
+    MODIFIES SQL DATA
+    COMMENT 'Inserts or updates info about a robot action (p_id).\nMandatory columns:\nFor insert: p_sessionId\nFor update: p_id \nReturns: Record ID in p_id.'
+BEGIN
+	IF p_id IS NOT NULL OR p_sessionId IS NOT NULL THEN
+		INSERT INTO RobotAction (robotActionId, blsessionId, blsampleId, actionType, startTimestamp, endTimestamp, status, message,
+			containerLocation, dewarLocation, sampleBarcode, xtalSnapshotBefore, xtalSnapshotAfter)
+			VALUES (p_id, p_sessionId, p_sampleId, p_actionType, p_startTimestamp, p_endTimestamp, p_status, p_message,
+				p_containerLocation, p_dewarLocation, p_sampleBarcode, p_snapshotBefore, p_snapshotAfter)
+			ON DUPLICATE KEY UPDATE
+				blsessionId = IFNULL(p_sessionId, blsessionId),
+				blsampleId = IFNULL(p_sampleId, blsampleId),
+				actionType = IFNULL(p_actionType, actionType),
+				startTimestamp = IFNULL(p_startTimestamp, startTimestamp),
+				endTimestamp = IFNULL(p_endTimestamp, endTimestamp),
+				status = IFNULL(p_status, status),
+				message = IFNULL(p_message, message),
+				containerLocation = IFNULL(p_containerLocation, containerLocation),
+				dewarLocation = IFNULL(p_dewarLocation, dewarLocation),
+				sampleBarcode = IFNULL(p_sampleBarcode, sampleBarcode),
+				xtalSnapshotBefore = IFNULL(p_snapshotBefore, xtalSnapshotBefore),
+				xtalSnapshotAfter = IFNULL(p_snapshotAfter, xtalSnapshotAfter);
+
+			IF p_id IS NULL THEN
+				SET p_id = LAST_INSERT_ID();
+			END IF;
+	ELSE
+		SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) are NULL: p_id OR p_sessionId must be non-NULL.';
+	END IF;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -11513,6 +12050,151 @@ BEGIN
         END IF;
       END IF;
   END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_session_for_proposal_code_number` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_session_for_proposal_code_number`(
+	 INOUT p_id int(11) unsigned,
+	 p_proposalCode varchar(3),
+	 p_proposalNumber int(11),
+	 p_visitNumber int(10) unsigned,
+	 p_beamLineSetupId int(10) unsigned,
+	 p_startDate datetime,
+	 p_endDate datetime,
+	 p_beamlineName varchar(45),
+	 p_title varchar(255),
+	 p_beamlineOperator varchar(45),
+	 p_nbShifts int(10) unsigned,
+	 p_scheduled tinyint(1),
+	 p_usedFlag tinyint(1),
+	 p_comments varchar(255),
+	 p_externalPkId int(11) unsigned,
+	 p_externalPkUUID varchar(32)
+ )
+    MODIFIES SQL DATA
+    COMMENT 'Inserts or updates a session for a proposal with given code and number.\nMandatory columns:p_proposalCode and p_proposalNumber\nReturns: Record ID in p_id.'
+BEGIN
+	DECLARE row_proposal_id int(10) unsigned DEFAULT NULL;
+	IF p_id IS NOT NULL OR (p_proposalCode IS NOT NULL AND p_proposalNumber IS NOT NULL) THEN
+		SELECT min(proposalId) INTO row_proposal_id FROM Proposal WHERE proposalCode=p_proposalCode AND proposalNumber=p_proposalNumber;
+
+	  IF p_id IS NULL THEN
+		  INSERT INTO BLSession(sessionId, proposalId, visit_number, beamLineSetupId, startDate, endDate,
+			  beamLineName, sessionTitle, beamLineOperator, nbShifts, scheduled, usedFlag, comments, expSessionPk, externalId)
+			  VALUES (p_id, row_proposal_id, p_visitNumber, p_beamLineSetupId, p_startDate, p_endDate,
+				  p_beamlineName, p_title, p_beamlineOperator, p_nbShifts, p_scheduled, p_usedFlag, p_comments, p_externalPkId, unhex(p_externalPkUUID));
+		  SET p_id = LAST_INSERT_ID();
+
+	  ELSEIF p_id IS NOT NULL THEN
+	    UPDATE BLSession
+			SET
+				proposalId = IFNULL(row_proposal_id, proposalId),
+				visit_number = IFNULL(p_visitNumber, visit_number),
+				beamLineSetupId = IFNULL(p_beamLineSetupId, beamLineSetupId),
+				startDate = IFNULL(p_startDate, startDate),
+				endDate = IFNULL(p_endDate, endDate),
+				beamLineName = IFNULL(p_beamlineName, beamLineName),
+				sessionTitle = IFNULL(p_title, sessionTitle),
+				beamLineOperator = IFNULL(p_beamlineOperator, beamLineOperator),
+				nbShifts = IFNULL(p_nbShifts, nbShifts),
+				scheduled = IFNULL(p_scheduled, scheduled),
+				usedFlag = IFNULL(p_usedFlag, usedFlag),
+				comments = IFNULL(p_comments, comments),
+				expSessionPk = IFNULL(p_externalPkId, expSessionPk),
+				externalId = IFNULL(unhex(p_externalPkUUID), externalId)
+		  WHERE sessionId = p_id;
+    END IF;
+	ELSE
+		SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) are NULL: p_id OR (p_proposalCode AND p_proposalNumber) must be non-NULL.';
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_xfe_fluo_spectrum` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_xfe_fluo_spectrum`(
+	 INOUT p_id int(11) unsigned,
+	 p_sessionId int(10) unsigned,
+	 p_sampleId int(10) unsigned,
+	 p_subSampleId int(11) unsigned,
+	 p_startTime datetime,
+	 p_endTime datetime,
+	 p_energy float,
+	 p_fileName varchar(255),
+	 p_annotatedPymcaSpectrum varchar(255),
+	 p_fittedDataFileFullPath varchar(255),
+	 p_jpegScanFileFullPath varchar(255),
+	 p_scanFileFullPath varchar(255),
+	 p_beamSizeHorizontal float,
+	 p_beamSizeVertical float,
+	 p_exposureTime float,
+	 p_transmission float,
+	 p_flux double,
+	 p_fluxEnd double,
+	 p_comments varchar(1024))
+    MODIFIES SQL DATA
+    COMMENT 'Inserts or updates info about a fluorescence spectrum measurement (p_id).\nMandatory columns:\nFor insert: p_sessionId\nFor update: p_id \nReturns: Record ID in p_id.'
+BEGIN
+  IF p_id IS NOT NULL OR p_sessionId IS NOT NULL THEN
+
+      INSERT INTO XFEFluorescenceSpectrum (xfeFluorescenceSpectrumId, sessionId, blSampleId, blSubSampleId, startTime, endTime,
+				energy, filename, annotatedPymcaXfeSpectrum, fittedDataFileFullPath,
+				jpegScanFileFullPath, scanFileFullPath, beamSizeHorizontal, beamSizeVertical,
+				exposureTime, beamTransmission, flux, flux_end, comments)
+			  VALUES (p_id, p_sessionId, p_sampleId, p_subSampleId, p_startTime, p_endTime,
+					p_energy, p_fileName, p_annotatedPymcaSpectrum, p_fittedDataFileFullPath,
+					p_jpegScanFileFullPath, p_scanFileFullPath, p_beamSizeHorizontal, p_beamSizeVertical,
+					p_exposureTime, p_transmission, p_flux, p_fluxEnd, p_comments)
+				ON DUPLICATE KEY UPDATE
+			  		sessionId = IFNULL(p_sessionId, sessionId),
+	          blSampleId = IFNULL(p_sampleId, blSampleId),
+						blSubSampleId = IFNULL(p_subSampleId, blSubSampleId),
+	          startTime = IFNULL(p_startTime, startTime),
+	          endTime = IFNULL(p_endTime, endTime),
+						energy = IFNULL(p_energy, energy),
+						filename = IFNULL(p_fileName, filename),
+						annotatedPymcaXfeSpectrum = IFNULL(p_annotatedPymcaSpectrum, annotatedPymcaXfeSpectrum),
+						fittedDataFileFullPath = IFNULL(p_fittedDataFileFullPath, fittedDataFileFullPath),
+						jpegScanFileFullPath = IFNULL(p_jpegScanFileFullPath, jpegScanFileFullPath),
+						scanFileFullPath = IFNULL(p_scanFileFullPath, scanFileFullPath),
+						beamSizeHorizontal = IFNULL(p_beamSizeHorizontal, beamSizeHorizontal),
+						beamSizeVertical = IFNULL(p_beamSizeVertical, beamSizeVertical),
+						exposureTime = IFNULL(p_exposureTime, exposureTime),
+						beamTransmission = IFNULL(p_transmission, beamTransmission),
+						flux = IFNULL(p_flux, flux),
+						flux_end = IFNULL(p_fluxEnd, flux_end),
+	          comments = IFNULL(p_comments, comments);
+
+			IF p_id IS NULL THEN
+				SET p_id = LAST_INSERT_ID();
+			END IF;
+	ELSE
+		SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) are NULL: p_id OR p_sessionId must be non-NULL.';
+	END IF;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -11984,4 +12666,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-11 15:02:47
+-- Dump completed on 2018-03-08 22:49:55
