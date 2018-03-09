@@ -3,6 +3,26 @@ from __future__ import division, print_function
 import context
 import ispyb.factory
 
+def test_insert_session_for_proposal_code_number(testconfig):
+  with ispyb.open(testconfig) as conn:
+        core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
+        params = core.get_session_for_proposal_code_number_params()
+        params['proposal_code'] = 'cm'
+        params['proposal_number'] = 14451
+        params['visit_number'] = 10
+        params['beamline_name'] = 'i04-1'
+        params['comments'] = 'For software testing'
+        params['external_pk_uuid'] = '88173030C90C4696BC3D4D0C24FD1516'
+        id = core.upsert_session_for_proposal_code_number(list(params.values()))
+        assert id is not None
+        assert id > 0
+
+        params = core.get_session_for_proposal_code_number_params()
+        params['id'] = id
+        params['beamline_name'] = 'i03'
+        id = core.upsert_session_for_proposal_code_number(list(params.values()))
+        assert id is not None
+
 def test_upsert_sample(testconfig):
   with ispyb.open(testconfig) as conn:
         core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
@@ -11,6 +31,12 @@ def test_upsert_sample(testconfig):
         params['crystalid'] = 3918
         params['name'] = 'Sample-010101'
         params['code'] = 'SAM-010101'
+        id = core.upsert_sample(list(params.values()))
+        assert id is not None
+
+        params = core.get_sample_params()
+        params['id'] = id
+        params['loop_type'] = 'multi-pin'
         id = core.upsert_sample(list(params.values()))
         assert id is not None
 

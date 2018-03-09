@@ -1,6 +1,7 @@
 import datetime
 import os
 import sys
+import traceback
 import threading
 import time
 
@@ -77,8 +78,8 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
         cursor = self.create_cursor()
         try:
             result_args = cursor.callproc(procname=procname, args=args)
-        except DataError:
-            raise ISPyBWriteFailed
+        except DataError as e:
+            raise ISPyBWriteFailed("DataError({0}): {1}".format(e.errno, traceback.format_exc()))
         finally:
             cursor.close()
     if result_args is not None and len(result_args) > 0:
@@ -89,8 +90,8 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
         cursor = self.create_cursor(dictionary=True)
         try:
             cursor.callproc(procname=procname, args=args)
-        except DataError:
-            raise ISPyBRetrieveFailed
+        except DataError as e:
+            raise ISPyBRetrieveFailed("DataError({0}): {1}".format(e.errno, traceback.format_exc()))
 
         result = []
         for recordset in cursor.stored_results():
@@ -110,8 +111,8 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
         cursor = self.create_cursor(dictionary=True)
         try:
             cursor.execute(('select %s' % funcname) + ' (%s)' % ','.join(['%s'] * len(args)), args)
-        except DataError:
-            raise ISPyBRetrieveFailed
+        except DataError as e:
+            raise ISPyBRetrieveFailed("DataError({0}): {1}".format(e.errno, traceback.format_exc()))
         result = None
         rs = cursor.fetchone()
         if len(rs) > 0:
@@ -126,8 +127,8 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
         cursor = self.create_cursor()
         try:
             cursor.execute(('select %s' % funcname) + ' (%s)' % ','.join(['%s'] * len(args)), args)
-        except DataError:
-            raise ISPyBWriteFailed
+        except DataError as e:
+            raise ISPyBWriteFailed("DataError({0}): {1}".format(e.errno, traceback.format_exc()))
         result = None
         rs = cursor.fetchone()
         if len(rs) > 0:
