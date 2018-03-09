@@ -12,7 +12,7 @@ procedures, but the package is designed to allow for other methods as well, such
 as webservices.
 
 ### Requirements
-* Python 2.7 or 3.x
+* Python 2.7, 3.4, 3.5, 3.6
 * The mysql.connector Python package.
 * An ISPyB database on either MariaDB 10.0+ or MySQL 5.6+
 * If binary logging is enabled in the DB system, then execute this before
