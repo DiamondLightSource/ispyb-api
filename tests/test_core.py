@@ -2,6 +2,7 @@ from __future__ import division, print_function
 
 import context
 import ispyb.factory
+import time
 
 def test_insert_session_for_proposal_code_number(testconfig):
   with ispyb.open(testconfig) as conn:
@@ -13,15 +14,48 @@ def test_insert_session_for_proposal_code_number(testconfig):
         params['beamline_name'] = 'i04-1'
         params['comments'] = 'For software testing'
         params['external_pk_uuid'] = '88173030C90C4696BC3D4D0C24FD1516'
-        id = core.upsert_session_for_proposal_code_number(list(params.values()))
-        assert id is not None
-        assert id > 0
+        sid = core.upsert_session_for_proposal_code_number(list(params.values()))
+        assert sid is not None
+        assert sid > 0
 
         params = core.get_session_for_proposal_code_number_params()
-        params['id'] = id
+        params['id'] = sid
         params['beamline_name'] = 'i03'
-        id = core.upsert_session_for_proposal_code_number(list(params.values()))
-        assert id is not None
+        sid2 = core.upsert_session_for_proposal_code_number(list(params.values()))
+        assert sid2 is not None
+
+        # Test upsert_person:
+        params = core.get_person_params()
+        params['given_name'] = 'Baldur'
+        params['family_name'] = 'Odinsson'
+        params['login'] = 'bo%s' % str(time.time()) # login must be unique
+        pid = core.upsert_person(list(params.values()))
+        assert pid is not None
+        assert pid > 0
+
+        params = core.get_person_params()
+        params['id'] = pid
+        params['email_address'] = 'baldur.odinsson@asgard.org'
+        pid2 = core.upsert_person(list(params.values()))
+        assert pid2 is not None
+        assert pid2 == pid
+
+        # Test upsert_session_has_person:
+        params = core.get_session_has_person_params()
+        params['session_id'] = sid
+        params['person_id'] = pid
+        params['role'] = 'Co-Investigator'
+        params['remote'] = True
+        core.upsert_session_has_person(list(params.values()))
+
+        # Test upsert_proposal_has_person:
+        params = core.get_proposal_has_person_params()
+        params['proposal_id'] = 141666
+        params['person_id'] = pid
+        params['role'] = 'Principal Investigator'
+        phpid = core.upsert_proposal_has_person(list(params.values()))
+        assert phpid is not None
+        assert phpid > 0
 
 def test_upsert_sample(testconfig):
   with ispyb.open(testconfig) as conn:
