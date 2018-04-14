@@ -1,4 +1,4 @@
--- MySQL dump 10.15  Distrib 10.0.17-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.16  Distrib 10.2.14-MariaDB, for Linux (x86_64)
 --
 -- Host: cs04r-sc-vserv-87    Database: ispybstage
 -- ------------------------------------------------------
@@ -1099,7 +1099,7 @@ CREATE TABLE `BLSession` (
   KEY `Session_FKIndexStartDate` (`startDate`),
   CONSTRAINT `BLSession_ibfk_1` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `BLSession_ibfk_2` FOREIGN KEY (`beamLineSetupId`) REFERENCES `BeamLineSetup` (`beamLineSetupId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=339532 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=339538 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1108,7 +1108,7 @@ CREATE TABLE `BLSession` (
 
 LOCK TABLES `BLSession` WRITE;
 /*!40000 ALTER TABLE `BLSession` DISABLE KEYS */;
-INSERT INTO `BLSession` VALUES (55167,1,37027,NULL,'2016-01-01 09:00:00','2016-01-01 17:00:00','i03',NULL,NULL,'ghfg',NULL,'2015-12-21 15:20:43',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL),(55168,1,37027,NULL,'2016-03-11 09:00:00','2016-03-11 17:00:00','i03',NULL,NULL,'jhgjh',NULL,'2015-12-21 15:20:44',2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL),(339525,NULL,141666,NULL,NULL,NULL,'i03',NULL,NULL,NULL,NULL,'2016-03-16 16:08:29',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL),(339528,NULL,141666,NULL,NULL,NULL,'i03',NULL,NULL,NULL,NULL,'2016-03-17 15:07:42',2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL),(339531,NULL,141666,NULL,NULL,NULL,'i03',NULL,NULL,NULL,NULL,'2016-03-17 15:08:09',3,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL);
+INSERT INTO `BLSession` VALUES (55167,1,37027,NULL,'2016-01-01 09:00:00','2016-01-01 17:00:00','i03',NULL,NULL,'ghfg',NULL,'2015-12-21 15:20:43',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL),(55168,1,37027,NULL,'2016-03-11 09:00:00','2016-03-11 17:00:00','i03',NULL,NULL,'jhgjh',NULL,'2015-12-21 15:20:44',2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL),(339525,NULL,141666,NULL,NULL,NULL,'i03',NULL,NULL,NULL,NULL,'2016-03-16 16:08:29',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL),(339528,NULL,141666,NULL,NULL,NULL,'i03',NULL,NULL,NULL,NULL,'2016-03-17 15:07:42',2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL),(339531,NULL,141666,NULL,NULL,NULL,'i03',NULL,NULL,NULL,NULL,'2016-03-17 15:08:09',3,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL),(339535,NULL,37027,NULL,'2018-03-27 09:00:00','2018-07-27 09:00:00','i02-2',NULL,NULL,NULL,NULL,'2018-04-05 15:48:37',99,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL);
 /*!40000 ALTER TABLE `BLSession` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1277,6 +1277,7 @@ DROP TABLE IF EXISTS `BeamLineSetup`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `BeamLineSetup` (
   `beamLineSetupId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `detectorId` int(11) DEFAULT NULL,
   `synchrotronMode` varchar(255) DEFAULT NULL,
   `undulatorType1` varchar(45) DEFAULT NULL,
   `undulatorType2` varchar(45) DEFAULT NULL,
@@ -1290,14 +1291,40 @@ CREATE TABLE `BeamLineSetup` (
   `setupDate` datetime DEFAULT NULL,
   `synchrotronName` varchar(255) DEFAULT NULL,
   `maxExpTimePerDataCollection` double DEFAULT NULL,
+  `maxExposureTimePerImage` float DEFAULT NULL COMMENT 'unit: seconds',
   `minExposureTimePerImage` double DEFAULT NULL,
   `goniostatMaxOscillationSpeed` double DEFAULT NULL,
+  `goniostatMaxOscillationWidth` double DEFAULT NULL COMMENT 'unit: degrees',
   `goniostatMinOscillationWidth` double DEFAULT NULL,
+  `maxTransmission` double DEFAULT NULL COMMENT 'unit: percentage',
   `minTransmission` double DEFAULT NULL,
   `recordTimeStamp` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Creation or last update date/time',
   `CS` float DEFAULT NULL COMMENT 'Spherical Aberration, Units: mm?',
   `beamlineName` varchar(50) DEFAULT NULL COMMENT 'Beamline that this setup relates to',
-  PRIMARY KEY (`beamLineSetupId`)
+  `beamSizeXMin` float DEFAULT NULL COMMENT 'unit: um',
+  `beamSizeXMax` float DEFAULT NULL COMMENT 'unit: um',
+  `beamSizeYMin` float DEFAULT NULL COMMENT 'unit: um',
+  `beamSizeYMax` float DEFAULT NULL COMMENT 'unit: um',
+  `energyMin` float DEFAULT NULL COMMENT 'unit: eV',
+  `energyMax` float DEFAULT NULL COMMENT 'unit: eV',
+  `omegaMin` float DEFAULT NULL COMMENT 'unit: degrees',
+  `omegaMax` float DEFAULT NULL COMMENT 'unit: degrees',
+  `kappaMin` float DEFAULT NULL COMMENT 'unit: degrees',
+  `kappaMax` float DEFAULT NULL COMMENT 'unit: degrees',
+  `phiMin` float DEFAULT NULL COMMENT 'unit: degrees',
+  `phiMax` float DEFAULT NULL COMMENT 'unit: degrees',
+  `active` tinyint(1) NOT NULL DEFAULT 0,
+  `numberOfImagesMax` mediumint(8) unsigned DEFAULT NULL,
+  `numberOfImagesMin` mediumint(8) unsigned DEFAULT NULL,
+  `boxSizeXMin` double DEFAULT NULL COMMENT 'For gridscans, unit: um',
+  `boxSizeXMax` double DEFAULT NULL COMMENT 'For gridscans, unit: um',
+  `boxSizeYMin` double DEFAULT NULL COMMENT 'For gridscans, unit: um',
+  `boxSizeYMax` double DEFAULT NULL COMMENT 'For gridscans, unit: um',
+  `monoBandwidthMin` double DEFAULT NULL COMMENT 'unit: percentage',
+  `monoBandwidthMax` double DEFAULT NULL COMMENT 'unit: percentage',
+  PRIMARY KEY (`beamLineSetupId`),
+  KEY `BeamLineSetup_ibfk_1` (`detectorId`),
+  CONSTRAINT `BeamLineSetup_ibfk_1` FOREIGN KEY (`detectorId`) REFERENCES `Detector` (`detectorId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1307,7 +1334,7 @@ CREATE TABLE `BeamLineSetup` (
 
 LOCK TABLES `BeamLineSetup` WRITE;
 /*!40000 ALTER TABLE `BeamLineSetup` DISABLE KEYS */;
-INSERT INTO `BeamLineSetup` VALUES (1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2007-04-26 00:00:00','Diamond Light Source',NULL,NULL,NULL,NULL,NULL,'2016-03-19 22:56:25',NULL,NULL);
+INSERT INTO `BeamLineSetup` VALUES (1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2007-04-26 00:00:00','Diamond Light Source',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-19 22:56:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `BeamLineSetup` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1686,7 +1713,7 @@ CREATE TABLE `Container` (
   CONSTRAINT `Container_ibfk7` FOREIGN KEY (`requestedImagerId`) REFERENCES `Imager` (`imagerId`),
   CONSTRAINT `Container_ibfk8` FOREIGN KEY (`containerRegistryId`) REFERENCES `ContainerRegistry` (`containerRegistryId`),
   CONSTRAINT `Container_ibfk_1` FOREIGN KEY (`dewarId`) REFERENCES `Dewar` (`dewarId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=34884 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=34891 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1695,7 +1722,7 @@ CREATE TABLE `Container` (
 
 LOCK TABLES `Container` WRITE;
 /*!40000 ALTER TABLE `Container` DISABLE KEYS */;
-INSERT INTO `Container` VALUES (1326,573,'Container-1-cm0001-1','Puck-16',16,'3','processing',NULL,'i03',NULL,NULL,'container-cm0001-1-0000001',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,4),(1329,573,'Container-2-cm0001-1','Puck-16',16,'4','processing',NULL,'i03',NULL,NULL,'container-cm0001-1-0000002',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(1332,576,'Container-3-cm0001-1','Puck-16',16,'5','processing',NULL,'i03',NULL,NULL,'container-cm0001-1-0000003',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(1335,579,'Container-4-cm0001-2','Puck-16',16,'6','processing',NULL,'i03',NULL,NULL,'container-cm0001-2-0001335',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(1338,582,'Container-5-cm0001-3','Puck-16',16,'7','processing',NULL,'i03',NULL,NULL,'container-cm0001-3-0001338',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(1341,573,'Manual',NULL,NULL,'9',NULL,NULL,'i03',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(33049,8287,'cm14451-1_i03r-002','Puck',16,NULL,'at DLS',NULL,'i03',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(34864,8572,'I03R-001','Puck',16,'29','processing','2016-02-24 12:13:05','i03',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(34874,8572,'test_plate2','CrystalQuickX',192,'3','in_storage','2016-02-12 09:20:44','i03',NULL,2,'test_plate2',2,NULL,NULL,2,0,NULL,NULL,NULL,NULL),(34877,8572,'test_plate3','CrystalQuickX',192,'3','in_storage','2016-10-04 10:50:05','i03',NULL,2,'test_plate3',2,NULL,NULL,2,0,NULL,NULL,NULL,NULL),(34879,8572,'test_plate4','CrystalQuickX',192,'4','processing',NULL,'i02-2',NULL,2,'test_plate4',2,NULL,NULL,2,0,NULL,NULL,NULL,NULL),(34883,NULL,'XPDF-container-1','XPDF container',NULL,NULL,'processing',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL);
+INSERT INTO `Container` VALUES (1326,573,'Container-1-cm0001-1','Puck-16',16,'3','processing',NULL,'i03',NULL,NULL,'container-cm0001-1-0000001',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,4),(1329,573,'Container-2-cm0001-1','Puck-16',16,'4','processing',NULL,'i03',NULL,NULL,'container-cm0001-1-0000002',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(1332,576,'Container-3-cm0001-1','Puck-16',16,'5','processing',NULL,'i03',NULL,NULL,'container-cm0001-1-0000003',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(1335,579,'Container-4-cm0001-2','Puck-16',16,'6','processing',NULL,'i03',NULL,NULL,'container-cm0001-2-0001335',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(1338,582,'Container-5-cm0001-3','Puck-16',16,'7','processing',NULL,'i03',NULL,NULL,'container-cm0001-3-0001338',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(1341,573,'Manual',NULL,NULL,'9',NULL,NULL,'i03',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(33049,8287,'cm14451-1_i03r-002','Puck',16,NULL,'at DLS',NULL,'i03',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(34864,8572,'I03R-001','Puck',16,'29','processing','2016-02-24 12:13:05','i03',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(34874,8572,'test_plate2','CrystalQuickX',192,'3','in_storage','2016-02-12 09:20:44','i03',NULL,2,'test_plate2',2,NULL,NULL,2,0,NULL,NULL,NULL,NULL),(34877,8572,'test_plate3','CrystalQuickX',192,'3','in_storage','2016-10-04 10:50:05','i03',NULL,2,'test_plate3',2,NULL,NULL,2,0,NULL,NULL,NULL,NULL),(34879,8572,'test_plate4','CrystalQuickX',192,'4','processing',NULL,'i02-2',NULL,2,'test_plate4',2,NULL,NULL,2,0,NULL,NULL,NULL,NULL),(34883,NULL,'XPDF-container-1','XPDF container',NULL,NULL,'processing',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(34888,8578,'TestSim01','CrystalQuickX',192,'1','in_storage',NULL,'i02-2',NULL,2,'VMXiSim-001',7,339535,1,7,0,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `Container` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2387,6 +2414,8 @@ CREATE TABLE `Detector` (
   `composition` varchar(16) DEFAULT NULL,
   `numberOfPixelsX` mediumint(9) DEFAULT NULL COMMENT 'Detector number of pixels in x',
   `numberOfPixelsY` mediumint(9) DEFAULT NULL COMMENT 'Detector number of pixels in y',
+  `detectorRollMin` double DEFAULT NULL COMMENT 'unit: degrees',
+  `detectorRollMax` double DEFAULT NULL COMMENT 'unit: degrees',
   PRIMARY KEY (`detectorId`),
   UNIQUE KEY `Detector_ibuk1` (`detectorSerialNumber`),
   KEY `Detector_FKIndex1` (`detectorType`,`detectorManufacturer`,`detectorModel`,`detectorPixelSizeHorizontal`,`detectorPixelSizeVertical`)
@@ -2399,7 +2428,7 @@ CREATE TABLE `Detector` (
 
 LOCK TABLES `Detector` WRITE;
 /*!40000 ALTER TABLE `Detector` DISABLE KEYS */;
-INSERT INTO `Detector` VALUES (4,'Photon counting','In-house','Excalibur',NULL,NULL,NULL,NULL,'1109-434',100,300,NULL,NULL,NULL,NULL,NULL,NULL,NULL,55,'CrO3Br5Sr10',NULL,NULL),(8,'Diamond XPDF detector',NULL,NULL,NULL,NULL,NULL,NULL,'1109-761',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,10.4,'C+Br+He',NULL,NULL);
+INSERT INTO `Detector` VALUES (4,'Photon counting','In-house','Excalibur',NULL,NULL,NULL,NULL,'1109-434',100,300,NULL,NULL,NULL,NULL,NULL,NULL,NULL,55,'CrO3Br5Sr10',NULL,NULL,NULL,NULL),(8,'Diamond XPDF detector',NULL,NULL,NULL,NULL,NULL,NULL,'1109-761',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,10.4,'C+Br+He',NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `Detector` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2437,7 +2466,7 @@ CREATE TABLE `Dewar` (
   KEY `Dewar_FKIndexStatus` (`dewarStatus`),
   CONSTRAINT `Dewar_ibfk_1` FOREIGN KEY (`shippingId`) REFERENCES `Shipping` (`shippingId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `Dewar_ibfk_2` FOREIGN KEY (`firstExperimentId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8573 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8581 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2446,7 +2475,7 @@ CREATE TABLE `Dewar` (
 
 LOCK TABLES `Dewar` WRITE;
 /*!40000 ALTER TABLE `Dewar` DISABLE KEYS */;
-INSERT INTO `Dewar` VALUES (573,474,'Dewar-1-cm0001-1',NULL,NULL,'processing',NULL,0,'dewar-cm0001-1-0000001',NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL),(576,474,'Dewar-2-cm0001-1',NULL,NULL,'at DLS',NULL,0,'dewar-cm0001-1-0000002',NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL),(579,477,'Dewar-3-cm0001-2',NULL,NULL,'processing',NULL,0,'dewar-cm0001-2-0000477',NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL),(582,480,'Dewar-4-cm0001-3',NULL,NULL,'processing',NULL,0,'dewar-cm0001-3-0000480',NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL),(8287,6988,'Default Dewar:cm14451-1',NULL,NULL,'processing',NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL),(8572,7227,'cm14451-2_Dewar1',NULL,NULL,'processing','2016-02-10 13:03:07',0,NULL,NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL);
+INSERT INTO `Dewar` VALUES (573,474,'Dewar-1-cm0001-1',NULL,NULL,'processing',NULL,0,'dewar-cm0001-1-0000001',NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL),(576,474,'Dewar-2-cm0001-1',NULL,NULL,'at DLS',NULL,0,'dewar-cm0001-1-0000002',NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL),(579,477,'Dewar-3-cm0001-2',NULL,NULL,'processing',NULL,0,'dewar-cm0001-2-0000477',NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL),(582,480,'Dewar-4-cm0001-3',NULL,NULL,'processing',NULL,0,'dewar-cm0001-3-0000480',NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL),(8287,6988,'Default Dewar:cm14451-1',NULL,NULL,'processing',NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL),(8572,7227,'cm14451-2_Dewar1',NULL,NULL,'processing','2016-02-10 13:03:07',0,NULL,NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL),(8578,7231,'Dewar_1',NULL,NULL,'opened',NULL,0,'cm14451-12345',NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `Dewar` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3068,7 +3097,8 @@ DROP TABLE IF EXISTS `ImageQualityIndicators`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ImageQualityIndicators` (
-  `imageQualityIndicatorsId` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
+  `dataCollectionId` int(11) unsigned NOT NULL,
+  `imageNumber` mediumint(8) unsigned NOT NULL,
   `imageId` int(12) DEFAULT NULL,
   `autoProcProgramId` int(10) unsigned DEFAULT NULL COMMENT 'Foreign key to the AutoProcProgram table',
   `spotTotal` int(10) DEFAULT NULL COMMENT 'Total number of spots',
@@ -3084,13 +3114,9 @@ CREATE TABLE `ImageQualityIndicators` (
   `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
   `totalIntegratedSignal` double DEFAULT NULL,
   `dozor_score` double DEFAULT NULL COMMENT 'dozor_score',
-  `dataCollectionId` int(11) unsigned DEFAULT NULL,
-  `imageNumber` mediumint(8) unsigned DEFAULT NULL,
   `driftFactor` float DEFAULT NULL COMMENT 'EM movie drift factor',
-  PRIMARY KEY (`imageQualityIndicatorsId`),
-  KEY `ImageQualityIndicators_ibfk3` (`dataCollectionId`),
-  CONSTRAINT `_ImageQualityIndicators_ibfk3` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=62328700 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`dataCollectionId`,`imageNumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3099,7 +3125,7 @@ CREATE TABLE `ImageQualityIndicators` (
 
 LOCK TABLES `ImageQualityIndicators` WRITE;
 /*!40000 ALTER TABLE `ImageQualityIndicators` DISABLE KEYS */;
-INSERT INTO `ImageQualityIndicators` VALUES (60845691,NULL,NULL,296,296,259,0,2.03,2.03,0,0,0,0,NULL,2.61,NULL,1052494,1,NULL),(60845694,NULL,NULL,239,239,224,0,2.12,2.12,0,0,0,0,NULL,2.95,NULL,1052494,2,NULL),(60845703,274837177,NULL,217,217,202,0,2.07,2.07,0,0,0,0,NULL,2.99,NULL,1052503,1,NULL),(60845706,NULL,NULL,257,257,236,0,2.06,2.06,0,0,0,0,NULL,3.02,NULL,1052503,2,NULL),(60845709,NULL,NULL,306,306,278,0,2.04,2.04,0,0,0,0,NULL,2.75,NULL,1052503,3,NULL),(62328693,284718055,NULL,848,848,652,0,1.56,1.56,0,0,0,0,NULL,2.03,NULL,1066786,2,NULL),(62328696,284718118,NULL,922,922,735,0,1.57,1.57,0,0,0,0,NULL,2.13,NULL,1066786,3,NULL),(62328699,284717989,NULL,1132,1132,872,0,1.63,1.63,0,0,0,0,NULL,2.09,NULL,1066786,1,NULL);
+INSERT INTO `ImageQualityIndicators` VALUES (1052494,1,NULL,NULL,296,296,259,0,2.03,2.03,0,0,0,0,NULL,2.61,NULL,NULL),(1052494,2,NULL,NULL,239,239,224,0,2.12,2.12,0,0,0,0,NULL,2.95,NULL,NULL),(1052503,1,274837177,NULL,217,217,202,0,2.07,2.07,0,0,0,0,NULL,2.99,NULL,NULL),(1052503,2,NULL,NULL,257,257,236,0,2.06,2.06,0,0,0,0,NULL,3.02,NULL,NULL),(1052503,3,NULL,NULL,306,306,278,0,2.04,2.04,0,0,0,0,NULL,2.75,NULL,NULL),(1066786,1,284717989,NULL,1132,1132,872,0,1.63,1.63,0,0,0,0,NULL,2.09,NULL,NULL),(1066786,2,284718055,NULL,848,848,652,0,1.56,1.56,0,0,0,0,NULL,2.03,NULL,NULL),(1066786,3,284718118,NULL,922,922,735,0,1.57,1.57,0,0,0,0,NULL,2.13,NULL,NULL);
 /*!40000 ALTER TABLE `ImageQualityIndicators` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3117,7 +3143,7 @@ CREATE TABLE `Imager` (
   `serial` varchar(45) DEFAULT NULL,
   `capacity` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`imagerId`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3126,7 +3152,7 @@ CREATE TABLE `Imager` (
 
 LOCK TABLES `Imager` WRITE;
 /*!40000 ALTER TABLE `Imager` DISABLE KEYS */;
-INSERT INTO `Imager` VALUES (2,'Imager1 20c',20,'Z125434',1000);
+INSERT INTO `Imager` VALUES (2,'Imager1 20c',20,'Z125434',1000),(7,'VMXi sim',20,'RI1000-0000',750);
 /*!40000 ALTER TABLE `Imager` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6001,7 +6027,7 @@ CREATE TABLE `Shipping` (
   CONSTRAINT `Shipping_ibfk_2` FOREIGN KEY (`sendingLabContactId`) REFERENCES `LabContact` (`labContactId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `Shipping_ibfk_3` FOREIGN KEY (`returnLabContactId`) REFERENCES `LabContact` (`labContactId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `Shipping_ibfk_4` FOREIGN KEY (`deliveryAgent_flightCodePersonId`) REFERENCES `Person` (`personId`)
-) ENGINE=InnoDB AUTO_INCREMENT=7228 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7234 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6010,7 +6036,7 @@ CREATE TABLE `Shipping` (
 
 LOCK TABLES `Shipping` WRITE;
 /*!40000 ALTER TABLE `Shipping` DISABLE KEYS */;
-INSERT INTO `Shipping` VALUES (474,141666,'cm-0001 1 processing',NULL,NULL,NULL,NULL,NULL,'processing',NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(477,141666,'cm-0001 2 processing',NULL,NULL,NULL,NULL,NULL,'processing',NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(480,141666,'cm-0001 3 processing',NULL,NULL,NULL,NULL,NULL,'processing',NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(6988,37027,'Default Shipping:cm14451-1',NULL,NULL,NULL,NULL,NULL,'processing',NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(7227,37027,'cm14451-2_Shipment1',NULL,NULL,NULL,NULL,NULL,'processing','2016-02-10 13:03:07',NULL,0,'2016-02-10 13:03:07',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `Shipping` VALUES (474,141666,'cm-0001 1 processing',NULL,NULL,NULL,NULL,NULL,'processing',NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(477,141666,'cm-0001 2 processing',NULL,NULL,NULL,NULL,NULL,'processing',NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(480,141666,'cm-0001 3 processing',NULL,NULL,NULL,NULL,NULL,'processing',NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(6988,37027,'Default Shipping:cm14451-1',NULL,NULL,NULL,NULL,NULL,'processing',NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(7227,37027,'cm14451-2_Shipment1',NULL,NULL,NULL,NULL,NULL,'processing','2016-02-10 13:03:07',NULL,0,'2016-02-10 13:03:07',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(7231,37027,'VMXi Simulator Test shipment',NULL,NULL,NULL,NULL,NULL,'opened',NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `Shipping` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7204,9 +7230,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES' */ ;
+/*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
 CREATE FUNCTION `root_replace`(p_str varchar(255), p_oldroot varchar(255), p_newroot varchar(255)) RETURNS varchar(255) CHARSET latin1
+    COMMENT 'Returns a varchar where the old root p_oldroot (the leftmost part) of p_str has been replaced with a new root p_newroot'
 BEGIN
  DECLARE path_len smallint unsigned DEFAULT LENGTH(p_oldroot);
  RETURN CASE WHEN LEFT(p_str, path_len) = BINARY p_oldroot THEN CONCAT(p_newroot, SUBSTRING(p_str, path_len + 1)) ELSE p_str END; 
@@ -8217,9 +8244,7 @@ BEGIN
         p_method1Res, p_method2Res, p_maxUnitCell, p_pctSaturationTop50Peaks, 
         p_inResolutionOvrlSpots, p_binPopCutOffMethod2Res, p_totalIntegratedSignal, p_driftFactor
       );
-    IF p_id IS NULL THEN 
-      SET p_id = LAST_INSERT_ID();
-    END IF;      
+	SET p_id = 1; -- indicate success ...
   ELSE
         SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) p_dataCollectionId and/or p_imageNumber are NULL';  
   END IF;
@@ -10283,7 +10308,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES' */ ;
+/*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
 CREATE PROCEDURE `update_session_paths`(
   p_proposalCode varchar(3),
@@ -10293,6 +10318,7 @@ CREATE PROCEDURE `update_session_paths`(
   p_newRoot varchar(255)
 )
     MODIFIES SQL DATA
+    COMMENT 'Attempts to update the root (the leftmost part) of all paths related to session \np_proposalCode + p_proposalNumber + p_sessionNumber from p_oldRoot to p_newRoot.\nNOTE:\nWe assume that p_oldRoot and p_newRoot both contain a trailing "/"'
 BEGIN
   DECLARE row_session_id int(10) unsigned DEFAULT NULL;
   DECLARE row_proposal_id int(10) unsigned DEFAULT NULL;
@@ -10305,7 +10331,7 @@ BEGIN
 
       IF row_session_id IS NOT NULL AND row_proposal_id IS NOT NULL THEN
 
-
+-- DataCollection
         UPDATE DataCollection dc
           INNER JOIN DataCollectionGroup dcg on dcg.dataCollectionGroupId = dc.dataCollectionGroupId 
         SET 
@@ -10317,8 +10343,17 @@ BEGIN
           datFullPath = root_replace(datFullPath, p_oldRoot, p_newRoot)
         WHERE 
           dcg.sessionId = row_session_id;
-          
 
+-- DataCollectionFileAttachment
+        UPDATE DataCollectionFileAttachment dcfa
+		  INNER JOIN DataCollection dc on dc.dataCollectionId = dcfa.datacollectionId
+          INNER JOIN DataCollectionGroup dcg on dcg.dataCollectionGroupId = dc.dataCollectionGroupId 
+        SET 
+          fileFullPath = root_replace(fileFullPath, p_oldRoot, p_newRoot)
+        WHERE 
+          dcg.sessionId = row_session_id;
+          
+-- XFEFluorescenceSpectrum 
 	UPDATE XFEFluorescenceSpectrum 
 	SET 
           jpegScanFileFullPath = root_replace(jpegScanFileFullPath, p_oldRoot, p_newRoot), 
@@ -10329,7 +10364,7 @@ BEGIN
 	WHERE 
           sessionId = row_session_id;
           
-
+-- EnergyScan
 	UPDATE EnergyScan
 	SET 
           scanFileFullPath = root_replace(scanFileFullPath, p_oldRoot, p_newRoot), 
@@ -10340,7 +10375,7 @@ BEGIN
 	WHERE 
           sessionId = row_session_id;
 
-
+-- PhasingProgramAttachment
 	UPDATE PhasingProgramAttachment ppa
           INNER JOIN Phasing p on p.phasingProgramRunId = ppa.phasingProgramRunId
           INNER JOIN Phasing_has_Scaling phs on phs.phasingAnalysisId = p.phasingAnalysisId
@@ -10353,7 +10388,7 @@ BEGIN
         WHERE
           dcg.sessionId = row_session_id;  
 
-
+-- AutoProcProgramAttachment
         UPDATE AutoProcProgramAttachment appa
           INNER JOIN AutoProcIntegration api on api.autoProcProgramId = appa.autoProcProgramId
           INNER JOIN DataCollection dc on dc.dataCollectionId = api.dataCollectionId
@@ -10363,7 +10398,7 @@ BEGIN
         WHERE
           dcg.sessionId = row_session_id;
 
-
+-- MXMRRun
         UPDATE MXMRRun mr
           INNER JOIN AutoProcScaling_has_Int apshi on mr.autoProcScalingId = apshi.autoProcScalingId 
           INNER JOIN AutoProcIntegration api on api.autoProcIntegrationId = apshi.autoProcIntegrationId 
@@ -10379,7 +10414,7 @@ BEGIN
         WHERE
           dcg.sessionId = row_session_id;
 
-
+-- MXMRRunBlob
         UPDATE MXMRRunBlob mrb
           INNER JOIN MXMRRun mr on mrb.mxMRRunId = mr.mxMRRunId
           INNER JOIN AutoProcScaling_has_Int apshi on mr.autoProcScalingId = apshi.autoProcScalingId 
@@ -10393,7 +10428,7 @@ BEGIN
         WHERE
           dcg.sessionId = row_session_id;
 
-
+-- BLSampleImage
         UPDATE BLSampleImage blsi
           INNER JOIN BLSample bls on blsi.blsampleId = bls.blsampleId
           INNER JOIN Container c on c.containerId = bls.containerId
@@ -10402,7 +10437,7 @@ BEGIN
         WHERE 
           c.sessionId = row_session_id;
 
-
+-- BLSampleImageAnalysis
         UPDATE BLSampleImageAnalysis blsia
           INNER JOIN BLSampleImage blsi on blsia.blSampleImageId = blsi.blSampleImageId
           INNER JOIN BLSample bls on blsi.blsampleId = bls.blsampleId
@@ -10413,7 +10448,7 @@ BEGIN
           c.sessionId = row_session_id;
 
       ELSE
-        
+        -- MYSQL_ERRNO=1643: ER_SIGNAL_NOT_FOUND: Unhandled user-defined not found condition
 		SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1643, MESSAGE_TEXT='Corresponding rows for p_proposalCode + p_proposalNumber + p_sessionNumber not found';
       END IF;
   END IF;
@@ -10558,23 +10593,23 @@ CREATE PROCEDURE `upsert_dc_file_attachment`(
      p_fileType varchar(45)
 	)
     MODIFIES SQL DATA
-    COMMENT 'Inserts or updates info about a file attachmet for a data collec'
+    COMMENT 'Inserts or updates info about a file attachmet for a data collection. Returns: The PK value in p_id.'
 BEGIN
 	IF p_id IS NOT NULL OR p_dataCollectionId IS NOT NULL THEN
 
-      INSERT INTO DataCollectionFileAttachment (dataCollectionFileAttachmentId, dataCollectionId, fileFullPath, fileType)
+      INSERT INTO DataCollectionFileAttachment (dataCollectionFileAttachmentId, dataCollectionId, fileFullPath, fileType) 
         VALUES (p_id, p_dataCollectionId, p_fileFullPath, p_fileType)
 	    ON DUPLICATE KEY UPDATE
 		  dataCollectionId = IFNULL(p_dataCollectionId, dataCollectionId),
           fileFullPath = IFNULL(p_fileFullPath, fileFullPath),
           fileType = IFNULL(p_fileType, fileType);
 
-	  IF p_id IS NULL THEN
+	  IF p_id IS NULL THEN 
 		  SET p_id = LAST_INSERT_ID();
       END IF;
     ELSE
       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument is NULL: p_id OR p_dataCollectionId must be non-NULL.';
-    END IF;
+    END IF;      
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -11091,18 +11126,31 @@ DELIMITER ;;
 CREATE PROCEDURE `upsert_fluo_mapping`(
 	 INOUT p_id int(11) unsigned,
 	 p_roiId int(11) unsigned,
+	 p_roiStartEnergy float,
+	 p_roiEndEnergy float,
 	 p_dcId int(11) unsigned,
 	 p_imgNumber int(10) unsigned,
 	 p_counts int(10) unsigned
  )
     MODIFIES SQL DATA
-    COMMENT 'Inserts or updates info about a fluorescence spectrum mapping (p'
+    COMMENT 'Inserts or updates info about a fluorescence spectrum mapping (p_id).\nMandatory columns:\nFor insert: (p_roiId OR (p_roiStartEnergy AND p_roiEndEnergy)) AND p_dcId\nFor update: p_id \nReturns: Record ID in p_id.'
 BEGIN
-	IF p_id IS NOT NULL OR (p_roiId IS NOT NULL AND p_dcId IS NOT NULL) THEN
+  DECLARE row_xrfFluorescenceMappingROIId int(10) unsigned DEFAULT NULL;
+
+	IF p_id IS NOT NULL OR ((p_roiId IS NOT NULL OR (p_roiStartEnergy IS NOT NULL AND p_roiEndEnergy IS NOT NULL)) AND p_dcId IS NOT NULL) THEN
+
+    IF p_roiId IS NULL THEN
+      SELECT MAX(xrfFluorescenceMappingROIId) INTO row_xrfFluorescenceMappingROIId
+			FROM XRFFluorescenceMappingROI
+			WHERE p_roiStartEnergy >= startEnergy AND p_roiEndEnergy <= endEnergy;
+		ELSE
+		  SET row_xrfFluorescenceMappingROIId = p_roiId;
+    END IF;
+
   	INSERT INTO XRFFluorescenceMapping (xrfFluorescenceMappingId, xrfFluorescenceMappingROIId, dataCollectionId, imageNumber, counts)
-	  	VALUES (p_id, p_roiId, p_dcId, p_imgNumber, p_counts)
+	  	VALUES (p_id, row_xrfFluorescenceMappingROIId, p_dcId, p_imgNumber, p_counts)
 	  	ON DUPLICATE KEY UPDATE
-				xrfFluorescenceMappingROIId = IFNULL(p_roiId, xrfFluorescenceMappingROIId),
+				xrfFluorescenceMappingROIId = IFNULL(row_xrfFluorescenceMappingROIId, xrfFluorescenceMappingROIId),
 				dataCollectionId = IFNULL(p_dcId, dataCollectionId),
 				imageNumber = IFNULL(p_imgNumber, imageNumber),
 				counts = IFNULL(p_counts, counts);
@@ -11111,7 +11159,7 @@ BEGIN
 			SET p_id = LAST_INSERT_ID();
 		END IF;
 	ELSE
-		SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) are NULL: p_id OR (p_roiId AND p_dcId) must be non-NULL.';
+		SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) are NULL: p_id OR (p_roiId OR (p_roiStartEnergy AND p_roiEndEnergy)) AND p_dcId) must be non-NULL.';
 	END IF;
 END ;;
 DELIMITER ;
@@ -11872,6 +11920,54 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_proposal` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_proposal`(
+	 INOUT p_id int(11) unsigned,
+	 p_personId int(11) unsigned,
+	 p_title varchar(200),
+	 p_proposalCode varchar(45),
+	 p_proposalNumber int(11) unsigned,
+	 p_proposalType varchar(2),
+   p_externalPkUUID varchar(32)
+ )
+    MODIFIES SQL DATA
+    COMMENT 'Inserts or updates info about a proposal (p_id).\nMandatory columns:\nFor insert: p_personId AND p_proposalCode AND p_proposalNumber\nFor update: p_id \nReturns: Record ID in p_id.'
+BEGIN
+
+IF p_id IS NOT NULL OR (p_personId IS NOT NULL AND p_proposalCode IS NOT NULL AND p_proposalNumber IS NOT NULL)  THEN
+
+  INSERT INTO Proposal (proposalId, personId, title, proposalCode, proposalNumber, proposalType, externalId)
+    VALUES (p_id, p_personId, p_title, p_proposalCode, p_proposalNumber, p_proposalType, unhex(p_externalPkUUID))
+    ON DUPLICATE KEY UPDATE
+      personId = IFNULL(p_personId, personId),
+      title = IFNULL(p_title, title),
+      proposalCode = IFNULL(p_proposalCode, proposalCode),
+      proposalNumber = IFNULL(p_proposalNumber, proposalNumber),
+      proposalType = IFNULL(p_proposalType, proposalType),
+      externalId = IFNULL(unhex(p_externalPkUUID), externalId);
+
+  IF p_id IS NULL THEN
+    SET p_id = LAST_INSERT_ID();
+  END IF;
+ELSE
+  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) are NULL: p_id OR (p_personId AND p_proposalCode AND p_proposalNumber) must be non-NULL.';
+END IF;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `upsert_proposal_has_person` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -11940,12 +12036,14 @@ CREATE PROCEDURE `upsert_quality_indicators`(
   p_driftFactor float
 )
     MODIFIES SQL DATA
-    COMMENT 'Inserts into or updates a row in the image quality indicators ta'
+    COMMENT 'Inserts into or updates a row in the image quality indicators table'
 BEGIN
-  DECLARE iqiId int(11) unsigned DEFAULT NULL;
+  DECLARE row_DataCollectionId int(11) unsigned DEFAULT NULL;
+  DECLARE row_imageNumber mediumint(8) unsigned DEFAULT NULL;
+  
   IF (p_dataCollectionId IS NOT NULL AND p_imageNumber IS NOT NULL) THEN
-    SELECT MAX(imageQualityIndicatorsId) INTO iqiId FROM ImageQualityIndicators WHERE dataCollectionId = p_dataCollectionId AND imageNumber = p_imageNumber;
-    IF iqiId IS NULL THEN
+    SELECT dataCollectionId, imageNumber INTO row_DataCollectionId, row_imageNumber FROM ImageQualityIndicators WHERE dataCollectionId = p_dataCollectionId AND imageNumber = p_imageNumber;
+    IF row_DataCollectionId IS NULL THEN
         INSERT INTO ImageQualityIndicators (
           dataCollectionId, imageNumber, spotTotal, goodBraggCandidates,  
 	      method1Res, method2Res, totalIntegratedSignal, dozor_score, driftFactor) 
@@ -11953,10 +12051,10 @@ BEGIN
           p_dataCollectionId, p_imageNumber, p_spotTotal, p_goodBraggCandidates, 
           p_method1Res, p_method2Res, p_totalIntegratedSignal, p_dozorScore, p_driftFactor
         );
-        SET p_id = LAST_INSERT_ID();
+        SET p_id = 1;
     ELSE
-        
-        
+        -- Not setting dataCollectionId and imageNumber as they are sort of the "primary keys" here
+        -- and have already been used for looking up the row:
         UPDATE ImageQualityIndicators 
         SET
           spotTotal = IFNULL(p_spotTotal, spotTotal),
@@ -11966,8 +12064,8 @@ BEGIN
           totalIntegratedSignal = IFNULL(p_totalIntegratedSignal, totalIntegratedSignal),
           dozor_score = IFNULL(p_dozorScore, dozor_score),
           driftFactor = IFNULL(p_driftFactor, driftFactor)
-		WHERE imageQualityIndicatorsId = iqiId;
-        SET p_id = iqiId;
+		WHERE dataCollectionId = p_dataCollectionId AND imageNumber = p_imageNumber;
+        SET p_id = 1;
     END IF;
   ELSE
 	SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory arguments p_dataCollectionId and/or p_imageNumber are NULL';  
@@ -11995,20 +12093,23 @@ CREATE PROCEDURE `upsert_quality_indicators_dozor_score`(
   p_dozorScore double
 )
     MODIFIES SQL DATA
-    COMMENT 'Inserts into or updates a row in the image quality indicators ta'
+    COMMENT 'Inserts into or updates a row in the image quality indicators table'
 BEGIN
-    DECLARE iqiId int(11) unsigned DEFAULT NULL;
-    SELECT MAX(imageQualityIndicatorsId) INTO iqiId FROM ImageQualityIndicators WHERE dataCollectionId = p_dataCollectionId AND imageNumber = p_imageNumber;
-    IF iqiId IS NULL THEN
+  DECLARE row_DataCollectionId int(11) unsigned DEFAULT NULL;
+  DECLARE row_imageNumber mediumint(8) unsigned DEFAULT NULL;
+  
+  SELECT dataCollectionId, imageNumber INTO row_DataCollectionId, row_imageNumber FROM ImageQualityIndicators WHERE dataCollectionId = p_dataCollectionId AND imageNumber = p_imageNumber;
+
+  IF dataCollectionId IS NULL THEN
         INSERT INTO ImageQualityIndicators (dataCollectionId, imageNumber, dozor_score)
           VALUES (p_dataCollectionId, p_imageNumber, p_dozorScore);
-        SET p_id = LAST_INSERT_ID();
-    ELSE
+        SET p_id = 1;
+  ELSE
         UPDATE ImageQualityIndicators
           SET dozor_score = p_dozorScore
-        WHERE imageQualityIndicatorsId = iqiId;
-        SET p_id = iqiId;
-    END IF;
+        WHERE dataCollectionId = p_dataCollectionId AND imageNumber = p_imageNumber;
+        SET p_id = 1;
+  END IF;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -12789,4 +12890,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-20 23:05:31
+-- Dump completed on 2018-04-14 17:57:31
