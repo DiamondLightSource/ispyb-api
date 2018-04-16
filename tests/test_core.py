@@ -7,22 +7,6 @@ import time
 def test_insert_session_for_proposal_code_number(testconfig):
   with ispyb.open(testconfig) as conn:
         core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
-        params = core.get_session_for_proposal_code_number_params()
-        params['proposal_code'] = 'cm'
-        params['proposal_number'] = 14451
-        params['visit_number'] = 10
-        params['beamline_name'] = 'i04-1'
-        params['comments'] = 'For software testing'
-        params['external_pk_uuid'] = '88173030C90C4696BC3D4D0C24FD1516'
-        sid = core.upsert_session_for_proposal_code_number(list(params.values()))
-        assert sid is not None
-        assert sid > 0
-
-        params = core.get_session_for_proposal_code_number_params()
-        params['id'] = sid
-        params['beamline_name'] = 'i03'
-        sid2 = core.upsert_session_for_proposal_code_number(list(params.values()))
-        assert sid2 is not None
 
         # Test upsert_person:
         params = core.get_person_params()
@@ -39,6 +23,35 @@ def test_insert_session_for_proposal_code_number(testconfig):
         pid2 = core.upsert_person(list(params.values()))
         assert pid2 is not None
         assert pid2 == pid
+
+        # Test upsert_proposal:
+        params = core.get_proposal_params()
+        params['proposal_code'] = 'cm'
+        params['proposal_number'] = 14452
+        params['proposal_type'] = 'mx'
+        params['person_id'] = pid
+        params['title'] = 'Test proposal, created by unit test'
+        proposal_id = core.upsert_proposal(list(params.values()))
+        assert proposal_id is not None
+        assert proposal_id > 0
+
+        # Test upsert_session_for_proposal_code_number:
+        params = core.get_session_for_proposal_code_number_params()
+        params['proposal_code'] = 'cm'
+        params['proposal_number'] = 14451
+        params['visit_number'] = 10
+        params['beamline_name'] = 'i04-1'
+        params['comments'] = 'For software testing'
+        params['external_pk_uuid'] = '88173030C90C4696BC3D4D0C24FD1516'
+        sid = core.upsert_session_for_proposal_code_number(list(params.values()))
+        assert sid is not None
+        assert sid > 0
+
+        params = core.get_session_for_proposal_code_number_params()
+        params['id'] = sid
+        params['beamline_name'] = 'i03'
+        sid2 = core.upsert_session_for_proposal_code_number(list(params.values()))
+        assert sid2 is not None
 
         # Test upsert_session_has_person:
         params = core.get_session_has_person_params()

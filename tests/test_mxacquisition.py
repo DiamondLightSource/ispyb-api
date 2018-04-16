@@ -117,6 +117,8 @@ def test_mxacquisition_methods(testconfig):
 
         params = mxacquisition.get_fluo_mapping_params()
         params['roi_id'] = fmrid
+        params['roi_start_energy'] = 7.014 
+        params['roi_end_energy'] = 13.617
         params['dc_id'] = id1
         params['img_number'] = 1
         params['counts'] = 14

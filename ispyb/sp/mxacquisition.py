@@ -63,7 +63,7 @@ class MXAcquisition(Acquisition):
         ('comments',None)])
 
   _fluo_mapping_params =\
-    StrictOrderedDict([('id',None), ('roi_id',None), ('dc_id',None), ('img_number',None), ('counts',None)])
+    StrictOrderedDict([('id',None), ('roi_id',None), ('roi_start_energy',None), ('roi_end_energy',None), ('dc_id',None), ('img_number',None), ('counts',None)])
 
   _fluo_mapping_roi_params =\
     StrictOrderedDict([('id',None), ('start_energy',None), ('end_energy',None), ('element',None), ('edge',None), ('r',None), ('g',None), ('b',None)])
