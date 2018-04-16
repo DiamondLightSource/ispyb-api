@@ -1,4 +1,4 @@
--- MySQL dump 10.15  Distrib 10.0.17-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.16  Distrib 10.2.14-MariaDB, for Linux (x86_64)
 --
 -- Host: cs04r-sc-vserv-87    Database: ispybstage
 -- ------------------------------------------------------
@@ -187,9 +187,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES' */ ;
+/*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
 CREATE FUNCTION `root_replace`(p_str varchar(255), p_oldroot varchar(255), p_newroot varchar(255)) RETURNS varchar(255) CHARSET latin1
+    COMMENT 'Returns a varchar where the old root p_oldroot (the leftmost part) of p_str has been replaced with a new root p_newroot'
 BEGIN
  DECLARE path_len smallint unsigned DEFAULT LENGTH(p_oldroot);
  RETURN CASE WHEN LEFT(p_str, path_len) = BINARY p_oldroot THEN CONCAT(p_newroot, SUBSTRING(p_str, path_len + 1)) ELSE p_str END; 
@@ -1200,9 +1201,7 @@ BEGIN
         p_method1Res, p_method2Res, p_maxUnitCell, p_pctSaturationTop50Peaks, 
         p_inResolutionOvrlSpots, p_binPopCutOffMethod2Res, p_totalIntegratedSignal, p_driftFactor
       );
-    IF p_id IS NULL THEN 
-      SET p_id = LAST_INSERT_ID();
-    END IF;      
+	SET p_id = 1; -- indicate success ...
   ELSE
         SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) p_dataCollectionId and/or p_imageNumber are NULL';  
   END IF;
@@ -3266,7 +3265,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES' */ ;
+/*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
 CREATE PROCEDURE `update_session_paths`(
   p_proposalCode varchar(3),
@@ -3276,6 +3275,7 @@ CREATE PROCEDURE `update_session_paths`(
   p_newRoot varchar(255)
 )
     MODIFIES SQL DATA
+    COMMENT 'Attempts to update the root (the leftmost part) of all paths related to session \np_proposalCode + p_proposalNumber + p_sessionNumber from p_oldRoot to p_newRoot.\nNOTE:\nWe assume that p_oldRoot and p_newRoot both contain a trailing "/"'
 BEGIN
   DECLARE row_session_id int(10) unsigned DEFAULT NULL;
   DECLARE row_proposal_id int(10) unsigned DEFAULT NULL;
@@ -3288,7 +3288,7 @@ BEGIN
 
       IF row_session_id IS NOT NULL AND row_proposal_id IS NOT NULL THEN
 
-
+-- DataCollection
         UPDATE DataCollection dc
           INNER JOIN DataCollectionGroup dcg on dcg.dataCollectionGroupId = dc.dataCollectionGroupId 
         SET 
@@ -3300,8 +3300,17 @@ BEGIN
           datFullPath = root_replace(datFullPath, p_oldRoot, p_newRoot)
         WHERE 
           dcg.sessionId = row_session_id;
-          
 
+-- DataCollectionFileAttachment
+        UPDATE DataCollectionFileAttachment dcfa
+		  INNER JOIN DataCollection dc on dc.dataCollectionId = dcfa.datacollectionId
+          INNER JOIN DataCollectionGroup dcg on dcg.dataCollectionGroupId = dc.dataCollectionGroupId 
+        SET 
+          fileFullPath = root_replace(fileFullPath, p_oldRoot, p_newRoot)
+        WHERE 
+          dcg.sessionId = row_session_id;
+          
+-- XFEFluorescenceSpectrum 
 	UPDATE XFEFluorescenceSpectrum 
 	SET 
           jpegScanFileFullPath = root_replace(jpegScanFileFullPath, p_oldRoot, p_newRoot), 
@@ -3312,7 +3321,7 @@ BEGIN
 	WHERE 
           sessionId = row_session_id;
           
-
+-- EnergyScan
 	UPDATE EnergyScan
 	SET 
           scanFileFullPath = root_replace(scanFileFullPath, p_oldRoot, p_newRoot), 
@@ -3323,7 +3332,7 @@ BEGIN
 	WHERE 
           sessionId = row_session_id;
 
-
+-- PhasingProgramAttachment
 	UPDATE PhasingProgramAttachment ppa
           INNER JOIN Phasing p on p.phasingProgramRunId = ppa.phasingProgramRunId
           INNER JOIN Phasing_has_Scaling phs on phs.phasingAnalysisId = p.phasingAnalysisId
@@ -3336,7 +3345,7 @@ BEGIN
         WHERE
           dcg.sessionId = row_session_id;  
 
-
+-- AutoProcProgramAttachment
         UPDATE AutoProcProgramAttachment appa
           INNER JOIN AutoProcIntegration api on api.autoProcProgramId = appa.autoProcProgramId
           INNER JOIN DataCollection dc on dc.dataCollectionId = api.dataCollectionId
@@ -3346,7 +3355,7 @@ BEGIN
         WHERE
           dcg.sessionId = row_session_id;
 
-
+-- MXMRRun
         UPDATE MXMRRun mr
           INNER JOIN AutoProcScaling_has_Int apshi on mr.autoProcScalingId = apshi.autoProcScalingId 
           INNER JOIN AutoProcIntegration api on api.autoProcIntegrationId = apshi.autoProcIntegrationId 
@@ -3362,7 +3371,7 @@ BEGIN
         WHERE
           dcg.sessionId = row_session_id;
 
-
+-- MXMRRunBlob
         UPDATE MXMRRunBlob mrb
           INNER JOIN MXMRRun mr on mrb.mxMRRunId = mr.mxMRRunId
           INNER JOIN AutoProcScaling_has_Int apshi on mr.autoProcScalingId = apshi.autoProcScalingId 
@@ -3376,7 +3385,7 @@ BEGIN
         WHERE
           dcg.sessionId = row_session_id;
 
-
+-- BLSampleImage
         UPDATE BLSampleImage blsi
           INNER JOIN BLSample bls on blsi.blsampleId = bls.blsampleId
           INNER JOIN Container c on c.containerId = bls.containerId
@@ -3385,7 +3394,7 @@ BEGIN
         WHERE 
           c.sessionId = row_session_id;
 
-
+-- BLSampleImageAnalysis
         UPDATE BLSampleImageAnalysis blsia
           INNER JOIN BLSampleImage blsi on blsia.blSampleImageId = blsi.blSampleImageId
           INNER JOIN BLSample bls on blsi.blsampleId = bls.blsampleId
@@ -3396,7 +3405,7 @@ BEGIN
           c.sessionId = row_session_id;
 
       ELSE
-        
+        -- MYSQL_ERRNO=1643: ER_SIGNAL_NOT_FOUND: Unhandled user-defined not found condition
 		SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1643, MESSAGE_TEXT='Corresponding rows for p_proposalCode + p_proposalNumber + p_sessionNumber not found';
       END IF;
   END IF;
@@ -3541,23 +3550,23 @@ CREATE PROCEDURE `upsert_dc_file_attachment`(
      p_fileType varchar(45)
 	)
     MODIFIES SQL DATA
-    COMMENT 'Inserts or updates info about a file attachmet for a data collec'
+    COMMENT 'Inserts or updates info about a file attachmet for a data collection. Returns: The PK value in p_id.'
 BEGIN
 	IF p_id IS NOT NULL OR p_dataCollectionId IS NOT NULL THEN
 
-      INSERT INTO DataCollectionFileAttachment (dataCollectionFileAttachmentId, dataCollectionId, fileFullPath, fileType)
+      INSERT INTO DataCollectionFileAttachment (dataCollectionFileAttachmentId, dataCollectionId, fileFullPath, fileType) 
         VALUES (p_id, p_dataCollectionId, p_fileFullPath, p_fileType)
 	    ON DUPLICATE KEY UPDATE
 		  dataCollectionId = IFNULL(p_dataCollectionId, dataCollectionId),
           fileFullPath = IFNULL(p_fileFullPath, fileFullPath),
           fileType = IFNULL(p_fileType, fileType);
 
-	  IF p_id IS NULL THEN
+	  IF p_id IS NULL THEN 
 		  SET p_id = LAST_INSERT_ID();
       END IF;
     ELSE
       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument is NULL: p_id OR p_dataCollectionId must be non-NULL.';
-    END IF;
+    END IF;      
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -4074,18 +4083,31 @@ DELIMITER ;;
 CREATE PROCEDURE `upsert_fluo_mapping`(
 	 INOUT p_id int(11) unsigned,
 	 p_roiId int(11) unsigned,
+	 p_roiStartEnergy float,
+	 p_roiEndEnergy float,
 	 p_dcId int(11) unsigned,
 	 p_imgNumber int(10) unsigned,
 	 p_counts int(10) unsigned
  )
     MODIFIES SQL DATA
-    COMMENT 'Inserts or updates info about a fluorescence spectrum mapping (p'
+    COMMENT 'Inserts or updates info about a fluorescence spectrum mapping (p_id).\nMandatory columns:\nFor insert: (p_roiId OR (p_roiStartEnergy AND p_roiEndEnergy)) AND p_dcId\nFor update: p_id \nReturns: Record ID in p_id.'
 BEGIN
-	IF p_id IS NOT NULL OR (p_roiId IS NOT NULL AND p_dcId IS NOT NULL) THEN
+  DECLARE row_xrfFluorescenceMappingROIId int(10) unsigned DEFAULT NULL;
+
+	IF p_id IS NOT NULL OR ((p_roiId IS NOT NULL OR (p_roiStartEnergy IS NOT NULL AND p_roiEndEnergy IS NOT NULL)) AND p_dcId IS NOT NULL) THEN
+
+    IF p_roiId IS NULL THEN
+      SELECT MAX(xrfFluorescenceMappingROIId) INTO row_xrfFluorescenceMappingROIId
+			FROM XRFFluorescenceMappingROI
+			WHERE p_roiStartEnergy >= startEnergy AND p_roiEndEnergy <= endEnergy;
+		ELSE
+		  SET row_xrfFluorescenceMappingROIId = p_roiId;
+    END IF;
+
   	INSERT INTO XRFFluorescenceMapping (xrfFluorescenceMappingId, xrfFluorescenceMappingROIId, dataCollectionId, imageNumber, counts)
-	  	VALUES (p_id, p_roiId, p_dcId, p_imgNumber, p_counts)
+	  	VALUES (p_id, row_xrfFluorescenceMappingROIId, p_dcId, p_imgNumber, p_counts)
 	  	ON DUPLICATE KEY UPDATE
-				xrfFluorescenceMappingROIId = IFNULL(p_roiId, xrfFluorescenceMappingROIId),
+				xrfFluorescenceMappingROIId = IFNULL(row_xrfFluorescenceMappingROIId, xrfFluorescenceMappingROIId),
 				dataCollectionId = IFNULL(p_dcId, dataCollectionId),
 				imageNumber = IFNULL(p_imgNumber, imageNumber),
 				counts = IFNULL(p_counts, counts);
@@ -4094,7 +4116,7 @@ BEGIN
 			SET p_id = LAST_INSERT_ID();
 		END IF;
 	ELSE
-		SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) are NULL: p_id OR (p_roiId AND p_dcId) must be non-NULL.';
+		SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) are NULL: p_id OR (p_roiId OR (p_roiStartEnergy AND p_roiEndEnergy)) AND p_dcId) must be non-NULL.';
 	END IF;
 END ;;
 DELIMITER ;
@@ -4855,6 +4877,54 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_proposal` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_proposal`(
+	 INOUT p_id int(11) unsigned,
+	 p_personId int(11) unsigned,
+	 p_title varchar(200),
+	 p_proposalCode varchar(45),
+	 p_proposalNumber int(11) unsigned,
+	 p_proposalType varchar(2),
+   p_externalPkUUID varchar(32)
+ )
+    MODIFIES SQL DATA
+    COMMENT 'Inserts or updates info about a proposal (p_id).\nMandatory columns:\nFor insert: p_personId AND p_proposalCode AND p_proposalNumber\nFor update: p_id \nReturns: Record ID in p_id.'
+BEGIN
+
+IF p_id IS NOT NULL OR (p_personId IS NOT NULL AND p_proposalCode IS NOT NULL AND p_proposalNumber IS NOT NULL)  THEN
+
+  INSERT INTO Proposal (proposalId, personId, title, proposalCode, proposalNumber, proposalType, externalId)
+    VALUES (p_id, p_personId, p_title, p_proposalCode, p_proposalNumber, p_proposalType, unhex(p_externalPkUUID))
+    ON DUPLICATE KEY UPDATE
+      personId = IFNULL(p_personId, personId),
+      title = IFNULL(p_title, title),
+      proposalCode = IFNULL(p_proposalCode, proposalCode),
+      proposalNumber = IFNULL(p_proposalNumber, proposalNumber),
+      proposalType = IFNULL(p_proposalType, proposalType),
+      externalId = IFNULL(unhex(p_externalPkUUID), externalId);
+
+  IF p_id IS NULL THEN
+    SET p_id = LAST_INSERT_ID();
+  END IF;
+ELSE
+  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) are NULL: p_id OR (p_personId AND p_proposalCode AND p_proposalNumber) must be non-NULL.';
+END IF;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `upsert_proposal_has_person` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -4923,12 +4993,14 @@ CREATE PROCEDURE `upsert_quality_indicators`(
   p_driftFactor float
 )
     MODIFIES SQL DATA
-    COMMENT 'Inserts into or updates a row in the image quality indicators ta'
+    COMMENT 'Inserts into or updates a row in the image quality indicators table'
 BEGIN
-  DECLARE iqiId int(11) unsigned DEFAULT NULL;
+  DECLARE row_DataCollectionId int(11) unsigned DEFAULT NULL;
+  DECLARE row_imageNumber mediumint(8) unsigned DEFAULT NULL;
+  
   IF (p_dataCollectionId IS NOT NULL AND p_imageNumber IS NOT NULL) THEN
-    SELECT MAX(imageQualityIndicatorsId) INTO iqiId FROM ImageQualityIndicators WHERE dataCollectionId = p_dataCollectionId AND imageNumber = p_imageNumber;
-    IF iqiId IS NULL THEN
+    SELECT dataCollectionId, imageNumber INTO row_DataCollectionId, row_imageNumber FROM ImageQualityIndicators WHERE dataCollectionId = p_dataCollectionId AND imageNumber = p_imageNumber;
+    IF row_DataCollectionId IS NULL THEN
         INSERT INTO ImageQualityIndicators (
           dataCollectionId, imageNumber, spotTotal, goodBraggCandidates,  
 	      method1Res, method2Res, totalIntegratedSignal, dozor_score, driftFactor) 
@@ -4936,10 +5008,10 @@ BEGIN
           p_dataCollectionId, p_imageNumber, p_spotTotal, p_goodBraggCandidates, 
           p_method1Res, p_method2Res, p_totalIntegratedSignal, p_dozorScore, p_driftFactor
         );
-        SET p_id = LAST_INSERT_ID();
+        SET p_id = 1;
     ELSE
-        
-        
+        -- Not setting dataCollectionId and imageNumber as they are sort of the "primary keys" here
+        -- and have already been used for looking up the row:
         UPDATE ImageQualityIndicators 
         SET
           spotTotal = IFNULL(p_spotTotal, spotTotal),
@@ -4949,8 +5021,8 @@ BEGIN
           totalIntegratedSignal = IFNULL(p_totalIntegratedSignal, totalIntegratedSignal),
           dozor_score = IFNULL(p_dozorScore, dozor_score),
           driftFactor = IFNULL(p_driftFactor, driftFactor)
-		WHERE imageQualityIndicatorsId = iqiId;
-        SET p_id = iqiId;
+		WHERE dataCollectionId = p_dataCollectionId AND imageNumber = p_imageNumber;
+        SET p_id = 1;
     END IF;
   ELSE
 	SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory arguments p_dataCollectionId and/or p_imageNumber are NULL';  
@@ -4978,20 +5050,23 @@ CREATE PROCEDURE `upsert_quality_indicators_dozor_score`(
   p_dozorScore double
 )
     MODIFIES SQL DATA
-    COMMENT 'Inserts into or updates a row in the image quality indicators ta'
+    COMMENT 'Inserts into or updates a row in the image quality indicators table'
 BEGIN
-    DECLARE iqiId int(11) unsigned DEFAULT NULL;
-    SELECT MAX(imageQualityIndicatorsId) INTO iqiId FROM ImageQualityIndicators WHERE dataCollectionId = p_dataCollectionId AND imageNumber = p_imageNumber;
-    IF iqiId IS NULL THEN
+  DECLARE row_DataCollectionId int(11) unsigned DEFAULT NULL;
+  DECLARE row_imageNumber mediumint(8) unsigned DEFAULT NULL;
+  
+  SELECT dataCollectionId, imageNumber INTO row_DataCollectionId, row_imageNumber FROM ImageQualityIndicators WHERE dataCollectionId = p_dataCollectionId AND imageNumber = p_imageNumber;
+
+  IF dataCollectionId IS NULL THEN
         INSERT INTO ImageQualityIndicators (dataCollectionId, imageNumber, dozor_score)
           VALUES (p_dataCollectionId, p_imageNumber, p_dozorScore);
-        SET p_id = LAST_INSERT_ID();
-    ELSE
+        SET p_id = 1;
+  ELSE
         UPDATE ImageQualityIndicators
           SET dozor_score = p_dozorScore
-        WHERE imageQualityIndicatorsId = iqiId;
-        SET p_id = iqiId;
-    END IF;
+        WHERE dataCollectionId = p_dataCollectionId AND imageNumber = p_imageNumber;
+        SET p_id = 1;
+  END IF;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -5315,4 +5390,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-20 23:05:56
+-- Dump completed on 2018-04-14 17:57:54
