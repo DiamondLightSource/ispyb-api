@@ -1,8 +1,9 @@
 import abc
+import ispyb.interface.factory
 
 ABC = abc.ABCMeta('ABC', (object,), {'__slots__': ()}) # compatible with Python 2 *and* 3
 
-class IF(ABC):
+class IF(ABC, ispyb.interface.factory.factory_mixin):
   '''ISPyB connection interface definition object.'''
 
   @abc.abstractmethod
