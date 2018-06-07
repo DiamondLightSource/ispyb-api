@@ -26,6 +26,8 @@ def create_connection(conf_file):
 def create_data_area(data_area_type, conn):
   '''Factory function. Given a DataArea type and a Connection object imports the relevant data area module and
      returns the correct type of Data Area object with its connection as the Connection object.'''
+  import warnings
+  warnings.warn("deprecated, use the data area properties on the connection object", DeprecationWarning)
   if not hasattr(data_area_type, 'module') or not hasattr(data_area_type, 'classname'):
       raise AttributeError('DataArea type %s does not exist' % data_area_type)
   da_mod = importlib.import_module('%s.%s' % (conn.get_data_area_package(), data_area_type.module))
