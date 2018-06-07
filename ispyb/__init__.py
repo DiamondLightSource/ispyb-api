@@ -33,10 +33,7 @@ def open(configuration_file):
 
   return conn
 
-# add legacy imports to top level name space
-from enum import Enum
-def legacy_get_driver(_):
+# add legacy import to top level name space
+def legacy_get_driver(*args):
   import ispyb.legacy.driver.mysql.main
   return ispyb.legacy.driver.mysql.main.ISPyBMySQLDriver
-class legacy_Backend(Enum):
-  DATABASE_MYSQL = 1
