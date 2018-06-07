@@ -1,15 +1,15 @@
-from __future__ import division, print_function
+from __future__ import absolute_import, division, print_function
 
 from datetime import datetime
 
 import context
-import ispyb.factory
+import ispyb
 
 def test_insert_all_screening(testconfig):
   with ispyb.open(testconfig) as conn:
-        core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
-        mxscreening = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXSCREENING, conn)
-        mxacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXACQUISITION, conn)
+        core = conn.core
+        mxscreening = conn.mx_screening
+        mxacquisition = conn.mx_acquisition
 
         test_session = 'cm14451-2'
         session_id = core.retrieve_visit_id(test_session)

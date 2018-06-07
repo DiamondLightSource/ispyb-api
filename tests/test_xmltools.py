@@ -1,14 +1,14 @@
-from __future__ import division, print_function
+from __future__ import absolute_import, division, print_function
 
 import os
 
 import context
+import ispyb
 from ispyb.xmltools import mx_data_reduction_to_ispyb, xml_file_to_dict
-import ispyb.factory
 
 def test_mx_data_reduction_xml_to_ispyb(testconfig):
   with ispyb.open(testconfig) as conn:
-        mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
+        mxprocessing = conn.mx_processing
 
         xml_file = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data/mx_data_reduction_pipeline_results.xml'))
         # Find the datacollection associated with this data reduction run

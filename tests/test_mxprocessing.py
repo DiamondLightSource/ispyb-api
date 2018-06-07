@@ -1,11 +1,11 @@
-from __future__ import division, print_function
+from __future__ import absolute_import, division, print_function
 
 import context
-import ispyb.factory
+import ispyb
 
 def test_processing_jobs(testconfig):
   with ispyb.open(testconfig) as conn:
-        mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
+        mxprocessing = conn.mx_processing
 
         params = mxprocessing.get_job_params()
         params['datacollectionid'] = 993677
@@ -52,7 +52,7 @@ def test_processing_jobs(testconfig):
 
 def test_processing(testconfig):
   with ispyb.open(testconfig) as conn:
-        mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
+        mxprocessing = conn.mx_processing
 
         params = mxprocessing.get_program_params()
         params['cmd_line'] = 'ls -ltr'
@@ -153,7 +153,7 @@ def test_processing(testconfig):
 
 def test_post_processing(testconfig):
   with ispyb.open(testconfig) as conn:
-        mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
+        mxprocessing = conn.mx_processing
 
         params = mxprocessing.get_run_params()
         params['parentid'] = 596133 # some autoProcScalingId

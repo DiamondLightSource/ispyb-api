@@ -8,7 +8,7 @@
 
 This package provides a way to write acquisition and processing results into
 an ISPyB database. Currently, the only supported method is through stored
-procedures, but the package is designed to allow for other methods as well, such  
+procedures, but the package is designed to allow for other methods as well, such
 as webservices.
 
 ### Requirements
@@ -34,25 +34,25 @@ pip2.7 install --user ispyb
 
 ### Examples
 ```python
-import ispyb.factory
+import ispyb
 from datetime import datetime
 
 # Get a connection and data area objects
 with ispyb.open('config.cfg') as conn:
-  core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
-  mxacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXACQUISITION, conn)
+  core = conn.core
+  mx_acquisition = conn.mx_acquisition
 
   # Find the id for a given visit
   sessionid = core.retrieve_visit_id('cm14451-2')
 
   # Create a new data collection group entry:
-  params = mxacquisition.get_data_collection_group_params()
+  params = mx_acquisition.get_data_collection_group_params()
   params['parentid'] = sessionid
   params['experimenttype'] = 'OSC'
   params['starttime'] = datetime.strptime('2017-09-21 13:00:00', '%Y-%m-%d %H:%M:%S')
   params['endtime'] = datetime.strptime('2017-09-21 13:00:10', '%Y-%m-%d %H:%M:%S')
   params['comments'] = 'This is a test of data collection group.'
-  dcg_id = mxacquisition.insert_data_collection_group(list(params.values()))
+  dcg_id = mx_acquisition.insert_data_collection_group(list(params.values()))
   print("dcg_id: %i" % dcg_id)
 ```
 

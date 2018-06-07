@@ -12,7 +12,7 @@ import os
 import sys
 from datetime import datetime
 
-import ispyb.factory
+import ispyb
 from ispyb.xmltools import mx_data_reduction_to_ispyb, xml_file_to_dict
 
 if len(sys.argv) not in (3,4):
@@ -24,7 +24,7 @@ if len(sys.argv) not in (3,4):
 conf_file = sys.argv[1]
 
 with ispyb.open(conf_file) as conn:
-    mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
+    mxprocessing = conn.mx_processing
 
     xml_file = sys.argv[2]
     xml_dir = os.path.split(xml_file)[0]

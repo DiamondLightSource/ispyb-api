@@ -1,12 +1,12 @@
-from __future__ import division, print_function
+from __future__ import absolute_import, division, print_function
 
 import context
 from datetime import datetime
-import ispyb.factory
+import ispyb
 
 def test_mxacquisition_methods(testconfig):
   with ispyb.open(testconfig) as conn:
-        mxacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXACQUISITION, conn)
+        mxacquisition = conn.mx_acquisition
 
         params = mxacquisition.get_data_collection_group_params()
         params['parentid'] = 55168 # sessionId

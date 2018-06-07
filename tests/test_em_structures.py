@@ -1,11 +1,11 @@
-from __future__ import division, print_function
+from __future__ import absolute_import, division, print_function
 
 import context
-import ispyb.factory
+import ispyb
 
 def test_insert_movie(testconfig):
   with ispyb.open(testconfig) as conn:
-        emacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.EMACQUISITION, conn)
+        emacquisition = conn.em_acquisition
         group_params = emacquisition.get_data_collection_group_params()
         group_params['parentid'] = 55168
         group_id = emacquisition.insert_data_collection_group(list(group_params.values()))
@@ -25,7 +25,7 @@ def test_insert_movie(testconfig):
 
 def test_insert_motion_correction(testconfig):
   with ispyb.open(testconfig) as conn:
-        emacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.EMACQUISITION, conn)
+        emacquisition = conn.em_acquisition
         group_params = emacquisition.get_data_collection_group_params()
         group_params['parentid'] = 55168
         group_id = emacquisition.insert_data_collection_group(list(group_params.values()))
@@ -48,7 +48,7 @@ def test_insert_motion_correction(testconfig):
 
 def test_insert_ctf(testconfig):
   with ispyb.open(testconfig) as conn:
-        emacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.EMACQUISITION, conn)
+        emacquisition = conn.em_acquisition
         group_params = emacquisition.get_data_collection_group_params()
         group_params['parentid'] = 55168
         group_id = emacquisition.insert_data_collection_group(list(group_params.values()))
@@ -75,7 +75,7 @@ def test_insert_ctf(testconfig):
 
 def test_insert_drift(testconfig):
   with ispyb.open(testconfig) as conn:
-        emacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.EMACQUISITION, conn)
+        emacquisition = conn.em_acquisition
         group_params = emacquisition.get_data_collection_group_params()
         group_params['parentid'] = 55168
         group_id = emacquisition.insert_data_collection_group(list(group_params.values()))

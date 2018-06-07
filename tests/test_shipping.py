@@ -1,17 +1,16 @@
-from __future__ import division, print_function
+from __future__ import absolute_import, division, print_function
 
 import context
-import ispyb.factory
+import ispyb
 
 def test_update_container_assign(testconfig):
   with ispyb.open(testconfig) as conn:
-        shipping = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.SHIPPING, conn)
-        shipping.update_container_assign('i04', 'DLS-0001', 10)
+        conn.shipping.update_container_assign('i04', 'DLS-0001', 10)
 
 
 def test_upsert_dewar(testconfig):
   with ispyb.open(testconfig) as conn:
-        shipping = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.SHIPPING, conn)
+        shipping = conn.shipping
         params = shipping.get_dewar_params()
         params['shipping_id'] = 474
         params['name'] = 'Test-dewar'
@@ -25,6 +24,5 @@ def test_upsert_dewar(testconfig):
 
 def test_retrieve_dewars(testconfig):
   with ispyb.open(testconfig) as conn:
-        shipping = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.SHIPPING, conn)
-        rs = shipping.retrieve_dewars_for_proposal_code_number('cm', 1)
+        rs = conn.shipping.retrieve_dewars_for_proposal_code_number('cm', 1)
         assert len(rs) > 0
