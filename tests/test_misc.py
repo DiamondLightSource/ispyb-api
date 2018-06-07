@@ -1,4 +1,4 @@
-from __future__ import division, print_function
+from __future__ import absolute_import, division, print_function
 
 import threading
 
@@ -8,7 +8,7 @@ import pytest
 
 def test_multi_threads_upsert(testconfig):
   with ispyb.open(testconfig) as conn:
-        mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
+        mxprocessing = conn.mx_processing
 
         params = mxprocessing.get_program_params()
         params['cmd_line'] = 'dials -xia2 /path/to/files'
@@ -40,7 +40,5 @@ def test_multi_threads_upsert(testconfig):
 
 def test_retrieve_failure(testconfig):
   with ispyb.open(testconfig) as conn:
-    mxacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXACQUISITION, conn)
-
     with pytest.raises(ispyb.exception.ISPyBNoResultException):
-      rs = mxacquisition.retrieve_data_collection_main(0)
+      rs = conn.mx_acquisition.retrieve_data_collection_main(0)

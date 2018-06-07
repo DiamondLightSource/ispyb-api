@@ -1,12 +1,12 @@
-from __future__ import division, print_function
+from __future__ import absolute_import, division, print_function
 
 import context
-import ispyb.factory
+import ispyb
 import time
 
 def test_insert_session_for_proposal_code_number(testconfig):
   with ispyb.open(testconfig) as conn:
-        core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
+        core = conn.core
 
         # Test upsert_person:
         params = core.get_person_params()
@@ -72,7 +72,7 @@ def test_insert_session_for_proposal_code_number(testconfig):
 
 def test_upsert_sample(testconfig):
   with ispyb.open(testconfig) as conn:
-        core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
+        core = conn.core
         params = core.get_sample_params()
         params['containerid'] = 1326
         params['crystalid'] = 3918
@@ -89,50 +89,42 @@ def test_upsert_sample(testconfig):
 
 def test_retrieve_visit_id(testconfig):
   with ispyb.open(testconfig) as conn:
-        core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
-        id = core.retrieve_visit_id('cm14451-2')
+        id = conn.core.retrieve_visit_id('cm14451-2')
         assert id == 55168
 
 def test_retrieve_current_sessions(testconfig):
   with ispyb.open(testconfig) as conn:
-        core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
-        rs = core.retrieve_current_sessions('i03', 24*60*30000)
+        rs = conn.core.retrieve_current_sessions('i03', 24*60*30000)
         assert len(rs) > 0
 
 def test_retrieve_current_sessions_for_person(testconfig):
   with ispyb.open(testconfig) as conn:
-        core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
-        rs = core.retrieve_current_sessions_for_person('i03', 'boaty', tolerance_mins=24*60*30000)
+        rs = conn.core.retrieve_current_sessions_for_person('i03', 'boaty', tolerance_mins=24*60*30000)
         assert len(rs) > 0
 
 def test_retrieve_most_recent_session(testconfig):
   with ispyb.open(testconfig) as conn:
-        core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
-        rs = core.retrieve_most_recent_session('i03', 'cm')
+        rs = conn.core.retrieve_most_recent_session('i03', 'cm')
         assert len(rs) == 1
 
 def test_retrieve_persons_for_proposal(testconfig):
   with ispyb.open(testconfig) as conn:
-        core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
-        rs = core.retrieve_persons_for_proposal('cm', 14451)
+        rs = conn.core.retrieve_persons_for_proposal('cm', 14451)
         assert len(rs) == 1
         login = rs[0]['login']
         assert login is not None
 
 def test_retrieve_current_cm_sessions(testconfig):
   with ispyb.open(testconfig) as conn:
-        core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
-        rs = core.retrieve_current_cm_sessions('i03')
+        rs = conn.core.retrieve_current_cm_sessions('i03')
         assert len(rs) > 0
 
 def test_retrieve_active_plates(testconfig):
   with ispyb.open(testconfig) as conn:
-        core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
-        rs = core.retrieve_active_plates('i02-2')
+        rs = conn.core.retrieve_active_plates('i02-2')
         assert len(rs) >= 0
 
 def test_retrieve_proposal_title(testconfig):
   with ispyb.open(testconfig) as conn:
-        core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
-        title = core.retrieve_proposal_title('cm', 14451)
+        title = conn.core.retrieve_proposal_title('cm', 14451)
         assert title.strip() == 'I03 Commissioning Directory 2016'

@@ -10,17 +10,18 @@
 # data acquisition and processing pipeline.
 #
 
+from __future__ import absolute_import, division
 
 import sys
 from datetime import datetime
 
-import ispyb.factory
+import ispyb
 
 with ispyb.open(sys.argv[1]) as conn:
-    core = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.CORE, conn)
-    mxacquisition = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXACQUISITION, conn)
-    mxprocessing = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXPROCESSING, conn)
-    mxscreening = ispyb.factory.create_data_area(ispyb.factory.DataAreaType.MXSCREENING, conn)
+    core = conn.core
+    mxacquisition = conn.mx_acquisition
+    mxprocessing = conn.mx_processing
+    mxscreening = conn.mx_screening
 
     # Find the id for a given visit
     sessionid = core.retrieve_visit_id('cm14451-2')
