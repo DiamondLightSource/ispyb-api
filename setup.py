@@ -34,6 +34,7 @@ setup(
     download_url='https://github.com/DiamondLightSource/ispyb-api/releases',
     keywords = ['ISPyB', 'database'],
     packages=find_packages(),
+    scripts=['bin/dimple2ispyb.py', 'bin/mxdatareduction2ispyb.py'],
     license='Apache License, Version 2.0',
     install_requires=[
       'enum-compat',
