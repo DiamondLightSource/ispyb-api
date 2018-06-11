@@ -12,8 +12,7 @@ import traceback
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
 
-from ispyb.dbconnection import DBConnection
-from ispyb.mxmr import mxmr
+import ispyb
 
 def get_logical_arg(job, name):
     return job.args[job.args.index(name)+1]
@@ -40,8 +39,10 @@ def get_scaling_id(dir):
     else:
         return m.group(1)
 
-def store_result(cursor, dir, scaling_id):
+def store_result(conn, dir, scaling_id):
     '''Store results from DIMPLE pipeline'''
+
+    mx_processing = conn.mx_processing
 
     log_file = os.path.join(dir, "dimple.log")
     if (not os.path.isfile(log_file)) or (not os.access(log_file, os.R_OK)):
@@ -51,7 +52,7 @@ def store_result(cursor, dir, scaling_id):
     log = ConfigParser.RawConfigParser()
     log.read(log_file)
 
-    params = mxmr.get_run_params()
+    params = mx_processing.get_run_params()
     params['parentid'] = scaling_id
     params['pipeline'] = 'dimple'
     params['log_file'] = log_file
@@ -75,24 +76,27 @@ def store_result(cursor, dir, scaling_id):
     params['output_MTZ_file'] = dir + '/final.mtz'
     params['output_coord_file'] = dir + '/final.pdb'
     params['cmd_line'] = log.get('workflow', 'prog') + ' ' + log.get('workflow', 'args').replace('\n', ' ')
-    mr_id = mxmr.insert_run(cursor, params.values())
+    mr_id = mx_processing.upsert_run(params.values())
 
     for n in (1,2):
         if os.path.exists(dir+'/blob{0}v1.png'.format(n)):
-            mrblob_id = mxmr.insert_run_blob(cursor, mr_id,
+            mrblob_id = mx_processing.upsert_run_blob(mr_id,
                 'blob{0}v1.png'.format(n), 'blob{0}v2.png'.format(n),
                 'blob{0}v3.png'.format(n))
 
 
-def store_failure(cursor, run_dir, scaling_id):
+def store_failure(conn, run_dir, scaling_id):
     '''Store failure of DIMPLE pipeline'''
-    params = mxmr.get_run_params()
+    mx_processing = conn.mx_processing
+
+    params = mx_processing.get_run_params()
     params['parentid'] = scaling_id
     params['pipeline'] = 'dimple'
     params['success'] = 0
     params['message'] = 'Unknown error'
     params['run_dir'] = run_dir
-    mr_id = mxmr.insert_run(cursor, params.values())
+    mr_id = mx_processing.upsert_run(params.values())
+
 
 # Configure logging
 logger = logging.getLogger()
@@ -111,23 +115,19 @@ try:
         hdlr2.setFormatter(_formatter)
         logging.getLogger().addHandler(hdlr2)
 except:
-        logging.getLogger().exception("dimple2ispyb: problem setting the file logging using file %s :-(" % log_file)
+        logging.getLogger().exception("dimple2ispyb.py: problem setting the file logging using file %s :-(" % log_file)
 
 if len(sys.argv) != 4:
     print("Usage: %s conf_file dimple-output-dir fast_dp-output-dir" % sys.argv[0])
     sys.exit(1)
 
-conf_file = sys.argv[1]
-conn = DBConnection('prod', conf_file = conf_file)
-cursor = conn.get_cursor()
+with ispyb.open(sys.argv[1]) as conn:
 
-scaling_id = get_scaling_id(sys.argv[3])
+    scaling_id = get_scaling_id(sys.argv[3])
 
-if scaling_id is not None:
-    try:
-        store_result(cursor, sys.argv[2], scaling_id)
-    except:
-        logging.getLogger().exception("dimple2ispyb: Problem extracting / storing the dimple result.")
-        store_failure(cursor, sys.argv[2], scaling_id)
-
-conn.disconnect()
+    if scaling_id is not None:
+        try:
+            store_result(conn, sys.argv[2], scaling_id)
+        except:
+            logging.getLogger().exception("dimple2ispyb.py: Problem extracting / storing the dimple result.")
+            store_failure(conn, sys.argv[2], scaling_id)

@@ -2,7 +2,7 @@
 --
 -- Host: cs04r-sc-vserv-87    Database: ispybstage
 -- ------------------------------------------------------
--- Server version	10.2.13-MariaDB-log
+-- Server version	10.2.15-MariaDB-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -1040,6 +1040,56 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `insert_container_inspections` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `insert_container_inspections`(p_containerId int(11) unsigned, p_scheduleName varchar(10))
+    MODIFIES SQL DATA
+    COMMENT 'Inserts records into ContainerInspection'
+BEGIN
+	DECLARE finished boolean DEFAULT 0;
+	DECLARE datetime_now datetime DEFAULT current_timestamp();
+    DECLARE v_scheduleComponentId INT UNSIGNED;
+    DECLARE v_offset_hours INT UNSIGNED;
+    DECLARE v_inspectionTypeId INT UNSIGNED;
+	DECLARE priority_count INT DEFAULT 1;
+    DECLARE schedule_component_cursor CURSOR FOR
+		SELECT sc.scheduleComponentId, sc.offset_hours, sc.inspectionTypeId 
+        FROM ScheduleComponent sc
+          INNER JOIN `Schedule` s USING (scheduleId) 
+        WHERE s.name = p_scheduleName 
+        ORDER BY sc.offset_hours ASC;
+
+	DECLARE CONTINUE HANDLER 
+    FOR NOT FOUND SET finished = 1;
+
+	OPEN schedule_component_cursor;
+
+    WHILE finished <> 1 DO
+
+		FETCH schedule_component_cursor INTO v_scheduleComponentId, v_offset_hours, v_inspectionTypeId;  
+        
+		INSERT INTO ContainerInspection (containerId, inspectionTypeId, scheduleComponentid, state, scheduledTimeStamp, manual, priority) 
+			VALUES (p_containerId, v_inspectionTypeId, v_scheduleComponentId, 'Not completed', datetime_now + INTERVAL v_offset_hours HOUR, 0, priority_count);
+
+		SET priority_count = priority_count + 1;
+
+    END WHILE;
+
+	CLOSE schedule_component_cursor;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `insert_processing_scaling` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1389,6 +1439,65 @@ BEGIN
         p_rawOrientationMatrix_c_x, p_rawOrientationMatrix_c_y, p_rawOrientationMatrix_c_z,
         p_unitCell_a, p_unitCell_b, p_unitCell_c, p_unitCell_alpha, p_unitCell_beta, p_unitCell_gamma, p_labelitIndexing
         );
+	  IF LAST_INSERT_ID() <> 0 THEN 
+		  SET p_id = LAST_INSERT_ID();
+      END IF;      
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `insert_screening_output_v2` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `insert_screening_output_v2`(
+     OUT p_id int(11) unsigned,
+     p_screeningId int(10) unsigned,
+     p_statusDescription varchar(1024), 
+     p_rejectedReflections int(10) unsigned, 
+     p_resolutionObtained float, 
+     p_spotDeviationR float, 
+     p_spotDeviationTheta float, 
+     p_beamShiftX float, 
+     p_beamShiftY float, 
+     p_numSpotsFound int(10) unsigned, 
+     p_numSpotsUsed int(10) unsigned, 
+     p_numSpotsRejected int(10) unsigned, 
+     p_mosaicity float, 
+     p_iOverSigma float, 
+     p_diffractionRings boolean, 
+     p_mosaicityEstimated boolean, 
+     p_rankingResolution double, 
+     p_program varchar(45), 
+     p_doseTotal double, 
+     p_totalExposureTime double, 
+     p_totalRotationRange double, 
+     p_totalNumberOfImages int(11), 
+     p_rFriedel double, 
+     p_indexingSuccess boolean, 
+     p_strategySuccess boolean, 
+     p_alignmentSuccess boolean
+)
+    MODIFIES SQL DATA
+    COMMENT 'Insert a row with info about a screening output. Returns the ID in p_id.'
+BEGIN
+      INSERT INTO ScreeningOutput (screeningId, statusDescription, rejectedReflections, resolutionObtained, spotDeviationR, spotDeviationTheta, 
+        beamShiftX, beamShiftY, numSpotsFound, numSpotsUsed, numSpotsRejected, mosaicity, iOverSigma, 
+        diffractionRings, mosaicityEstimated, rankingResolution, program, doseTotal, totalExposureTime, totalRotationRange, 
+        totalNumberOfImages, rFriedel, indexingSuccess, strategySuccess, alignmentSuccess) 
+        VALUES (p_screeningId, p_statusDescription, p_rejectedReflections, p_resolutionObtained, p_spotDeviationR, p_spotDeviationTheta, 
+        p_beamShiftX, p_beamShiftY, p_numSpotsFound, p_numSpotsUsed, p_numSpotsRejected, p_mosaicity, p_iOverSigma, 
+        p_diffractionRings, p_mosaicityEstimated, p_rankingResolution, p_program, p_doseTotal, p_totalExposureTime, p_totalRotationRange,
+        p_totalNumberOfImages, p_rFriedel, p_indexingSuccess, p_strategySuccess, p_alignmentSuccess);
+
 	  IF LAST_INSERT_ID() <> 0 THEN 
 		  SET p_id = LAST_INSERT_ID();
       END IF;      
@@ -3288,7 +3397,7 @@ BEGIN
 
       IF row_session_id IS NOT NULL AND row_proposal_id IS NOT NULL THEN
 
--- DataCollection
+
         UPDATE DataCollection dc
           INNER JOIN DataCollectionGroup dcg on dcg.dataCollectionGroupId = dc.dataCollectionGroupId 
         SET 
@@ -3301,7 +3410,7 @@ BEGIN
         WHERE 
           dcg.sessionId = row_session_id;
 
--- DataCollectionFileAttachment
+
         UPDATE DataCollectionFileAttachment dcfa
 		  INNER JOIN DataCollection dc on dc.dataCollectionId = dcfa.datacollectionId
           INNER JOIN DataCollectionGroup dcg on dcg.dataCollectionGroupId = dc.dataCollectionGroupId 
@@ -3310,7 +3419,7 @@ BEGIN
         WHERE 
           dcg.sessionId = row_session_id;
           
--- XFEFluorescenceSpectrum 
+
 	UPDATE XFEFluorescenceSpectrum 
 	SET 
           jpegScanFileFullPath = root_replace(jpegScanFileFullPath, p_oldRoot, p_newRoot), 
@@ -3321,7 +3430,7 @@ BEGIN
 	WHERE 
           sessionId = row_session_id;
           
--- EnergyScan
+
 	UPDATE EnergyScan
 	SET 
           scanFileFullPath = root_replace(scanFileFullPath, p_oldRoot, p_newRoot), 
@@ -3332,7 +3441,7 @@ BEGIN
 	WHERE 
           sessionId = row_session_id;
 
--- PhasingProgramAttachment
+
 	UPDATE PhasingProgramAttachment ppa
           INNER JOIN Phasing p on p.phasingProgramRunId = ppa.phasingProgramRunId
           INNER JOIN Phasing_has_Scaling phs on phs.phasingAnalysisId = p.phasingAnalysisId
@@ -3345,7 +3454,7 @@ BEGIN
         WHERE
           dcg.sessionId = row_session_id;  
 
--- AutoProcProgramAttachment
+
         UPDATE AutoProcProgramAttachment appa
           INNER JOIN AutoProcIntegration api on api.autoProcProgramId = appa.autoProcProgramId
           INNER JOIN DataCollection dc on dc.dataCollectionId = api.dataCollectionId
@@ -3355,7 +3464,7 @@ BEGIN
         WHERE
           dcg.sessionId = row_session_id;
 
--- MXMRRun
+
         UPDATE MXMRRun mr
           INNER JOIN AutoProcScaling_has_Int apshi on mr.autoProcScalingId = apshi.autoProcScalingId 
           INNER JOIN AutoProcIntegration api on api.autoProcIntegrationId = apshi.autoProcIntegrationId 
@@ -3371,7 +3480,7 @@ BEGIN
         WHERE
           dcg.sessionId = row_session_id;
 
--- MXMRRunBlob
+
         UPDATE MXMRRunBlob mrb
           INNER JOIN MXMRRun mr on mrb.mxMRRunId = mr.mxMRRunId
           INNER JOIN AutoProcScaling_has_Int apshi on mr.autoProcScalingId = apshi.autoProcScalingId 
@@ -3385,7 +3494,7 @@ BEGIN
         WHERE
           dcg.sessionId = row_session_id;
 
--- BLSampleImage
+
         UPDATE BLSampleImage blsi
           INNER JOIN BLSample bls on blsi.blsampleId = bls.blsampleId
           INNER JOIN Container c on c.containerId = bls.containerId
@@ -3394,7 +3503,7 @@ BEGIN
         WHERE 
           c.sessionId = row_session_id;
 
--- BLSampleImageAnalysis
+
         UPDATE BLSampleImageAnalysis blsia
           INNER JOIN BLSampleImage blsi on blsia.blSampleImageId = blsi.blSampleImageId
           INNER JOIN BLSample bls on blsi.blsampleId = bls.blsampleId
@@ -3405,7 +3514,7 @@ BEGIN
           c.sessionId = row_session_id;
 
       ELSE
-        -- MYSQL_ERRNO=1643: ER_SIGNAL_NOT_FOUND: Unhandled user-defined not found condition
+        
 		SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1643, MESSAGE_TEXT='Corresponding rows for p_proposalCode + p_proposalNumber + p_sessionNumber not found';
       END IF;
   END IF;
@@ -4344,7 +4453,7 @@ CREATE PROCEDURE `upsert_mrrun`(
      p_endtime datetime
      )
     MODIFIES SQL DATA
-    COMMENT 'Update or insert new entry with info about a MX molecular replac'
+    COMMENT 'Update or insert new entry with info about a MX molecular replacements run, e.g. Dimple'
 BEGIN
     IF p_parentId IS NOT NULL THEN
       INSERT INTO MXMRRun (mxMRRunId, autoProcScalingId, success, message, pipeline, inputCoordFile, outputCoordFile, inputMTZFile, outputMTZFile, 
@@ -4353,15 +4462,15 @@ BEGIN
         p_id, 
         p_parentId, 
         p_success, 
-        p_message, 
-        p_pipeline, 
-        p_inputCoordFile, 
-        p_outputCoordFile, 
-        p_inputMTZFile, 
-        p_outputMTZFile, 
-        p_runDirectory,
-        p_logFile,
-        p_commandLine,
+        substr(p_message, 1, 255),
+        substr(p_pipeline, 1, 50),
+        substr(p_inputCoordFile, 1, 255),
+        substr(p_outputCoordFile, 1, 255),
+        substr(p_inputMTZFile, 1, 255),
+        substr(p_outputMTZFile, 1, 255),
+        substr(p_runDirectory, 1, 255),
+        substr(p_logFile, 1, 255),
+        substr(p_commandLine, 1, 255),
         p_rValueStart, 
         p_rValueEnd, 
         p_rFreeValueStart, 
@@ -4371,15 +4480,15 @@ BEGIN
 		ON DUPLICATE KEY UPDATE
 			autoProcScalingId = IFNULL(p_parentId, autoProcScalingId), 
             success = IFNULL(p_success, success), 
-            message = IFNULL(p_message, message), 
-            pipeline = IFNULL(p_pipeline, pipeline), 
-            inputCoordFile = IFNULL(p_inputCoordFile, inputCoordFile), 
-            outputCoordFile = IFNULL(p_outputCoordFile, outputCoordFile), 
-            inputMTZFile = IFNULL(p_inputMTZFile, inputMTZFile), 
-            outputMTZFile = IFNULL(p_outputMTZFile, outputMTZFile), 
-            runDirectory = IFNULL(p_runDirectory, runDirectory), 
-            logFile = IFNULL(p_logFile, logFile), 
-            commandLine = IFNULL(p_commandLine, commandLine), 
+            message = IFNULL(substr(p_message, 1, 255), message), 
+            pipeline = IFNULL(substr(p_pipeline, 1, 50), pipeline), 
+            inputCoordFile = IFNULL(substr(p_inputCoordFile, 1, 255), inputCoordFile), 
+            outputCoordFile = IFNULL(substr(p_outputCoordFile, 1, 255), outputCoordFile), 
+            inputMTZFile = IFNULL(substr(p_inputMTZFile, 1, 255), inputMTZFile), 
+            outputMTZFile = IFNULL(substr(p_outputMTZFile, 1, 255), outputMTZFile), 
+            runDirectory = IFNULL(substr(p_runDirectory, 1, 255), runDirectory), 
+            logFile = IFNULL(substr(p_logFile, 1, 255), logFile), 
+            commandLine = IFNULL(substr(p_commandLine, 1, 255), commandLine), 
             rValueStart = IFNULL(p_rValueStart, rValueStart), 
             rValueEnd = IFNULL(p_rValueEnd, rValueEnd), 
             rFreeValueStart = IFNULL(p_rFreeValueStart, rFreeValueStart), 
@@ -4417,16 +4526,16 @@ CREATE PROCEDURE `upsert_mrrun_blob`(
      p_view3 varchar(255) 
   )
     MODIFIES SQL DATA
-    COMMENT 'Update or insert new entry with info about views (image paths) f'
+    COMMENT 'Update or insert new entry with info about views (image paths) for an MX molecular replacement run, e.g. Dimple.'
 BEGIN
   IF p_parentId IS NOT NULL THEN
     INSERT INTO MXMRRunBlob (mxMRRunBlobId, mxMRRunId, view1, view2, view3) 
-		VALUES (p_id, p_parentId, p_view1, p_view2, p_view3)
+		VALUES (p_id, p_parentId, substr(p_view1, 1, 255), substr(p_view2, 1, 255), substr(p_view3, 1, 255))
 		ON DUPLICATE KEY UPDATE
 			mxMRRunId = IFNULL(p_parentId, mxMRRunId),
-			view1 = IFNULL(p_view1, view1),
-			view2 = IFNULL(p_view2, view2),
-			view3 = IFNULL(p_view3, view3);
+			view1 = IFNULL(substr(p_view1, 1, 255), view1),
+			view2 = IFNULL(substr(p_view2, 1, 255), view2),
+			view3 = IFNULL(substr(p_view3, 1, 255), view3);
 
  	IF p_id IS NULL THEN 
 		SET p_id = LAST_INSERT_ID();
@@ -5010,8 +5119,8 @@ BEGIN
         );
         SET p_id = 1;
     ELSE
-        -- Not setting dataCollectionId and imageNumber as they are sort of the "primary keys" here
-        -- and have already been used for looking up the row:
+        
+        
         UPDATE ImageQualityIndicators 
         SET
           spotTotal = IFNULL(p_spotTotal, spotTotal),
@@ -5390,4 +5499,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-14 17:57:54
+-- Dump completed on 2018-06-11 16:03:38

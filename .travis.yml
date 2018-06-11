@@ -12,7 +12,8 @@ addons:
 
 before_install:
 - mysql -u root -e "CREATE DATABASE ispybtest; SET GLOBAL log_bin_trust_function_creators=ON;"
-- mysql -u root -D ispybtest < conf/schema.sql
+- mysql -u root -D ispybtest < conf/tables.sql
+- mysql -u root -D ispybtest < conf/routines.sql
 
 before_script:
 - cp conf/config.example.cfg conf/config.cfg
