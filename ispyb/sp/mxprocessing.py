@@ -8,10 +8,6 @@
 #
 
 import copy
-import datetime
-import os
-import sys
-import time
 
 import ispyb.interface.processing
 from ispyb.strictordereddict import StrictOrderedDict
