@@ -50,6 +50,10 @@ def test_processing_jobs(testconfig):
         assert job_image_sweep[0]['endImage'] is not None
         assert job_image_sweep[0]['endImage'] == 180
 
+        job = mxprocessing.getProcessingJob(job_id)
+        assert job.name
+        assert job.DCID
+
 def test_processing(testconfig):
   with ispyb.open(testconfig) as conn:
         mxprocessing = conn.mx_processing
