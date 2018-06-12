@@ -13,7 +13,7 @@ class ProcessingJob(object):
        :param jobid: ProcessingJob ID
        :param db_area: ISPyB database data area object
        :return: A ProcessingJob object representing the database entry for the
-                given job ID
+                specified job ID
     '''
     self._cache = None
     self._db = db_area
@@ -25,6 +25,14 @@ class ProcessingJob(object):
     if not self._cache:
       self._cache = self._db.retrieve_job(self._jobid)[0]
     return self._cache[key]
+
+  @property
+  def DCID(self):
+    '''Returns the data collection id.'''
+    dcid = self._record('dataCollectionId')
+    if dcid is None:
+      return None
+    return int(dcid)
 
   @property
   def jobid(self):
@@ -60,7 +68,6 @@ class ProcessingJob(object):
     ))).format(pj=self)
 
 for key, internalkey in (
-    ('DCID', 'dataCollectionId'),
     ('name', 'displayName'),
     ('comment', 'comments'),
     ('recipe', 'recipe'),

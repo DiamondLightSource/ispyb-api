@@ -39,20 +39,22 @@ def test_processing_jobs(testconfig):
         assert job[0]['dataCollectionId'] is not None
 
         job_params = mxprocessing.retrieve_job_parameters(job_id)
-        assert job_params[0]['parameterKey'] is not None
         assert job_params[0]['parameterKey'] == 'fudge factor'
-        assert job_params[0]['parameterValue'] is not None
         assert job_params[0]['parameterValue'] == '3.14'
 
         job_image_sweep = mxprocessing.retrieve_job_image_sweeps(job_id)
-        assert job_image_sweep[0]['startImage'] is not None
         assert job_image_sweep[0]['startImage'] == 1
-        assert job_image_sweep[0]['endImage'] is not None
         assert job_image_sweep[0]['endImage'] == 180
 
+        # Retrieve same information via object model
+
         job = mxprocessing.getProcessingJob(job_id)
-        assert job.name
-        assert job.DCID
+        assert job.name == 'test_job'
+        assert job.DCID == 993677
+        assert job.comment == 'Test job by the unit test system ...'
+        assert job.automatic is False
+        assert job.recipe == 'xia2 recipe 14'
+        assert job.timestamp
 
 def test_processing(testconfig):
   with ispyb.open(testconfig) as conn:
