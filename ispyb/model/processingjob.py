@@ -4,7 +4,7 @@ import collections
 
 import ispyb.model
 
-class ProcessingJob(object):
+class ProcessingJob(ispyb.model.DBCache):
   '''An object representing a ProcessingJob database entry. The object lazily
      accesses the underlying database when necessary and exposes record data
      as python attributes.
@@ -19,23 +19,19 @@ class ProcessingJob(object):
        :return: A ProcessingJob object representing the database entry for the
                 specified job ID
     '''
-    self._cache = None
     self._cache_parameters = None
     self._cache_sweeps = None
     self._db = db_area
-    self._jobid = jobid
+    self._jobid = int(jobid)
 
-  def _record(self, key):
-    '''An internal caching indirector so that information is only read once
-       from the database, and only when required.'''
-    if not self._cache:
-      self._cache = self._db.retrieve_job(self._jobid)[0]
-    return self._cache[key]
+  def reload(self):
+    '''Load/update information from the database.'''
+    self._data = self._db.retrieve_job(self._jobid)[0]
 
   @property
   def DCID(self):
     '''Returns the data collection id.'''
-    dcid = self._record('dataCollectionId')
+    dcid = self._data['dataCollectionId']
     if dcid is None:
       return None
     return int(dcid)
@@ -49,17 +45,17 @@ class ProcessingJob(object):
   def automatic(self):
     '''Returns whether this processing job was initiated as part of automatic
        data processing.'''
-    return bool(self._record('automatic'))
+    return bool(self._data['automatic'])
 
   @property
   def parameters(self):
-    if not self._cache_parameters:
+    if self._cache_parameters is None:
       self._cache_parameters = ProcessingJobParameters(self._jobid, self._db)
     return self._cache_parameters
 
   @property
   def sweeps(self):
-    if not self._cache_sweeps:
+    if self._cache_sweeps is None:
       self._cache_sweeps = ProcessingJobImageSweeps(self._jobid, self._db)
     return self._cache_sweeps
 
@@ -68,13 +64,13 @@ class ProcessingJob(object):
        the database connection interface object, and the cache status.'''
     return '<ProcessingJob #%d (%s), %r>' % (
         self._jobid,
-        'cached' if self._cache else 'uncached',
+        'cached' if self.cached else 'uncached',
         self._db
     )
 
   def __str__(self):
     '''Returns a pretty-printed object representation.'''
-    if not self._cache:
+    if not self.cached:
       return 'ProcessingJob #%d (not yet loaded from database)' % self._jobid
     return ('\n'.join((
       'ProcessingJob #{pj.jobid}',
@@ -91,7 +87,7 @@ for key, internalkey in (
     ('recipe', 'recipe'),
     ('timestamp', 'recordTimestamp'),
   ):
-  setattr(ProcessingJob, key, property(lambda self, k=internalkey: self._record(k)))
+  setattr(ProcessingJob, key, property(lambda self, k=internalkey: self._data[k]))
 
 
 class ProcessingJobParameterValue(ispyb.model.EncapsulatedValue):
@@ -120,7 +116,7 @@ class ProcessingJobParameterValue(ispyb.model.EncapsulatedValue):
         (self._key, self._value, self._pid)
 
 
-class ProcessingJobParameters(object):
+class ProcessingJobParameters(ispyb.model.DBCache):
   '''An object representing the parameters for a ProcessingJob database entry.
      The object lazily accesses the underlying database when necessary and
      exposes the parameters both as a list and in a dictionary-like fashion.
@@ -136,44 +132,40 @@ class ProcessingJobParameters(object):
        :return: A ProcessingJobParameters object representing the database
                 entries for the parameters of the specified job ID
     '''
-    self._cache = None
     self._db = db_area
     self._jobid = int(jobid)
 
-  def _record(self):
-    '''An internal caching indirector so that information is only read once
-       from the database, and only when required.'''
-    if self._cache is None:
-      try:
-        self._cache = [
-            (p['parameterKey'], ProcessingJobParameterValue(
-                 p['parameterKey'], p['parameterValue'], p['parameterId']))
-            for p in self._db.retrieve_job_parameters(self._jobid)
-        ]
-      except ispyb.exception.ISPyBNoResultException:
-        self._cache = []
-      self._cache_dict = collections.OrderedDict(self._cache)
-    return self._cache
+  def reload(self):
+    '''Load/update information from the database.'''
+    try:
+      self._data = [
+          (p['parameterKey'], ProcessingJobParameterValue(
+               p['parameterKey'], p['parameterValue'], p['parameterId']))
+          for p in self._db.retrieve_job_parameters(self._jobid)
+      ]
+    except ispyb.exception.ISPyBNoResultException:
+      self._data = []
+    self._data_dict = collections.OrderedDict(self._data)
 
   def __getitem__(self, item):
     '''Allow accessing the parameter records as a list or dictionary.'''
     try:
       # Assume 'item' is an integer: treat as list
-      return self._record()[item]
+      return self._data[item]
     except TypeError:
       # Assume 'item' is a key: treat as dictionary
-      return self._cache_dict[item]
+      return self._data_dict[item]
 
   def __len__(self):
     '''Return the number of parameters attached to this processing job.'''
-    return len(self._record())
+    return len(self._data)
 
   def __repr__(self):
     '''Returns an object representation, including the processing job ID,
        the database connection interface object, and the cache status.'''
     return '<ProcessingJobParameters #%d (%s), %r>' % (
         self._jobid,
-        'uncached' if self._cache is None else 'cached',
+        'cached' if self.cached else 'uncached',
         self._db
     )
 
@@ -215,7 +207,7 @@ class ProcessingJobImageSweep(object):
         (self._dcid, self._start, self._end, self._sid)
 
 
-class ProcessingJobImageSweeps(object):
+class ProcessingJobImageSweeps(ispyb.model.DBCache):
   '''An object representing the list of image sweeps for a ProcessingJob
      database entry. The object lazily accesses the underlying database when
      necessary and exposes the sweeps as a list.
@@ -231,36 +223,32 @@ class ProcessingJobImageSweeps(object):
        :return: A ProcessingJobImageSweeps object representing the database
                 entries for the sweeps of the specified job ID
     '''
-    self._cache = None
     self._db = db_area
     self._jobid = int(jobid)
 
-  def _record(self):
-    '''An internal caching indirector so that information is only read once
-       from the database, and only when required.'''
-    if self._cache is None:
-      try:
-        self._cache = [
-            ProcessingJobImageSweep(p['dataCollectionId'], p['startImage'], p['endImage'], p['sweepId'])
-            for p in self._db.retrieve_job_image_sweeps(self._jobid)
-        ]
-      except ispyb.exception.ISPyBNoResultException:
-        self._cache = []
-    return self._cache
+  def reload(self):
+    '''Load/update information from the database.'''
+    try:
+      self._data = [
+          ProcessingJobImageSweep(p['dataCollectionId'], p['startImage'], p['endImage'], p['sweepId'])
+          for p in self._db.retrieve_job_image_sweeps(self._jobid)
+      ]
+    except ispyb.exception.ISPyBNoResultException:
+      self._data = []
 
   def __getitem__(self, item):
     '''Allow accessing the sweep records as a list.'''
-    return self._record()[item]
+    return self._data[item]
 
   def __len__(self):
     '''Return the number of sweeps attached to this processing job.'''
-    return len(self._record())
+    return len(self._data)
 
   def __repr__(self):
     '''Returns an object representation, including the processing job ID,
        the database connection interface object, and the cache status.'''
     return '<ProcessingJobImageSweeps #%d (%s), %r>' % (
         self._jobid,
-        'uncached' if self._cache is None else 'cached',
+        'cached' if self.cached else 'uncached',
         self._db
     )
