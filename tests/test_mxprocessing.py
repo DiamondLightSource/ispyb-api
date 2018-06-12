@@ -39,16 +39,33 @@ def test_processing_jobs(testconfig):
         assert job[0]['dataCollectionId'] is not None
 
         job_params = mxprocessing.retrieve_job_parameters(job_id)
-        assert job_params[0]['parameterKey'] is not None
         assert job_params[0]['parameterKey'] == 'fudge factor'
-        assert job_params[0]['parameterValue'] is not None
         assert job_params[0]['parameterValue'] == '3.14'
 
         job_image_sweep = mxprocessing.retrieve_job_image_sweeps(job_id)
-        assert job_image_sweep[0]['startImage'] is not None
         assert job_image_sweep[0]['startImage'] == 1
-        assert job_image_sweep[0]['endImage'] is not None
         assert job_image_sweep[0]['endImage'] == 180
+
+        # Retrieve same information via object model
+
+        job = mxprocessing.getProcessingJob(job_id)
+        assert job.name == 'test_job'
+        assert job.DCID == 993677
+        assert job.comment == 'Test job by the unit test system ...'
+        assert job.automatic is False
+        assert job.recipe == 'xia2 recipe 14'
+        assert job.timestamp
+
+        assert list(job.parameters) == [ ('fudge factor', '3.14') ]
+        assert dict(job.parameters) == { 'fudge factor': '3.14' }
+        assert job.parameters['fudge factor'] == '3.14'
+        assert job.parameters['fudge factor'].parameter_id == job_parameter_id
+
+        assert len(job.sweeps) == 1
+        assert job.sweeps[0].start == 1
+        assert job.sweeps[0].end == 180
+        assert job.sweeps[0].DCID == 993677
+        assert job.sweeps[0].sweep_id == id
 
 def test_processing(testconfig):
   with ispyb.open(testconfig) as conn:
