@@ -61,6 +61,12 @@ def test_processing_jobs(testconfig):
         assert job.parameters['fudge factor'] == '3.14'
         assert job.parameters['fudge factor'].parameter_id == job_parameter_id
 
+        assert len(job.sweeps) == 1
+        assert job.sweeps[0].start == 1
+        assert job.sweeps[0].end == 180
+        assert job.sweeps[0].DCID == 993677
+        assert job.sweeps[0].sweep_id == id
+
 def test_processing(testconfig):
   with ispyb.open(testconfig) as conn:
         mxprocessing = conn.mx_processing

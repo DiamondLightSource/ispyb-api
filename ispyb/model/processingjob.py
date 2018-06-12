@@ -21,6 +21,7 @@ class ProcessingJob(object):
     '''
     self._cache = None
     self._cache_parameters = None
+    self._cache_sweeps = None
     self._db = db_area
     self._jobid = jobid
 
@@ -55,6 +56,12 @@ class ProcessingJob(object):
     if not self._cache_parameters:
       self._cache_parameters = ProcessingJobParameters(self._jobid, self._db)
     return self._cache_parameters
+
+  @property
+  def sweeps(self):
+    if not self._cache_sweeps:
+      self._cache_sweeps = ProcessingJobImageSweeps(self._jobid, self._db)
+    return self._cache_sweeps
 
   def __repr__(self):
     '''Returns an object representation, including the processing job ID,
@@ -127,7 +134,7 @@ class ProcessingJobParameters(object):
        :param jobid: ProcessingJob ID
        :param db_area: ISPyB database data area object
        :return: A ProcessingJobParameters object representing the database
-                entry for the parameters of the specified job ID
+                entries for the parameters of the specified job ID
     '''
     self._cache = None
     self._db = db_area
@@ -159,6 +166,91 @@ class ProcessingJobParameters(object):
        the database connection interface object, and the cache status.'''
     return '<ProcessingJobParameters #%d (%s), %r>' % (
         self._jobid,
-        'cached' if self._cache is None else 'uncached',
+        'uncached' if self._cache is None else 'cached',
+        self._db
+    )
+
+
+class ProcessingJobImageSweep(object):
+  '''An object representing an image sweep for a processing job. Each image
+     sweep has a data collection id, a start and an end image, and an image
+     sweep id.
+  '''
+
+  def __init__(self, dcid, start, end, sweep_id):
+    self._dcid, self._sid = int(dcid), int(sweep_id)
+    self._start, self._end = int(start), int(end)
+
+  @property
+  def DCID(self):
+    '''Returns the data collection id.'''
+    return self._dcid
+
+  @property
+  def start(self):
+    '''Returns the start image number of the sweep'''
+    return self._start
+
+  @property
+  def end(self):
+    '''Returns the end image number of the sweep'''
+    return self._end
+
+  @property
+  def sweep_id(self):
+    '''Returns the processingJobImageSweepId'''
+    return self._sid
+
+  def __repr__(self):
+    '''Returns an object representation, including all contained attribute
+       values.'''
+    return "ProcessingJobImageSweep(dcid:%r, start:%r, end:%r, id:%r)" % \
+        (self._dcid, self._start, self._end, self._sid)
+
+
+class ProcessingJobImageSweeps(object):
+  '''An object representing the list of image sweeps for a ProcessingJob
+     database entry. The object lazily accesses the underlying database when
+     necessary and exposes the sweeps as a list.
+  '''
+
+  def __init__(self, jobid, db_area):
+    '''Create a ProcessingJobImageSweeps object for a defined ProcessingJob ID.
+       Requires a database data area object exposing further data access
+       methods.
+
+       :param jobid: ProcessingJob ID
+       :param db_area: ISPyB database data area object
+       :return: A ProcessingJobImageSweeps object representing the database
+                entries for the sweeps of the specified job ID
+    '''
+    self._cache = None
+    self._db = db_area
+    self._jobid = jobid
+
+  def _record(self):
+    '''An internal caching indirector so that information is only read once
+       from the database, and only when required.'''
+    if self._cache is None:
+      self._cache = [
+          ProcessingJobImageSweep(p['dataCollectionId'], p['startImage'], p['endImage'], p['sweepId'])
+          for p in self._db.retrieve_job_image_sweeps(self._jobid)
+      ]
+    return self._cache
+
+  def __getitem__(self, item):
+    '''Allow accessing the sweep records as a list.'''
+    return self._record()[item]
+
+  def __len__(self):
+    '''Return the number of sweeps attached to this processing job.'''
+    return len(self._record())
+
+  def __repr__(self):
+    '''Returns an object representation, including the processing job ID,
+       the database connection interface object, and the cache status.'''
+    return '<ProcessingJobImageSweeps #%d (%s), %r>' % (
+        self._jobid,
+        'uncached' if self._cache is None else 'cached',
         self._db
     )
