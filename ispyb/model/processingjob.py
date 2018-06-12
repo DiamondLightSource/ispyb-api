@@ -138,17 +138,20 @@ class ProcessingJobParameters(object):
     '''
     self._cache = None
     self._db = db_area
-    self._jobid = jobid
+    self._jobid = int(jobid)
 
   def _record(self):
     '''An internal caching indirector so that information is only read once
        from the database, and only when required.'''
     if self._cache is None:
-      self._cache = [
-          (p['parameterKey'], ProcessingJobParameterValue(
-               p['parameterKey'], p['parameterValue'], p['parameterId']))
-          for p in self._db.retrieve_job_parameters(self._jobid)
-      ]
+      try:
+        self._cache = [
+            (p['parameterKey'], ProcessingJobParameterValue(
+                 p['parameterKey'], p['parameterValue'], p['parameterId']))
+            for p in self._db.retrieve_job_parameters(self._jobid)
+        ]
+      except ispyb.exception.ISPyBNoResultException:
+        self._cache = []
       self._cache_dict = collections.OrderedDict(self._cache)
     return self._cache
 
@@ -160,6 +163,10 @@ class ProcessingJobParameters(object):
     except TypeError:
       # Assume 'item' is a key: treat as dictionary
       return self._cache_dict[item]
+
+  def __len__(self):
+    '''Return the number of parameters attached to this processing job.'''
+    return len(self._record())
 
   def __repr__(self):
     '''Returns an object representation, including the processing job ID,
@@ -226,16 +233,19 @@ class ProcessingJobImageSweeps(object):
     '''
     self._cache = None
     self._db = db_area
-    self._jobid = jobid
+    self._jobid = int(jobid)
 
   def _record(self):
     '''An internal caching indirector so that information is only read once
        from the database, and only when required.'''
     if self._cache is None:
-      self._cache = [
-          ProcessingJobImageSweep(p['dataCollectionId'], p['startImage'], p['endImage'], p['sweepId'])
-          for p in self._db.retrieve_job_image_sweeps(self._jobid)
-      ]
+      try:
+        self._cache = [
+            ProcessingJobImageSweep(p['dataCollectionId'], p['startImage'], p['endImage'], p['sweepId'])
+            for p in self._db.retrieve_job_image_sweeps(self._jobid)
+        ]
+      except ispyb.exception.ISPyBNoResultException:
+        self._cache = []
     return self._cache
 
   def __getitem__(self, item):
