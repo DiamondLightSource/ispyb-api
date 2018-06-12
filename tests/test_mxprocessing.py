@@ -56,6 +56,11 @@ def test_processing_jobs(testconfig):
         assert job.recipe == 'xia2 recipe 14'
         assert job.timestamp
 
+        assert list(job.parameters) == [ ('fudge factor', '3.14') ]
+        assert dict(job.parameters) == { 'fudge factor': '3.14' }
+        assert job.parameters['fudge factor'] == '3.14'
+        assert job.parameters['fudge factor'].parameter_id == job_parameter_id
+
 def test_processing(testconfig):
   with ispyb.open(testconfig) as conn:
         mxprocessing = conn.mx_processing
