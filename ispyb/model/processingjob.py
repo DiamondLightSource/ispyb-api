@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function
 import collections
 
 import ispyb.model
+import ispyb.model.autoprocprogram
 
 class ProcessingJob(ispyb.model.DBCache):
   '''An object representing a ProcessingJob database entry. The object lazily
@@ -20,6 +21,7 @@ class ProcessingJob(ispyb.model.DBCache):
                 specified job ID
     '''
     self._cache_parameters = None
+    self._cache_programs = None
     self._cache_sweeps = None
     self._db = db_area
     self._jobid = int(jobid)
@@ -58,6 +60,12 @@ class ProcessingJob(ispyb.model.DBCache):
     if self._cache_sweeps is None:
       self._cache_sweeps = ProcessingJobImageSweeps(self._jobid, self._db)
     return self._cache_sweeps
+
+  @property
+  def programs(self):
+    if self._cache_programs is None:
+      self._cache_programs = ProcessingJobPrograms(self._jobid, self._db)
+    return self._cache_programs
 
   def __repr__(self):
     '''Returns an object representation, including the processing job ID,
@@ -248,6 +256,52 @@ class ProcessingJobImageSweeps(ispyb.model.DBCache):
     '''Returns an object representation, including the processing job ID,
        the database connection interface object, and the cache status.'''
     return '<ProcessingJobImageSweeps #%d (%s), %r>' % (
+        self._jobid,
+        'cached' if self.cached else 'uncached',
+        self._db
+    )
+
+class ProcessingJobPrograms(ispyb.model.DBCache):
+  '''An object representing the programs working on a ProcessingJob.
+     The object lazily accesses the underlying database when
+     necessary and exposes the programs as a list of AutoProcProgam objects.
+  '''
+
+  def __init__(self, jobid, db_area):
+    '''Create a ProcessingJobPrograms object for a defined ProcessingJob ID.
+       Requires a database data area object exposing further data access
+       methods.
+
+       :param jobid: ProcessingJob ID
+       :param db_area: ISPyB database data area object
+       :return: A ProcessingJobPrograms object representing the database
+                entries for the programs working on the specified job ID.
+    '''
+    self._db = db_area
+    self._jobid = int(jobid)
+
+  def reload(self):
+    '''Load/update information from the database.'''
+    try:
+      self._data = [
+          ispyb.model.autoprocprogram.AutoProcProgram(p['id'], self._db, preload=p)
+          for p in self._db.retrieve_programs_for_job_id(self._jobid)
+      ]
+    except ispyb.exception.ISPyBNoResultException:
+      self._data = []
+
+  def __getitem__(self, item):
+    '''Allow accessing the program records as a list.'''
+    return self._data[item]
+
+  def __len__(self):
+    '''Return the number of programs attached to this processing job.'''
+    return len(self._data)
+
+  def __repr__(self):
+    '''Returns an object representation, including the processing job ID,
+       the database connection interface object, and the cache status.'''
+    return '<ProcessingJobPrograms #%d (%s), %r>' % (
         self._jobid,
         'cached' if self.cached else 'uncached',
         self._db

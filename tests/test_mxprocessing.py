@@ -83,6 +83,17 @@ def test_processing(testconfig):
         assert rs is not None
         assert len(rs) > 0
 
+        # Find program using the processing job ID and verify stored values
+        programs = mxprocessing.getProcessingJob(5).programs
+        assert programs
+        assert len(programs) >= 1
+        programs = list(filter(lambda p: p.appid == id, programs))
+        assert programs
+        program = programs[0]
+        assert program.jobid == 5
+        assert program.command == params['cmd_line']
+        assert program.message == params['message']
+
         params['id'] = id
         params['status'] = True
         params['message'] = 'Finished'
