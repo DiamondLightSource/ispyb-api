@@ -68,9 +68,9 @@ class AutoProcProgram(ispyb.model.DBCache):
       '  Command      : {0.command}',
       '  Environment  : {0.environment}',
       '  ProcessingJob: {0.jobid}',
-      '  Defined      : {0.timestamp}',
-      '  Started      : {0.start}',
-      '  Last Update  : {0.end}',
+      '  Defined      : {0.time_defined}',
+      '  Started      : {0.time_start}',
+      '  Last Update  : {0.time_end}',
       '  Last Message : {0.message}',
     ))).format(self)
 
@@ -78,9 +78,9 @@ for key, internalkey in (
     ('program', 'programs'),
     ('command', 'commandLine'),
     ('environment', 'environment'),
-    ('timestamp', 'recordTimeStamp'),
-    ('start', 'startTime'),
-    ('end', 'endTime'),
+    ('time_defined', 'recordTimeStamp'),
+    ('time_start', 'startTime'),
+    ('time_end', 'endTime'),
     ('status', 'status'),
     ('message', 'message'),
   ):
