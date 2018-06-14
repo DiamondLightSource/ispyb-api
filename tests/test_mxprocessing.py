@@ -48,7 +48,7 @@ def test_processing_jobs(testconfig):
 
         # Retrieve same information via object model
 
-        job = mxprocessing.getProcessingJob(job_id)
+        job = mxprocessing.get_processing_job(job_id)
         assert job.name == 'test_job'
         assert job.DCID == 993677
         assert job.comment == 'Test job by the unit test system ...'
@@ -84,7 +84,7 @@ def test_processing(testconfig):
         assert len(rs) > 0
 
         # Find program using the processing job ID and verify stored values
-        programs = mxprocessing.getProcessingJob(5).programs
+        programs = mxprocessing.get_processing_job(5).programs
         assert programs
         assert len(programs) >= 1
         programs = list(filter(lambda p: p.appid == id, programs))
