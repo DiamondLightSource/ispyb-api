@@ -1,5 +1,41 @@
 from __future__ import absolute_import, division, print_function
 
+class DBCache(object):
+  '''A helper class with useful functions to manage caching of database
+     requests.
+     Subclasses must implement reload() which should store data to be cached
+     in self._data. Cached data should be accessed as self._data. On first
+     uncached access reload() is called.'''
+
+  def __init__(self):
+    '''Data has not yet been loaded from the database.'''
+
+  def load(self):
+    '''Ensure data is loaded from the database.'''
+    if not self.cached:
+      self.reload()
+
+  def reload(self):
+    '''Force update from the database.'''
+    raise NotImplementedError()
+
+  @property
+  def _data(self):
+    '''Internal caching logic so that information is only read once from the
+       database, and only when required.'''
+    if not hasattr(self, '_data_cache'):
+      self.reload()
+    return getattr(self, '_data_cache')
+
+  @_data.setter
+  def _data(self, value):
+    setattr(self, '_data_cache', value)
+
+  @property
+  def cached(self):
+    return hasattr(self, '_data_cache')
+
+
 class EncapsulatedValue(object):
   '''A helper class encapsulating another object and mostly behaving as that
      object. The property .value allows access to the original object.

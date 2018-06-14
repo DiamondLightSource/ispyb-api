@@ -23,6 +23,6 @@ class IF(DataArea):
   def get_quality_indicators_params(self):
       pass
 
-  def getProcessingJob(self, jobid):
+  def get_processing_job(self, jobid):
     '''Return a ProcessingJob object representing the information about the selected processing job'''
     return ispyb.model.processingjob.ProcessingJob(jobid, self)
