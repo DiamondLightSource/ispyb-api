@@ -1,6 +1,9 @@
+from __future__ import absolute_import, division, print_function
+
 import abc
 
 from ispyb.interface.dataarea import DataArea
+import ispyb.model.datacollection
 
 class IF(DataArea):
 
@@ -21,3 +24,8 @@ class IF(DataArea):
   def upsert_data_collection(self, cursor, values):
     '''Store new data collection.'''
     pass
+
+  def get_data_collection(self, dcid):
+    '''Return a DataCollection object representing the information about the
+       selected data collection'''
+    return ispyb.model.datacollection.DataCollection(dcid, self)
