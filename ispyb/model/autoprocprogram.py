@@ -38,12 +38,11 @@ class AutoProcProgram(ispyb.model.DBCache):
     return self._data['jobId']
 
   @property
-  def status(self):
+  def status_text(self):
     '''Returns a human-readable status.'''
-    return "(Status unknown: SCI-7444)" # TODO
-    if self._data['processingStatus'] == 1:
+    if self._data['status'] == 1:
       return 'success'
-    if self._data['processingStatus'] == 0:
+    if self._data['status'] == 0:
       return 'failure'
     if self._data['startTime']:
       return 'running'
@@ -65,6 +64,7 @@ class AutoProcProgram(ispyb.model.DBCache):
     return ('\n'.join((
       'AutoProcProgram #{0.appid}',
       '  Name         : {0.program}',
+      '  Status       : {0.status_text}',
       '  Command      : {0.command}',
       '  Environment  : {0.environment}',
       '  ProcessingJob: {0.jobid}',
@@ -81,6 +81,7 @@ for key, internalkey in (
     ('timestamp', 'recordTimeStamp'),
     ('start', 'startTime'),
     ('end', 'endTime'),
+    ('status', 'status'),
     ('message', 'message'),
   ):
   setattr(AutoProcProgram, key, property(lambda self, k=internalkey: self._data[k]))
