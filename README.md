@@ -12,6 +12,9 @@ an ISPyB database. Currently, the only supported method is through stored
 procedures, but the package is designed to allow for other methods as well, such
 as webservices.
 
+### Documentation
+https://ispyb.readthedocs.io.
+
 ### Requirements
 * Python 2.7, 3.4, 3.5, 3.6
 * The mysql.connector Python package.
