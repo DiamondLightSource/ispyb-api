@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/DiamondLightSource/ispyb-api.svg?branch=master)](https://travis-ci.org/DiamondLightSource/ispyb-api)
 [![Coverage Status](https://coveralls.io/repos/github/DiamondLightSource/ispyb-api/badge.svg?branch=master)](https://coveralls.io/github/DiamondLightSource/ispyb-api?branch=master)
+[![Documentation Status](//readthedocs.org/projects/ispyb/badge/?version=latest)](https://ispyb.readthedocs.io/en/latest/?badge=latest)
 [![PyPI version](https://img.shields.io/pypi/v/ispyb.svg)](https://pypi.python.org/pypi/ispyb)
 [![Development status](https://img.shields.io/pypi/status/ispyb.svg)](https://pypi.python.org/pypi/ispyb)
 [![Python versions](https://img.shields.io/pypi/pyversions/ispyb.svg)](https://pypi.python.org/pypi/ispyb)
