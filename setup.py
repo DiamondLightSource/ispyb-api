@@ -59,4 +59,7 @@ setup(
       'Operating System :: OS Independent',
       'Topic :: Software Development :: Libraries :: Python Modules',
     ],
+    project_urls={
+      'Documentation': 'https://ispyb.readthedocs.io',
+    },
 )
