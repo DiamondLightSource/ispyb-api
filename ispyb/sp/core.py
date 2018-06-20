@@ -114,6 +114,10 @@ class Core(ispyb.interface.core.IF):
     '''Get a result-set with the currently active sessions on the given beamline.'''
     return self.get_connection().call_sp_retrieve(procname='retrieve_current_sessions', args=(beamline,tolerance_mins))
 
+  def retrieve_sessions_for_person_login(self, login):
+    '''Get a result-set with the sessions associated with the given unique person login.'''
+    return self.get_connection().call_sp_retrieve(procname='retrieve_sessions_for_person_login', args=(login,))
+
   def retrieve_current_sessions_for_person(self, beamline, fed_id, tolerance_mins=0):
     '''Get a result-set with the currently active sessions on the given beamline.'''
     return self.get_connection().call_sp_retrieve(procname='retrieve_current_sessions_for_person', args=(beamline, fed_id, tolerance_mins))

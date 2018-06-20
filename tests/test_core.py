@@ -97,6 +97,11 @@ def test_retrieve_current_sessions(testconfig):
         rs = conn.core.retrieve_current_sessions('i03', 24*60*30000)
         assert len(rs) > 0
 
+def test_retrieve_sessions_for_person_login(testconfig):
+  with ispyb.open(testconfig) as conn:
+        rs = conn.core.retrieve_sessions_for_person_login('boaty')
+        assert len(rs) > 0
+
 def test_retrieve_current_sessions_for_person(testconfig):
   with ispyb.open(testconfig) as conn:
         rs = conn.core.retrieve_current_sessions_for_person('i03', 'boaty', tolerance_mins=24*60*30000)
