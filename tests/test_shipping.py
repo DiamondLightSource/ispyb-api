@@ -16,11 +16,19 @@ def test_upsert_dewar(testconfig):
         params['name'] = 'Test-dewar'
         params['comments'] = 'This is a test ...'
         #params['barcode'] = 'cm1-1-i03-0023151' # must be unique! Or not set ...
-        params['status'] = 'at DLS'
+        params['status'] = 'at facility'
         params['type'] = 'Dewar' # only Dewar and Toolbox allowed in table definition
-        sid = shipping.upsert_dewar(list(params.values()))
-        assert sid is not None
-        assert sid > 0
+        did = shipping.upsert_dewar(list(params.values()))
+        assert did is not None
+        assert did > 0
+
+        params = shipping.get_dewar_params()
+        params['id'] = did
+        params['status'] = 'processing'
+        params['storageLocation'] = 'i04-1'
+        did2 = shipping.upsert_dewar(list(params.values()))
+        assert did2 is not None
+        assert did2 > 0
 
 def test_retrieve_dewars(testconfig):
   with ispyb.open(testconfig) as conn:
