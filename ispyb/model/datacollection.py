@@ -48,9 +48,11 @@ class DataCollection(ispyb.model.DBCache):
       'DataCollection #{0.dcid}',
       '  Started      : {0.time_start}',
       '  Finished     : {0.time_end}',
+      '  DC group     : {0.dcgid}',
     ))).format(self)
 
 for key, internalkey in (
+    ('dcgid', 'groupId'),
     ('time_start', 'startTime'),
     ('time_end', 'endTime'),
     ('image_count', 'noImages'),
