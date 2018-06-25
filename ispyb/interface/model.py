@@ -14,6 +14,14 @@ class objectmodel_mixin():
         self.mx_acquisition,
     )
 
+  def get_data_collection_group(self, dcgid):
+    '''Return a DataCollectionGroup object representing the information
+       about the selected data collection group'''
+    return ispyb.model.datacollection.DataCollectionGroup(
+        dcgid,
+        self,
+    )
+
   def get_processing_job(self, jobid):
     '''Return a ProcessingJob object representing the information
        about the selected processing job.'''
