@@ -17,6 +17,7 @@ class DataCollection(ispyb.model.DBCache):
        :return: A DataCollection object representing the database entry for
                 the specified DataCollectionID
     '''
+    self._cache_group = None
     self._db = db_area
     self._dcid = int(dcid)
     if preload:
@@ -30,6 +31,13 @@ class DataCollection(ispyb.model.DBCache):
   def dcid(self):
     '''Returns the DataCollectionID.'''
     return self._dcid
+
+  @property
+  def group(self):
+    '''Returns a DataCollectionGroup object'''
+    if self._cache_group is None:
+      self._cache_group = DataCollectionGroup(self.dcgid, self._db.conn)
+    return self._cache_group
 
   def __repr__(self):
     '''Returns an object representation, including the DataCollectionID,

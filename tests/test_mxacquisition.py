@@ -40,6 +40,7 @@ def test_mxacquisition_methods(testconfig):
         dc = conn.get_data_collection(id1)
         assert dc.image_count == 360
         assert dc.dcgid == dcgid
+        assert dc.group.dcgid == dcgid
 
         params = mxacquisition.get_image_params()
         params['parentid'] = id1
