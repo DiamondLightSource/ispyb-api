@@ -83,6 +83,7 @@ class DataCollectionGroup(ispyb.model.DBCache):
        :return: A DataCollectionGroup object representing the database entry for
                 the specified DataCollectionGroupID
     '''
+    self._cache_gridinfo = None
     self._db = db_conn
     self._dcgid = int(dcgid)
     if preload:
@@ -96,6 +97,13 @@ class DataCollectionGroup(ispyb.model.DBCache):
   def dcgid(self):
     '''Returns the DataCollectionGroupID.'''
     return self._dcgid
+
+  @property
+  def gridinfo(self):
+    '''Returns a GridInfo object.'''
+    if self._cache_gridinfo is None:
+      self._cache_gridinfo = GridInfo(self.dcgid, self._db)
+    return self._cache_gridinfo
 
   def __repr__(self):
     '''Returns an object representation, including the DataCollectionGroupID,
