@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import importlib
 
-class factory_mixin():
+class FactoryMixIn():
   def _get_data_area(self, module, classname):
     '''Helper function to instantiate a data area or return a cached instance.'''
     if hasattr(self, '_cache_' + module):

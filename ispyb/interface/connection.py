@@ -6,7 +6,7 @@ ABC = abc.ABCMeta('ABC', (object,), {'__slots__': ()}) # compatible with Python 
 
 class IF(
     ABC,
-    ispyb.interface.factory.factory_mixin,
+    ispyb.interface.factory.FactoryMixIn,
     ispyb.model.interface.ObjectModelMixIn):
   '''ISPyB connection interface definition object.'''
 
