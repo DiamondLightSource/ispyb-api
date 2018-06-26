@@ -15,7 +15,7 @@ Accessing records using the object model
 The connection object offers the following accessor functions to get
 object-like representations of database entries:
 
-.. autoclass:: ispyb.interface.model.objectmodel_mixin
+.. autoclass:: ispyb.model.interface.ObjectModelMixIn
     :members:
 
 DataCollection

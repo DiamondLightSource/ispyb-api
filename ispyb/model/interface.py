@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 import ispyb.model.datacollection
 import ispyb.model.processingjob
 
-class objectmodel_mixin():
+class ObjectModelMixIn():
   '''Object model accessor functions for Connector classes.'''
 
   def get_data_collection(self, dcid):
