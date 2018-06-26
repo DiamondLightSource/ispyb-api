@@ -28,4 +28,6 @@ class IF(DataArea):
   def get_data_collection(self, dcid):
     '''Return a DataCollection object representing the information about the
        selected data collection'''
+    import warnings
+    warnings.warn("Object model getter call on the data area is deprecated and will be removed in the next release. Call the function on connection object instead.", DeprecationWarning)
     return ispyb.model.datacollection.DataCollection(dcid, self)

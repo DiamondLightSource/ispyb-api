@@ -11,7 +11,13 @@ __version__ = '4.8.0'
 _log = logging.getLogger('ispyb')
 
 def open(configuration_file):
-  '''Create an ISPyB connection using settings from a configuration file.'''
+  '''Create an ISPyB connection using settings from a configuration file.
+     This can be used either as a function call or as a context manager.
+
+     :param configuration_file: Full path to a file containing database
+                                credentials
+     :return: ISPyB connection object
+  '''
   config = configparser.RawConfigParser(allow_no_value=True)
   if not config.read(configuration_file):
     raise AttributeError('No configuration found at %s' % configuration_file)

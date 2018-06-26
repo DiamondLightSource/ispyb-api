@@ -25,4 +25,6 @@ class IF(DataArea):
 
   def get_processing_job(self, jobid):
     '''Return a ProcessingJob object representing the information about the selected processing job'''
+    import warnings
+    warnings.warn("Object model getter call on the data area is deprecated and will be removed in the next release. Call the function on connection object instead.", DeprecationWarning)
     return ispyb.model.processingjob.ProcessingJob(jobid, self)
