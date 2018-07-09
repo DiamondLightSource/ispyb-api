@@ -34,7 +34,7 @@ class DataCollection(ispyb.model.DBCache):
 
   @property
   def group(self):
-    '''Returns a DataCollectionGroup object'''
+    '''Returns a DataCollectionGroup object.'''
     if self._cache_group is None:
       self._cache_group = DataCollectionGroup(self.dcgid, self._db.conn)
     return self._cache_group
@@ -54,19 +54,22 @@ class DataCollection(ispyb.model.DBCache):
       return 'DataCollection #%d (not yet loaded from database)' % self._dcid
     return ('\n'.join((
       'DataCollection #{0.dcid}',
+      '  Status       : {0.status}',
       '  Started      : {0.time_start}',
       '  Finished     : {0.time_end}',
       '  DC group     : {0.dcgid}',
     ))).format(self)
 
-for key, internalkey in (
-    ('dcgid', 'groupId'),
-    ('time_start', 'startTime'),
-    ('time_end', 'endTime'),
-    ('image_count', 'noImages'),
-    ('image_start_number', 'startImgNumber'),
-  ):
-  setattr(DataCollection, key, property(lambda self, k=internalkey: self._data[k]))
+ispyb.model.add_properties(DataCollection, (
+    ('dcgid', 'groupId', 'Returns the Data Collection Group ID associated with this data collection. '
+        'You can use .group to get the data collection group model object instead'),
+    ('time_start', 'startTime', None),
+    ('time_end', 'endTime', None),
+    ('image_count', 'noImages', None),
+    ('image_start_number', 'startImgNumber', None),
+    ('status', 'status', 'Returns a string representing the current data collection status.'),
+))
+
 
 class DataCollectionGroup(ispyb.model.DBCache):
   '''An object representing a DataCollectionGroup database entry. The object
