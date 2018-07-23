@@ -89,13 +89,12 @@ class ProcessingJob(ispyb.model.DBCache):
       '  Timestamp   : {pj.timestamp}',
     ))).format(pj=self)
 
-for key, internalkey in (
+ispyb.model.add_properties(ProcessingJob, (
     ('name', 'displayName'),
     ('comment', 'comments'),
     ('recipe', 'recipe'),
     ('timestamp', 'recordTimestamp'),
-  ):
-  setattr(ProcessingJob, key, property(lambda self, k=internalkey: self._data[k]))
+))
 
 
 class ProcessingJobParameterValue(ispyb.model.EncapsulatedValue):
