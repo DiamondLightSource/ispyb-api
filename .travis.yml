@@ -1,16 +1,28 @@
+dist: trusty
 sudo: false # use containers
 
 language: python
-python:
-  - "2.7"
-  - "3.4"
-  - "3.5"
-  - "3.6"
+
+matrix:
+  include:
+    - python: 2.7
+    - python: 3.4
+    - python: 3.5
+    - python: 3.6
+    - python: 3.7
+      dist: xenial
+      sudo: true
+    - python: pypy
+      env: OPTIONAL=1
+
+  allow_failures:
+    - env: OPTIONAL=1
 
 addons:
   mariadb: '10.2'
 
 before_install:
+- mysql_upgrade -u root
 - mysql -u root -e "CREATE DATABASE ispybtest; SET GLOBAL log_bin_trust_function_creators=ON;"
 - mysql -u root -D ispybtest < conf/tables.sql
 - mysql -u root -D ispybtest < conf/routines.sql

@@ -94,3 +94,22 @@ class EncapsulatedValue(object):
   def __nonzero__(self):
     '''Python 2: value when used in bool() context.'''
     return bool(self._value)
+
+
+def add_properties(objectclass, property_list):
+  '''Generate class properties for a model that provide read-only access
+     to elements from the internal ._data data structure.
+
+     :param objectclass: The class to which properties should be added
+     :param property_list: A list of property name + data structure key
+                           + optional docstring tuples. Property names
+                           then read from the given data structure keys.
+  '''
+  for prop_item in property_list:
+    key = prop_item[0]
+    internalkey = prop_item[1]
+    def model_attribute(self, k=internalkey):
+      return self._data[k]
+    if len(prop_item) > 2:
+      model_attribute.__doc__ = prop_item[2]
+    setattr(objectclass, key, property(model_attribute))

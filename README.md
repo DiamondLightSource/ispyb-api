@@ -16,7 +16,7 @@ as webservices.
 https://ispyb.readthedocs.io.
 
 ### Requirements
-* Python 2.7, 3.4, 3.5, 3.6
+* Python 2.7, 3.4, 3.5, 3.6, 3.7
 * The mysql.connector Python package.
 * An ISPyB database on either MariaDB 10.0+ or MySQL 5.6+
 * If binary logging is enabled in the DB system, then execute this before

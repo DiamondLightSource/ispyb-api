@@ -74,7 +74,7 @@ class AutoProcProgram(ispyb.model.DBCache):
       '  Last Message : {0.message}',
     ))).format(self)
 
-for key, internalkey in (
+ispyb.model.add_properties(AutoProcProgram, (
     ('program', 'programs'),
     ('command', 'commandLine'),
     ('environment', 'environment'),
@@ -83,5 +83,4 @@ for key, internalkey in (
     ('time_end', 'endTime'),
     ('status', 'status'),
     ('message', 'message'),
-  ):
-  setattr(AutoProcProgram, key, property(lambda self, k=internalkey: self._data[k]))
+))
