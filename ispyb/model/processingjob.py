@@ -32,7 +32,7 @@ class ProcessingJob(ispyb.model.DBCache):
 
   @property
   def DCID(self):
-    '''Returns the data collection id.'''
+    '''Returns the main data collection id.'''
     dcid = self._data['dataCollectionId']
     if dcid is None:
       return None
@@ -57,6 +57,8 @@ class ProcessingJob(ispyb.model.DBCache):
 
   @property
   def sweeps(self):
+    '''Returns a list of ProcessingJobImageSweeps involved in this
+       processing job.'''
     if self._cache_sweeps is None:
       self._cache_sweeps = ProcessingJobImageSweeps(self._jobid, self._db)
     return self._cache_sweeps

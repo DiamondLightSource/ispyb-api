@@ -43,7 +43,7 @@ class GridInfo(ispyb.model.DBCache):
   def __str__(self):
     '''Returns a pretty-printed object representation.'''
     if not self.cached:
-      return 'GridInfo #%d (not yet loaded from database)' % self._dcid
+      return 'GridInfo #%d (not yet loaded from database)' % self._dcgid
     return ('\n'.join((
       'GridInfo #{0.dcgid}',
     ))).format(self)

@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
 import ispyb.model
+import ispyb.model.gridinfo
 
 class DataCollection(ispyb.model.DBCache):
   '''An object representing a DataCollection database entry. The object
@@ -105,7 +106,7 @@ class DataCollectionGroup(ispyb.model.DBCache):
   def gridinfo(self):
     '''Returns a GridInfo object.'''
     if self._cache_gridinfo is None:
-      self._cache_gridinfo = GridInfo(self.dcgid, self._db)
+      self._cache_gridinfo = ispyb.model.gridinfo.GridInfo(self.dcgid, self._db)
     return self._cache_gridinfo
 
   def __repr__(self):
