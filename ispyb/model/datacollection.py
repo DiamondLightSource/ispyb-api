@@ -1,5 +1,8 @@
 from __future__ import absolute_import, division, print_function
 
+import os
+import re
+
 import ispyb.model
 import ispyb.model.gridinfo
 
@@ -40,6 +43,28 @@ class DataCollection(ispyb.model.DBCache):
       self._cache_group = DataCollectionGroup(self.dcgid, self._db.conn)
     return self._cache_group
 
+  @property
+  def file_template_full(self):
+    '''Template for file names with full directory path. As with file_template
+       \'#\' characters stand in for image number digits.'''
+    return os.path.join(self.file_directory, self.file_template)
+
+  @property
+  def file_template_full_python(self):
+    '''Template for file names that can be used in python string templates
+       (for use with the % operator), with %0xd standing in for the x image
+       number digits.'''
+    if not self.file_template_full:
+      return None
+    if '#' not in self.file_template_full:
+      return self.file_template_full
+    return re.sub(
+        r'#+',
+        lambda x: "%%0%dd" % len(x.group(0)),
+        self.file_template_full.replace('%', '%%'),
+        count=1,
+    )
+
   def __repr__(self):
     '''Returns an object representation, including the DataCollectionID,
        the database connection interface object, and the cache status.'''
@@ -59,11 +84,14 @@ class DataCollection(ispyb.model.DBCache):
       '  Started      : {0.time_start}',
       '  Finished     : {0.time_end}',
       '  DC group     : {0.dcgid}',
+      '  Image files  : {0.file_template_full}',
     ))).format(self)
 
 ispyb.model.add_properties(DataCollection, (
     ('dcgid', 'groupId', 'Returns the Data Collection Group ID associated with this data collection. '
         'You can use .group to get the data collection group model object instead'),
+    ('file_template', 'fileTemplate', 'Template for file names with the character \'#\' standing in for image number digits.'),
+    ('file_directory', 'imgDir', 'Fully qualified path to the image files'),
     ('time_start', 'startTime', None),
     ('time_end', 'endTime', None),
     ('image_count', 'noImages', None),
