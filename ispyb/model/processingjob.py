@@ -20,6 +20,7 @@ class ProcessingJob(ispyb.model.DBCache):
        :return: A ProcessingJob object representing the database entry for the
                 specified job ID
     '''
+    self._cache_dc = None
     self._cache_parameters = None
     self._cache_programs = None
     self._cache_sweeps = None
@@ -37,6 +38,17 @@ class ProcessingJob(ispyb.model.DBCache):
     if dcid is None:
       return None
     return int(dcid)
+
+  @property
+  def data_collection(self):
+    '''Returns the DataCollection model object for the main data collection of
+       the ProcessingJob.'''
+    dcid = self._data['dataCollectionId']
+    if dcid is None:
+      return None
+    if self._cache_dc is None:
+      self._cache_dc = self._db.conn.get_data_collection(self._data['dataCollectionId'])
+    return self._cache_dc
 
   @property
   def jobid(self):
@@ -185,14 +197,21 @@ class ProcessingJobImageSweep(object):
      sweep id.
   '''
 
-  def __init__(self, dcid, start, end, sweep_id):
+  def __init__(self, dcid, start, end, sweep_id, db_area):
     self._dcid, self._sid = int(dcid), int(sweep_id)
     self._start, self._end = int(start), int(end)
+    self._db = db_area
 
   @property
   def DCID(self):
     '''Returns the data collection id.'''
     return self._dcid
+
+  @property
+  def data_collection(self):
+    '''Returns the DataCollection model object for the data collection of this
+       sweep.'''
+    return self._db.conn.get_data_collection(self._dcid)
 
   @property
   def start(self):
@@ -239,7 +258,7 @@ class ProcessingJobImageSweeps(ispyb.model.DBCache):
     '''Load/update information from the database.'''
     try:
       self._data = [
-          ProcessingJobImageSweep(p['dataCollectionId'], p['startImage'], p['endImage'], p['sweepId'])
+          ProcessingJobImageSweep(p['dataCollectionId'], p['startImage'], p['endImage'], p['sweepId'], self._db)
           for p in self._db.retrieve_job_image_sweeps(self._jobid)
       ]
     except ispyb.exception.ISPyBNoResultException:
