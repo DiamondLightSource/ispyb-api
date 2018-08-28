@@ -60,13 +60,15 @@ record = {
     k: getattr(mock.sentinel, k)
     for k in database_column_to_attribute_name
 }
+record["imgDir"] = "/path/to/some/images/"
+record["fileTemplate"] = "file_####.cbf"
 
 @pytest.mark.parametrize('column,attribute', filter(lambda ca: ca[1], database_column_to_attribute_name.items()))
 def test_datacollection_model_attributes_return_correct_values(column, attribute):
   dc = ispyb.model.datacollection.DataCollection(1234, None, preload=record)
   assert getattr(dc, attribute) == record[column]
 
-@pytest.mark.parametrize('printed_attribute', ('startTime', 'endTime'))
+@pytest.mark.parametrize('printed_attribute', ('startTime', 'endTime', 'imgDir', 'fileTemplate'))
 def test_pretty_printing_datacollection_shows_attribute(printed_attribute):
   dc_str = str(ispyb.model.datacollection.DataCollection(1234, None, preload=record))
   assert "1234" in dc_str
