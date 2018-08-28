@@ -15,9 +15,6 @@ from ispyb.strictordereddict import StrictOrderedDict
 class MXProcessing(ispyb.interface.processing.IF):
   '''MXProcessing provides methods to store MX processing data.'''
 
-  def __init__(self):
-    pass
-
   _program_params = StrictOrderedDict([('id',None), ('cmd_line',None), ('programs',None),
     ('status',None), ('message',None), ('starttime',None), ('updatetime',None), ('environment',None), ('processing_job_id',None),
     ('recordtime',None)])
@@ -125,6 +122,26 @@ class MXProcessing(ispyb.interface.processing.IF):
   def upsert_program(self, values):
     '''Store new or update existing program params.'''
     return self.get_connection().call_sp_write(procname='upsert_processing_program', args=values) # doesn't work with dict cursors
+
+  def upsert_program_ex(self, program_id=None, processing_id=None,
+      command_line=None, program_name=None, environment=None,
+      record_timestamp=None, status=None, start_time=None,
+      update_time=None, update_message=None):
+    '''Store new or update existing processing program information.
+
+       :param status: An integer describing the processing status. 1 means
+                      success, 0 means failure. If left at None then the
+                      status is left undefined or unchanged. The underlying
+                      stored procedure does not allow any more changes to the
+                      record once the status is set.
+       :return: The program_id.
+    '''
+    return self.get_connection().call_sp_write(
+        procname='upsert_processing_program',
+        args=[ program_id, command_line, program_name, status, update_message,
+               start_time, update_time, environment, processing_id,
+               record_timestamp ],
+    )
 
   def upsert_program_attachment(self, values):
     '''Store new or update existing program attachment params.'''
