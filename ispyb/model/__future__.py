@@ -28,14 +28,14 @@ def enable(configuration_file):
 
   # Open a direct MySQL connection
   _db = mysql.connector.connect(host=host, port=port, user=username, password=password, database=database)
-  _db_cc = dictionary_contextcursor_factory(_db.cursor)
+  _db_cc = DictionaryContextcursorFactory(_db.cursor)
 
   import ispyb.model.gridinfo
   ispyb.model.gridinfo.GridInfo.reload = _get_gridinfo
   import ispyb.model.processingprogram
   ispyb.model.processingprogram.ProcessingProgram.reload = _get_autoprocprogram
 
-class dictionary_contextcursor_factory(object):
+class DictionaryContextcursorFactory(object):
   '''This class creates dictionary context manager objects for mysql.connector
      cursors. By using a context manager it is ensured that cursors are
      closed immediately after use.
@@ -47,7 +47,7 @@ class dictionary_contextcursor_factory(object):
   def __init__(self, cursor_factory_function):
     '''Set up the context manager factory.'''
 
-    class contextmanager(object):
+    class ContextManager(object):
       '''The context manager object which is actually used in the
             with .. as ..:
          clause.'''
@@ -75,7 +75,7 @@ class dictionary_contextcursor_factory(object):
         cm.cursor.close()
         cm.cursor = None
 
-    self._contextmanager_factory = contextmanager
+    self._contextmanager_factory = ContextManager
 
   def __call__(self, **parameters):
     '''Creates and returns a context manager object.'''
