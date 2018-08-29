@@ -32,6 +32,8 @@ def enable(configuration_file):
 
   import ispyb.model.gridinfo
   ispyb.model.gridinfo.GridInfo.reload = _get_gridinfo
+  import ispyb.model.processingprogram
+  ispyb.model.processingprogram.ProcessingProgram.reload = _get_autoprocprogram
 
 class dictionary_contextcursor_factory(object):
   '''This class creates dictionary context manager objects for mysql.connector
@@ -85,4 +87,15 @@ def _get_gridinfo(self):
                "FROM GridInfo "
                "WHERE dataCollectionGroupId = %s "
                "LIMIT 1;", self._dcgid)
+    self._data = cursor.fetchone()
+
+def _get_autoprocprogram(self):
+  with _db_cc() as cursor:
+    cursor.run("SELECT processingCommandLine as commandLine, processingPrograms as programs, "
+               "processingStatus as status, processingMessage as message, processingEndTime as endTime, "
+               "processingStartTime as startTime, processingEnvironment as environment, "
+               "processingJobId as jobId, recordTimeStamp, autoProcProgramId "
+               "FROM AutoProcProgram "
+               "WHERE autoProcProgramId = %s "
+               "LIMIT 1;", self._appid)
     self._data = cursor.fetchone()

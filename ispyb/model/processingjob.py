@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 import collections
 
 import ispyb.model
-import ispyb.model.autoprocprogram
+import ispyb.model.processingprogram
 
 class ProcessingJob(ispyb.model.DBCache):
   '''An object representing a ProcessingJob database entry. The object lazily
@@ -304,7 +304,7 @@ class ProcessingJobPrograms(ispyb.model.DBCache):
     '''Load/update information from the database.'''
     try:
       self._data = [
-          ispyb.model.autoprocprogram.AutoProcProgram(p['id'], self._db, preload=p)
+          ispyb.model.processingprogram.ProcessingProgram(p['id'], self._db, preload=p)
           for p in self._db.retrieve_programs_for_job_id(self._jobid)
       ]
     except ispyb.exception.ISPyBNoResultException:
