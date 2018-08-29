@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
 import ispyb.model.datacollection
+import ispyb.model.processingprogram
 import ispyb.model.processingjob
 
 class ObjectModelMixIn():
@@ -8,7 +9,7 @@ class ObjectModelMixIn():
 
   def get_data_collection(self, dcid):
     '''Return a DataCollection object representing the information
-       about the selected data collection'''
+       about the selected data collection.'''
     return ispyb.model.datacollection.DataCollection(
         dcid,
         self.mx_acquisition,
@@ -16,7 +17,7 @@ class ObjectModelMixIn():
 
   def get_data_collection_group(self, dcgid):
     '''Return a DataCollectionGroup object representing the information
-       about the selected data collection group'''
+       about the selected data collection group.'''
     return ispyb.model.datacollection.DataCollectionGroup(
         dcgid,
         self,
@@ -28,4 +29,12 @@ class ObjectModelMixIn():
     return ispyb.model.processingjob.ProcessingJob(
         jobid,
         self.mx_processing,
+    )
+
+  def get_processing_program(self, appid):
+    '''Return an ProcessingProgram object representing the information
+       about a processing program invocation.'''
+    return ispyb.model.processingprogram.ProcessingProgram(
+        appid,
+        self,
     )

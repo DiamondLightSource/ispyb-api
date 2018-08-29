@@ -28,7 +28,8 @@ class GridInfo(ispyb.model.DBCache):
 
   @property
   def dcgid(self):
-    '''Returns the DataCollectionGroupID.'''
+    '''Returns the Data Collection Group ID associated with this grid
+       information.'''
     return self._dcgid
 
   def __repr__(self):
@@ -43,7 +44,24 @@ class GridInfo(ispyb.model.DBCache):
   def __str__(self):
     '''Returns a pretty-printed object representation.'''
     if not self.cached:
-      return 'GridInfo #%d (not yet loaded from database)' % self._dcid
+      return 'GridInfo #%d (not yet loaded from database)' % self._dcgid
     return ('\n'.join((
       'GridInfo #{0.dcgid}',
     ))).format(self)
+
+ispyb.model.add_properties(GridInfo, (
+    ('dx_mm', 'dx_mm', 'Grid element width in mm'),
+    ('dy_mm', 'dy_mm', 'Grid element height in mm'),
+    ('id', 'gridInfoId', 'A unique ID identifying this grid information record'),
+    ('orientation', 'orientation', 'The orientation of the grid, either "horizontal" or "vertical"'),
+    ('pixels_per_micron_x', 'pixelsPerMicronX', 'Number of pixels per micrometre (horizontal) when displaying the grid in GDA'),
+    ('pixels_per_micron_y', 'pixelsPerMicronY', 'Number of pixels per micrometre (vertical) when displaying the grid in GDA'),
+    ('timestamp', 'recordTimeStamp', 'Time and date of record creation'),
+    ('steps_x', 'steps_x', 'Width of the grid scan in number of grid elements'),
+    ('steps_y', 'steps_y', 'Height of the grid scan in number of grid elements'),
+    ('snaked', 'snaked', 'Whether the fast scan axis is inverted (1) or kept (0) for every slow axis acquisition'),
+    ('snapshot_offset_pixel_x', 'snapshot_offsetXPixel',
+         'Horizontal distance from the top left corner in GDA to the first grid element'),
+    ('snapshot_offset_pixel_y', 'snapshot_offsetYPixel',
+         'Vertical distance from the top left corner in GDA to the first grid element'),
+))

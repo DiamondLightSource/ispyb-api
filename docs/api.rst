@@ -30,3 +30,10 @@ ProcessingJob
 .. automodule:: ispyb.model.processingjob
     :members:
 
+ProcessingProgram
+=================
+
+These objects correspond to entries in the ISPyB table AutoProcProgram.
+
+.. automodule:: ispyb.model.processingprogram
+    :members:

@@ -2,14 +2,14 @@ from __future__ import absolute_import, division, print_function
 
 import ispyb.model
 
-class AutoProcProgram(ispyb.model.DBCache):
+class ProcessingProgram(ispyb.model.DBCache):
   '''An object representing an AutoProcProgram database entry. The object
      lazily accesses the underlying database when necessary and exposes record
      data as python attributes.
   '''
 
   def __init__(self, appid, db_area, preload=None):
-    '''Create an AutoProcProgram object for a defined APPID. Requires
+    '''Create an ProcessingProgram object for a defined APPID. Requires
        a database data area object exposing further data access methods.
 
        :param appid: AutoProcProgramID
@@ -31,11 +31,6 @@ class AutoProcProgram(ispyb.model.DBCache):
   def appid(self):
     '''Returns the AutoProcProgramID.'''
     return self._appid
-
-  @property
-  def jobid(self):
-    '''Returns the associated ProcessingJob ID (if any).'''
-    return self._data['jobId']
 
   @property
   def status_text(self):
@@ -63,7 +58,7 @@ class AutoProcProgram(ispyb.model.DBCache):
       return 'AutoProcProgram #%d (not yet loaded from database)' % self._appid
     return ('\n'.join((
       'AutoProcProgram #{0.appid}',
-      '  Name         : {0.program}',
+      '  Name         : {0.name}',
       '  Status       : {0.status_text}',
       '  Command      : {0.command}',
       '  Environment  : {0.environment}',
@@ -74,10 +69,11 @@ class AutoProcProgram(ispyb.model.DBCache):
       '  Last Message : {0.message}',
     ))).format(self)
 
-ispyb.model.add_properties(AutoProcProgram, (
-    ('program', 'programs'),
+ispyb.model.add_properties(ProcessingProgram, (
+    ('name', 'programs'),
     ('command', 'commandLine'),
     ('environment', 'environment'),
+    ('jobid', 'jobId', 'Returns the associated ProcessingJob ID (if any).'),
     ('time_defined', 'recordTimeStamp'),
     ('time_start', 'startTime'),
     ('time_end', 'endTime'),
