@@ -38,8 +38,3 @@ def open(configuration_file):
     raise AttributeError('No supported connection type found in %s' % configuration_file)
 
   return conn
-
-# add legacy import to top level name space
-def legacy_get_driver(*args):
-  import ispyb.legacy.driver.mysql.main
-  return ispyb.legacy.driver.mysql.main.ISPyBMySQLDriver
