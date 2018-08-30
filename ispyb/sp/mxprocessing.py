@@ -123,10 +123,9 @@ class MXProcessing(ispyb.interface.processing.IF):
     '''Store new or update existing program params.'''
     return self.get_connection().call_sp_write(procname='upsert_processing_program', args=values) # doesn't work with dict cursors
 
-  def upsert_program_ex(self, program_id=None, processing_id=None,
-      command_line=None, program_name=None, environment=None,
-      record_timestamp=None, status=None, start_time=None,
-      update_time=None, update_message=None):
+  def upsert_program_ex(self, program_id=None, job_id=None, name=None,
+      command=None, environment=None, message=None, status=None,
+      time_defined=None, time_start=None, time_update=None):
     '''Store new or update existing processing program information.
 
        :param status: An integer describing the processing status. 1 means
@@ -138,9 +137,9 @@ class MXProcessing(ispyb.interface.processing.IF):
     '''
     return self.get_connection().call_sp_write(
         procname='upsert_processing_program',
-        args=[ program_id, command_line, program_name, status, update_message,
-               start_time, update_time, environment, processing_id,
-               record_timestamp ],
+        args=[ program_id, command, name, status, message,
+               time_start, time_update, environment, job_id,
+               time_defined ],
     )
 
   def upsert_program_attachment(self, values):

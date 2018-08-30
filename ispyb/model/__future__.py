@@ -97,5 +97,5 @@ def _get_autoprocprogram(self):
                "processingJobId as jobId, recordTimeStamp, autoProcProgramId "
                "FROM AutoProcProgram "
                "WHERE autoProcProgramId = %s "
-               "LIMIT 1;", self._appid)
+               "LIMIT 1;", self._app_id)
     self._data = cursor.fetchone()
