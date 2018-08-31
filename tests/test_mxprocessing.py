@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
 import context
+import datetime
 import ispyb
 
 def test_processing_jobs(testconfig):
@@ -67,6 +68,68 @@ def test_processing_jobs(testconfig):
         assert job.sweeps[0].DCID == 993677
         assert job.sweeps[0].sweep_id == id
 
+def test_processing(testdb):
+  mxprocessing = testdb.mx_processing
+
+  program_start = datetime.datetime.now()
+  program_id = mxprocessing.upsert_program_ex(
+      job_id=5,
+      name='new program',
+      command='program.sh --help',
+      environment='environ=True',
+      time_defined=program_start,
+      message='preparing',
+  )
+
+  rs = mxprocessing.retrieve_programs_for_job_id(5)
+  assert rs and len(rs) >= 1
+
+  # Find programs using the processing job ID and verify stored values
+  program = list(filter(lambda p: p.app_id == program_id, programs))
+  assert program and len(program) == 1
+  program = program[0]
+  assert program.job_id == 5
+  assert program.name == 'new program'
+  assert program.command == 'program.sh --help'
+  assert program.environment == 'environ=True'
+  assert program.message == 'preparing'
+  assert program.status is None
+  assert program.status_text == 'queued'
+  assert program.time_defined == program_start.replace(microsecond=0)
+  assert program.time_start is None
+  assert program.time_update is None
+
+  # Update the program status and verify values
+  program_id = mxprocessing.upsert_program_ex(
+    program_id=program_id,
+    message='starting...',
+    time_start=program_start,
+    time_update=program_start,
+  )
+  programs = mxprocessing.get_processing_job(5).programs
+  program = list(filter(lambda p: p.app_id == program_id, programs))
+  assert program and len(program) == 1
+  program = program[0]
+  assert program.message == 'starting...'
+  assert program.status is None
+  assert program.status_text == 'running'
+  assert program.time_start == program_start
+  assert program.time_update == program_start
+
+  # Mark program run as success
+  program_id = mxprocessing.upsert_program_ex(
+    program_id=program_id,
+    status=1,
+    message='done',
+  )
+  programs = mxprocessing.get_processing_job(5).programs
+  program = list(filter(lambda p: p.app_id == program_id, programs))
+  assert program and len(program) == 1
+  program = program[0]
+  assert program.message == 'done'
+  assert program.status == 1
+  assert program.status_text == 'success'
+
 def test_processing(testconfig):
   with ispyb.open(testconfig) as conn:
         mxprocessing = conn.mx_processing
@@ -87,10 +150,10 @@ def test_processing(testconfig):
         programs = mxprocessing.get_processing_job(5).programs
         assert programs
         assert len(programs) >= 1
-        programs = list(filter(lambda p: p.appid == id, programs))
+        programs = list(filter(lambda p: p.app_id == id, programs))
         assert programs
         program = programs[0]
-        assert program.jobid == 5
+        assert program.job_id == 5
         assert program.command == params['cmd_line']
         assert program.message == params['message']
 

@@ -16,6 +16,12 @@ def testconfig():
   return config_file
 
 @pytest.fixture
+def testdb():
+  '''Return an ISPyB connection object for the test database configuration.'''
+  with ispyb.open(testconfig()) as conn:
+    yield conn
+
+@pytest.fixture
 def testconfig_ws():
   '''Return the path to a configuration file pointing to a websocket
      test instance.'''
