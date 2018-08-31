@@ -44,6 +44,11 @@ class DataCollection(ispyb.model.DBCache):
     return self._cache_group
 
   @property
+  def integrations(self):
+    '''Returns the list of IntegrationResult objects associated with this DC.'''
+    raise NotImplementedError('TODO: Not implemented yet')
+
+  @property
   def file_template_full(self):
     '''Template for file names with full directory path. As with file_template
        \'#\' characters stand in for image number digits.'''

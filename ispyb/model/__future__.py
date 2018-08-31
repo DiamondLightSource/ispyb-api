@@ -30,6 +30,8 @@ def enable(configuration_file):
   _db = mysql.connector.connect(host=host, port=port, user=username, password=password, database=database)
   _db_cc = DictionaryContextcursorFactory(_db.cursor)
 
+  import ispyb.model.datacollection
+  ispyb.model.datacollection.DataCollection.integrations = _get_linked_autoprocintegration_for_dc
   import ispyb.model.gridinfo
   ispyb.model.gridinfo.GridInfo.reload = _get_gridinfo
   import ispyb.model.processingprogram
@@ -99,3 +101,15 @@ def _get_autoprocprogram(self):
                "WHERE autoProcProgramId = %s "
                "LIMIT 1;", self._appid)
     self._data = cursor.fetchone()
+
+@property
+def _get_linked_autoprocintegration_for_dc(self):
+  import ispyb.model.integration
+  with _db_cc() as cursor:
+    cursor.run("SELECT * "
+               "FROM AutoProcIntegration "
+               "WHERE dataCollectionId = %s", self.dcid)
+    return [
+        ispyb.model.integration.IntegrationResult(ir['autoProcIntegrationId'], self._db, preload=ir)
+        for ir in cursor.fetchall()
+    ]
