@@ -10,9 +10,16 @@ try:
   import configparser
 except ImportError:
   import ConfigParser as configparser
+import logging
 import mysql.connector
 
 def enable(configuration_file):
+  logging.getLogger('ispyb').info(
+      'NOTICE: This code uses __future__ functionality in the ISPyB API. '
+      'This enables unsupported and potentially unstable code, which may '
+      'change from version to version without warnings. Here be dragons.'
+  )
+
   global _db, _db_cc
   '''Enable access to features that are currently under development.'''
 
@@ -84,6 +91,7 @@ class DictionaryContextcursorFactory(object):
     return self._contextmanager_factory(parameters)
 
 def _get_gridinfo(self):
+  # https://jira.diamond.ac.uk/browse/MXSW-1173
   with _db_cc() as cursor:
     cursor.run("SELECT * "
                "FROM GridInfo "
@@ -92,6 +100,7 @@ def _get_gridinfo(self):
     self._data = cursor.fetchone()
 
 def _get_autoprocprogram(self):
+  # https://jira.diamond.ac.uk/browse/SCI-7414
   with _db_cc() as cursor:
     cursor.run("SELECT processingCommandLine as commandLine, processingPrograms as programs, "
                "processingStatus as status, processingMessage as message, processingEndTime as endTime, "
@@ -104,6 +113,7 @@ def _get_autoprocprogram(self):
 
 @property
 def _get_linked_autoprocintegration_for_dc(self):
+  # not yet requested
   import ispyb.model.integration
   with _db_cc() as cursor:
     cursor.run("SELECT * "
