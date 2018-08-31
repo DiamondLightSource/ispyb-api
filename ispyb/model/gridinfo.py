@@ -32,6 +32,13 @@ class GridInfo(ispyb.model.DBCache):
        information.'''
     return self._dcgid
 
+  def __bool__(self):
+    '''GridInfo object evaluates to True in a boolean context if grid
+       information exists in the database. Otherwise it evaluates to False.'''
+    self.load()
+    return self._data is not None
+  __nonzero__ = __bool__ # Python 2 compatibility
+
   def __repr__(self):
     '''Returns an object representation, including the DataCollectionGroupID,
        the database connection interface object, and the cache status.'''
