@@ -33,6 +33,70 @@ class IntegrationResult(ispyb.model.DBCache):
     raise NotImplementedError('TODO: Not implemented yet')
 
   @property
+  def XBeam(self):
+    '''Returns refined x beam'''
+    xbeam = self._data['refinedXBeam']
+    if xbeam is None:
+      return None
+    return float(xbeam)
+
+  @property
+  def YBeam(self):
+    '''Returns refined y beam'''
+    ybeam = self._data['refinedYBeam']
+    if ybeam is None:
+      return None
+    return float(ybeam)
+   
+  @property
+  def CellA(self):
+    '''Returns dimension a of unit cell'''
+    cell_a = self._data['cell_a']
+    if cell_a is None:
+      return None
+    return float(cell_a)
+ 
+  @property
+  def CellB(self):
+    '''Returns dimension b of unit cell'''
+    cell_b = self._data['cell_b']
+    if cell_b is None:
+      return None
+    return float(cell_b)
+
+  @property
+  def CellC(self):
+    '''Returns dimension c of unit cell'''
+    cell_c = self._data['cell_c']
+    if cell_c is None:
+      return None
+    return float(cell_c)
+
+  @property
+  def CellAlpha(self):
+    '''Returns angle alpha of unit cell'''
+    alpha = self._data['cell_alpha']
+    if alpha is None:
+      return None
+    return float(alpha)
+
+  @property
+  def CellBeta(self):
+    '''Returns angle beta of unit cell'''
+    beta = self._data['cell_beta']
+    if beta is None:
+      return None
+    return float(beta)
+
+  @property
+  def CellGamma(self):
+    '''Returns angle gamma of unit cell'''
+    gamma = self._data['cell_gamma']
+    if gamma is None:
+      return None
+    return float(gamma)
+
+  @property
   def DCID(self):
     '''Returns the main data collection id.'''
     dcid = self._data['dataCollectionId']
@@ -75,6 +139,14 @@ class IntegrationResult(ispyb.model.DBCache):
       '  Start Image      : {ir.image_start}',
       '  End Image        : {ir.image_end}',
       '  Detector Distance: {ir.detector_distance}',
+      '  x beam           : {ir.XBeam}',
+      '  y beam           : {ir.YBeam}',
+      '  cell a           : {ir.CellA}',
+      '  cell b           : {ir.CellB}',
+      '  cell c           : {ir.CellC}',
+      '  cell alpha       : {ir.CellAlpha}',
+      '  cell beta        : {ir.CellBeta}',
+      '  cell gamma       : {ir.CellGamma}',
       '  Timestamp        : {ir.timestamp}',
     ))).format(ir=self)
 
@@ -83,5 +155,13 @@ ispyb.model.add_properties(IntegrationResult, (
     ('image_start', 'startImageNumber'),
     ('image_end', 'endImageNumber'),
     ('detector_distance', 'refinedDetectorDistance'),
+    ('XBeam','refinedXBeam'),
+    ('YBeam','refinedYBeam'),
+    ('CellA','cell_a'),
+    ('CellB','cell_b'),
+    ('CellC','cell_c'),
+    ('CellAlpha','cell_alpha'),
+    ('CellBeta','cell_beta'),
+    ('CellGamma','cell_gamma'),
     ('timestamp', 'recordTimeStamp'),
 ))
