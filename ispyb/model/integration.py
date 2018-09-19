@@ -33,70 +33,6 @@ class IntegrationResult(ispyb.model.DBCache):
     raise NotImplementedError('TODO: Not implemented yet')
 
   @property
-  def XBeam(self):
-    '''Returns refined x beam'''
-    xbeam = self._data['refinedXBeam']
-    if xbeam is None:
-      return None
-    return float(xbeam)
-
-  @property
-  def YBeam(self):
-    '''Returns refined y beam'''
-    ybeam = self._data['refinedYBeam']
-    if ybeam is None:
-      return None
-    return float(ybeam)
-   
-  @property
-  def CellA(self):
-    '''Returns dimension a of unit cell'''
-    cell_a = self._data['cell_a']
-    if cell_a is None:
-      return None
-    return float(cell_a)
- 
-  @property
-  def CellB(self):
-    '''Returns dimension b of unit cell'''
-    cell_b = self._data['cell_b']
-    if cell_b is None:
-      return None
-    return float(cell_b)
-
-  @property
-  def CellC(self):
-    '''Returns dimension c of unit cell'''
-    cell_c = self._data['cell_c']
-    if cell_c is None:
-      return None
-    return float(cell_c)
-
-  @property
-  def CellAlpha(self):
-    '''Returns angle alpha of unit cell'''
-    alpha = self._data['cell_alpha']
-    if alpha is None:
-      return None
-    return float(alpha)
-
-  @property
-  def CellBeta(self):
-    '''Returns angle beta of unit cell'''
-    beta = self._data['cell_beta']
-    if beta is None:
-      return None
-    return float(beta)
-
-  @property
-  def CellGamma(self):
-    '''Returns angle gamma of unit cell'''
-    gamma = self._data['cell_gamma']
-    if gamma is None:
-      return None
-    return float(gamma)
-
-  @property
   def DCID(self):
     '''Returns the main data collection id.'''
     dcid = self._data['dataCollectionId']
@@ -113,6 +49,12 @@ class IntegrationResult(ispyb.model.DBCache):
         return None
       self._cache_dc = self._db.get_data_collection(self.DCID)
     return self._cache_dc
+
+  @property
+  def unit_cell(self):
+    '''Returns the unit cell model'''
+    return ispyb.model.integration.UnitCell(self._data['cell_a'], self._data['cell_b'],self._data['cell_c'],
+                                            self._data['cell_alpha'], self._data['cell_beta'], self._data['cell_gamma'])
 
   @property
   def APIID(self):
@@ -139,14 +81,6 @@ class IntegrationResult(ispyb.model.DBCache):
       '  Start Image      : {ir.image_start}',
       '  End Image        : {ir.image_end}',
       '  Detector Distance: {ir.detector_distance}',
-      '  x beam           : {ir.XBeam}',
-      '  y beam           : {ir.YBeam}',
-      '  cell a           : {ir.CellA}',
-      '  cell b           : {ir.CellB}',
-      '  cell c           : {ir.CellC}',
-      '  cell alpha       : {ir.CellAlpha}',
-      '  cell beta        : {ir.CellBeta}',
-      '  cell gamma       : {ir.CellGamma}',
       '  Timestamp        : {ir.timestamp}',
     ))).format(ir=self)
 
@@ -155,13 +89,95 @@ ispyb.model.add_properties(IntegrationResult, (
     ('image_start', 'startImageNumber'),
     ('image_end', 'endImageNumber'),
     ('detector_distance', 'refinedDetectorDistance'),
-    ('XBeam','refinedXBeam'),
-    ('YBeam','refinedYBeam'),
-    ('CellA','cell_a'),
-    ('CellB','cell_b'),
-    ('CellC','cell_c'),
-    ('CellAlpha','cell_alpha'),
-    ('CellBeta','cell_beta'),
-    ('CellGamma','cell_gamma'),
     ('timestamp', 'recordTimeStamp'),
 ))
+
+class UnitCell():
+  '''An object representing the parameters of the unit cell I.e unit cell edges and angles
+  '''
+
+  def __init__(self, a,b,c,alpha,beta,gamma):
+    '''Unit cell object
+
+       :param apiid: AutoProcIntegrationID
+       :param db_conn: ISPyB database connection object
+       :return: A unit cell object representing the database entry for
+                the specified AutoProcIntegrationID
+    '''
+    self._a = a
+    self._b = b
+    self._c = c
+    self._alpha = alpha
+    self._beta = beta
+    self._gamma = gamma
+
+   
+  @property
+  def a(self):
+    '''Returns dimension a of unit cell in Angstroms'''
+    return self._a
+
+  @a.setter
+  def a(self, value):
+    '''Sets dimension a of unit cell in Angstroms'''
+    self._a = value
+
+  @property
+  def b(self):
+    '''Returns dimension b of unit cell in Angstroms'''
+    return self._b
+
+  @b.setter
+  def b(self, value):
+    '''Sets dimension b of unit cell in Angstroms'''
+    self._b = value
+
+  @property
+  def c(self):
+    '''Returns dimension c of unit cell in Angstroms'''
+    return self._c
+
+  @c.setter
+  def c(self, value):
+    '''Sets dimension c of unit cell in Angstroms'''
+    self._c = value
+
+  @property
+  def alpha(self):
+    '''Returns angle alpha of unit cell'''
+    return self._alpha
+
+  @alpha.setter
+  def alpha(self, value):
+    '''Sets angle alpha of unit cell'''
+    self._alpha = value
+
+  @property
+  def beta(self):
+    '''Returns angle beta of unit cell'''
+    return self._beta
+
+  @beta.setter
+  def beta(self, value):
+    '''Sets angle beta of unit cell'''
+    self._beta = value
+
+  @property
+  def gamma(self):
+    '''Returns angle gamma of unit cell'''
+    return self._gamma
+
+  @gamma.setter
+  def gamma(self, value):
+    '''Sets angle gamma of unit cell'''
+    self._gamma = value
+ 
+  def __str__(self):
+    '''Returns a pretty-printed object representation.'''
+    text = """  cell a      : {}
+  cell b      : {}
+  cell c      : {}
+  cell alpha  : {}
+  cell beta   : {}
+  cell gamma  : {}""".format(self._a, self._b, self._c, self._alpha, self._beta, self._gamma)
+    return text
