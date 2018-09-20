@@ -13,15 +13,26 @@ except ImportError:
 import logging
 import mysql.connector
 
+_db_config = None
+
 def enable(configuration_file):
+  '''Enable access to features that are currently under development.'''
+
+  global _db, _db_cc, _db_config
+
+  if _db_config:
+    if _db_config == configuration_file:
+      # This database connection is already set up.
+      return
+    logging.getLogger('ispyb').warn('__future__ configuration file change requested')
+    _db.close()
+    _db, _db_cc, _db_config = None, None, None
+
   logging.getLogger('ispyb').info(
       'NOTICE: This code uses __future__ functionality in the ISPyB API. '
       'This enables unsupported and potentially unstable code, which may '
       'change from version to version without warnings. Here be dragons.'
   )
-
-  global _db, _db_cc
-  '''Enable access to features that are currently under development.'''
 
   cfgparser = configparser.RawConfigParser()
   if not cfgparser.read(configuration_file):
@@ -36,6 +47,7 @@ def enable(configuration_file):
   # Open a direct MySQL connection
   _db = mysql.connector.connect(host=host, port=port, user=username, password=password, database=database)
   _db_cc = DictionaryContextcursorFactory(_db.cursor)
+  _db_config = configuration_file
 
   import ispyb.model.datacollection
   ispyb.model.datacollection.DataCollection.integrations = _get_linked_autoprocintegration_for_dc
