@@ -96,13 +96,16 @@ class UnitCell():
   '''An object representing the parameters of the unit cell I.e unit cell edges and angles
   '''
 
-  def __init__(self, a,b,c,alpha,beta,gamma):
+  def __init__(self, a, b, c, alpha, beta, gamma):
     '''Unit cell object
 
-       :param apiid: AutoProcIntegrationID
-       :param db_conn: ISPyB database connection object
-       :return: A unit cell object representing the database entry for
-                the specified AutoProcIntegrationID
+       :param a: Edge a
+       :param b: Edge b
+       :param c: Edge c
+       :param alpha: Angle alpha
+       :param beta: Angle beta
+       :param gamma: Angle gamma
+       :return: A unitcell object
     '''
     self._a = a
     self._b = b
@@ -117,67 +120,39 @@ class UnitCell():
     '''Returns dimension a of unit cell in Angstroms'''
     return self._a
 
-  @a.setter
-  def a(self, value):
-    '''Sets dimension a of unit cell in Angstroms'''
-    self._a = value
-
   @property
   def b(self):
     '''Returns dimension b of unit cell in Angstroms'''
     return self._b
-
-  @b.setter
-  def b(self, value):
-    '''Sets dimension b of unit cell in Angstroms'''
-    self._b = value
 
   @property
   def c(self):
     '''Returns dimension c of unit cell in Angstroms'''
     return self._c
 
-  @c.setter
-  def c(self, value):
-    '''Sets dimension c of unit cell in Angstroms'''
-    self._c = value
-
   @property
   def alpha(self):
     '''Returns angle alpha of unit cell'''
     return self._alpha
-
-  @alpha.setter
-  def alpha(self, value):
-    '''Sets angle alpha of unit cell'''
-    self._alpha = value
 
   @property
   def beta(self):
     '''Returns angle beta of unit cell'''
     return self._beta
 
-  @beta.setter
-  def beta(self, value):
-    '''Sets angle beta of unit cell'''
-    self._beta = value
-
   @property
   def gamma(self):
     '''Returns angle gamma of unit cell'''
     return self._gamma
-
-  @gamma.setter
-  def gamma(self, value):
-    '''Sets angle gamma of unit cell'''
-    self._gamma = value
  
   def __str__(self):
     '''Returns a pretty-printed object representation.'''
-    text = """  cell a      : {}
-  cell b      : {}
-  cell c      : {}
-  cell alpha  : {}
-  cell beta   : {}
-  cell gamma  : {}""".format(self._a, self._b, self._c, self._alpha, self._beta, self._gamma)
-    return text
+    return ('\n'.join((
+      '  a         : {ir.a}',
+      '  b         : {ir.b}',
+      '  c         : {ir.c}',
+      '  alpha     : {ir.alpha}',
+      '  beta      : {ir.beta}',
+      '  gamma     : {ir.gamma}',
+    ))).format(ir=self)
+
