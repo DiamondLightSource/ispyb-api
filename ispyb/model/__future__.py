@@ -46,6 +46,7 @@ def enable(configuration_file):
 
   # Open a direct MySQL connection
   _db = mysql.connector.connect(host=host, port=port, user=username, password=password, database=database)
+  _db.autocommit = True
   _db_cc = DictionaryContextcursorFactory(_db.cursor)
   _db_config = configuration_file
 
