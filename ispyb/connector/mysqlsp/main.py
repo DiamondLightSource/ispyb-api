@@ -1,9 +1,9 @@
-import datetime
+from __future__ import absolute_import, division, print_function
+
 import os
 import sys
-import traceback
 import threading
-import time
+import traceback
 
 import ispyb.interface.connection
 import mysql.connector
@@ -17,7 +17,7 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
 
   def __init__(self, user=None, pw=None, host='localhost', db=None, port=3306, conn_inactivity=360):
     self.lock = threading.Lock()
-    self.connect(user=user, pw=pw, host=host, db=db, port=port, conn_inactivity=conn_inactivity)
+    self.connect(user=user, pw=pw, host=host, db=db, port=port)
 
   def __enter__(self):
     if hasattr(self, 'conn') and self.conn is not None:
@@ -30,23 +30,15 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
 
   def connect(self, user=None, pw=None, host='localhost', db=None, port=3306, conn_inactivity=360):
     self.disconnect()
-    self.user = user
-    self.pw = pw
-    self.host = host
-    self.db = db
-    self.port = port
-    self.conn_inactivity = int(conn_inactivity)
 
     self.conn = mysql.connector.connect(user=user,
         password=pw,
         host=host,
         database=db,
         port=int(port))
-    if self.conn is not None:
-        self.conn.autocommit=True
-    else:
-        raise ISPyBConnectionException
-    self.last_activity_ts = time.time()
+    if not self.conn:
+      raise ISPyBConnectionException('Could not connect to database')
+    self.conn.autocommit = True
 
   def __del__(self):
     self.disconnect()
@@ -61,17 +53,13 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
     return 'ispyb.sp'
 
   def create_cursor(self, dictionary=False):
-      if time.time() - self.last_activity_ts > self.conn_inactivity:
-          # re-connect:
-          self.connect(self.user, self.pw, self.host, self.db, self.port)
-      self.last_activity_ts = time.time()
-      if self.conn is None:
-          raise ISPyBConnectionException
-
-      cursor = self.conn.cursor(dictionary=dictionary)
-      if cursor is None:
-          raise ISPyBConnectionException
-      return cursor
+    if not self.conn:
+      raise ISPyBConnectionException('Not connected to database')
+    self.conn.ping(reconnect=True)
+    cursor = self.conn.cursor(dictionary=dictionary)
+    if not cursor:
+      raise ISPyBConnectionException('Could not create database cursor')
+    return cursor
 
   def call_sp_write(self, procname, args):
     with self.lock:
