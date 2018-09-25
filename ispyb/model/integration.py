@@ -148,11 +148,11 @@ class UnitCell():
   def __str__(self):
     '''Returns a pretty-printed object representation.'''
     return ('\n'.join((
-      '  a         : {ir.a}',
-      '  b         : {ir.b}',
-      '  c         : {ir.c}',
-      '  alpha     : {ir.alpha}',
-      '  beta      : {ir.beta}',
-      '  gamma     : {ir.gamma}',
-    ))).format(ir=self)
+      '  a         : {uc.a}',
+      '  b         : {uc.b}',
+      '  c         : {uc.c}',
+      '  alpha     : {uc.alpha}',
+      '  beta      : {uc.beta}',
+      '  gamma     : {uc.gamma}',
+    ))).format(uc=self)
 
