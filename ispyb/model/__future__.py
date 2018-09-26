@@ -15,7 +15,7 @@ import mysql.connector
 
 _db_config = None
 
-def enable(configuration_file):
+def enable(configuration_file, section='ispyb'):
   '''Enable access to features that are currently under development.'''
 
   global _db, _db_cc, _db_config
@@ -37,12 +37,12 @@ def enable(configuration_file):
   cfgparser = configparser.RawConfigParser()
   if not cfgparser.read(configuration_file):
     raise RuntimeError('Could not read from configuration file %s' % configuration_file)
-  cfgsection = dict(cfgparser.items('ispyb'))
+  cfgsection = dict(cfgparser.items(section))
   host = cfgsection.get('host')
   port = cfgsection.get('port', 3306)
-  database = cfgsection.get('database')
-  username = cfgsection.get('username')
-  password = cfgsection.get('password')
+  database = cfgsection.get('database', cfgsection.get('db'))
+  username = cfgsection.get('username', cfgsection.get('user'))
+  password = cfgsection.get('password', cfgsection.get('pw'))
 
   # Open a direct MySQL connection
   _db = mysql.connector.connect(host=host, port=port, user=username, password=password, database=database)
