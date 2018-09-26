@@ -3,7 +3,10 @@ from __future__ import absolute_import, division, print_function
 import threading
 
 import context
+import ispyb
 import ispyb.exception
+import ispyb.model.__future__
+import mysql.connector.errors
 import pytest
 
 def test_multi_threads_upsert(testconfig):
@@ -42,3 +45,45 @@ def test_retrieve_failure(testconfig):
   with ispyb.open(testconfig) as conn:
     with pytest.raises(ispyb.exception.ISPyBNoResultException):
       rs = conn.mx_acquisition.retrieve_data_collection_main(0)
+
+def test_database_reconnects_on_connection_failure(testconfig, testdb):
+  ispyb.model.__future__.enable(testconfig, section='ispyb_mysql_sp')
+
+  # Create minimal data collection and data collection group for test
+  params = testdb.mx_acquisition.get_data_collection_group_params()
+  params['parentid'] = 55168
+  dcgid = testdb.mx_acquisition.insert_data_collection_group(list(params.values()))
+  assert dcgid, "Could not create dummy data collection group"
+  params = testdb.mx_acquisition.get_data_collection_params()
+  params['parentid'] = dcgid
+  dcid = testdb.mx_acquisition.insert_data_collection(list(params.values()))
+  assert dcid, "Could not create dummy data collection"
+
+  # Test the database connections
+  # This goes from DCID to DCGID using the default connection,
+  # and looks into the GridInfo table using the __future__ connection.
+  assert bool(testdb.get_data_collection(dcid).group.gridinfo) is False
+
+  fconn = ispyb.model.__future__._db
+  iconn = testdb.conn
+
+  # Break both connections from the server side
+  c = iconn.cursor()
+  with pytest.raises(mysql.connector.errors.DatabaseError):
+    c.execute("KILL CONNECTION_ID();")
+  c.close()
+
+  c = fconn.cursor()
+  with pytest.raises(mysql.connector.errors.DatabaseError):
+    c.execute("KILL CONNECTION_ID();")
+  c.close()
+
+  # Confirm both connections are broken
+  with pytest.raises(mysql.connector.errors.OperationalError):
+    iconn.cursor()
+
+  with pytest.raises(mysql.connector.errors.OperationalError):
+    fconn.cursor()
+
+  # Test implicit reconnect
+  assert bool(testdb.get_data_collection(dcid).group.gridinfo) is False
