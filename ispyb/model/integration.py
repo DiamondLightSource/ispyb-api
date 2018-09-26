@@ -51,6 +51,12 @@ class IntegrationResult(ispyb.model.DBCache):
     return self._cache_dc
 
   @property
+  def unit_cell(self):
+    '''Returns the unit cell model'''
+    return ispyb.model.integration.UnitCell(self._data['cell_a'], self._data['cell_b'],self._data['cell_c'],
+                                            self._data['cell_alpha'], self._data['cell_beta'], self._data['cell_gamma'])
+
+  @property
   def APIID(self):
     '''Returns the AutoProcIntegrationID.'''
     return self._apiid
@@ -85,3 +91,68 @@ ispyb.model.add_properties(IntegrationResult, (
     ('detector_distance', 'refinedDetectorDistance'),
     ('timestamp', 'recordTimeStamp'),
 ))
+
+class UnitCell():
+  '''An object representing the parameters of the unit cell I.e unit cell edges and angles
+  '''
+
+  def __init__(self, a, b, c, alpha, beta, gamma):
+    '''Unit cell object
+
+       :param a: Edge a
+       :param b: Edge b
+       :param c: Edge c
+       :param alpha: Angle alpha
+       :param beta: Angle beta
+       :param gamma: Angle gamma
+       :return: A unitcell object
+    '''
+    self._a = a
+    self._b = b
+    self._c = c
+    self._alpha = alpha
+    self._beta = beta
+    self._gamma = gamma
+
+   
+  @property
+  def a(self):
+    '''Returns dimension a of unit cell in Angstroms'''
+    return self._a
+
+  @property
+  def b(self):
+    '''Returns dimension b of unit cell in Angstroms'''
+    return self._b
+
+  @property
+  def c(self):
+    '''Returns dimension c of unit cell in Angstroms'''
+    return self._c
+
+  @property
+  def alpha(self):
+    '''Returns angle alpha of unit cell'''
+    return self._alpha
+
+  @property
+  def beta(self):
+    '''Returns angle beta of unit cell'''
+    return self._beta
+
+  @property
+  def gamma(self):
+    '''Returns angle gamma of unit cell'''
+    return self._gamma
+ 
+  def __str__(self):
+    '''Returns a pretty-printed object representation.'''
+    return ('\n'.join((
+      '  a         : {uc.a}',
+      '  b         : {uc.b}',
+      '  c         : {uc.c}',
+      '  alpha     : {uc.alpha}',
+      '  beta      : {uc.beta}',
+      '  gamma     : {uc.gamma}',
+    ))).format(uc=self)
+
