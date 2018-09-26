@@ -15,7 +15,7 @@ import mysql.connector
 
 _db_config = None
 
-def enable(configuration_file):
+def enable(configuration_file, section='ispyb'):
   '''Enable access to features that are currently under development.'''
 
   global _db, _db_cc, _db_config
@@ -37,18 +37,45 @@ def enable(configuration_file):
   cfgparser = configparser.RawConfigParser()
   if not cfgparser.read(configuration_file):
     raise RuntimeError('Could not read from configuration file %s' % configuration_file)
-  cfgsection = dict(cfgparser.items('ispyb'))
+  cfgsection = dict(cfgparser.items(section))
   host = cfgsection.get('host')
   port = cfgsection.get('port', 3306)
-  database = cfgsection.get('database')
-  username = cfgsection.get('username')
-  password = cfgsection.get('password')
+  database = cfgsection.get('database', cfgsection.get('db'))
+  username = cfgsection.get('username', cfgsection.get('user'))
+  password = cfgsection.get('password', cfgsection.get('pw'))
 
   # Open a direct MySQL connection
   _db = mysql.connector.connect(host=host, port=port, user=username, password=password, database=database)
   _db.autocommit = True
-  _db_cc = DictionaryContextcursorFactory(_db.cursor)
   _db_config = configuration_file
+
+  class DictionaryCursorContextManager(object):
+    '''This class creates dictionary cursors for mysql.connector connections.
+       By using a context manager it is ensured that cursors are closed
+       immediately after use.
+       Cursors created with this context manager return results as a dictionary
+       and offer a .run() function, which is an alias to .execute that accepts
+       query parameters as function parameters rather than a list.
+    '''
+
+    def __enter__(cm):
+      '''Enter context. Ensure the database is alive and return a cursor
+         with an extra .run() function.'''
+      _db.ping(reconnect=True)
+      cm.cursor = _db.cursor(dictionary=True)
+
+      def flat_execute(stmt, *parameters):
+        '''Pass all given function parameters as a list to the existing
+           .execute() function.'''
+        return cm.cursor.execute(stmt, parameters)
+      setattr(cm.cursor, 'run', flat_execute)
+      return cm.cursor
+
+    def __exit__(cm, *args):
+      '''Leave context. Close cursor. Destroy reference.'''
+      cm.cursor.close()
+      cm.cursor = None
+  _db_cc = DictionaryCursorContextManager
 
   import ispyb.model.datacollection
   ispyb.model.datacollection.DataCollection.integrations = _get_linked_autoprocintegration_for_dc
@@ -56,52 +83,6 @@ def enable(configuration_file):
   ispyb.model.gridinfo.GridInfo.reload = _get_gridinfo
   import ispyb.model.processingprogram
   ispyb.model.processingprogram.ProcessingProgram.reload = _get_autoprocprogram
-
-class DictionaryContextcursorFactory(object):
-  '''This class creates dictionary context manager objects for mysql.connector
-     cursors. By using a context manager it is ensured that cursors are
-     closed immediately after use.
-     Context managers created via this factory return results as a dictionary
-     by default, and offer a .run() function, which is an alias to .execute
-     that accepts query parameters as function parameters rather than a list.
-  '''
-
-  def __init__(self, cursor_factory_function):
-    '''Set up the context manager factory.'''
-
-    class ContextManager(object):
-      '''The context manager object which is actually used in the
-            with .. as ..:
-         clause.'''
-
-      def __init__(cm, parameters):
-        '''Store any constructor parameters, given as dictionary, so that they
-           can be passed to the cursor factory later.'''
-        cm.cursorparams = { 'dictionary': True }
-        cm.cursorparams.update(parameters)
-
-      def __enter__(cm):
-        '''Enter context. Instantiate and return the actual cursor using the
-           given constructor, parameters, and an extra .run() function.'''
-        cm.cursor = cursor_factory_function(**cm.cursorparams)
-
-        def flat_execute(stmt, *parameters):
-          '''Pass all given function parameters as a list to the existing
-             .execute() function.'''
-          return cm.cursor.execute(stmt, parameters)
-        setattr(cm.cursor, 'run', flat_execute)
-        return cm.cursor
-
-      def __exit__(cm, *args):
-        '''Leave context. Close cursor. Destroy reference.'''
-        cm.cursor.close()
-        cm.cursor = None
-
-    self._contextmanager_factory = ContextManager
-
-  def __call__(self, **parameters):
-    '''Creates and returns a context manager object.'''
-    return self._contextmanager_factory(parameters)
 
 def _get_gridinfo(self):
   # https://jira.diamond.ac.uk/browse/MXSW-1173
