@@ -20,7 +20,7 @@ class Acquisition(ispyb.interface.acquisition.IF):
                          ('apertureid',None), ('datacollection_number',None), ('starttime',None), ('endtime',None), ('run_status',None),
                          ('axis_start',None), ('axis_end',None), ('axis_range',None), ('overlap',None), ('n_images',None),
                          ('start_image_number',None), ('n_passes',None), ('exp_time',None),
-                         ('imgdir',None), ('imgprefix',None), ('imgsuffix',None), ('file_template',None),
+                         ('imgdir',None), ('imgprefix',None), ('imgsuffix',None), ('img_container_sub_path', None), ('file_template',None),
                          ('wavelength',None), ('resolution',None), ('detector_distance',None), ('xbeam',None), ('ybeam',None),
                          ('comments',None), ('slitgap_vertical',None), ('slitgap_horizontal',None), ('transmission',None),
                          ('synchrotron_mode',None), ('xtal_snapshot1',None), ('xtal_snapshot2',None), ('xtal_snapshot3',None),
@@ -60,12 +60,11 @@ class Acquisition(ispyb.interface.acquisition.IF):
 
   def upsert_data_collection_group(self, values):
     '''Insert or update MX data collection group.'''
-    #return self.get_connection().call_sf_write('upsert_dcgroup', values)
     return self.get_connection().call_sp_write('upsert_dc_group_v2', values)
 
   def upsert_data_collection(self, values):
     '''Insert or update data collection.'''
-    return self.get_connection().call_sf_write('upsert_dc', values)
+    return self.get_connection().call_sp_write('upsert_dc', values)
 
   def upsert_data_collection_file_attachment(self, values):
     '''Insert or update a data collection file attachment.'''
