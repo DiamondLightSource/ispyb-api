@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.2.14-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.16  Distrib 10.3.9-MariaDB, for Linux (x86_64)
 --
--- Host: cs04r-sc-vserv-87    Database: ispybstage
+-- Host: localhost    Database: ispyb_build
 -- ------------------------------------------------------
--- Server version	10.2.15-MariaDB-log
+-- Server version	10.3.9-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -15,7 +15,7 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping routines for database 'ispybstage'
+-- Dumping routines for database 'ispyb_build'
 --
 /*!50003 DROP FUNCTION IF EXISTS `insert_scaling` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -266,21 +266,21 @@ CREATE FUNCTION `upsert_dc`(
      p_focalSpotSizeAtSampleY float, 
      p_polarisation float, 
      p_flux float, 
--- new params
+
      p_processedDataFile varchar(255), 
      p_datFullPath varchar(255),
      p_magnification int(11),
      p_totalAbsorbedDose float,
-     p_binning tinyint(1), -- 1x or 2x 
-     p_particleDiameter float, -- in nm
+     p_binning tinyint(1), 
+     p_particleDiameter float, 
      p_boxSize_CTF float,
-     p_minResolution float, -- in A  
-     p_minDefocus float, -- in A
-     p_maxDefocus float, -- in A
-     p_defocusStepSize float, -- in A
-     p_amountAstigmatism float, -- in A
-     p_extractSize float, -- in nm
-     p_bgRadius float, -- in nm
+     p_minResolution float, 
+     p_minDefocus float, 
+     p_maxDefocus float, 
+     p_defocusStepSize float, 
+     p_amountAstigmatism float, 
+     p_extractSize float, 
+     p_bgRadius float, 
      p_voltage float,
      p_objAperture float,
      p_c1aperture float,
@@ -413,7 +413,7 @@ CREATE FUNCTION `upsert_dcgroup`(
 	 p_id int(11) unsigned,
      p_parentId int(10) unsigned,
      p_sampleId int(10) unsigned, 
-     p_experimenttype varchar(45), -- values controlled by enum on the table
+     p_experimenttype varchar(45), 
      p_starttime datetime,
      p_endtime datetime,
      p_crystalClass varchar(20),
@@ -633,7 +633,7 @@ CREATE FUNCTION `upsert_mrrun`(
     MODIFIES SQL DATA
 BEGIN
 
-    --  Insert a new row, using all the parameters
+    
     INSERT INTO MXMRRun (mxMRRunId, autoProcScalingId, success, message, pipeline, inputCoordFile, outputCoordFile, inputMTZFile, outputMTZFile, 
 		runDirectory, logFile, commandLine, rValueStart, rValueEnd, rFreeValueStart, rFreeValueEnd, starttime, endtime) 
       VALUES (
@@ -787,7 +787,7 @@ CREATE FUNCTION `upsert_program_run`(
      p_starttime datetime,
      p_endtime datetime,
      p_environment varchar(255),
--- Store AutoProcProgramAttachments as well
+
      p_file1_id int(10) unsigned,
      p_filename1 varchar(255),
      p_filepath1 varchar(255),
@@ -1103,7 +1103,7 @@ DELIMITER ;;
 CREATE PROCEDURE `insert_processing_scaling`(
      OUT p_id integer unsigned,
      p_parentId integer unsigned,
--- AutoProcScalingStatistics 1
+
      p_Type1 enum('overall','innerShell','outerShell'),
      p_Comments1 varchar(255), 
      p_ResolutionLimitLow1 float ,
@@ -1124,7 +1124,7 @@ CREATE PROCEDURE `insert_processing_scaling`(
      p_anomalousMultiplicity1 float,
      p_ccHalf1 float,
      p_ccAnomalous1 float,
--- AutoProcScalingStatistics 2
+
      p_Type2 enum('overall','innerShell','outerShell'),
      p_Comments2 varchar(255), 
      p_ResolutionLimitLow2 float,
@@ -1145,7 +1145,7 @@ CREATE PROCEDURE `insert_processing_scaling`(
      p_anomalousMultiplicity2 float,
      p_ccHalf2 float,
      p_ccAnomalous2 float,
--- AutoProcScalingStatistics 3
+
      p_Type3 enum('overall','innerShell','outerShell'),
      p_Comments3 varchar(255), 
      p_ResolutionLimitLow3 float,
@@ -1251,7 +1251,7 @@ BEGIN
         p_method1Res, p_method2Res, p_maxUnitCell, p_pctSaturationTop50Peaks, 
         p_inResolutionOvrlSpots, p_binPopCutOffMethod2Res, p_totalIntegratedSignal, p_driftFactor
       );
-	SET p_id = 1; -- indicate success ...
+	SET p_id = 1; 
   ELSE
         SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) p_dataCollectionId and/or p_imageNumber are NULL';  
   END IF;
@@ -2225,8 +2225,8 @@ BEGIN
         dc.beamSizeAtSampleX "beamSizeAtSampleX", dc.beamSizeAtSampleY "beamSizeAtSampleY", 
         dc.focalSpotSizeAtSampleX "focalSpotSizeAtSampleX", dc.focalSpotSizeAtSampleY "focalSpotSizeAtSampleY", 
         dc.polarisation "polarisation", dc.flux "flux", dc.flux_end "fluxEnd", a.sizeX "apertureSizeX"
-        -- processedDataFile, datFullPath, magnification, totalAbsorbedDose, binning, particleDiameter, boxSize_CTF, minResolution, minDefocus, maxDefocus, defocusStepSize, 
-        -- amountAstigmatism, extractSize, bgRadius, voltage, objAperture, c1aperture, c2aperture, c3aperture, c1lens, c2lens, c3lens
+        
+        
     FROM DataCollection dc
 		LEFT OUTER JOIN Aperture a on dc.apertureId = a.apertureId
     WHERE blSubSampleId = p_id;
@@ -2309,15 +2309,7 @@ BEGIN
       LEFT OUTER JOIN DataCollectionPlan_has_Detector dhd on dhd.dataCollectionPlanId = dp.diffractionPlanId
     WHERE bhd.blSampleId = p_sampleId
     ORDER BY dp.diffractionPlanId ASC, spm.sequenceNumber ASC;    
-/*
-    GROUP BY blss.blSubSampleId, location, pos1.posX, pos1.posY, pos1.posZ, pos2.posX, pos2.posY, pos2.posZ, 
-	  blsi.imageFullPath, blss.imgFilePath, blss.imgFileName, 
-      dp.experimentKind, dp.exposureTime, 
-      dp.preferredBeamSizeX, dp.preferredBeamSizeY, dp.requiredResolution, 
-      dp.monochromator, 12398.42 / dp.energy, dp.transmission, 
-      dp.boxSizeX, dp.boxSizeY, 
-      dp.kappaStart, dp.axisStart, dp.axisRange, dp.numberOfImages;
-*/
+
     ELSE
         SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_sampleId is NULL';
     END IF;
@@ -2408,7 +2400,7 @@ BEGIN
       detectorDistanceMin "distanceMin", detectorDistanceMax "distanceMax", 
       trustedPixelValueRangeLower "trustedPixelValueRangeLower", trustedPixelValueRangeUpper "trustedPixelValueRangeUpper", 
       sensorThickness "sensorThickness", overload "overload", detectorMode "mode"
-      -- , CS "CS", detectorPixelSize "pixelSize", density "density", composition "composition"
+      
 	FROM Detector
     WHERE detectorSerialNumber = p_serialNumber;
   ELSE
@@ -2446,6 +2438,46 @@ BEGIN
       WHERE p.proposalCode = p_proposalCode AND p.proposalNumber = p_proposalNumber;
     ELSE
         SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_proposalNumber is NULL';
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_grid_info_for_dcg` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_grid_info_for_dcg`(IN p_dcgId int unsigned)
+    READS SQL DATA
+    COMMENT 'Return multi-row result-set with grid info values for the dcg'
+BEGIN
+    IF NOT (p_dcgId IS NULL) THEN
+      SELECT
+        gi.gridInfoId,
+        gi.dx_mm,
+        gi.dy_mm,
+        gi.steps_x,
+        gi.steps_y,
+        gi.meshAngle,
+        gi.pixelsPerMicronX,
+        gi.pixelsPerMicronY,
+        gi.snapshot_offsetXPixel,
+        gi.snapshot_offsetYPixel,
+        gi.orientation,
+        gi.snaked
+    FROM GridInfo gi
+    WHERE gi.dataCollectionGroupId = p_dcgId
+    ORDER BY gi.gridInfoId ASC;
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_dcgId is NULL';
     END IF;
 END ;;
 DELIMITER ;
@@ -3037,8 +3069,9 @@ BEGIN
               UPDATE Container c
                 INNER JOIN Dewar d ON d.dewarId = c.dewarId
                 INNER JOIN Shipping s ON s.shippingId = d.shippingId
-              SET c.containerStatus = 'at facility'
-              WHERE s.shippingId = row_proposalId AND c.beamlineLocation = p_beamline AND
+              SET c.containerStatus = 'at facility',
+                c.sampleChangerLocation = ''
+              WHERE s.proposalId = row_proposalId AND c.beamlineLocation = p_beamline AND
                 c.sampleChangerLocation = p_position AND c.containerId <> row_containerId;
 
               
@@ -3638,6 +3671,223 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_dc` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_dc`(
+     INOUT p_id int(11) unsigned,
+     p_dcgId int(11) unsigned,
+     p_sessionId int(11) unsigned,
+     p_sampleId int(11) unsigned,
+     p_detectorid int(11) unsigned,
+     p_positionid int(11) unsigned,
+     p_apertureid int(11) unsigned,
+     p_datacollectionNumber int(10) unsigned,
+     p_starttime datetime,
+     p_endtime datetime,
+     p_runStatus varchar(45),
+     p_axisStart float,
+     p_axisEnd float,
+     p_axisRange float,
+     p_overlap float,
+     p_numberOfImages int(10) unsigned,
+     p_startImageNumber int(10) unsigned,
+     p_numberOfPasses int(10) unsigned,
+     p_exposureTime float,
+     p_imageDirectory varchar(255),
+     p_imagePrefix varchar(45),
+     p_imageSuffix varchar(45),
+     p_imageContainerSubPath varchar(255),
+     p_fileTemplate varchar(255),
+     p_wavelength float,
+     p_resolution float,
+     p_detectorDistance float,
+     p_xbeam float,
+     p_ybeam float,
+     p_comments varchar(1024),
+     p_slitgapVertical float,
+     p_slitgapHorizontal float,
+     p_transmission float,
+     p_synchrotronMode varchar(20),
+     p_xtalSnapshotFullPath1 varchar(255),
+     p_xtalSnapshotFullPath2 varchar(255),
+     p_xtalSnapshotFullPath3 varchar(255),
+     p_xtalSnapshotFullPath4 varchar(255),
+     p_rotationAxis enum('Omega','Kappa','Phi'),
+     p_phistart float,
+     p_kappastart float,
+     p_omegastart float,
+     p_resolutionAtCorner float,
+     p_detector2theta float,
+     p_undulatorGap1 float,
+     p_undulatorGap2 float,
+     p_undulatorGap3 float,
+     p_beamSizeAtSampleX float,
+     p_beamSizeAtSampleY float,
+     p_averageTemperature float,
+     p_actualCenteringPosition varchar(255),
+     p_beamShape varchar(45),
+     p_focalSpotSizeAtSampleX float,
+     p_focalSpotSizeAtSampleY float,
+     p_polarisation float,
+     p_flux float,
+
+     p_processedDataFile varchar(255),
+     p_datFullPath varchar(255),
+     p_magnification int(11),
+     p_totalAbsorbedDose float,
+     p_binning tinyint(1), 
+     p_particleDiameter float, 
+     p_boxSize_CTF float,
+     p_minResolution float, 
+     p_minDefocus float, 
+     p_maxDefocus float, 
+     p_defocusStepSize float, 
+     p_amountAstigmatism float, 
+     p_extractSize float, 
+     p_bgRadius float, 
+     p_voltage float,
+     p_objAperture float,
+     p_c1aperture float,
+     p_c2aperture float,
+     p_c3aperture float,
+     p_c1lens float,
+     p_c2lens float,
+     p_c3lens float
+)
+    MODIFIES SQL DATA
+    COMMENT 'Inserts or updates info about a data collection (p_id).\nMandatory columns:\nFor insert: p_dcgId\nFor update: p_id \nReturns: Record ID in p_id.'
+BEGIN
+    IF p_id IS NOT NULL OR p_dcgId IS NOT NULL THEN
+
+      INSERT INTO DataCollection (datacollectionId, datacollectiongroupid,
+        sessionId, blsampleId, detectorid, positionid, apertureid,
+        datacollectionNumber, starttime, endtime, runStatus, axisStart,
+        axisEnd, axisRange, overlap, numberOfImages, startImageNumber,
+        numberOfPasses, exposureTime, imageDirectory, imagePrefix, imageSuffix,
+        imageContainerSubPath, fileTemplate, wavelength, resolution,
+        detectorDistance, xbeam, ybeam, comments,slitgapVertical,
+        slitgapHorizontal, transmission, synchrotronMode,
+        xtalSnapshotFullPath1, xtalSnapshotFullPath2, xtalSnapshotFullPath3,
+        xtalSnapshotFullPath4, rotationAxis, phistart,
+        kappastart, omegastart, resolutionAtCorner, detector2theta,
+        undulatorGap1, undulatorGap2, undulatorGap3, beamSizeAtSampleX,
+        beamSizeAtSampleY, averageTemperature, actualCenteringPosition,
+        beamShape, focalSpotSizeAtSampleX, focalSpotSizeAtSampleY,
+        polarisation, flux, processedDataFile, datFullPath, magnification,
+        totalAbsorbedDose, binning, particleDiameter, boxSize_CTF,
+        minResolution, minDefocus, maxDefocus, defocusStepSize,
+        amountAstigmatism, extractSize, bgRadius, voltage, objAperture,
+        c1aperture, c2aperture, c3aperture, c1lens, c2lens, c3lens
+      )
+      VALUES (p_Id, p_dcgId, p_sessionId, p_sampleId, p_detectorid, p_positionid, p_apertureid, p_datacollectionNumber, p_starttime, p_endtime,
+      p_runStatus, p_axisStart, p_axisEnd, p_axisRange, p_overlap, p_numberOfImages, p_startImageNumber, p_numberOfPasses, p_exposureTime, p_imageDirectory, p_imagePrefix, p_imageSuffix, p_imageContainerSubPath, p_fileTemplate,
+      p_wavelength, p_resolution, p_detectorDistance, p_xbeam, p_ybeam, p_comments, p_slitgapVertical, p_slitgapHorizontal, p_transmission, p_synchrotronMode,
+      p_xtalSnapshotFullPath1, p_xtalSnapshotFullPath2, p_xtalSnapshotFullPath3, p_xtalSnapshotFullPath4, p_rotationAxis, p_phistart, p_kappastart, p_omegastart, p_resolutionAtCorner, p_detector2theta,
+      p_undulatorGap1, p_undulatorGap2, p_undulatorGap3, p_beamSizeAtSampleX, p_beamSizeAtSampleY, p_averageTemperature, p_actualCenteringPosition, p_beamShape,
+      p_focalSpotSizeAtSampleX, p_focalSpotSizeAtSampleY, p_polarisation, p_flux,
+      p_processedDataFile, p_datFullPath, p_magnification, p_totalAbsorbedDose, p_binning, p_particleDiameter, p_boxSize_CTF, p_minResolution, p_minDefocus, p_maxDefocus, p_defocusStepSize,
+      p_amountAstigmatism, p_extractSize, p_bgRadius, p_voltage, p_objAperture, p_c1aperture, p_c2aperture, p_c3aperture, p_c1lens, p_c2lens, p_c3lens
+      )
+      ON DUPLICATE KEY UPDATE
+		    dataCollectionGroupId = IFNULL(p_dcgId, dataCollectionGroupId),
+        sessionId = IFNULL(p_sessionId, sessionId),
+        blsampleId = IFNULL(p_sampleId, blsampleId),
+        detectorid = IFNULL(p_detectorid, detectorid),
+        positionid = IFNULL(p_positionid, positionid),
+        apertureid = IFNULL(p_apertureid, apertureid),
+        datacollectionNumber = IFNULL(p_datacollectionNumber, datacollectionNumber),
+        starttime = IFNULL(p_starttime, starttime),
+        endtime = IFNULL(p_endtime, endtime),
+        runStatus = IFNULL(p_runStatus, runStatus),
+        axisStart = IFNULL(p_axisStart, axisStart),
+        axisEnd = IFNULL(p_axisEnd, axisEnd),
+        axisRange = IFNULL(p_axisRange, axisRange),
+        overlap = IFNULL(p_overlap, overlap),
+        numberOfImages = IFNULL(p_numberOfImages, numberOfImages),
+        startImageNumber = IFNULL(p_startImageNumber, startImageNumber),
+        numberOfPasses = IFNULL(p_numberOfPasses, numberOfPasses),
+        exposureTime = IFNULL(p_exposureTime, exposureTime),
+        imagedirectory = IFNULL(p_imageDirectory, imagedirectory),
+        imageprefix = IFNULL(p_imagePrefix, imageprefix),
+        imagesuffix = IFNULL(p_imageSuffix, imagesuffix),
+        imageContainerSubPath = IFNULL(p_imageContainerSubPath, imageContainerSubPath),
+        fileTemplate = IFNULL(p_fileTemplate, fileTemplate),
+        wavelength = IFNULL(p_wavelength, wavelength),
+        resolution = IFNULL(p_resolution, resolution),
+        detectorDistance = IFNULL(p_detectorDistance, detectorDistance),
+        xbeam = IFNULL(p_xbeam, xbeam),
+        ybeam = IFNULL(p_ybeam, ybeam),
+        comments = IFNULL(p_comments, comments),
+        slitgapVertical = IFNULL(p_slitgapVertical, slitgapVertical),
+        slitgapHorizontal = IFNULL(p_slitgapHorizontal, slitgapHorizontal),
+        transmission = IFNULL(p_transmission, transmission),
+        synchrotronMode = IFNULL(p_synchrotronMode, synchrotronMode),
+        xtalSnapshotFullPath1 = IFNULL(p_xtalSnapshotFullPath1, xtalSnapshotFullPath1),
+        xtalSnapshotFullPath2 = IFNULL(p_xtalSnapshotFullPath2, xtalSnapshotFullPath2),
+        xtalSnapshotFullPath3 = IFNULL(p_xtalSnapshotFullPath3, xtalSnapshotFullPath3),
+        xtalSnapshotFullPath4 = IFNULL(p_xtalSnapshotFullPath4, xtalSnapshotFullPath4),
+        rotationAxis = IFNULL(p_rotationAxis, rotationAxis),
+        phistart = IFNULL(p_phistart, phistart),
+        kappastart = IFNULL(p_kappastart, kappastart),
+        omegastart = IFNULL(p_omegastart, omegastart),
+        resolutionAtCorner = IFNULL(p_resolutionAtCorner, resolutionAtCorner),
+        detector2theta = IFNULL(p_detector2theta, detector2theta),
+        undulatorGap1 = IFNULL(p_undulatorGap1, undulatorGap1),
+        undulatorGap2 = IFNULL(p_undulatorGap2, undulatorGap2),
+        undulatorGap3 = IFNULL(p_undulatorGap3, undulatorGap3),
+        beamSizeAtSampleX = IFNULL(p_beamSizeAtSampleX, beamSizeAtSampleX),
+        beamSizeAtSampleY = IFNULL(p_beamSizeAtSampleY, beamSizeAtSampleY),
+        averageTemperature = IFNULL(p_averageTemperature, averageTemperature),
+        actualCenteringPosition = IFNULL(p_actualCenteringPosition, actualCenteringPosition),
+        beamShape = IFNULL(p_beamShape, beamShape),
+        focalSpotSizeAtSampleX = IFNULL(p_focalSpotSizeAtSampleX, focalSpotSizeAtSampleX),
+        focalSpotSizeAtSampleY = IFNULL(p_focalSpotSizeAtSampleY, focalSpotSizeAtSampleY),
+        polarisation = IFNULL(p_polarisation, polarisation),
+        flux = IFNULL(p_flux, flux),
+        processedDataFile = IFNULL(p_processedDataFile, processedDataFile),
+        datFullPath = IFNULL(p_datFullPath, datFullPath),
+        magnification = IFNULL(p_magnification, magnification),
+        totalAbsorbedDose = IFNULL(p_totalAbsorbedDose, totalAbsorbedDose),
+        binning = IFNULL(p_binning, binning),
+        particleDiameter = IFNULL(p_particleDiameter, particleDiameter),
+        boxSize_CTF = IFNULL(p_boxSize_CTF, boxSize_CTF),
+        minResolution = IFNULL(p_minResolution, minResolution),
+        minDefocus = IFNULL(p_minDefocus, minDefocus),
+        maxDefocus = IFNULL(p_maxDefocus, maxDefocus),
+        defocusStepSize = IFNULL(p_defocusStepSize, defocusStepSize),
+        amountAstigmatism = IFNULL(p_amountAstigmatism, amountAstigmatism),
+        extractSize = IFNULL(p_extractSize, extractSize),
+        bgRadius = IFNULL(p_bgRadius, bgRadius),
+        voltage = IFNULL(p_voltage, voltage),
+        objAperture = IFNULL(p_objAperture, objAperture),
+        c1aperture = IFNULL(p_c1aperture, c1aperture),
+        c2aperture = IFNULL(p_c2aperture, c2aperture),
+        c3aperture = IFNULL(p_c3aperture, c3aperture),
+        c1lens = IFNULL(p_c1lens, c1lens),
+        c2lens = IFNULL(p_c2lens, c2lens),
+        c3lens = IFNULL(p_c3lens, c3lens);
+
+	    IF p_id IS NULL THEN
+		    SET p_id = LAST_INSERT_ID();
+      END IF;
+    ELSE
+      SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT=
+      'Mandatory argument(s) are NULL: p_id OR p_dcgId must be non-NULL.';
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `upsert_dcg_grid` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -4058,6 +4308,83 @@ BEGIN
         xtalSnapshotFullPath4 = IFNULL(p_snapshot4, xtalSnapshotFullPath4),
         comments = IFNULL(p_comments, comments);
 	IF p_id IS NULL THEN 
+		SET p_id = LAST_INSERT_ID();
+    END IF;
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_dc_main_v3` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_dc_main_v3`(
+     INOUT p_id int(11) unsigned,
+     p_groupId int(11) unsigned,
+     p_detectorId int(11),
+     p_blSubSampleId int(11) unsigned,
+     p_dcNumber int(10) unsigned,
+     p_startTime datetime,
+     p_endTime datetime,
+     p_status varchar(45),
+     p_noImages int(10) unsigned,
+	   p_startImgNumber int(10) unsigned,
+	   p_noPasses int(10) unsigned,
+     p_imgDir varchar(255),
+	   p_imgPrefix varchar(45),
+     p_imgSuffix varchar(45),
+     p_imgContainerSubPath varchar(255),
+     p_fileTemplate varchar(255),
+     p_snapshot1 varchar(255),
+     p_snapshot2 varchar(255),
+     p_snapshot3 varchar(255),
+     p_snapshot4 varchar(255),
+     p_comments varchar(1024)
+)
+    MODIFIES SQL DATA
+    COMMENT 'Inserts (if p_id not provided) or updates a row in DataCollection, returns ID in p_id. '
+BEGIN
+    INSERT INTO DataCollection (dataCollectionId, dataCollectionGroupId, sessionId, blSampleId, blSubSampleId, detectorId, datacollectionNumber, startTime, endTime,
+        runStatus, numberOfImages, startImageNumber, numberOfPasses, imageDirectory, imagePrefix, imageSuffix, imageContainerSubPath, fileTemplate,
+        xtalSnapshotFullPath1, xtalSnapshotFullPath2, xtalSnapshotFullPath3, xtalSnapshotFullPath4, comments)
+      VALUES (p_id, p_groupId,
+      (SELECT sessionId FROM DataCollectionGroup WHERE dataCollectionGroupId = p_groupId),
+      (SELECT blSampleId FROM DataCollectionGroup WHERE dataCollectionGroupId = p_groupId),
+      p_blSubSampleId,
+      p_detectorId,
+      p_dcNumber, p_startTime, p_endTime,
+      p_status, p_noImages, p_startImgNumber, p_noPasses, p_imgDir, p_imgPrefix, p_imgSuffix, p_imgContainerSubPath, p_fileTemplate,
+      p_snapshot1, p_snapshot2, p_snapshot3, p_snapshot4, comments)
+      ON DUPLICATE KEY UPDATE
+		    datacollectiongroupid = IFNULL(p_groupId, datacollectiongroupid),
+		    blSubSampleId = IFNULL(p_blSubSampleId, blSubSampleId),
+        detectorId = IFNULL(p_detectorId, detectorId),
+        datacollectionNumber = IFNULL(p_dcNumber, datacollectionNumber),
+        starttime = IFNULL(p_starttime, starttime),
+        endtime = IFNULL(p_endtime, endtime),
+        runStatus = IFNULL(p_status, runStatus),
+        numberOfImages = IFNULL(p_noImages, numberOfImages),
+        startImageNumber = IFNULL(p_noImages, startImageNumber),
+        numberOfPasses = IFNULL(p_noPasses, numberOfPasses),
+        imagedirectory = IFNULL(p_imgDir, imagedirectory),
+        imageprefix = IFNULL(p_imgPrefix, imageprefix),
+        imagesuffix = IFNULL(p_imgSuffix, imagesuffix),
+        imageContainerSubPath = IFNULL(p_imgContainerSubPath, imageContainerSubPath),
+        fileTemplate = IFNULL(p_fileTemplate, fileTemplate),
+        xtalSnapshotFullPath1 = IFNULL(p_snapshot1, xtalSnapshotFullPath1),
+        xtalSnapshotFullPath2 = IFNULL(p_snapshot2, xtalSnapshotFullPath2),
+        xtalSnapshotFullPath3 = IFNULL(p_snapshot3, xtalSnapshotFullPath3),
+        xtalSnapshotFullPath4 = IFNULL(p_snapshot4, xtalSnapshotFullPath4),
+        comments = IFNULL(p_comments, comments);
+	IF p_id IS NULL THEN
 		SET p_id = LAST_INSERT_ID();
     END IF;
   END ;;
@@ -4786,7 +5113,7 @@ BEGIN
 		SET p_id = LAST_INSERT_ID();
     END IF;
       
-    -- Link the integration to the scaling
+    
     IF p_parentId IS NOT NULL THEN
 	  IF p_id IS NULL THEN
 		INSERT INTO AutoProcScaling_has_Int (autoProcScalingId, autoProcIntegrationId, recordTimeStamp)
@@ -5350,9 +5677,9 @@ BEGIN
           INNER JOIN Container c ON c.containerId = bls.containerId 
         WHERE c.barcode = p_containerBarcode AND bls.location = p_sampleLocation;
 
-	-- SELECT max(blSampleImageId) INTO row_sampleImageId 
-        -- FROM BLSampleImage
-        -- WHERE imageFullPath = p_imagerImage;
+	
+        
+        
       
         IF row_sampleImageId is NOT NULL THEN
   
@@ -5571,4 +5898,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-19 23:20:09
+-- Dump completed on 2018-09-21 14:35:28

@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.2.14-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.16  Distrib 10.3.9-MariaDB, for Linux (x86_64)
 --
--- Host: cs04r-sc-vserv-87    Database: ispybstage
+-- Host: localhost    Database: ispyb_build
 -- ------------------------------------------------------
--- Server version	10.2.15-MariaDB-log
+-- Server version	10.3.9-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -43,15 +43,6 @@ CREATE TABLE `AbInitioModel` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `AbInitioModel`
---
-
-LOCK TABLES `AbInitioModel` WRITE;
-/*!40000 ALTER TABLE `AbInitioModel` DISABLE KEYS */;
-/*!40000 ALTER TABLE `AbInitioModel` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Additive`
 --
 
@@ -66,15 +57,6 @@ CREATE TABLE `Additive` (
   PRIMARY KEY (`additiveId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Additive`
---
-
-LOCK TABLES `Additive` WRITE;
-/*!40000 ALTER TABLE `Additive` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Additive` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `AdminActivity`
@@ -96,15 +78,6 @@ CREATE TABLE `AdminActivity` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `AdminActivity`
---
-
-LOCK TABLES `AdminActivity` WRITE;
-/*!40000 ALTER TABLE `AdminActivity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `AdminActivity` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `AdminVar`
 --
 
@@ -118,17 +91,8 @@ CREATE TABLE `AdminVar` (
   PRIMARY KEY (`varId`),
   KEY `AdminVar_FKIndexName` (`name`),
   KEY `AdminVar_FKIndexValue` (`value`(767))
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ISPyB administration values';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COMMENT='ISPyB administration values';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `AdminVar`
---
-
-LOCK TABLES `AdminVar` WRITE;
-/*!40000 ALTER TABLE `AdminVar` DISABLE KEYS */;
-/*!40000 ALTER TABLE `AdminVar` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Aperture`
@@ -143,15 +107,6 @@ CREATE TABLE `Aperture` (
   PRIMARY KEY (`apertureId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Aperture`
---
-
-LOCK TABLES `Aperture` WRITE;
-/*!40000 ALTER TABLE `Aperture` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Aperture` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Assembly`
@@ -170,15 +125,6 @@ CREATE TABLE `Assembly` (
   CONSTRAINT `AssemblyToMacromolecule` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Assembly`
---
-
-LOCK TABLES `Assembly` WRITE;
-/*!40000 ALTER TABLE `Assembly` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Assembly` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `AssemblyHasMacromolecule`
@@ -200,15 +146,6 @@ CREATE TABLE `AssemblyHasMacromolecule` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `AssemblyHasMacromolecule`
---
-
-LOCK TABLES `AssemblyHasMacromolecule` WRITE;
-/*!40000 ALTER TABLE `AssemblyHasMacromolecule` DISABLE KEYS */;
-/*!40000 ALTER TABLE `AssemblyHasMacromolecule` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `AssemblyRegion`
 --
 
@@ -227,15 +164,6 @@ CREATE TABLE `AssemblyRegion` (
   CONSTRAINT `AssemblyRegionToAssemblyHasMacromolecule` FOREIGN KEY (`assemblyHasMacromoleculeId`) REFERENCES `AssemblyHasMacromolecule` (`AssemblyHasMacromoleculeId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `AssemblyRegion`
---
-
-LOCK TABLES `AssemblyRegion` WRITE;
-/*!40000 ALTER TABLE `AssemblyRegion` DISABLE KEYS */;
-/*!40000 ALTER TABLE `AssemblyRegion` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `AutoProc`
@@ -259,16 +187,6 @@ CREATE TABLE `AutoProc` (
   KEY `AutoProc_FKIndex1` (`autoProcProgramId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=603745 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `AutoProc`
---
-
-LOCK TABLES `AutoProc` WRITE;
-/*!40000 ALTER TABLE `AutoProc` DISABLE KEYS */;
-INSERT INTO `AutoProc` VALUES (596406,56425592,'P 6 2 2',92.5546,92.5546,129.784,90,90,120,'2016-01-14 12:46:22'),(596411,56425944,'P 63 2 2',92.53,92.53,129.75,90,90,120,'2016-01-14 13:09:51'),(596418,56425952,'P 61 2 2',92.6461,92.6461,129.879,90,90,120,'2016-01-14 13:24:22'),(596419,56425963,'P 63 2 2',92.511,92.511,129.722,90,90,120,'2016-01-14 13:34:34'),(596420,56426286,'P 61 2 2',92.693,92.693,129.839,90,90,120,'2016-01-14 14:01:57'),(596421,56426287,'P 63 2 2',92.64,92.64,129.77,90,90,120,'2016-01-14 14:13:57'),(603708,56983954,'I 2 3',78.1548,78.1548,78.1548,90,90,90,'2016-01-22 11:34:03'),(603731,56985584,'I 2 3',78.15,78.15,78.15,90,90,90,'2016-01-22 11:52:36'),(603732,56985589,'I 2 3',78.157,78.157,78.157,90,90,90,'2016-01-22 11:53:38'),(603735,56985592,'I 2 3',78.15,78.15,78.15,90,90,90,'2016-01-22 11:54:01'),(603744,56986673,'I 2 3',78.1381,78.1381,78.1381,90,90,90,'2016-01-22 12:01:59');
-/*!40000 ALTER TABLE `AutoProc` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `AutoProcIntegration`
@@ -309,16 +227,6 @@ CREATE TABLE `AutoProcIntegration` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `AutoProcIntegration`
---
-
-LOCK TABLES `AutoProcIntegration` WRITE;
-/*!40000 ALTER TABLE `AutoProcIntegration` DISABLE KEYS */;
-INSERT INTO `AutoProcIntegration` VALUES (592508,993677,56425592,NULL,NULL,NULL,209.131,215.722,NULL,NULL,NULL,NULL,NULL,NULL,92.5546,92.5546,129.784,90,90,120,'2016-01-14 12:46:22',0),(592513,993677,56425944,1,3600,193.939,209.052,215.618,NULL,NULL,NULL,NULL,NULL,NULL,92.532,92.532,129.747,90,90,120,'2016-01-14 13:09:51',0),(592520,993677,56425952,1,3600,194.077,209.062,215.62,NULL,NULL,NULL,NULL,NULL,NULL,92.6461,92.6461,129.879,90,90,120,'2016-01-14 13:24:22',0),(592521,993677,56425963,1,3600,193.893,209.135,215.719,NULL,NULL,NULL,NULL,NULL,NULL,92.5114,92.5114,129.722,90,90,120,'2016-01-14 13:34:35',0),(592522,993677,56426286,1,3600,194.077,209.062,215.62,NULL,NULL,NULL,NULL,NULL,NULL,92.6461,92.6461,129.879,90,90,120,'2016-01-14 14:01:57',0),(592523,993677,56426286,1,1800,194.147,209.069,215.622,NULL,NULL,NULL,NULL,NULL,NULL,92.7867,92.7867,129.759,90,90,120,'2016-01-14 14:01:57',0),(592524,993677,56426287,1,3600,193.939,209.052,215.618,NULL,NULL,NULL,NULL,NULL,NULL,92.531,92.531,129.745,90,90,120,'2016-01-14 14:13:57',0),(592525,993677,56426287,1,1800,194.388,209.058,215.61,NULL,NULL,NULL,NULL,NULL,NULL,92.847,92.847,129.817,90,90,120,'2016-01-14 14:13:57',0),(600339,1002287,56983954,NULL,NULL,NULL,209.264,215.741,NULL,NULL,NULL,NULL,NULL,NULL,78.1548,78.1548,78.1548,90,90,90,'2016-01-22 11:34:03',0),(600362,1002287,56985584,1,7200,175.977,209.186,215.643,NULL,NULL,NULL,NULL,NULL,NULL,78.153,78.153,78.153,90,90,90,'2016-01-22 11:52:36',0),(600363,1002287,56985589,1,7200,176.262,209.264,215.741,NULL,NULL,NULL,NULL,NULL,NULL,78.1569,78.1569,78.1569,90,90,90,'2016-01-22 11:53:38',0),(600366,1002287,56985592,1,7200,176.239,209.177,215.651,NULL,NULL,NULL,NULL,NULL,NULL,78.153,78.153,78.153,90,90,90,'2016-01-22 11:54:01',0),(600376,1002287,56986673,1,7200,176.219,209.178,215.653,NULL,NULL,NULL,NULL,NULL,NULL,78.1381,78.1381,78.1381,90,90,90,'2016-01-22 12:01:59',0);
-/*!40000 ALTER TABLE `AutoProcIntegration` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `AutoProcProgram`
 --
 
@@ -343,16 +251,6 @@ CREATE TABLE `AutoProcProgram` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `AutoProcProgram`
---
-
-LOCK TABLES `AutoProcProgram` WRITE;
-/*!40000 ALTER TABLE `AutoProcProgram` DISABLE KEYS */;
-INSERT INTO `AutoProcProgram` VALUES (56425592,'/dls_sw/apps/fast_dp/2395/src/fast_dp.py -a S -j 0 -J 18 /dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/tlys_jan_4_1_0001.cbf','fast_dp',NULL,NULL,NULL,NULL,NULL,'2016-01-14 12:46:22',NULL),(56425944,'xia2 min_images=3 -3dii -xparallel -1 -atom s -blend -project cm14451v1 -crystal xtlysjan41 -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/tlys_jan_4_1_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-14 13:09:51',NULL),(56425952,'xia2 min_images=3 -dials -xparallel -1 -atom s -blend -project cm14451v1 -crystal xtlysjan41 -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/tlys_jan_4_1_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-14 13:24:22',NULL),(56425963,'/dls_sw/apps/GPhL/autoPROC/20151214/autoPROC/bin/linux64/process -xml -Id xtlysjan41,/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/,tlys_jan_4_1_####.cbf,1,3600 autoPROC_XdsKeyword_MAXIMUM_NUMBER_OF_PROCESSORS=12 autoPROC_XdsKeyword_MAXIMUM_NUMBER_OF_J','autoPROC 1.0.4 (see: http://www.globalphasing.com/autoproc/)',NULL,NULL,NULL,NULL,NULL,'2016-01-14 13:34:34',NULL),(56426286,'xia2 min_images=3 -dials -atom s -blend -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/linediffraction_1_0001.cbf image=/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/tlys_jan_4_1_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-14 14:01:57',NULL),(56426287,'xia2 min_images=3 -3dii -atom s -blend -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/linediffraction_1_0001.cbf image=/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/tlys_jan_4_1_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-14 14:13:57',NULL),(56983954,'/dls_sw/apps/fast_dp/2395/src/fast_dp.py -a S -j 0 -J 18 /dls/i03/data/2016/cm14451-1/20160122/gw/ins2/001/ins2_2_0001.cbf','fast_dp',NULL,NULL,NULL,NULL,NULL,'2016-01-22 11:34:03',NULL),(56985584,'xia2 min_images=3 -3d -xparallel -1 -atom s -blend -project cm14451v1 -crystal xins22 -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160122/gw/ins2/001/ins2_2_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-22 11:52:36',NULL),(56985589,'/dls_sw/apps/GPhL/autoPROC/20151214/autoPROC/bin/linux64/process -xml -Id xins22,/dls/i03/data/2016/cm14451-1/20160122/gw/ins2/001/,ins2_2_####.cbf,1,7200 autoPROC_XdsKeyword_MAXIMUM_NUMBER_OF_PROCESSORS=12 autoPROC_XdsKeyword_MAXIMUM_NUMBER_OF_JOBS=4 Sto','autoPROC 1.0.4 (see: http://www.globalphasing.com/autoproc/)',NULL,NULL,NULL,NULL,NULL,'2016-01-22 11:53:38',NULL),(56985592,'xia2 min_images=3 -3dii -xparallel -1 -atom s -blend -project cm14451v1 -crystal xins22 -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160122/gw/ins2/001/ins2_2_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-22 11:54:01',NULL),(56986673,'xia2 min_images=3 -dials -xparallel -1 -atom s -blend -project cm14451v1 -crystal xins22 -ispyb_xml_out ispyb.xml image=/dls/i03/data/2016/cm14451-1/20160122/gw/ins2/001/ins2_2_0001.cbf','xia2',NULL,NULL,NULL,NULL,NULL,'2016-01-22 12:01:59',5);
-/*!40000 ALTER TABLE `AutoProcProgram` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `AutoProcProgramAttachment`
 --
 
@@ -373,16 +271,6 @@ CREATE TABLE `AutoProcProgramAttachment` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `AutoProcProgramAttachment`
---
-
-LOCK TABLES `AutoProcProgramAttachment` WRITE;
-/*!40000 ALTER TABLE `AutoProcProgramAttachment` DISABLE KEYS */;
-INSERT INTO `AutoProcProgramAttachment` VALUES (1023947,56425592,'Log','fast_dp.log','/dls/i03/data/2016/cm14451-1/processed/20160114/tlys_jan_4/tlys_jan_4_1_/fast_dp','2016-01-14 12:46:22'),(1023955,56425944,'Result','cm14451v1_xtlysjan41_free.mtz','/dls/i03/data/2016/cm14451-1/processed/20160114/tlys_jan_4/tlys_jan_4_1_/xia2/3dii-run/DataFiles','2016-01-14 13:09:51'),(1023956,56425944,'Log','xia2.html','/dls/i03/data/2016/cm14451-1/processed/20160114/tlys_jan_4/tlys_jan_4_1_/xia2/3dii-run','2016-01-14 13:09:51'),(1023969,56425952,'Result','cm14451v1_xtlysjan41_free.mtz','/dls/i03/data/2016/cm14451-1/processed/20160114/tlys_jan_4/tlys_jan_4_1_/xia2/dials-run/DataFiles','2016-01-14 13:24:22'),(1023970,56425952,'Log','xia2.html','/dls/i03/data/2016/cm14451-1/processed/20160114/tlys_jan_4/tlys_jan_4_1_/xia2/dials-run','2016-01-14 13:24:22'),(1023971,56425963,'Log','autoPROC.log','/dls/i03/data/2016/cm14451-1/processed/20160114/tlys_jan_4/tlys_jan_4_1_/autoPROC/ap-run','2016-01-14 13:34:34'),(1023972,56425963,'Result','truncate-unique.mtz','/dls/i03/data/2016/cm14451-1/processed/20160114/tlys_jan_4/tlys_jan_4_1_/autoPROC/ap-run','2016-01-14 13:34:34'),(1023973,56426286,'Result','AUTOMATIC_DEFAULT_free.mtz','/dls/i03/data/2016/cm14451-1/processed/20160114/tlys_jan_4/linediffraction_1_/multi-xia2/dials/DataFiles','2016-01-14 14:01:57'),(1023974,56426286,'Log','xia2.html','/dls/i03/data/2016/cm14451-1/processed/20160114/tlys_jan_4/linediffraction_1_/multi-xia2/dials','2016-01-14 14:01:57'),(1023975,56426287,'Result','AUTOMATIC_DEFAULT_free.mtz','/dls/i03/data/2016/cm14451-1/processed/20160114/tlys_jan_4/linediffraction_1_/multi-xia2/3dii/DataFiles','2016-01-14 14:13:57'),(1023976,56426287,'Log','xia2.html','/dls/i03/data/2016/cm14451-1/processed/20160114/tlys_jan_4/linediffraction_1_/multi-xia2/3dii','2016-01-14 14:13:57'),(1037121,56983954,'Log','fast_dp.log','/dls/i03/data/2016/cm14451-1/processed/20160122/gw/ins2/001/ins2_2_/fast_dp','2016-01-22 11:34:03'),(1037160,56985584,'Result','cm14451v1_xins22_free.mtz','/dls/i03/data/2016/cm14451-1/processed/20160122/gw/ins2/001/ins2_2_/xia2/3d-run/DataFiles','2016-01-22 11:52:36'),(1037161,56985584,'Log','xia2.html','/dls/i03/data/2016/cm14451-1/processed/20160122/gw/ins2/001/ins2_2_/xia2/3d-run','2016-01-22 11:52:36'),(1037162,56985589,'Log','autoPROC.log','/dls/i03/data/2016/cm14451-1/processed/20160122/gw/ins2/001/ins2_2_/autoPROC/ap-run','2016-01-22 11:53:38'),(1037163,56985589,'Result','truncate-unique.mtz','/dls/i03/data/2016/cm14451-1/processed/20160122/gw/ins2/001/ins2_2_/autoPROC/ap-run','2016-01-22 11:53:38'),(1037168,56985592,'Result','cm14451v1_xins22_free.mtz','/dls/i03/data/2016/cm14451-1/processed/20160122/gw/ins2/001/ins2_2_/xia2/3dii-run/DataFiles','2016-01-22 11:54:01'),(1037169,56985592,'Log','xia2.html','/dls/i03/data/2016/cm14451-1/processed/20160122/gw/ins2/001/ins2_2_/xia2/3dii-run','2016-01-22 11:54:01'),(1037183,56986673,'Result','cm14451v1_xins22_free.mtz','/dls/i03/data/2016/cm14451-1/processed/20160122/gw/ins2/001/ins2_2_/xia2/dials-run/DataFiles','2016-01-22 12:01:59'),(1037184,56986673,'Log','xia2.html','/dls/i03/data/2016/cm14451-1/processed/20160122/gw/ins2/001/ins2_2_/xia2/dials-run','2016-01-22 12:01:59');
-/*!40000 ALTER TABLE `AutoProcProgramAttachment` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `AutoProcScaling`
 --
 
@@ -399,16 +287,6 @@ CREATE TABLE `AutoProcScaling` (
   CONSTRAINT `AutoProcScalingFk1` FOREIGN KEY (`autoProcId`) REFERENCES `AutoProc` (`autoProcId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=603471 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `AutoProcScaling`
---
-
-LOCK TABLES `AutoProcScaling` WRITE;
-/*!40000 ALTER TABLE `AutoProcScaling` DISABLE KEYS */;
-INSERT INTO `AutoProcScaling` VALUES (596133,596406,'2016-01-14 12:46:22'),(596138,596411,'2016-01-14 13:09:51'),(596145,596418,'2016-01-14 13:24:22'),(596146,596419,'2016-01-14 13:34:35'),(596147,596420,'2016-01-14 14:01:57'),(596148,596421,'2016-01-14 14:13:57'),(603434,603708,'2016-01-22 11:34:03'),(603457,603731,'2016-01-22 11:52:36'),(603458,603732,'2016-01-22 11:53:38'),(603461,603735,'2016-01-22 11:54:01'),(603470,603744,'2016-01-22 12:01:59');
-/*!40000 ALTER TABLE `AutoProcScaling` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `AutoProcScalingStatistics`
@@ -449,16 +327,6 @@ CREATE TABLE `AutoProcScalingStatistics` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `AutoProcScalingStatistics`
---
-
-LOCK TABLES `AutoProcScalingStatistics` WRITE;
-/*!40000 ALTER TABLE `AutoProcScalingStatistics` DISABLE KEYS */;
-INSERT INTO `AutoProcScalingStatistics` VALUES (1770617,596133,'outerShell',NULL,1.65,1.61,0.766,NULL,0.789,NULL,NULL,NULL,105090,3089,5.5,97.8,34,96.8,17.8,'2016-01-14 12:46:22',0,91.7,15.8),(1770618,596133,'innerShell',NULL,29.5,7.18,0.061,NULL,0.063,NULL,NULL,NULL,17093,593,61.7,98.6,28.8,100,19.5,'2016-01-14 12:46:22',0,99.9,73.4),(1770619,596133,'overall',NULL,29.5,1.61,0.106,NULL,0.109,NULL,NULL,NULL,1588225,43478,30.2,99.8,36.5,99.8,19.4,'2016-01-14 12:46:22',0,99.9,60.5),(1770632,596138,'outerShell',NULL,1.49,1.45,1.326,NULL,1.419,0.506,0.365,NULL,61482,4245,2,99.8,14.5,99.5,7.4,'2016-01-14 13:09:51',0,0.584,-0.059),(1770633,596138,'innerShell',NULL,68.18,6.48,0.064,NULL,0.07,0.015,0.012,NULL,23609,800,58.6,99.8,29.5,100,19.7,'2016-01-14 13:09:51',0,0.998,0.732),(1770634,596138,'overall',NULL,68.18,1.45,0.116,NULL,0.123,0.028,0.021,NULL,1942930,58601,22.9,99.9,33.2,99.9,17.4,'2016-01-14 13:09:51',0,0.999,0.592),(1770653,596145,'outerShell',NULL,1.46,1.42,3.758,NULL,4.107,1.67,1.216,NULL,42977,4422,2.2,97.9,9.7,96.3,5,'2016-01-14 13:24:22',0,0.497,-0.012),(1770654,596145,'innerShell',NULL,129.88,6.35,0.09,NULL,0.095,0.02,0.017,NULL,28041,858,32,100,32.7,100,21.3,'2016-01-14 13:24:22',0,0.996,0.556),(1770655,596145,'overall',NULL,129.88,1.42,0.177,NULL,0.184,0.045,0.033,NULL,1942399,62483,16.4,99.8,31.1,99.7,16.2,'2016-01-14 13:24:22',0,0.999,0.343),(1770656,596146,'outerShell',NULL,1.476,1.451,1.268,1.314,1.312,0.459,0.33,NULL,42945,2859,2.4,99.2,15,98.9,7.8,'2016-01-14 13:34:35',0,0.633,-0.059),(1770657,596146,'innerShell',NULL,129.722,3.938,0.08,0.078,0.081,0.017,0.014,NULL,103297,3251,50.7,100,31.8,99.7,19.1,'2016-01-14 13:34:35',0,0.993,-0.169),(1770658,596146,'overall',NULL,129.722,1.451,0.138,0.141,0.141,0.032,0.024,NULL,1953227,58523,22.5,100,33.4,100,17.8,'2016-01-14 13:34:35',0,0.996,0.035),(1770659,596147,'outerShell',NULL,1.47,1.43,3.442,NULL,3.711,1.471,1.058,NULL,46996,4388,1.6,99,10.7,97.8,5.5,'2016-01-14 14:01:57',0,0.627,-0.004),(1770660,596147,'innerShell',NULL,129.84,6.4,0.124,NULL,0.129,0.023,0.019,NULL,41147,842,27,100,48.9,100,31.8,'2016-01-14 14:01:57',0,0.996,0.532),(1770661,596147,'overall',NULL,129.84,1.43,0.707,NULL,0.719,0.156,0.114,NULL,2865527,61286,14.1,99.9,46.8,99.8,24.3,'2016-01-14 14:01:57',0,0.998,0.175),(1770662,596148,'outerShell',NULL,1.47,1.43,1.278,NULL,1.362,0.447,0.326,NULL,66780,4414,1.7,99.2,15.1,97,7.8,'2016-01-14 14:13:57',0,0.564,-0.056),(1770663,596148,'innerShell',NULL,80.23,6.4,0.106,NULL,0.112,0.02,0.017,NULL,36380,837,58.7,100,43.5,100,28.9,'2016-01-14 14:13:57',0,0.987,0.717),(1770664,596148,'overall',NULL,80.23,1.43,0.166,NULL,0.172,0.032,0.024,NULL,2926200,61215,22.9,99.9,47.8,99.8,25,'2016-01-14 14:13:57',0,0.997,0.589),(1792520,603434,'outerShell',NULL,1.57,1.53,0.765,NULL,0.775,NULL,NULL,NULL,64789,889,7.4,97.6,72.9,97.3,37,'2016-01-22 11:34:03',0,97.7,-4.8),(1792521,603434,'innerShell',NULL,27.63,6.84,0.043,NULL,0.044,NULL,NULL,NULL,10404,156,144.1,98.6,66.7,99,39.5,'2016-01-22 11:34:03',0,100,74.1),(1792522,603434,'overall',NULL,27.63,1.53,0.073,NULL,0.074,NULL,NULL,NULL,946151,12186,50.8,99.8,77.6,99.8,40,'2016-01-22 11:34:03',0,100,41.3),(1792589,603457,'outerShell',NULL,1.38,1.34,3.435,NULL,3.586,0.744,0.543,NULL,57789,1347,1.2,100,42.9,100,21.2,'2016-01-22 11:52:36',0,0.622,-0.017),(1792590,603457,'innerShell',NULL,31.9,6,0.044,NULL,0.046,0.007,0.006,NULL,15766,225,131.3,99.6,70.1,100,40.5,'2016-01-22 11:52:36',0,1,0.665),(1792591,603457,'overall',NULL,31.9,1.34,0.08,NULL,0.082,0.013,0.009,NULL,1309987,17989,34.2,100,72.8,100,37.2,'2016-01-22 11:52:36',0,1,0.484),(1792592,603458,'outerShell',NULL,1.4,1.376,2.142,2.136,2.156,0.345,0.249,NULL,60591,813,2.4,100,74.5,100,38.1,'2016-01-22 11:53:38',0,0.908,0.059),(1792593,603458,'innerShell',NULL,39.079,3.735,0.045,0.044,0.045,0.007,0.005,NULL,64542,887,114,99.9,72.8,99.9,40.2,'2016-01-22 11:53:38',0,1,0.267),(1792594,603458,'overall',NULL,39.079,1.376,0.083,0.084,0.083,0.013,0.009,NULL,1275766,16626,35,100,76.7,100,39.9,'2016-01-22 11:53:38',0,1,0.217),(1792601,603461,'outerShell',NULL,1.38,1.34,3.444,NULL,3.597,0.746,0.545,NULL,57746,1347,1.2,100,42.9,100,21.2,'2016-01-22 11:54:01',0,0.647,0.002),(1792602,603461,'innerShell',NULL,31.9,6,0.044,NULL,0.046,0.007,0.006,NULL,15773,225,131.2,99.6,70.1,100,40.5,'2016-01-22 11:54:01',0,1,0.654),(1792603,603461,'overall',NULL,31.9,1.34,0.08,NULL,0.082,0.013,0.009,NULL,1314502,17989,34.2,100,73.1,100,37.3,'2016-01-22 11:54:01',0,1,0.469),(1792628,603470,'outerShell',NULL,1.36,1.33,3.124,NULL,3.246,0.711,0.515,NULL,53402,1370,1.3,100,39,100,19.2,'2016-01-22 12:01:59',0,0.703,0.017),(1792629,603470,'innerShell',NULL,39.07,5.95,0.051,NULL,0.053,0.008,0.006,NULL,16799,235,117.7,99.7,71.5,100,41.9,'2016-01-22 12:01:59',0,1,0.654),(1792630,603470,'overall',NULL,39.07,1.33,0.08,NULL,0.082,0.013,0.009,NULL,1305126,18395,30.9,100,71,100,36.1,'2016-01-22 12:01:59',0,1,0.482);
-/*!40000 ALTER TABLE `AutoProcScalingStatistics` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `AutoProcScaling_has_Int`
 --
 
@@ -478,16 +346,6 @@ CREATE TABLE `AutoProcScaling_has_Int` (
   CONSTRAINT `AutoProcScaling_has_IntFk2` FOREIGN KEY (`autoProcIntegrationId`) REFERENCES `AutoProcIntegration` (`autoProcIntegrationId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=600376 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `AutoProcScaling_has_Int`
---
-
-LOCK TABLES `AutoProcScaling_has_Int` WRITE;
-/*!40000 ALTER TABLE `AutoProcScaling_has_Int` DISABLE KEYS */;
-INSERT INTO `AutoProcScaling_has_Int` VALUES (592507,596133,592508,'2016-01-14 12:46:22'),(592512,596138,592513,'2016-01-14 13:09:51'),(592519,596145,592520,'2016-01-14 13:24:22'),(592520,596146,592521,'2016-01-14 13:34:35'),(592521,596147,592522,'2016-01-14 14:01:57'),(592522,596147,592523,'2016-01-14 14:01:57'),(592523,596148,592524,'2016-01-14 14:13:57'),(592524,596148,592525,'2016-01-14 14:13:57'),(600338,603434,600339,'2016-01-22 11:34:03'),(600361,603457,600362,'2016-01-22 11:52:36'),(600362,603458,600363,'2016-01-22 11:53:38'),(600365,603461,600366,'2016-01-22 11:54:01'),(600375,603470,600376,'2016-01-22 12:01:59');
-/*!40000 ALTER TABLE `AutoProcScaling_has_Int` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `AutoProcStatus`
@@ -510,15 +368,6 @@ CREATE TABLE `AutoProcStatus` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `AutoProcStatus`
---
-
-LOCK TABLES `AutoProcStatus` WRITE;
-/*!40000 ALTER TABLE `AutoProcStatus` DISABLE KEYS */;
-/*!40000 ALTER TABLE `AutoProcStatus` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `BF_component`
 --
 
@@ -537,15 +386,6 @@ CREATE TABLE `BF_component` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `BF_component`
---
-
-LOCK TABLES `BF_component` WRITE;
-/*!40000 ALTER TABLE `BF_component` DISABLE KEYS */;
-/*!40000 ALTER TABLE `BF_component` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `BF_component_beamline`
 --
 
@@ -561,15 +401,6 @@ CREATE TABLE `BF_component_beamline` (
   CONSTRAINT `bf_component_beamline_FK1` FOREIGN KEY (`componentId`) REFERENCES `BF_component` (`componentId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `BF_component_beamline`
---
-
-LOCK TABLES `BF_component_beamline` WRITE;
-/*!40000 ALTER TABLE `BF_component_beamline` DISABLE KEYS */;
-/*!40000 ALTER TABLE `BF_component_beamline` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `BF_fault`
@@ -610,15 +441,6 @@ CREATE TABLE `BF_fault` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `BF_fault`
---
-
-LOCK TABLES `BF_fault` WRITE;
-/*!40000 ALTER TABLE `BF_fault` DISABLE KEYS */;
-/*!40000 ALTER TABLE `BF_fault` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `BF_subcomponent`
 --
 
@@ -635,15 +457,6 @@ CREATE TABLE `BF_subcomponent` (
   CONSTRAINT `bf_subcomponent_FK1` FOREIGN KEY (`componentId`) REFERENCES `BF_component` (`componentId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `BF_subcomponent`
---
-
-LOCK TABLES `BF_subcomponent` WRITE;
-/*!40000 ALTER TABLE `BF_subcomponent` DISABLE KEYS */;
-/*!40000 ALTER TABLE `BF_subcomponent` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `BF_subcomponent_beamline`
@@ -663,15 +476,6 @@ CREATE TABLE `BF_subcomponent_beamline` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `BF_subcomponent_beamline`
---
-
-LOCK TABLES `BF_subcomponent_beamline` WRITE;
-/*!40000 ALTER TABLE `BF_subcomponent_beamline` DISABLE KEYS */;
-/*!40000 ALTER TABLE `BF_subcomponent_beamline` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `BF_system`
 --
 
@@ -685,15 +489,6 @@ CREATE TABLE `BF_system` (
   PRIMARY KEY (`systemId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `BF_system`
---
-
-LOCK TABLES `BF_system` WRITE;
-/*!40000 ALTER TABLE `BF_system` DISABLE KEYS */;
-/*!40000 ALTER TABLE `BF_system` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `BF_system_beamline`
@@ -711,15 +506,6 @@ CREATE TABLE `BF_system_beamline` (
   CONSTRAINT `bf_system_beamline_FK1` FOREIGN KEY (`systemId`) REFERENCES `BF_system` (`systemId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `BF_system_beamline`
---
-
-LOCK TABLES `BF_system_beamline` WRITE;
-/*!40000 ALTER TABLE `BF_system_beamline` DISABLE KEYS */;
-/*!40000 ALTER TABLE `BF_system_beamline` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `BLSample`
@@ -785,16 +571,6 @@ CREATE TABLE `BLSample` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `BLSample`
---
-
-LOCK TABLES `BLSample` WRITE;
-/*!40000 ALTER TABLE `BLSample` DISABLE KEYS */;
-INSERT INTO `BLSample` VALUES (11550,NULL,3918,1326,'Sample-001','SAM-011550','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:16:11',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11553,NULL,3921,1326,'Sample-002','SAM-011553','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:21:43',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11556,NULL,3924,1326,'Sample-003','SAM-011556','3',NULL,NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11559,NULL,3927,1329,'Sample-004','SAM-011559','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11562,NULL,3930,1329,'Sample-005','SAM-011562','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11565,NULL,3933,1329,'Sample-006','SAM-011565','3',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11568,NULL,3936,1332,'Sample-007','SAM-011568','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11571,NULL,3939,1332,'Sample-008','SAM-011571','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11574,NULL,3942,1332,'Sample-009','SAM-011574','3',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11577,NULL,3942,1335,'Sample-010','SAM-011577','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11580,NULL,3942,1335,'Sample-011','SAM-011580','2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11583,NULL,3951,1335,'Sample-012','SAM-011583','3',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11586,NULL,3954,NULL,'Sample-013','SAM-011586',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11589,NULL,3957,NULL,'Sample-014','SAM-011589',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11592,NULL,3960,NULL,'Sample-015','SAM-011592',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:27:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(374695,NULL,310037,33049,'tlys_jan_4','HA00AU3712','4',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-19 22:57:04',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(398810,197784,333301,34864,'thau8','HA00AK8934','8',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-19 22:57:05',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(398816,197784,310037,34874,'thau88','HH00AU3788','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-09-30 14:21:28',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(398819,197784,310037,34877,'thau99','HH00AU3799','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-10-05 10:15:47',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(398824,NULL,333308,34883,'XPDF-1','XPDF-0001',NULL,NULL,NULL,NULL,NULL,'Test sample for XPDF',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-10-26 14:47:58',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(398827,NULL,333308,34883,'XPDF-2','XPDF-0002',NULL,NULL,NULL,NULL,NULL,'Test sample for XPDF',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-10-26 14:51:23',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-/*!40000 ALTER TABLE `BLSample` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `BLSampleGroup`
 --
 
@@ -806,16 +582,6 @@ CREATE TABLE `BLSampleGroup` (
   PRIMARY KEY (`blSampleGroupId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `BLSampleGroup`
---
-
-LOCK TABLES `BLSampleGroup` WRITE;
-/*!40000 ALTER TABLE `BLSampleGroup` DISABLE KEYS */;
-INSERT INTO `BLSampleGroup` VALUES (5);
-/*!40000 ALTER TABLE `BLSampleGroup` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `BLSampleGroup_has_BLSample`
@@ -835,16 +601,6 @@ CREATE TABLE `BLSampleGroup_has_BLSample` (
   CONSTRAINT `BLSampleGroup_has_BLSample_ibfk2` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `BLSampleGroup_has_BLSample`
---
-
-LOCK TABLES `BLSampleGroup_has_BLSample` WRITE;
-/*!40000 ALTER TABLE `BLSampleGroup_has_BLSample` DISABLE KEYS */;
-INSERT INTO `BLSampleGroup_has_BLSample` VALUES (5,398824,1,'background'),(5,398827,2,'sample');
-/*!40000 ALTER TABLE `BLSampleGroup_has_BLSample` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `BLSampleImage`
@@ -873,16 +629,6 @@ CREATE TABLE `BLSampleImage` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `BLSampleImage`
---
-
-LOCK TABLES `BLSampleImage` WRITE;
-/*!40000 ALTER TABLE `BLSampleImage` DISABLE KEYS */;
-INSERT INTO `BLSampleImage` VALUES (2,398819,NULL,NULL,'/dls/i03/data/2016/cm1234-5/something.jpg',NULL,NULL,'2016-10-05 11:23:33',NULL,NULL),(5,398816,1.1,1.2,'/dls/i03/data/2016/cm1234-5/something-else.jpg',NULL,NULL,'2016-10-10 14:31:06',NULL,NULL);
-/*!40000 ALTER TABLE `BLSampleImage` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `BLSampleImageAnalysis`
 --
 
@@ -906,16 +652,6 @@ CREATE TABLE `BLSampleImageAnalysis` (
   CONSTRAINT `BLSampleImageAnalysis_ibfk1` FOREIGN KEY (`blSampleImageId`) REFERENCES `BLSampleImage` (`blSampleImageId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `BLSampleImageAnalysis`
---
-
-LOCK TABLES `BLSampleImageAnalysis` WRITE;
-/*!40000 ALTER TABLE `BLSampleImageAnalysis` DISABLE KEYS */;
-INSERT INTO `BLSampleImageAnalysis` VALUES (4,5,'/dls/i02-2/data/2016/cm14559-5/.ispyb/something.jpg',NULL,10,11,0.94,0.5,'OK','2016-12-09 12:32:24','2016-12-09 12:32:25');
-/*!40000 ALTER TABLE `BLSampleImageAnalysis` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `BLSampleImageMeasurement`
@@ -942,15 +678,6 @@ CREATE TABLE `BLSampleImageMeasurement` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `BLSampleImageMeasurement`
---
-
-LOCK TABLES `BLSampleImageMeasurement` WRITE;
-/*!40000 ALTER TABLE `BLSampleImageMeasurement` DISABLE KEYS */;
-/*!40000 ALTER TABLE `BLSampleImageMeasurement` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `BLSampleImageScore`
 --
 
@@ -965,16 +692,6 @@ CREATE TABLE `BLSampleImageScore` (
   PRIMARY KEY (`blSampleImageScoreId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `BLSampleImageScore`
---
-
-LOCK TABLES `BLSampleImageScore` WRITE;
-/*!40000 ALTER TABLE `BLSampleImageScore` DISABLE KEYS */;
-INSERT INTO `BLSampleImageScore` VALUES (1,'Clear',0,'#cccccc'),(2,'Contaminated',1,'#fffd96'),(3,'Light Precipitate',2,'#fdfd96'),(4,'Phase Separation',4,'#fdfd96'),(5,'Spherulites',5,'#ffb347'),(6,'Microcrystals',6,'#ffb347'),(7,'1D Crystals',7,'#87ceeb'),(8,'2D Crystals',8,'#77dd77'),(9,'3D Crystals',9,'#77dd77'),(10,'Heavy Precipitate',3,'#ff6961');
-/*!40000 ALTER TABLE `BLSampleImageScore` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `BLSampleType_has_Component`
@@ -995,15 +712,6 @@ CREATE TABLE `BLSampleType_has_Component` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `BLSampleType_has_Component`
---
-
-LOCK TABLES `BLSampleType_has_Component` WRITE;
-/*!40000 ALTER TABLE `BLSampleType_has_Component` DISABLE KEYS */;
-/*!40000 ALTER TABLE `BLSampleType_has_Component` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `BLSample_has_DataCollectionPlan`
 --
 
@@ -1020,16 +728,6 @@ CREATE TABLE `BLSample_has_DataCollectionPlan` (
   CONSTRAINT `BLSample_has_DataCollectionPlan_ibfk2` FOREIGN KEY (`dataCollectionPlanId`) REFERENCES `DiffractionPlan` (`diffractionPlanId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `BLSample_has_DataCollectionPlan`
---
-
-LOCK TABLES `BLSample_has_DataCollectionPlan` WRITE;
-/*!40000 ALTER TABLE `BLSample_has_DataCollectionPlan` DISABLE KEYS */;
-INSERT INTO `BLSample_has_DataCollectionPlan` VALUES (398824,197792,NULL),(398827,197792,NULL);
-/*!40000 ALTER TABLE `BLSample_has_DataCollectionPlan` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `BLSample_has_EnergyScan`
@@ -1051,15 +749,6 @@ CREATE TABLE `BLSample_has_EnergyScan` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `BLSample_has_EnergyScan`
---
-
-LOCK TABLES `BLSample_has_EnergyScan` WRITE;
-/*!40000 ALTER TABLE `BLSample_has_EnergyScan` DISABLE KEYS */;
-/*!40000 ALTER TABLE `BLSample_has_EnergyScan` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `BLSession`
 --
 
@@ -1070,6 +759,7 @@ CREATE TABLE `BLSession` (
   `sessionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `beamLineSetupId` int(10) unsigned DEFAULT NULL,
   `proposalId` int(10) unsigned NOT NULL DEFAULT 0,
+  `beamCalendarId` int(10) unsigned DEFAULT NULL,
   `projectCode` varchar(45) DEFAULT NULL,
   `startDate` datetime DEFAULT NULL,
   `endDate` datetime DEFAULT NULL,
@@ -1098,20 +788,12 @@ CREATE TABLE `BLSession` (
   KEY `Session_FKIndexBeamLineName` (`beamLineName`),
   KEY `Session_FKIndexEndDate` (`endDate`),
   KEY `Session_FKIndexStartDate` (`startDate`),
+  KEY `BLSession_ibfk_3` (`beamCalendarId`),
   CONSTRAINT `BLSession_ibfk_1` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `BLSession_ibfk_2` FOREIGN KEY (`beamLineSetupId`) REFERENCES `BeamLineSetup` (`beamLineSetupId`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `BLSession_ibfk_2` FOREIGN KEY (`beamLineSetupId`) REFERENCES `BeamLineSetup` (`beamLineSetupId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `BLSession_ibfk_3` FOREIGN KEY (`beamCalendarId`) REFERENCES `BeamCalendar` (`beamCalendarId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=339536 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `BLSession`
---
-
-LOCK TABLES `BLSession` WRITE;
-/*!40000 ALTER TABLE `BLSession` DISABLE KEYS */;
-INSERT INTO `BLSession` VALUES (55167,1,37027,NULL,'2016-01-01 09:00:00','2016-01-01 17:00:00','i03',NULL,NULL,'ghfg',NULL,'2015-12-21 15:20:43',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL),(55168,1,37027,NULL,'2016-03-11 09:00:00','2016-03-11 17:00:00','i03',NULL,NULL,'jhgjh',NULL,'2015-12-21 15:20:44',2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL),(339525,NULL,141666,NULL,NULL,NULL,'i03',NULL,NULL,NULL,NULL,'2016-03-16 16:08:29',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL),(339528,NULL,141666,NULL,NULL,NULL,'i03',NULL,NULL,NULL,NULL,'2016-03-17 15:07:42',2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL),(339531,NULL,141666,NULL,NULL,NULL,'i03',NULL,NULL,NULL,NULL,'2016-03-17 15:08:09',3,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL),(339535,NULL,37027,NULL,'2018-03-27 09:00:00','2018-07-27 09:00:00','i02-2',NULL,NULL,NULL,NULL,'2018-04-05 15:48:37',99,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00',NULL,NULL);
-/*!40000 ALTER TABLE `BLSession` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `BLSession_has_SCPosition`
@@ -1130,15 +812,6 @@ CREATE TABLE `BLSession_has_SCPosition` (
   CONSTRAINT `blsession_has_scposition_FK1` FOREIGN KEY (`blsessionid`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `BLSession_has_SCPosition`
---
-
-LOCK TABLES `BLSession_has_SCPosition` WRITE;
-/*!40000 ALTER TABLE `BLSession_has_SCPosition` DISABLE KEYS */;
-/*!40000 ALTER TABLE `BLSession_has_SCPosition` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `BLSubSample`
@@ -1177,16 +850,6 @@ CREATE TABLE `BLSubSample` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `BLSubSample`
---
-
-LOCK TABLES `BLSubSample` WRITE;
-/*!40000 ALTER TABLE `BLSubSample` DISABLE KEYS */;
-INSERT INTO `BLSubSample` VALUES (2,398816,197784,NULL,2,5,NULL,NULL,NULL,NULL,NULL,'2016-09-30 14:25:19'),(5,398819,197784,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-10-05 10:16:44');
-/*!40000 ALTER TABLE `BLSubSample` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `BeamApertures`
 --
 
@@ -1207,15 +870,6 @@ CREATE TABLE `BeamApertures` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `BeamApertures`
---
-
-LOCK TABLES `BeamApertures` WRITE;
-/*!40000 ALTER TABLE `BeamApertures` DISABLE KEYS */;
-/*!40000 ALTER TABLE `BeamApertures` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `BeamCalendar`
 --
 
@@ -1231,15 +885,6 @@ CREATE TABLE `BeamCalendar` (
   PRIMARY KEY (`beamCalendarId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `BeamCalendar`
---
-
-LOCK TABLES `BeamCalendar` WRITE;
-/*!40000 ALTER TABLE `BeamCalendar` DISABLE KEYS */;
-/*!40000 ALTER TABLE `BeamCalendar` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `BeamCentres`
@@ -1259,15 +904,6 @@ CREATE TABLE `BeamCentres` (
   CONSTRAINT `beamCentres_FK1` FOREIGN KEY (`beamlineStatsId`) REFERENCES `BeamlineStats` (`beamlineStatsId`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `BeamCentres`
---
-
-LOCK TABLES `BeamCentres` WRITE;
-/*!40000 ALTER TABLE `BeamCentres` DISABLE KEYS */;
-/*!40000 ALTER TABLE `BeamCentres` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `BeamLineSetup`
@@ -1330,16 +966,6 @@ CREATE TABLE `BeamLineSetup` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `BeamLineSetup`
---
-
-LOCK TABLES `BeamLineSetup` WRITE;
-/*!40000 ALTER TABLE `BeamLineSetup` DISABLE KEYS */;
-INSERT INTO `BeamLineSetup` VALUES (1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2007-04-26 00:00:00','Diamond Light Source',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-19 22:56:25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-/*!40000 ALTER TABLE `BeamLineSetup` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `BeamlineAction`
 --
 
@@ -1361,15 +987,6 @@ CREATE TABLE `BeamlineAction` (
   CONSTRAINT `BeamlineAction_ibfk1` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `BeamlineAction`
---
-
-LOCK TABLES `BeamlineAction` WRITE;
-/*!40000 ALTER TABLE `BeamlineAction` DISABLE KEYS */;
-/*!40000 ALTER TABLE `BeamlineAction` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `BeamlineStats`
@@ -1395,15 +1012,6 @@ CREATE TABLE `BeamlineStats` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `BeamlineStats`
---
-
-LOCK TABLES `BeamlineStats` WRITE;
-/*!40000 ALTER TABLE `BeamlineStats` DISABLE KEYS */;
-/*!40000 ALTER TABLE `BeamlineStats` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Buffer`
 --
 
@@ -1427,15 +1035,6 @@ CREATE TABLE `Buffer` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Buffer`
---
-
-LOCK TABLES `Buffer` WRITE;
-/*!40000 ALTER TABLE `Buffer` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Buffer` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `BufferHasAdditive`
 --
 
@@ -1457,15 +1056,6 @@ CREATE TABLE `BufferHasAdditive` (
   CONSTRAINT `BufferHasAdditiveToUnit` FOREIGN KEY (`measurementUnitId`) REFERENCES `MeasurementUnit` (`measurementUnitId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `BufferHasAdditive`
---
-
-LOCK TABLES `BufferHasAdditive` WRITE;
-/*!40000 ALTER TABLE `BufferHasAdditive` DISABLE KEYS */;
-/*!40000 ALTER TABLE `BufferHasAdditive` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `CTF`
@@ -1502,15 +1092,6 @@ CREATE TABLE `CTF` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `CTF`
---
-
-LOCK TABLES `CTF` WRITE;
-/*!40000 ALTER TABLE `CTF` DISABLE KEYS */;
-/*!40000 ALTER TABLE `CTF` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `CalendarHash`
 --
 
@@ -1525,15 +1106,6 @@ CREATE TABLE `CalendarHash` (
   PRIMARY KEY (`calendarHashId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Lets people get to their calendars without logging in using a private (hash) url';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `CalendarHash`
---
-
-LOCK TABLES `CalendarHash` WRITE;
-/*!40000 ALTER TABLE `CalendarHash` DISABLE KEYS */;
-/*!40000 ALTER TABLE `CalendarHash` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ComponentLattice`
@@ -1559,16 +1131,6 @@ CREATE TABLE `ComponentLattice` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ComponentLattice`
---
-
-LOCK TABLES `ComponentLattice` WRITE;
-/*!40000 ALTER TABLE `ComponentLattice` DISABLE KEYS */;
-INSERT INTO `ComponentLattice` VALUES (1,123497,'P21',10.1,11.1,12.1,90.1,90.2,90.3);
-/*!40000 ALTER TABLE `ComponentLattice` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ComponentSubType`
 --
 
@@ -1584,16 +1146,6 @@ CREATE TABLE `ComponentSubType` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ComponentSubType`
---
-
-LOCK TABLES `ComponentSubType` WRITE;
-/*!40000 ALTER TABLE `ComponentSubType` DISABLE KEYS */;
-INSERT INTO `ComponentSubType` VALUES (1,'Buffer',1),(2,'Precipitant',0),(3,'Salt',0);
-/*!40000 ALTER TABLE `ComponentSubType` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ComponentType`
 --
 
@@ -1606,16 +1158,6 @@ CREATE TABLE `ComponentType` (
   PRIMARY KEY (`componentTypeId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ComponentType`
---
-
-LOCK TABLES `ComponentType` WRITE;
-/*!40000 ALTER TABLE `ComponentType` DISABLE KEYS */;
-INSERT INTO `ComponentType` VALUES (1,'Protein'),(2,'DNA'),(3,'Small Molecule'),(4,'RNA');
-/*!40000 ALTER TABLE `ComponentType` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Component_has_SubType`
@@ -1635,15 +1177,6 @@ CREATE TABLE `Component_has_SubType` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Component_has_SubType`
---
-
-LOCK TABLES `Component_has_SubType` WRITE;
-/*!40000 ALTER TABLE `Component_has_SubType` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Component_has_SubType` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ConcentrationType`
 --
 
@@ -1657,16 +1190,6 @@ CREATE TABLE `ConcentrationType` (
   PRIMARY KEY (`concentrationTypeId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ConcentrationType`
---
-
-LOCK TABLES `ConcentrationType` WRITE;
-/*!40000 ALTER TABLE `ConcentrationType` DISABLE KEYS */;
-INSERT INTO `ConcentrationType` VALUES (1,'Molar','M'),(2,'Percentage Weight / Volume','%(w/v)'),(3,'Percentage Volume / Volume','%(v/v)'),(4,'Milligrams / Millilitre','mg/ml'),(5,'Grams','g');
-/*!40000 ALTER TABLE `ConcentrationType` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Container`
@@ -1721,16 +1244,6 @@ CREATE TABLE `Container` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Container`
---
-
-LOCK TABLES `Container` WRITE;
-/*!40000 ALTER TABLE `Container` DISABLE KEYS */;
-INSERT INTO `Container` VALUES (1326,573,'Container-1-cm0001-1','Puck-16',16,'3','processing',NULL,'i03',NULL,NULL,'container-cm0001-1-0000001',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,4),(1329,573,'Container-2-cm0001-1','Puck-16',16,'4','processing',NULL,'i03',NULL,NULL,'container-cm0001-1-0000002',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(1332,576,'Container-3-cm0001-1','Puck-16',16,'5','processing',NULL,'i03',NULL,NULL,'container-cm0001-1-0000003',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(1335,579,'Container-4-cm0001-2','Puck-16',16,'6','processing',NULL,'i03',NULL,NULL,'container-cm0001-2-0001335',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(1338,582,'Container-5-cm0001-3','Puck-16',16,'7','processing',NULL,'i03',NULL,NULL,'container-cm0001-3-0001338',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(1341,573,'Manual',NULL,NULL,'9',NULL,NULL,'i03',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(33049,8287,'cm14451-1_i03r-002','Puck',16,NULL,'at DLS',NULL,'i03',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(34864,8572,'I03R-001','Puck',16,'29','processing','2016-02-24 12:13:05','i03',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(34874,8572,'test_plate2','CrystalQuickX',192,'3','in_storage','2016-02-12 09:20:44','i03',NULL,2,'test_plate2',2,NULL,NULL,2,0,NULL,NULL,NULL,NULL),(34877,8572,'test_plate3','CrystalQuickX',192,'3','in_storage','2016-10-04 10:50:05','i03',NULL,2,'test_plate3',2,NULL,NULL,2,0,NULL,NULL,NULL,NULL),(34879,8572,'test_plate4','CrystalQuickX',192,'4','processing',NULL,'i02-2',NULL,2,'test_plate4',2,NULL,NULL,2,0,NULL,NULL,NULL,NULL),(34883,NULL,'XPDF-container-1','XPDF container',NULL,NULL,'processing',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL),(34888,8578,'TestSim01','CrystalQuickX',192,'1','in_storage',NULL,'i02-2',NULL,2,'VMXiSim-001',7,339535,1,7,0,NULL,NULL,NULL,NULL);
-/*!40000 ALTER TABLE `Container` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ContainerHistory`
 --
 
@@ -1749,16 +1262,6 @@ CREATE TABLE `ContainerHistory` (
   CONSTRAINT `ContainerHistory_ibfk1` FOREIGN KEY (`containerId`) REFERENCES `Container` (`containerId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ContainerHistory`
---
-
-LOCK TABLES `ContainerHistory` WRITE;
-/*!40000 ALTER TABLE `ContainerHistory` DISABLE KEYS */;
-INSERT INTO `ContainerHistory` VALUES (6,34874,'3','2016-09-30 12:56:21','in_localstorage','i03'),(7,34874,'3','2017-10-19 13:35:34','in_storage','i02-2');
-/*!40000 ALTER TABLE `ContainerHistory` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ContainerInspection`
@@ -1793,15 +1296,6 @@ CREATE TABLE `ContainerInspection` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ContainerInspection`
---
-
-LOCK TABLES `ContainerInspection` WRITE;
-/*!40000 ALTER TABLE `ContainerInspection` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ContainerInspection` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ContainerQueue`
 --
 
@@ -1823,16 +1317,6 @@ CREATE TABLE `ContainerQueue` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ContainerQueue`
---
-
-LOCK TABLES `ContainerQueue` WRITE;
-/*!40000 ALTER TABLE `ContainerQueue` DISABLE KEYS */;
-INSERT INTO `ContainerQueue` VALUES (2,34874,NULL,'2016-09-30 12:56:21',NULL),(8,34877,NULL,'2016-10-05 09:09:59',NULL);
-/*!40000 ALTER TABLE `ContainerQueue` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ContainerQueueSample`
 --
 
@@ -1852,16 +1336,6 @@ CREATE TABLE `ContainerQueueSample` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ContainerQueueSample`
---
-
-LOCK TABLES `ContainerQueueSample` WRITE;
-/*!40000 ALTER TABLE `ContainerQueueSample` DISABLE KEYS */;
-INSERT INTO `ContainerQueueSample` VALUES (2,2,2);
-/*!40000 ALTER TABLE `ContainerQueueSample` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ContainerRegistry`
 --
 
@@ -1876,16 +1350,6 @@ CREATE TABLE `ContainerRegistry` (
   PRIMARY KEY (`containerRegistryId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ContainerRegistry`
---
-
-LOCK TABLES `ContainerRegistry` WRITE;
-/*!40000 ALTER TABLE `ContainerRegistry` DISABLE KEYS */;
-INSERT INTO `ContainerRegistry` VALUES (4,'DLS-0001',NULL,'2017-09-21 10:01:07');
-/*!40000 ALTER TABLE `ContainerRegistry` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ContainerRegistry_has_Proposal`
@@ -1911,15 +1375,6 @@ CREATE TABLE `ContainerRegistry_has_Proposal` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ContainerRegistry_has_Proposal`
---
-
-LOCK TABLES `ContainerRegistry_has_Proposal` WRITE;
-/*!40000 ALTER TABLE `ContainerRegistry_has_Proposal` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ContainerRegistry_has_Proposal` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ContainerReport`
 --
 
@@ -1940,15 +1395,6 @@ CREATE TABLE `ContainerReport` (
   CONSTRAINT `ContainerReport_ibfk2` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ContainerReport`
---
-
-LOCK TABLES `ContainerReport` WRITE;
-/*!40000 ALTER TABLE `ContainerReport` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ContainerReport` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `CourierTermsAccepted`
@@ -1973,15 +1419,6 @@ CREATE TABLE `CourierTermsAccepted` (
   CONSTRAINT `CourierTermsAccepted_ibfk_3` FOREIGN KEY (`shippingId`) REFERENCES `Shipping` (`shippingId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Records acceptances of the courier T and C';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `CourierTermsAccepted`
---
-
-LOCK TABLES `CourierTermsAccepted` WRITE;
-/*!40000 ALTER TABLE `CourierTermsAccepted` DISABLE KEYS */;
-/*!40000 ALTER TABLE `CourierTermsAccepted` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Crystal`
@@ -2023,16 +1460,6 @@ CREATE TABLE `Crystal` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Crystal`
---
-
-LOCK TABLES `Crystal` WRITE;
-/*!40000 ALTER TABLE `Crystal` DISABLE KEYS */;
-INSERT INTO `Crystal` VALUES (3918,NULL,4380,NULL,'Crystal 01',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:11:19',NULL,NULL),(3921,NULL,4383,NULL,'Crystal 02',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:11:19',NULL,NULL),(3924,NULL,4386,NULL,'Crystal 03',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:11:19',NULL,NULL),(3927,NULL,4389,NULL,'Crystal 04',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:11:19',NULL,NULL),(3930,NULL,4392,NULL,'Crystal 05',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:11:19',NULL,NULL),(3933,NULL,4395,NULL,'Crystal 06',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:11:19',NULL,NULL),(3936,NULL,4398,NULL,'Crystal 07',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:11:19',NULL,NULL),(3939,NULL,4401,NULL,'Crystal 08',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:11:19',NULL,NULL),(3942,NULL,4404,NULL,'Crystal 09',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:11:19',NULL,NULL),(3945,NULL,4407,NULL,'Crystal 10',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:11:19',NULL,NULL),(3948,NULL,4407,NULL,'Crystal 11',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:11:19',NULL,NULL),(3951,NULL,4410,NULL,'Crystal 12',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:11:19',NULL,NULL),(3954,NULL,4410,NULL,'Crystal 13',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:11:19',NULL,NULL),(3957,NULL,4413,NULL,'Crystal 14',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:11:19',NULL,NULL),(3960,NULL,4413,NULL,'Crystal 15',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-17 16:11:19',NULL,NULL),(310037,NULL,121393,NULL,'crystal-4-cm14451-1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-19 22:58:00',NULL,NULL),(333301,NULL,123491,NULL,NULL,'P41212',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-19 22:58:00',NULL,NULL),(333308,NULL,123497,NULL,'SampleType01','P12121',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'sample type comments ...',NULL,NULL,'2017-03-23 22:06:42',NULL,NULL);
-/*!40000 ALTER TABLE `Crystal` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Crystal_has_UUID`
 --
 
@@ -2052,15 +1479,6 @@ CREATE TABLE `Crystal_has_UUID` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Crystal_has_UUID`
---
-
-LOCK TABLES `Crystal_has_UUID` WRITE;
-/*!40000 ALTER TABLE `Crystal_has_UUID` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Crystal_has_UUID` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `DataAcquisition`
 --
 
@@ -2077,15 +1495,6 @@ CREATE TABLE `DataAcquisition` (
   PRIMARY KEY (`dataAcquisitionId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `DataAcquisition`
---
-
-LOCK TABLES `DataAcquisition` WRITE;
-/*!40000 ALTER TABLE `DataAcquisition` DISABLE KEYS */;
-/*!40000 ALTER TABLE `DataAcquisition` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `DataCollection`
@@ -2111,9 +1520,10 @@ CREATE TABLE `DataCollection` (
   `startImageNumber` int(10) unsigned DEFAULT NULL,
   `numberOfPasses` int(10) unsigned DEFAULT NULL,
   `exposureTime` float DEFAULT NULL,
-  `imageDirectory` varchar(255) DEFAULT NULL,
+  `imageDirectory` varchar(255) DEFAULT NULL COMMENT 'The directory where files reside - should end with a slash',
   `imagePrefix` varchar(45) DEFAULT NULL,
   `imageSuffix` varchar(45) DEFAULT NULL,
+  `imageContainerSubPath` varchar(255) DEFAULT NULL COMMENT 'Internal path of a HDF5 file pointing to the data for this data collection',
   `fileTemplate` varchar(255) DEFAULT NULL,
   `wavelength` float DEFAULT NULL,
   `resolution` float DEFAULT NULL,
@@ -2219,16 +1629,6 @@ CREATE TABLE `DataCollection` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `DataCollection`
---
-
-LOCK TABLES `DataCollection` WRITE;
-/*!40000 ALTER TABLE `DataCollection` DISABLE KEYS */;
-INSERT INTO `DataCollection` VALUES (993677,374695,55167,NULL,1,'2016-01-14 12:40:34','2016-01-14 12:41:54','DataCollection Successful',45,0.1,0.1,0,3600,1,1,0.02,'/dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/','tlys_jan_4','cbf','tlys_jan_4_1_####.cbf',1.28255,1.6,193.087,215.62,208.978,'(-402,345,142) EDNAStrategy4: subWedge:1Aperture: Medium',1,NULL,0.059918,0.099937,40.1936,'User','/dls/i03/data/2016/cm14451-1/jpegs/20160114/tlys_jan_4/tlys_jan_4_1_1_315.0.png','/dls/i03/data/2016/cm14451-1/jpegs/20160114/tlys_jan_4/tlys_jan_4_1_1_225.0.png','/dls/i03/data/2016/cm14451-1/jpegs/20160114/tlys_jan_4/tlys_jan_4_1_1_135.0.png','/dls/i03/data/2016/cm14451-1/jpegs/20160114/tlys_jan_4/tlys_jan_4_1_1_45.0.png','Omega',NULL,NULL,45,NULL,NULL,NULL,NULL,5.685,NULL,NULL,0.05,0.02,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,988855,595236,NULL,80,NULL,20,6,NULL,NULL,NULL,833107367454.3083,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(1002287,NULL,55167,NULL,2,'2016-01-22 11:25:18','2016-01-22 11:28:23','DataCollection Successful',0,0.1,0.1,0,7200,1,1,0.025,'/dls/i03/data/2016/cm14451-1/20160122/gw/ins2/001/','ins2','cbf','ins2_2_####.cbf',1.2,1.41777,175,215.618,209.102,'(-307,322,-184) Aperture: Large',1,NULL,0.059918,0.099937,0.999423,'User','/dls/i03/data/2016/cm14451-1/jpegs/20160122/gw/ins2/001/ins2_2_1_270.0.png','/dls/i03/data/2016/cm14451-1/jpegs/20160122/gw/ins2/001/ins2_2_1_180.0.png','/dls/i03/data/2016/cm14451-1/jpegs/20160122/gw/ins2/001/ins2_2_1_90.0.png','/dls/i03/data/2016/cm14451-1/jpegs/20160122/gw/ins2/001/ins2_2_1_0.0.png','Omega',NULL,NULL,0,NULL,NULL,NULL,NULL,6.1213,NULL,NULL,0.08,0.02,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,996311,602072,NULL,80,NULL,20,3752,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(1052494,NULL,55168,NULL,1,'2016-04-13 12:18:12','2016-04-13 12:18:50','DataCollection Successful',0,0.4,0.4,-89.6,2,1,1,0.01,'/dls/i03/data/2016/cm14451-2/20160413/test_xtal/','xtal1','cbf','xtal1_1_####.cbf',0.976254,1.24362,200,214.33,208.71,'(-703,-47,-74) Aperture: Large',1,NULL,0.059918,0.099937,100,'User','/dls/i03/data/2016/cm14451-2/jpegs/20160413/test_xtal/xtal1_1_1_90.0.png','/dls/i03/data/2016/cm14451-2/jpegs/20160413/test_xtal/xtal1_1_1_0.0.png',NULL,NULL,'Omega',NULL,NULL,0,NULL,NULL,NULL,NULL,5.30095,NULL,NULL,0.08,0.02,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1040398,647536,NULL,80,NULL,20,3752,NULL,NULL,NULL,1959830505829.428,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(1052503,NULL,55168,NULL,3,'2016-04-13 12:21:26','2016-04-13 12:21:54','DataCollection Successful',93,0.3,0.3,-44.7,3,1,1,0.01,'/dls/i03/data/2016/cm14451-2/20160413/test_xtal/','xtal1','cbf','xtal1_3_####.cbf',0.976253,1.5,266.693,214.372,208.299,'(-703,-47,-74) Aperture: Large',1,NULL,0.059918,0.099937,100,'User','/dls/i03/data/2016/cm14451-2/jpegs/20160413/test_xtal/xtal1_3_1_183.0.png','/dls/i03/data/2016/cm14451-2/jpegs/20160413/test_xtal/xtal1_3_1_93.0.png',NULL,NULL,'Omega',NULL,NULL,93,NULL,NULL,NULL,NULL,5.30095,NULL,NULL,0.08,0.02,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1040407,647545,NULL,80,NULL,20,3752,NULL,NULL,NULL,1972385107622.2878,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(1066786,398810,55168,NULL,2,'2016-04-18 11:04:44','2016-04-18 11:04:57','DataCollection Successful',0,0.5,0.5,-44.5,3,1,1,0.1,'/dls/i03/data/2016/cm14451-2/gw/20160418/thau/edna_test/','thau','cbf','thau_2_####.cbf',0.976253,1.5,266.693,214.372,208.299,'(-345,-241,-185) Aperture: Large',1,NULL,0.059918,0.099937,5.00016,'User','/dls/i03/data/2016/cm14451-2/jpegs/gw/20160418/thau/edna_test/thau_2_1_90.0.png','/dls/i03/data/2016/cm14451-2/jpegs/gw/20160418/thau/edna_test/thau_2_1_0.0.png',NULL,NULL,'Omega',NULL,NULL,0,NULL,NULL,NULL,NULL,5.301,NULL,NULL,0.08,0.02,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1054243,661459,NULL,80,NULL,20,3752,NULL,NULL,NULL,57087013071.909134,NULL,2,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-/*!40000 ALTER TABLE `DataCollection` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `DataCollectionComment`
 --
 
@@ -2251,15 +1651,6 @@ CREATE TABLE `DataCollectionComment` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `DataCollectionComment`
---
-
-LOCK TABLES `DataCollectionComment` WRITE;
-/*!40000 ALTER TABLE `DataCollectionComment` DISABLE KEYS */;
-/*!40000 ALTER TABLE `DataCollectionComment` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `DataCollectionFileAttachment`
 --
 
@@ -2277,15 +1668,6 @@ CREATE TABLE `DataCollectionFileAttachment` (
   CONSTRAINT `_dataCollectionFileAttachmentId_fk1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `DataCollectionFileAttachment`
---
-
-LOCK TABLES `DataCollectionFileAttachment` WRITE;
-/*!40000 ALTER TABLE `DataCollectionFileAttachment` DISABLE KEYS */;
-/*!40000 ALTER TABLE `DataCollectionFileAttachment` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `DataCollectionGroup`
@@ -2321,16 +1703,6 @@ CREATE TABLE `DataCollectionGroup` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `DataCollectionGroup`
---
-
-LOCK TABLES `DataCollectionGroup` WRITE;
-/*!40000 ALTER TABLE `DataCollectionGroup` DISABLE KEYS */;
-INSERT INTO `DataCollectionGroup` VALUES (988855,55167,NULL,374695,'SAD',NULL,NULL,NULL,'Ext. Trigger','HA00AU3712',NULL,NULL,NULL,NULL,NULL),(996311,55167,NULL,NULL,'SAD',NULL,NULL,NULL,'Ext. Trigger',NULL,NULL,NULL,NULL,NULL,NULL),(1040398,55168,NULL,NULL,'SAD',NULL,NULL,NULL,'Ext. Trigger',NULL,NULL,NULL,NULL,NULL,NULL),(1040407,55168,NULL,NULL,'SAD',NULL,NULL,NULL,'Ext. Trigger',NULL,NULL,NULL,NULL,NULL,NULL),(1054243,55168,NULL,398810,'SAD',NULL,NULL,NULL,'Ext. Trigger','CA00AG9993',NULL,NULL,NULL,NULL,NULL);
-/*!40000 ALTER TABLE `DataCollectionGroup` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `DataCollectionPlan_has_Detector`
 --
 
@@ -2353,16 +1725,6 @@ CREATE TABLE `DataCollectionPlan_has_Detector` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `DataCollectionPlan_has_Detector`
---
-
-LOCK TABLES `DataCollectionPlan_has_Detector` WRITE;
-/*!40000 ALTER TABLE `DataCollectionPlan_has_Detector` DISABLE KEYS */;
-INSERT INTO `DataCollectionPlan_has_Detector` VALUES (4,197792,8,5.4,136.86,45);
-/*!40000 ALTER TABLE `DataCollectionPlan_has_Detector` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `DataReductionStatus`
 --
 
@@ -2378,15 +1740,6 @@ CREATE TABLE `DataReductionStatus` (
   PRIMARY KEY (`dataReductionStatusId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `DataReductionStatus`
---
-
-LOCK TABLES `DataReductionStatus` WRITE;
-/*!40000 ALTER TABLE `DataReductionStatus` DISABLE KEYS */;
-/*!40000 ALTER TABLE `DataReductionStatus` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Detector`
@@ -2427,16 +1780,6 @@ CREATE TABLE `Detector` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Detector`
---
-
-LOCK TABLES `Detector` WRITE;
-/*!40000 ALTER TABLE `Detector` DISABLE KEYS */;
-INSERT INTO `Detector` VALUES (4,'Photon counting','In-house','Excalibur',NULL,NULL,NULL,NULL,'1109-434',100,300,NULL,NULL,NULL,NULL,NULL,NULL,NULL,55,'CrO3Br5Sr10',NULL,NULL,NULL,NULL),(8,'Diamond XPDF detector',NULL,NULL,NULL,NULL,NULL,NULL,'1109-761',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,10.4,'C+Br+He',NULL,NULL,NULL,NULL);
-/*!40000 ALTER TABLE `Detector` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Dewar`
 --
 
@@ -2474,16 +1817,6 @@ CREATE TABLE `Dewar` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Dewar`
---
-
-LOCK TABLES `Dewar` WRITE;
-/*!40000 ALTER TABLE `Dewar` DISABLE KEYS */;
-INSERT INTO `Dewar` VALUES (573,474,'Dewar-1-cm0001-1',NULL,NULL,'processing',NULL,0,'dewar-cm0001-1-0000001',NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL),(576,474,'Dewar-2-cm0001-1',NULL,NULL,'at DLS',NULL,0,'dewar-cm0001-1-0000002',NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL),(579,477,'Dewar-3-cm0001-2',NULL,NULL,'processing',NULL,0,'dewar-cm0001-2-0000477',NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL),(582,480,'Dewar-4-cm0001-3',NULL,NULL,'processing',NULL,0,'dewar-cm0001-3-0000480',NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL),(8287,6988,'Default Dewar:cm14451-1',NULL,NULL,'processing',NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL),(8572,7227,'cm14451-2_Dewar1',NULL,NULL,'processing','2016-02-10 13:03:07',0,NULL,NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL),(8578,7231,'Dewar_1',NULL,NULL,'opened',NULL,0,'cm14451-12345',NULL,NULL,NULL,NULL,NULL,'Dewar',NULL,NULL,NULL);
-/*!40000 ALTER TABLE `Dewar` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `DewarLocation`
 --
 
@@ -2503,15 +1836,6 @@ CREATE TABLE `DewarLocation` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `DewarLocation`
---
-
-LOCK TABLES `DewarLocation` WRITE;
-/*!40000 ALTER TABLE `DewarLocation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `DewarLocation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `DewarLocationList`
 --
 
@@ -2524,15 +1848,6 @@ CREATE TABLE `DewarLocationList` (
   PRIMARY KEY (`locationId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='List of locations for dewars';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `DewarLocationList`
---
-
-LOCK TABLES `DewarLocationList` WRITE;
-/*!40000 ALTER TABLE `DewarLocationList` DISABLE KEYS */;
-/*!40000 ALTER TABLE `DewarLocationList` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `DewarRegistry`
@@ -2556,15 +1871,6 @@ CREATE TABLE `DewarRegistry` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `DewarRegistry`
---
-
-LOCK TABLES `DewarRegistry` WRITE;
-/*!40000 ALTER TABLE `DewarRegistry` DISABLE KEYS */;
-/*!40000 ALTER TABLE `DewarRegistry` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `DewarReport`
 --
 
@@ -2584,15 +1890,6 @@ CREATE TABLE `DewarReport` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `DewarReport`
---
-
-LOCK TABLES `DewarReport` WRITE;
-/*!40000 ALTER TABLE `DewarReport` DISABLE KEYS */;
-/*!40000 ALTER TABLE `DewarReport` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `DewarTransportHistory`
 --
 
@@ -2610,15 +1907,6 @@ CREATE TABLE `DewarTransportHistory` (
   CONSTRAINT `DewarTransportHistory_ibfk_1` FOREIGN KEY (`dewarId`) REFERENCES `Dewar` (`dewarId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `DewarTransportHistory`
---
-
-LOCK TABLES `DewarTransportHistory` WRITE;
-/*!40000 ALTER TABLE `DewarTransportHistory` DISABLE KEYS */;
-/*!40000 ALTER TABLE `DewarTransportHistory` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `DiffractionPlan`
@@ -2688,16 +1976,6 @@ CREATE TABLE `DiffractionPlan` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `DiffractionPlan`
---
-
-LOCK TABLES `DiffractionPlan` WRITE;
-/*!40000 ALTER TABLE `DiffractionPlan` DISABLE KEYS */;
-INSERT INTO `DiffractionPlan` VALUES (197784,NULL,'OSC',NULL,NULL,0.2,NULL,NULL,NULL,NULL,NULL,10.5,10.5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,0,NULL,NULL,NULL,1.1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-20 23:50:27',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(197788,NULL,NULL,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,160,100,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-10-26 15:28:12',NULL,150,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,4,162.5,45,330.6),(197792,'XPDF-1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2017-03-22 10:56:32',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-/*!40000 ALTER TABLE `DiffractionPlan` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `EMMicroscope`
 --
 
@@ -2716,15 +1994,6 @@ CREATE TABLE `EMMicroscope` (
   PRIMARY KEY (`emMicroscopeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `EMMicroscope`
---
-
-LOCK TABLES `EMMicroscope` WRITE;
-/*!40000 ALTER TABLE `EMMicroscope` DISABLE KEYS */;
-/*!40000 ALTER TABLE `EMMicroscope` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `EnergyScan`
@@ -2774,17 +2043,8 @@ CREATE TABLE `EnergyScan` (
   CONSTRAINT `ES_ibfk_1` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `ES_ibfk_2` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`),
   CONSTRAINT `ES_ibfk_3` FOREIGN KEY (`blSubSampleId`) REFERENCES `BLSubSample` (`blSubSampleId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=50291 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `EnergyScan`
---
-
-LOCK TABLES `EnergyScan` WRITE;
-/*!40000 ALTER TABLE `EnergyScan` DISABLE KEYS */;
-/*!40000 ALTER TABLE `EnergyScan` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Experiment`
@@ -2809,15 +2069,6 @@ CREATE TABLE `Experiment` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Experiment`
---
-
-LOCK TABLES `Experiment` WRITE;
-/*!40000 ALTER TABLE `Experiment` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Experiment` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ExperimentKindDetails`
 --
 
@@ -2838,15 +2089,6 @@ CREATE TABLE `ExperimentKindDetails` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ExperimentKindDetails`
---
-
-LOCK TABLES `ExperimentKindDetails` WRITE;
-/*!40000 ALTER TABLE `ExperimentKindDetails` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ExperimentKindDetails` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Frame`
 --
 
@@ -2863,15 +2105,6 @@ CREATE TABLE `Frame` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Frame`
---
-
-LOCK TABLES `Frame` WRITE;
-/*!40000 ALTER TABLE `Frame` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Frame` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `FrameList`
 --
 
@@ -2884,15 +2117,6 @@ CREATE TABLE `FrameList` (
   PRIMARY KEY (`frameListId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `FrameList`
---
-
-LOCK TABLES `FrameList` WRITE;
-/*!40000 ALTER TABLE `FrameList` DISABLE KEYS */;
-/*!40000 ALTER TABLE `FrameList` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `FrameSet`
@@ -2918,15 +2142,6 @@ CREATE TABLE `FrameSet` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `FrameSet`
---
-
-LOCK TABLES `FrameSet` WRITE;
-/*!40000 ALTER TABLE `FrameSet` DISABLE KEYS */;
-/*!40000 ALTER TABLE `FrameSet` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `FrameToList`
 --
 
@@ -2946,15 +2161,6 @@ CREATE TABLE `FrameToList` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `FrameToList`
---
-
-LOCK TABLES `FrameToList` WRITE;
-/*!40000 ALTER TABLE `FrameToList` DISABLE KEYS */;
-/*!40000 ALTER TABLE `FrameToList` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `GeometryClassname`
 --
 
@@ -2968,15 +2174,6 @@ CREATE TABLE `GeometryClassname` (
   PRIMARY KEY (`geometryClassnameId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `GeometryClassname`
---
-
-LOCK TABLES `GeometryClassname` WRITE;
-/*!40000 ALTER TABLE `GeometryClassname` DISABLE KEYS */;
-/*!40000 ALTER TABLE `GeometryClassname` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `GridImageMap`
@@ -2997,15 +2194,6 @@ CREATE TABLE `GridImageMap` (
   CONSTRAINT `_GridImageMap_ibfk1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `GridImageMap`
---
-
-LOCK TABLES `GridImageMap` WRITE;
-/*!40000 ALTER TABLE `GridImageMap` DISABLE KEYS */;
-/*!40000 ALTER TABLE `GridImageMap` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `GridInfo`
@@ -3039,15 +2227,6 @@ CREATE TABLE `GridInfo` (
   CONSTRAINT `GridInfo_ibfk_2` FOREIGN KEY (`dataCollectionGroupId`) REFERENCES `DataCollectionGroup` (`dataCollectionGroupId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `GridInfo`
---
-
-LOCK TABLES `GridInfo` WRITE;
-/*!40000 ALTER TABLE `GridInfo` DISABLE KEYS */;
-/*!40000 ALTER TABLE `GridInfo` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Image`
@@ -3084,16 +2263,6 @@ CREATE TABLE `Image` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Image`
---
-
-LOCK TABLES `Image` WRITE;
-/*!40000 ALTER TABLE `Image` DISABLE KEYS */;
-INSERT INTO `Image` VALUES (274837165,1052494,1,'xtal1_1_0001.cbf','/dls/i03/data/2016/cm14451-2/20160413/test_xtal',0,'/dls/i03/data/2016/cm14451-2/jpegs/20160413/test_xtal/xtal1_1_0001.jpeg','/dls/i03/data/2016/cm14451-2/jpegs/20160413/test_xtal/xtal1_1_0001.thumb.jpeg',294,0,298.847,NULL,NULL,'2016-04-13 11:18:39',NULL,'2016-04-13 11:18:39'),(274837168,1052494,2,'xtal1_1_0002.cbf','/dls/i03/data/2016/cm14451-2/20160413/test_xtal',0,'/dls/i03/data/2016/cm14451-2/jpegs/20160413/test_xtal/xtal1_1_0002.jpeg','/dls/i03/data/2016/cm14451-2/jpegs/20160413/test_xtal/xtal1_1_0002.thumb.jpeg',294,0,298.74,NULL,NULL,'2016-04-13 11:18:50',NULL,'2016-04-13 11:18:50'),(274837177,1052503,1,'xtal1_3_0001.cbf','/dls/i03/data/2016/cm14451-2/20160413/test_xtal',0,'/dls/i03/data/2016/cm14451-2/jpegs/20160413/test_xtal/xtal1_3_0001.jpeg','/dls/i03/data/2016/cm14451-2/jpegs/20160413/test_xtal/xtal1_3_0001.thumb.jpeg',294,0,302.004,NULL,NULL,'2016-04-13 11:21:36',NULL,'2016-04-13 11:21:36'),(274837180,1052503,2,'xtal1_3_0002.cbf','/dls/i03/data/2016/cm14451-2/20160413/test_xtal',0,'/dls/i03/data/2016/cm14451-2/jpegs/20160413/test_xtal/xtal1_3_0002.jpeg','/dls/i03/data/2016/cm14451-2/jpegs/20160413/test_xtal/xtal1_3_0002.thumb.jpeg',294,0,301.922,NULL,NULL,'2016-04-13 11:21:45',NULL,'2016-04-13 11:21:45'),(274837183,1052503,3,'xtal1_3_0003.cbf','/dls/i03/data/2016/cm14451-2/20160413/test_xtal',0,'/dls/i03/data/2016/cm14451-2/jpegs/20160413/test_xtal/xtal1_3_0003.jpeg','/dls/i03/data/2016/cm14451-2/jpegs/20160413/test_xtal/xtal1_3_0003.thumb.jpeg',294,0,301.842,NULL,NULL,'2016-04-13 11:21:54',NULL,'2016-04-13 11:21:54'),(284717989,1066786,1,'thau_2_0001.cbf','/dls/i03/data/2016/cm14451-2/gw/20160418/thau/edna_test',0,'/dls/i03/data/2016/cm14451-2/jpegs/gw/20160418/thau/edna_test/thau_2_0001.jpeg','/dls/i03/data/2016/cm14451-2/jpegs/gw/20160418/thau/edna_test/thau_2_0001.thumb.jpeg',294,0,299.987,NULL,NULL,'2016-04-14 02:19:04',NULL,'2016-04-14 02:19:04'),(284718055,1066786,2,'thau_2_0002.cbf','/dls/i03/data/2016/cm14451-2/gw/20160418/thau/edna_test',0,'/dls/i03/data/2016/cm14451-2/jpegs/gw/20160418/thau/edna_test/thau_2_0002.jpeg','/dls/i03/data/2016/cm14451-2/jpegs/gw/20160418/thau/edna_test/thau_2_0002.thumb.jpeg',294,0,299.933,NULL,NULL,'2016-04-14 02:19:04',NULL,'2016-04-14 02:19:04'),(284718118,1066786,3,'thau_2_0003.cbf','/dls/i03/data/2016/cm14451-2/gw/20160418/thau/edna_test',0,'/dls/i03/data/2016/cm14451-2/jpegs/gw/20160418/thau/edna_test/thau_2_0003.jpeg','/dls/i03/data/2016/cm14451-2/jpegs/gw/20160418/thau/edna_test/thau_2_0003.thumb.jpeg',294,0,299.908,NULL,NULL,'2016-04-14 02:19:04',NULL,'2016-04-14 02:19:04');
-/*!40000 ALTER TABLE `Image` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ImageQualityIndicators`
 --
 
@@ -3124,16 +2293,6 @@ CREATE TABLE `ImageQualityIndicators` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ImageQualityIndicators`
---
-
-LOCK TABLES `ImageQualityIndicators` WRITE;
-/*!40000 ALTER TABLE `ImageQualityIndicators` DISABLE KEYS */;
-INSERT INTO `ImageQualityIndicators` VALUES (1052494,1,NULL,NULL,296,296,259,0,2.03,2.03,0,0,0,0,NULL,2.61,NULL,NULL),(1052494,2,NULL,NULL,239,239,224,0,2.12,2.12,0,0,0,0,NULL,2.95,NULL,NULL),(1052503,1,274837177,NULL,217,217,202,0,2.07,2.07,0,0,0,0,NULL,2.99,NULL,NULL),(1052503,2,NULL,NULL,257,257,236,0,2.06,2.06,0,0,0,0,NULL,3.02,NULL,NULL),(1052503,3,NULL,NULL,306,306,278,0,2.04,2.04,0,0,0,0,NULL,2.75,NULL,NULL),(1066786,1,284717989,NULL,1132,1132,872,0,1.63,1.63,0,0,0,0,NULL,2.09,NULL,NULL),(1066786,2,284718055,NULL,848,848,652,0,1.56,1.56,0,0,0,0,NULL,2.03,NULL,NULL),(1066786,3,284718118,NULL,922,922,735,0,1.57,1.57,0,0,0,0,NULL,2.13,NULL,NULL);
-/*!40000 ALTER TABLE `ImageQualityIndicators` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Imager`
 --
 
@@ -3151,16 +2310,6 @@ CREATE TABLE `Imager` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Imager`
---
-
-LOCK TABLES `Imager` WRITE;
-/*!40000 ALTER TABLE `Imager` DISABLE KEYS */;
-INSERT INTO `Imager` VALUES (2,'Imager1 20c',20,'Z125434',1000),(7,'VMXi sim',20,'RI1000-0000',750);
-/*!40000 ALTER TABLE `Imager` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `InspectionType`
 --
 
@@ -3173,16 +2322,6 @@ CREATE TABLE `InspectionType` (
   PRIMARY KEY (`inspectionTypeId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `InspectionType`
---
-
-LOCK TABLES `InspectionType` WRITE;
-/*!40000 ALTER TABLE `InspectionType` DISABLE KEYS */;
-INSERT INTO `InspectionType` VALUES (1,'Visible'),(2,'UV');
-/*!40000 ALTER TABLE `InspectionType` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Instruction`
@@ -3204,15 +2343,6 @@ CREATE TABLE `Instruction` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Instruction`
---
-
-LOCK TABLES `Instruction` WRITE;
-/*!40000 ALTER TABLE `Instruction` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Instruction` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `InstructionSet`
 --
 
@@ -3225,15 +2355,6 @@ CREATE TABLE `InstructionSet` (
   PRIMARY KEY (`instructionSetId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `InstructionSet`
---
-
-LOCK TABLES `InstructionSet` WRITE;
-/*!40000 ALTER TABLE `InstructionSet` DISABLE KEYS */;
-/*!40000 ALTER TABLE `InstructionSet` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `IspybCrystalClass`
@@ -3251,15 +2372,6 @@ CREATE TABLE `IspybCrystalClass` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `IspybCrystalClass`
---
-
-LOCK TABLES `IspybCrystalClass` WRITE;
-/*!40000 ALTER TABLE `IspybCrystalClass` DISABLE KEYS */;
-/*!40000 ALTER TABLE `IspybCrystalClass` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `IspybReference`
 --
 
@@ -3275,15 +2387,6 @@ CREATE TABLE `IspybReference` (
   PRIMARY KEY (`referenceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `IspybReference`
---
-
-LOCK TABLES `IspybReference` WRITE;
-/*!40000 ALTER TABLE `IspybReference` DISABLE KEYS */;
-/*!40000 ALTER TABLE `IspybReference` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `LabContact`
@@ -3313,15 +2416,6 @@ CREATE TABLE `LabContact` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `LabContact`
---
-
-LOCK TABLES `LabContact` WRITE;
-/*!40000 ALTER TABLE `LabContact` DISABLE KEYS */;
-/*!40000 ALTER TABLE `LabContact` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Laboratory`
 --
 
@@ -3345,15 +2439,6 @@ CREATE TABLE `Laboratory` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Laboratory`
---
-
-LOCK TABLES `Laboratory` WRITE;
-/*!40000 ALTER TABLE `Laboratory` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Laboratory` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Log4Stat`
 --
 
@@ -3371,15 +2456,6 @@ CREATE TABLE `Log4Stat` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Log4Stat`
---
-
-LOCK TABLES `Log4Stat` WRITE;
-/*!40000 ALTER TABLE `Log4Stat` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Log4Stat` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `MXMRRun`
@@ -3410,17 +2486,8 @@ CREATE TABLE `MXMRRun` (
   PRIMARY KEY (`mxMRRunId`),
   KEY `mxMRRun_FK1` (`autoProcScalingId`),
   CONSTRAINT `mxMRRun_FK1` FOREIGN KEY (`autoProcScalingId`) REFERENCES `AutoProcScaling` (`autoProcScalingId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=672901 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `MXMRRun`
---
-
-LOCK TABLES `MXMRRun` WRITE;
-/*!40000 ALTER TABLE `MXMRRun` DISABLE KEYS */;
-/*!40000 ALTER TABLE `MXMRRun` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `MXMRRunBlob`
@@ -3440,15 +2507,6 @@ CREATE TABLE `MXMRRunBlob` (
   CONSTRAINT `mxMRRunBlob_FK1` FOREIGN KEY (`mxMRRunId`) REFERENCES `MXMRRun` (`mxMRRunId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `MXMRRunBlob`
---
-
-LOCK TABLES `MXMRRunBlob` WRITE;
-/*!40000 ALTER TABLE `MXMRRunBlob` DISABLE KEYS */;
-/*!40000 ALTER TABLE `MXMRRunBlob` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Macromolecule`
@@ -3475,15 +2533,6 @@ CREATE TABLE `Macromolecule` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Macromolecule`
---
-
-LOCK TABLES `Macromolecule` WRITE;
-/*!40000 ALTER TABLE `Macromolecule` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Macromolecule` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `MacromoleculeRegion`
 --
 
@@ -3502,15 +2551,6 @@ CREATE TABLE `MacromoleculeRegion` (
   CONSTRAINT `MacromoleculeRegionInformationToMacromolecule` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `MacromoleculeRegion`
---
-
-LOCK TABLES `MacromoleculeRegion` WRITE;
-/*!40000 ALTER TABLE `MacromoleculeRegion` DISABLE KEYS */;
-/*!40000 ALTER TABLE `MacromoleculeRegion` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Measurement`
@@ -3542,15 +2582,6 @@ CREATE TABLE `Measurement` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Measurement`
---
-
-LOCK TABLES `Measurement` WRITE;
-/*!40000 ALTER TABLE `Measurement` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Measurement` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `MeasurementToDataCollection`
 --
 
@@ -3571,15 +2602,6 @@ CREATE TABLE `MeasurementToDataCollection` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `MeasurementToDataCollection`
---
-
-LOCK TABLES `MeasurementToDataCollection` WRITE;
-/*!40000 ALTER TABLE `MeasurementToDataCollection` DISABLE KEYS */;
-/*!40000 ALTER TABLE `MeasurementToDataCollection` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `MeasurementUnit`
 --
 
@@ -3593,15 +2615,6 @@ CREATE TABLE `MeasurementUnit` (
   PRIMARY KEY (`measurementUnitId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `MeasurementUnit`
---
-
-LOCK TABLES `MeasurementUnit` WRITE;
-/*!40000 ALTER TABLE `MeasurementUnit` DISABLE KEYS */;
-/*!40000 ALTER TABLE `MeasurementUnit` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Merge`
@@ -3627,15 +2640,6 @@ CREATE TABLE `Merge` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Merge`
---
-
-LOCK TABLES `Merge` WRITE;
-/*!40000 ALTER TABLE `Merge` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Merge` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Model`
 --
 
@@ -3657,15 +2661,6 @@ CREATE TABLE `Model` (
   PRIMARY KEY (`modelId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Model`
---
-
-LOCK TABLES `Model` WRITE;
-/*!40000 ALTER TABLE `Model` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Model` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ModelBuilding`
@@ -3693,15 +2688,6 @@ CREATE TABLE `ModelBuilding` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ModelBuilding`
---
-
-LOCK TABLES `ModelBuilding` WRITE;
-/*!40000 ALTER TABLE `ModelBuilding` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ModelBuilding` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ModelList`
 --
 
@@ -3715,15 +2701,6 @@ CREATE TABLE `ModelList` (
   PRIMARY KEY (`modelListId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ModelList`
---
-
-LOCK TABLES `ModelList` WRITE;
-/*!40000 ALTER TABLE `ModelList` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ModelList` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ModelToList`
@@ -3743,15 +2720,6 @@ CREATE TABLE `ModelToList` (
   CONSTRAINT `ModelToListToModel` FOREIGN KEY (`modelId`) REFERENCES `Model` (`modelId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ModelToList`
---
-
-LOCK TABLES `ModelToList` WRITE;
-/*!40000 ALTER TABLE `ModelToList` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ModelToList` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `MotionCorrection`
@@ -3791,15 +2759,6 @@ CREATE TABLE `MotionCorrection` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `MotionCorrection`
---
-
-LOCK TABLES `MotionCorrection` WRITE;
-/*!40000 ALTER TABLE `MotionCorrection` DISABLE KEYS */;
-/*!40000 ALTER TABLE `MotionCorrection` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `MotionCorrectionDrift`
 --
 
@@ -3817,15 +2776,6 @@ CREATE TABLE `MotionCorrectionDrift` (
   CONSTRAINT `MotionCorrectionDrift_ibfk1` FOREIGN KEY (`motionCorrectionId`) REFERENCES `MotionCorrection` (`motionCorrectionId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `MotionCorrectionDrift`
---
-
-LOCK TABLES `MotionCorrectionDrift` WRITE;
-/*!40000 ALTER TABLE `MotionCorrectionDrift` DISABLE KEYS */;
-/*!40000 ALTER TABLE `MotionCorrectionDrift` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `MotorPosition`
@@ -3853,15 +2803,6 @@ CREATE TABLE `MotorPosition` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `MotorPosition`
---
-
-LOCK TABLES `MotorPosition` WRITE;
-/*!40000 ALTER TABLE `MotorPosition` DISABLE KEYS */;
-/*!40000 ALTER TABLE `MotorPosition` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Movie`
 --
 
@@ -3884,15 +2825,6 @@ CREATE TABLE `Movie` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Movie`
---
-
-LOCK TABLES `Movie` WRITE;
-/*!40000 ALTER TABLE `Movie` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Movie` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `PDB`
 --
 
@@ -3907,16 +2839,6 @@ CREATE TABLE `PDB` (
   PRIMARY KEY (`pdbId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `PDB`
---
-
-LOCK TABLES `PDB` WRITE;
-/*!40000 ALTER TABLE `PDB` DISABLE KEYS */;
-INSERT INTO `PDB` VALUES (6,'ceo2','\r\ndata_\r\n_chemical_name_mineral ?CeO2?\r\n_cell_length_a  5.411223\r\n_cell_length_b  5.411223\r\n_cell_length_c  5.411223\r\n_cell_angle_alpha 90\r\n_cell_angle_beta  90\r\n_cell_angle_gamma 90\r\n_cell_volume 158.4478\r\n_symmetry_space_group_name_H-M     \'Fm3m\'\r\nloop_\r\n_symmetry_equiv_pos_as_xyz\r\n	\'-x, -y, -z\'\r\n	\'-x, -y, z\'\r\n	\'-x, -y+1/2, -z+1/2\'\r\n	\'-x, -y+1/2, z+1/2\'\r\n	\'-x, -z, -y\'\r\n	\'-x, -z, y\'\r\n	\'-x, -z+1/2, -y+1/2\'\r\n	\'-x, -z+1/2, y+1/2\'\r\n	\'-x, z, -y\'\r\n	\'-x, z, y\'\r\n	\'-x, z+1/2, -y+1/2\'\r\n	\'-x, z+1/2, y+1/2\'\r\n	\'-x, y, -z\'\r\n	\'-x, y, z\'\r\n	\'-x, y+1/2, -z+1/2\'\r\n	\'-x, y+1/2, z+1/2\'\r\n	\'-x+1/2, -y, -z+1/2\'\r\n	\'-x+1/2, -y, z+1/2\'\r\n	\'-x+1/2, -y+1/2, -z\'\r\n	\'-x+1/2, -y+1/2, z\'\r\n	\'-x+1/2, -z, -y+1/2\'\r\n	\'-x+1/2, -z, y+1/2\'\r\n	\'-x+1/2, -z+1/2, -y\'\r\n	\'-x+1/2, -z+1/2, y\'\r\n	\'-x+1/2, z, -y+1/2\'\r\n	\'-x+1/2, z, y+1/2\'\r\n	\'-x+1/2, z+1/2, -y\'\r\n	\'-x+1/2, z+1/2, y\'\r\n	\'-x+1/2, y, -z+1/2\'\r\n	\'-x+1/2, y, z+1/2\'\r\n	\'-x+1/2, y+1/2, -z\'\r\n	\'-x+1/2, y+1/2, z\'\r\n	\'-y, -x, -z\'\r\n	\'-y, -x, z\'\r\n	\'-y, -x+1/2, -z+1/2\'\r\n	\'-y, -x+1/2, z+1/2\'\r\n	\'-y, -z, -x\'\r\n	\'-y, -z, x\'\r\n	\'-y, -z+1/2, -x+1/2\'\r\n	\'-y, -z+1/2, x+1/2\'\r\n	\'-y, z, -x\'\r\n	\'-y, z, x\'\r\n	\'-y, z+1/2, -x+1/2\'\r\n	\'-y, z+1/2, x+1/2\'\r\n	\'-y, x, -z\'\r\n	\'-y, x, z\'\r\n	\'-y, x+1/2, -z+1/2\'\r\n	\'-y, x+1/2, z+1/2\'\r\n	\'-y+1/2, -x, -z+1/2\'\r\n	\'-y+1/2, -x, z+1/2\'\r\n	\'-y+1/2, -x+1/2, -z\'\r\n	\'-y+1/2, -x+1/2, z\'\r\n	\'-y+1/2, -z, -x+1/2\'\r\n	\'-y+1/2, -z, x+1/2\'\r\n	\'-y+1/2, -z+1/2, -x\'\r\n	\'-y+1/2, -z+1/2, x\'\r\n	\'-y+1/2, z, -x+1/2\'\r\n	\'-y+1/2, z, x+1/2\'\r\n	\'-y+1/2, z+1/2, -x\'\r\n	\'-y+1/2, z+1/2, x\'\r\n	\'-y+1/2, x, -z+1/2\'\r\n	\'-y+1/2, x, z+1/2\'\r\n	\'-y+1/2, x+1/2, -z\'\r\n	\'-y+1/2, x+1/2, z\'\r\n	\'-z, -x, -y\'\r\n	\'-z, -x, y\'\r\n	\'-z, -x+1/2, -y+1/2\'\r\n	\'-z, -x+1/2, y+1/2\'\r\n	\'-z, -y, -x\'\r\n	\'-z, -y, x\'\r\n	\'-z, -y+1/2, -x+1/2\'\r\n	\'-z, -y+1/2, x+1/2\'\r\n	\'-z, y, -x\'\r\n	\'-z, y, x\'\r\n	\'-z, y+1/2, -x+1/2\'\r\n	\'-z, y+1/2, x+1/2\'\r\n	\'-z, x, -y\'\r\n	\'-z, x, y\'\r\n	\'-z, x+1/2, -y+1/2\'\r\n	\'-z, x+1/2, y+1/2\'\r\n	\'-z+1/2, -x, -y+1/2\'\r\n	\'-z+1/2, -x, y+1/2\'\r\n	\'-z+1/2, -x+1/2, -y\'\r\n	\'-z+1/2, -x+1/2, y\'\r\n	\'-z+1/2, -y, -x+1/2\'\r\n	\'-z+1/2, -y, x+1/2\'\r\n	\'-z+1/2, -y+1/2, -x\'\r\n	\'-z+1/2, -y+1/2, x\'\r\n	\'-z+1/2, y, -x+1/2\'\r\n	\'-z+1/2, y, x+1/2\'\r\n	\'-z+1/2, y+1/2, -x\'\r\n	\'-z+1/2, y+1/2, x\'\r\n	\'-z+1/2, x, -y+1/2\'\r\n	\'-z+1/2, x, y+1/2\'\r\n	\'-z+1/2, x+1/2, -y\'\r\n	\'-z+1/2, x+1/2, y\'\r\n	\'z, -x, -y\'\r\n	\'z, -x, y\'\r\n	\'z, -x+1/2, -y+1/2\'\r\n	\'z, -x+1/2, y+1/2\'\r\n	\'z, -y, -x\'\r\n	\'z, -y, x\'\r\n	\'z, -y+1/2, -x+1/2\'\r\n	\'z, -y+1/2, x+1/2\'\r\n	\'z, y, -x\'\r\n	\'z, y, x\'\r\n	\'z, y+1/2, -x+1/2\'\r\n	\'z, y+1/2, x+1/2\'\r\n	\'z, x, -y\'\r\n	\'z, x, y\'\r\n	\'z, x+1/2, -y+1/2\'\r\n	\'z, x+1/2, y+1/2\'\r\n	\'z+1/2, -x, -y+1/2\'\r\n	\'z+1/2, -x, y+1/2\'\r\n	\'z+1/2, -x+1/2, -y\'\r\n	\'z+1/2, -x+1/2, y\'\r\n	\'z+1/2, -y, -x+1/2\'\r\n	\'z+1/2, -y, x+1/2\'\r\n	\'z+1/2, -y+1/2, -x\'\r\n	\'z+1/2, -y+1/2, x\'\r\n	\'z+1/2, y, -x+1/2\'\r\n	\'z+1/2, y, x+1/2\'\r\n	\'z+1/2, y+1/2, -x\'\r\n	\'z+1/2, y+1/2, x\'\r\n	\'z+1/2, x, -y+1/2\'\r\n	\'z+1/2, x, y+1/2\'\r\n	\'z+1/2, x+1/2, -y\'\r\n	\'z+1/2, x+1/2, y\'\r\n	\'y, -x, -z\'\r\n	\'y, -x, z\'\r\n	\'y, -x+1/2, -z+1/2\'\r\n	\'y, -x+1/2, z+1/2\'\r\n	\'y, -z, -x\'\r\n	\'y, -z, x\'\r\n	\'y, -z+1/2, -x+1/2\'\r\n	\'y, -z+1/2, x+1/2\'\r\n	\'y, z, -x\'\r\n	\'y, z, x\'\r\n	\'y, z+1/2, -x+1/2\'\r\n	\'y, z+1/2, x+1/2\'\r\n	\'y, x, -z\'\r\n	\'y, x, z\'\r\n	\'y, x+1/2, -z+1/2\'\r\n	\'y, x+1/2, z+1/2\'\r\n	\'y+1/2, -x, -z+1/2\'\r\n	\'y+1/2, -x, z+1/2\'\r\n	\'y+1/2, -x+1/2, -z\'\r\n	\'y+1/2, -x+1/2, z\'\r\n	\'y+1/2, -z, -x+1/2\'\r\n	\'y+1/2, -z, x+1/2\'\r\n	\'y+1/2, -z+1/2, -x\'\r\n	\'y+1/2, -z+1/2, x\'\r\n	\'y+1/2, z, -x+1/2\'\r\n	\'y+1/2, z, x+1/2\'\r\n	\'y+1/2, z+1/2, -x\'\r\n	\'y+1/2, z+1/2, x\'\r\n	\'y+1/2, x, -z+1/2\'\r\n	\'y+1/2, x, z+1/2\'\r\n	\'y+1/2, x+1/2, -z\'\r\n	\'y+1/2, x+1/2, z\'\r\n	\'x, -y, -z\'\r\n	\'x, -y, z\'\r\n	\'x, -y+1/2, -z+1/2\'\r\n	\'x, -y+1/2, z+1/2\'\r\n	\'x, -z, -y\'\r\n	\'x, -z, y\'\r\n	\'x, -z+1/2, -y+1/2\'\r\n	\'x, -z+1/2, y+1/2\'\r\n	\'x, z, -y\'\r\n	\'x, z, y\'\r\n	\'x, z+1/2, -y+1/2\'\r\n	\'x, z+1/2, y+1/2\'\r\n	\'x, y, -z\'\r\n	\'x, y, z\'\r\n	\'x, y+1/2, -z+1/2\'\r\n	\'x, y+1/2, z+1/2\'\r\n	\'x+1/2, -y, -z+1/2\'\r\n	\'x+1/2, -y, z+1/2\'\r\n	\'x+1/2, -y+1/2, -z\'\r\n	\'x+1/2, -y+1/2, z\'\r\n	\'x+1/2, -z, -y+1/2\'\r\n	\'x+1/2, -z, y+1/2\'\r\n	\'x+1/2, -z+1/2, -y\'\r\n	\'x+1/2, -z+1/2, y\'\r\n	\'x+1/2, z, -y+1/2\'\r\n	\'x+1/2, z, y+1/2\'\r\n	\'x+1/2, z+1/2, -y\'\r\n	\'x+1/2, z+1/2, y\'\r\n	\'x+1/2, y, -z+1/2\'\r\n	\'x+1/2, y, z+1/2\'\r\n	\'x+1/2, y+1/2, -z\'\r\n	\'x+1/2, y+1/2, z\'\r\nloop_\r\n_atom_site_label\r\n_atom_site_type_symbol\r\n_atom_site_symmetry_multiplicity\r\n_atom_site_fract_x\r\n_atom_site_fract_y\r\n_atom_site_fract_z\r\n_atom_site_occupancy\r\n_atom_site_B_iso_or_equiv\r\nCe1 Ce   0 0 0 0 1 0.127911\r\nO1 O   0 0.25 0.25 0.25 1 0.07795472',NULL);
-/*!40000 ALTER TABLE `PDB` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `PDBEntry`
@@ -3953,15 +2875,6 @@ CREATE TABLE `PDBEntry` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `PDBEntry`
---
-
-LOCK TABLES `PDBEntry` WRITE;
-/*!40000 ALTER TABLE `PDBEntry` DISABLE KEYS */;
-/*!40000 ALTER TABLE `PDBEntry` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `PDBEntry_has_AutoProcProgram`
 --
 
@@ -3982,15 +2895,6 @@ CREATE TABLE `PDBEntry_has_AutoProcProgram` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `PDBEntry_has_AutoProcProgram`
---
-
-LOCK TABLES `PDBEntry_has_AutoProcProgram` WRITE;
-/*!40000 ALTER TABLE `PDBEntry_has_AutoProcProgram` DISABLE KEYS */;
-/*!40000 ALTER TABLE `PDBEntry_has_AutoProcProgram` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `PHPSession`
 --
 
@@ -4004,15 +2908,6 @@ CREATE TABLE `PHPSession` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `PHPSession`
---
-
-LOCK TABLES `PHPSession` WRITE;
-/*!40000 ALTER TABLE `PHPSession` DISABLE KEYS */;
-/*!40000 ALTER TABLE `PHPSession` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Particle`
@@ -4033,15 +2928,6 @@ CREATE TABLE `Particle` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Particle`
---
-
-LOCK TABLES `Particle` WRITE;
-/*!40000 ALTER TABLE `Particle` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Particle` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Permission`
 --
 
@@ -4055,16 +2941,6 @@ CREATE TABLE `Permission` (
   PRIMARY KEY (`permissionId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Permission`
---
-
-LOCK TABLES `Permission` WRITE;
-/*!40000 ALTER TABLE `Permission` DISABLE KEYS */;
-INSERT INTO `Permission` VALUES (1,'mx_admin','MX Administrator'),(2,'manage_groups','Manage User Groups'),(4,'manage_perms','Manage User Group Permissions'),(5,'global_stats','View Global Statistics'),(6,'fault_view','View Fault Reports'),(7,'saxs_admin','SAXS Administrator'),(8,'em_admin','EM Administrator'),(9,'gen_admin','Powder Admin'),(10,'tomo_admin','Tomo Admin'),(11,'super_admin','Site Admin'),(12,'fault_global','Globally edit all faults'),(13,'schedules','Manage Imaging Schedules'),(15,'schedule_comps','Manage Imaging Schedule Components'),(16,'imaging_dash','Imaging Dashboard'),(17,'vmxi_queue','VMXi Data Collection Queue'),(18,'sm_admin','Small Molecule Admin');
-/*!40000 ALTER TABLE `Permission` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Person`
@@ -4098,16 +2974,6 @@ CREATE TABLE `Person` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Person`
---
-
-LOCK TABLES `Person` WRITE;
-/*!40000 ALTER TABLE `Person` DISABLE KEYS */;
-INSERT INTO `Person` VALUES (1,NULL,NULL,NULL,'McBoatface','Boaty','Mr',NULL,NULL,'boaty',NULL,'2016-03-20 13:56:45','a:1:{s:9:\"container\";N;}',NULL),(46266,NULL,NULL,NULL,NULL,NULL,'User',NULL,NULL,NULL,NULL,'2016-03-16 15:53:55',NULL,NULL),(46269,NULL,NULL,NULL,NULL,NULL,'User',NULL,NULL,NULL,NULL,'2016-03-16 15:59:22',NULL,NULL);
-/*!40000 ALTER TABLE `Person` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Phasing`
 --
 
@@ -4136,15 +3002,6 @@ CREATE TABLE `Phasing` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Phasing`
---
-
-LOCK TABLES `Phasing` WRITE;
-/*!40000 ALTER TABLE `Phasing` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Phasing` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `PhasingAnalysis`
 --
 
@@ -4157,15 +3014,6 @@ CREATE TABLE `PhasingAnalysis` (
   PRIMARY KEY (`phasingAnalysisId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `PhasingAnalysis`
---
-
-LOCK TABLES `PhasingAnalysis` WRITE;
-/*!40000 ALTER TABLE `PhasingAnalysis` DISABLE KEYS */;
-/*!40000 ALTER TABLE `PhasingAnalysis` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `PhasingProgramAttachment`
@@ -4188,15 +3036,6 @@ CREATE TABLE `PhasingProgramAttachment` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `PhasingProgramAttachment`
---
-
-LOCK TABLES `PhasingProgramAttachment` WRITE;
-/*!40000 ALTER TABLE `PhasingProgramAttachment` DISABLE KEYS */;
-/*!40000 ALTER TABLE `PhasingProgramAttachment` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `PhasingProgramRun`
 --
 
@@ -4216,15 +3055,6 @@ CREATE TABLE `PhasingProgramRun` (
   PRIMARY KEY (`phasingProgramRunId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `PhasingProgramRun`
---
-
-LOCK TABLES `PhasingProgramRun` WRITE;
-/*!40000 ALTER TABLE `PhasingProgramRun` DISABLE KEYS */;
-/*!40000 ALTER TABLE `PhasingProgramRun` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `PhasingStatistics`
@@ -4255,15 +3085,6 @@ CREATE TABLE `PhasingStatistics` (
   CONSTRAINT `fk_PhasingStatistics_phasingStep` FOREIGN KEY (`phasingStepId`) REFERENCES `PhasingStep` (`phasingStepId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `PhasingStatistics`
---
-
-LOCK TABLES `PhasingStatistics` WRITE;
-/*!40000 ALTER TABLE `PhasingStatistics` DISABLE KEYS */;
-/*!40000 ALTER TABLE `PhasingStatistics` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `PhasingStep`
@@ -4298,15 +3119,6 @@ CREATE TABLE `PhasingStep` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `PhasingStep`
---
-
-LOCK TABLES `PhasingStep` WRITE;
-/*!40000 ALTER TABLE `PhasingStep` DISABLE KEYS */;
-/*!40000 ALTER TABLE `PhasingStep` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Phasing_has_Scaling`
 --
 
@@ -4328,15 +3140,6 @@ CREATE TABLE `Phasing_has_Scaling` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Phasing_has_Scaling`
---
-
-LOCK TABLES `Phasing_has_Scaling` WRITE;
-/*!40000 ALTER TABLE `Phasing_has_Scaling` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Phasing_has_Scaling` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `PlateGroup`
 --
 
@@ -4350,15 +3153,6 @@ CREATE TABLE `PlateGroup` (
   PRIMARY KEY (`plateGroupId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `PlateGroup`
---
-
-LOCK TABLES `PlateGroup` WRITE;
-/*!40000 ALTER TABLE `PlateGroup` DISABLE KEYS */;
-/*!40000 ALTER TABLE `PlateGroup` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `PlateType`
@@ -4379,15 +3173,6 @@ CREATE TABLE `PlateType` (
   KEY `PlateTypeToExperiment` (`experimentId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `PlateType`
---
-
-LOCK TABLES `PlateType` WRITE;
-/*!40000 ALTER TABLE `PlateType` DISABLE KEYS */;
-/*!40000 ALTER TABLE `PlateType` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Position`
@@ -4412,16 +3197,6 @@ CREATE TABLE `Position` (
   CONSTRAINT `Position_relativePositionfk_1` FOREIGN KEY (`relativePositionId`) REFERENCES `Position` (`positionId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Position`
---
-
-LOCK TABLES `Position` WRITE;
-/*!40000 ALTER TABLE `Position` DISABLE KEYS */;
-INSERT INTO `Position` VALUES (2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-/*!40000 ALTER TABLE `Position` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `PreparePhasingData`
@@ -4449,15 +3224,6 @@ CREATE TABLE `PreparePhasingData` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `PreparePhasingData`
---
-
-LOCK TABLES `PreparePhasingData` WRITE;
-/*!40000 ALTER TABLE `PreparePhasingData` DISABLE KEYS */;
-/*!40000 ALTER TABLE `PreparePhasingData` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ProcessingJob`
 --
 
@@ -4477,16 +3243,6 @@ CREATE TABLE `ProcessingJob` (
   CONSTRAINT `ProcessingJob_ibfk1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='From this we get both job times and lag times';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ProcessingJob`
---
-
-LOCK TABLES `ProcessingJob` WRITE;
-/*!40000 ALTER TABLE `ProcessingJob` DISABLE KEYS */;
-INSERT INTO `ProcessingJob` VALUES (5,1052503,'test job 01','Testing the job submission system','2017-10-16 11:02:12','DIALS/xia2',0);
-/*!40000 ALTER TABLE `ProcessingJob` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ProcessingJobImageSweep`
@@ -4510,16 +3266,6 @@ CREATE TABLE `ProcessingJobImageSweep` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ProcessingJobImageSweep`
---
-
-LOCK TABLES `ProcessingJobImageSweep` WRITE;
-/*!40000 ALTER TABLE `ProcessingJobImageSweep` DISABLE KEYS */;
-INSERT INTO `ProcessingJobImageSweep` VALUES (5,5,1052503,1,270),(8,5,1052503,271,360);
-/*!40000 ALTER TABLE `ProcessingJobImageSweep` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ProcessingJobParameter`
 --
 
@@ -4536,16 +3282,6 @@ CREATE TABLE `ProcessingJobParameter` (
   CONSTRAINT `ProcessingJobParameter_ibfk1` FOREIGN KEY (`processingJobId`) REFERENCES `ProcessingJob` (`processingJobId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ProcessingJobParameter`
---
-
-LOCK TABLES `ProcessingJobParameter` WRITE;
-/*!40000 ALTER TABLE `ProcessingJobParameter` DISABLE KEYS */;
-INSERT INTO `ProcessingJobParameter` VALUES (5,5,'vortex factor','1.8*10^102'),(8,5,'80s factor','0.87*10^-93');
-/*!40000 ALTER TABLE `ProcessingJobParameter` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Project`
@@ -4567,15 +3303,6 @@ CREATE TABLE `Project` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Project`
---
-
-LOCK TABLES `Project` WRITE;
-/*!40000 ALTER TABLE `Project` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Project` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Project_has_BLSample`
 --
 
@@ -4591,15 +3318,6 @@ CREATE TABLE `Project_has_BLSample` (
   CONSTRAINT `Project_has_BLSample_FK2` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Project_has_BLSample`
---
-
-LOCK TABLES `Project_has_BLSample` WRITE;
-/*!40000 ALTER TABLE `Project_has_BLSample` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Project_has_BLSample` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Project_has_DCGroup`
@@ -4619,15 +3337,6 @@ CREATE TABLE `Project_has_DCGroup` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Project_has_DCGroup`
---
-
-LOCK TABLES `Project_has_DCGroup` WRITE;
-/*!40000 ALTER TABLE `Project_has_DCGroup` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Project_has_DCGroup` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Project_has_EnergyScan`
 --
 
@@ -4643,15 +3352,6 @@ CREATE TABLE `Project_has_EnergyScan` (
   CONSTRAINT `project_has_energyscan_FK2` FOREIGN KEY (`energyScanId`) REFERENCES `EnergyScan` (`energyScanId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Project_has_EnergyScan`
---
-
-LOCK TABLES `Project_has_EnergyScan` WRITE;
-/*!40000 ALTER TABLE `Project_has_EnergyScan` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Project_has_EnergyScan` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Project_has_Person`
@@ -4671,15 +3371,6 @@ CREATE TABLE `Project_has_Person` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Project_has_Person`
---
-
-LOCK TABLES `Project_has_Person` WRITE;
-/*!40000 ALTER TABLE `Project_has_Person` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Project_has_Person` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Project_has_Protein`
 --
 
@@ -4695,15 +3386,6 @@ CREATE TABLE `Project_has_Protein` (
   CONSTRAINT `project_has_protein_FK2` FOREIGN KEY (`proteinId`) REFERENCES `Protein` (`proteinId`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Project_has_Protein`
---
-
-LOCK TABLES `Project_has_Protein` WRITE;
-/*!40000 ALTER TABLE `Project_has_Protein` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Project_has_Protein` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Project_has_Session`
@@ -4723,15 +3405,6 @@ CREATE TABLE `Project_has_Session` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Project_has_Session`
---
-
-LOCK TABLES `Project_has_Session` WRITE;
-/*!40000 ALTER TABLE `Project_has_Session` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Project_has_Session` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Project_has_Shipping`
 --
 
@@ -4747,15 +3420,6 @@ CREATE TABLE `Project_has_Shipping` (
   CONSTRAINT `project_has_shipping_FK2` FOREIGN KEY (`shippingId`) REFERENCES `Shipping` (`shippingId`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Project_has_Shipping`
---
-
-LOCK TABLES `Project_has_Shipping` WRITE;
-/*!40000 ALTER TABLE `Project_has_Shipping` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Project_has_Shipping` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Project_has_User`
@@ -4775,15 +3439,6 @@ CREATE TABLE `Project_has_User` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Project_has_User`
---
-
-LOCK TABLES `Project_has_User` WRITE;
-/*!40000 ALTER TABLE `Project_has_User` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Project_has_User` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Project_has_XFEFSpectrum`
 --
 
@@ -4799,15 +3454,6 @@ CREATE TABLE `Project_has_XFEFSpectrum` (
   CONSTRAINT `project_has_xfefspectrum_FK2` FOREIGN KEY (`xfeFluorescenceSpectrumId`) REFERENCES `XFEFluorescenceSpectrum` (`xfeFluorescenceSpectrumId`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Project_has_XFEFSpectrum`
---
-
-LOCK TABLES `Project_has_XFEFSpectrum` WRITE;
-/*!40000 ALTER TABLE `Project_has_XFEFSpectrum` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Project_has_XFEFSpectrum` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Proposal`
@@ -4833,16 +3479,6 @@ CREATE TABLE `Proposal` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Proposal`
---
-
-LOCK TABLES `Proposal` WRITE;
-/*!40000 ALTER TABLE `Proposal` DISABLE KEYS */;
-INSERT INTO `Proposal` VALUES (37027,1,'I03 Commissioning Directory 2016','cm','14451','2015-12-21 15:20:43',NULL,NULL),(141666,46266,'Test Proposal cm-0001','cm','1','2016-03-16 16:01:34',NULL,NULL);
-/*!40000 ALTER TABLE `Proposal` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ProposalHasPerson`
 --
 
@@ -4861,16 +3497,6 @@ CREATE TABLE `ProposalHasPerson` (
   CONSTRAINT `fk_ProposalHasPerson_Proposal` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ProposalHasPerson`
---
-
-LOCK TABLES `ProposalHasPerson` WRITE;
-/*!40000 ALTER TABLE `ProposalHasPerson` DISABLE KEYS */;
-INSERT INTO `ProposalHasPerson` VALUES (4,37027,1,'Principal Investigator');
-/*!40000 ALTER TABLE `ProposalHasPerson` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Protein`
@@ -4911,16 +3537,6 @@ CREATE TABLE `Protein` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Protein`
---
-
-LOCK TABLES `Protein` WRITE;
-/*!40000 ALTER TABLE `Protein` DISABLE KEYS */;
-INSERT INTO `Protein` VALUES (4380,141666,'Protein 01','PRT-01',NULL,NULL,NULL,'2016-03-17 15:57:52',0,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL),(4383,141666,'Protein 02','PRT-02',NULL,NULL,NULL,'2016-03-17 16:02:07',0,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL),(4386,141666,'Protein 03','PRT-03',NULL,NULL,NULL,'2016-03-17 16:02:07',0,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL),(4389,141666,'Protein 04','PRT-04',NULL,NULL,NULL,'2016-03-17 16:02:07',0,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL),(4392,141666,'Protein 05','PRT-05',NULL,NULL,NULL,'2016-03-17 16:02:07',0,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL),(4395,141666,'Protein 06','PRT-06',NULL,NULL,NULL,'2016-03-17 16:02:07',0,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL),(4398,141666,'Protein 07','PRT-07',NULL,NULL,NULL,'2016-03-17 16:02:07',0,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL),(4401,141666,'Protein 08','PRT-08',NULL,NULL,NULL,'2016-03-17 16:02:07',0,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL),(4404,141666,'Protein 09','PRT-09',NULL,NULL,NULL,'2016-03-17 16:02:07',0,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL),(4407,141666,'Protein 10','PRT-10',NULL,NULL,NULL,'2016-03-17 16:02:07',0,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL),(4410,141666,'Protein 11','PRT-11',NULL,NULL,NULL,'2016-03-17 16:02:07',0,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL),(4413,141666,'Protein 12','PRT-12',NULL,NULL,NULL,'2016-03-17 16:02:07',0,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL),(121393,37027,'therm','therm',NULL,NULL,NULL,'2016-01-13 13:50:20',0,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL),(123491,37027,NULL,'thau',NULL,NULL,NULL,'2016-02-24 12:12:16',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(123497,37027,'XPDF comp1','xpdf-comp-01',NULL,NULL,NULL,'2017-03-23 22:03:40',0,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL);
-/*!40000 ALTER TABLE `Protein` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Protein_has_PDB`
 --
 
@@ -4938,16 +3554,6 @@ CREATE TABLE `Protein_has_PDB` (
   CONSTRAINT `Protein_Has_PDB_fk2` FOREIGN KEY (`pdbid`) REFERENCES `PDB` (`pdbId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Protein_has_PDB`
---
-
-LOCK TABLES `Protein_has_PDB` WRITE;
-/*!40000 ALTER TABLE `Protein_has_PDB` DISABLE KEYS */;
-INSERT INTO `Protein_has_PDB` VALUES (5,123497,6);
-/*!40000 ALTER TABLE `Protein_has_PDB` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Reprocessing`
@@ -4971,15 +3577,6 @@ CREATE TABLE `Reprocessing` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Reprocessing`
---
-
-LOCK TABLES `Reprocessing` WRITE;
-/*!40000 ALTER TABLE `Reprocessing` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Reprocessing` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ReprocessingImageSweep`
 --
 
@@ -5001,15 +3598,6 @@ CREATE TABLE `ReprocessingImageSweep` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ReprocessingImageSweep`
---
-
-LOCK TABLES `ReprocessingImageSweep` WRITE;
-/*!40000 ALTER TABLE `ReprocessingImageSweep` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ReprocessingImageSweep` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ReprocessingParameter`
 --
 
@@ -5026,15 +3614,6 @@ CREATE TABLE `ReprocessingParameter` (
   CONSTRAINT `ReprocessingParameter_ibfk1` FOREIGN KEY (`reprocessingId`) REFERENCES `Reprocessing` (`reprocessingId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ReprocessingParameter`
---
-
-LOCK TABLES `ReprocessingParameter` WRITE;
-/*!40000 ALTER TABLE `ReprocessingParameter` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ReprocessingParameter` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `RobotAction`
@@ -5064,15 +3643,6 @@ CREATE TABLE `RobotAction` (
   CONSTRAINT `RobotAction_FK2` FOREIGN KEY (`blsampleId`) REFERENCES `BLSample` (`blSampleId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Robot actions as reported by GDA';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `RobotAction`
---
-
-LOCK TABLES `RobotAction` WRITE;
-/*!40000 ALTER TABLE `RobotAction` DISABLE KEYS */;
-/*!40000 ALTER TABLE `RobotAction` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Run`
@@ -5106,15 +3676,6 @@ CREATE TABLE `Run` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Run`
---
-
-LOCK TABLES `Run` WRITE;
-/*!40000 ALTER TABLE `Run` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Run` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `SAFETYREQUEST`
 --
 
@@ -5132,15 +3693,6 @@ CREATE TABLE `SAFETYREQUEST` (
   `RESPONSEDETAILS` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `SAFETYREQUEST`
---
-
-LOCK TABLES `SAFETYREQUEST` WRITE;
-/*!40000 ALTER TABLE `SAFETYREQUEST` DISABLE KEYS */;
-/*!40000 ALTER TABLE `SAFETYREQUEST` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `SAMPLECELL`
@@ -5161,15 +3713,6 @@ CREATE TABLE `SAMPLECELL` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `SAMPLECELL`
---
-
-LOCK TABLES `SAMPLECELL` WRITE;
-/*!40000 ALTER TABLE `SAMPLECELL` DISABLE KEYS */;
-/*!40000 ALTER TABLE `SAMPLECELL` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `SAMPLEEXPOSUREUNIT`
 --
 
@@ -5186,15 +3729,6 @@ CREATE TABLE `SAMPLEEXPOSUREUNIT` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `SAMPLEEXPOSUREUNIT`
---
-
-LOCK TABLES `SAMPLEEXPOSUREUNIT` WRITE;
-/*!40000 ALTER TABLE `SAMPLEEXPOSUREUNIT` DISABLE KEYS */;
-/*!40000 ALTER TABLE `SAMPLEEXPOSUREUNIT` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `SAXSDATACOLLECTIONGROUP`
 --
 
@@ -5208,15 +3742,6 @@ CREATE TABLE `SAXSDATACOLLECTIONGROUP` (
   PRIMARY KEY (`DATACOLLECTIONGROUPID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `SAXSDATACOLLECTIONGROUP`
---
-
-LOCK TABLES `SAXSDATACOLLECTIONGROUP` WRITE;
-/*!40000 ALTER TABLE `SAXSDATACOLLECTIONGROUP` DISABLE KEYS */;
-/*!40000 ALTER TABLE `SAXSDATACOLLECTIONGROUP` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `SW_onceToken`
@@ -5241,15 +3766,6 @@ CREATE TABLE `SW_onceToken` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `SW_onceToken`
---
-
-LOCK TABLES `SW_onceToken` WRITE;
-/*!40000 ALTER TABLE `SW_onceToken` DISABLE KEYS */;
-/*!40000 ALTER TABLE `SW_onceToken` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `SafetyLevel`
 --
 
@@ -5263,15 +3779,6 @@ CREATE TABLE `SafetyLevel` (
   PRIMARY KEY (`safetyLevelId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `SafetyLevel`
---
-
-LOCK TABLES `SafetyLevel` WRITE;
-/*!40000 ALTER TABLE `SafetyLevel` DISABLE KEYS */;
-/*!40000 ALTER TABLE `SafetyLevel` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `SamplePlate`
@@ -5305,15 +3812,6 @@ CREATE TABLE `SamplePlate` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `SamplePlate`
---
-
-LOCK TABLES `SamplePlate` WRITE;
-/*!40000 ALTER TABLE `SamplePlate` DISABLE KEYS */;
-/*!40000 ALTER TABLE `SamplePlate` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `SamplePlatePosition`
 --
 
@@ -5333,15 +3831,6 @@ CREATE TABLE `SamplePlatePosition` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `SamplePlatePosition`
---
-
-LOCK TABLES `SamplePlatePosition` WRITE;
-/*!40000 ALTER TABLE `SamplePlatePosition` DISABLE KEYS */;
-/*!40000 ALTER TABLE `SamplePlatePosition` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `SaxsDataCollection`
 --
 
@@ -5358,15 +3847,6 @@ CREATE TABLE `SaxsDataCollection` (
   CONSTRAINT `SaxsDataCollectionToExperiment` FOREIGN KEY (`experimentId`) REFERENCES `Experiment` (`experimentId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `SaxsDataCollection`
---
-
-LOCK TABLES `SaxsDataCollection` WRITE;
-/*!40000 ALTER TABLE `SaxsDataCollection` DISABLE KEYS */;
-/*!40000 ALTER TABLE `SaxsDataCollection` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ScanParametersModel`
@@ -5394,16 +3874,6 @@ CREATE TABLE `ScanParametersModel` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ScanParametersModel`
---
-
-LOCK TABLES `ScanParametersModel` WRITE;
-/*!40000 ALTER TABLE `ScanParametersModel` DISABLE KEYS */;
-INSERT INTO `ScanParametersModel` VALUES (4,4,197788,1,0,90,10,NULL,NULL),(7,4,197788,2,90,180,5,NULL,NULL),(10,4,197788,3,180,270,1,NULL,NULL),(13,4,197788,3,270,360,0.5,NULL,NULL),(16,7,197788,4,20,120,10,NULL,NULL),(20,7,197792,1,0,90,5,NULL,NULL),(23,7,197792,2,90,120,1,NULL,NULL);
-/*!40000 ALTER TABLE `ScanParametersModel` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ScanParametersService`
 --
 
@@ -5419,16 +3889,6 @@ CREATE TABLE `ScanParametersService` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ScanParametersService`
---
-
-LOCK TABLES `ScanParametersService` WRITE;
-/*!40000 ALTER TABLE `ScanParametersService` DISABLE KEYS */;
-INSERT INTO `ScanParametersService` VALUES (4,'Temperature','Temperature in Celsius'),(7,'Pressure','Pressure in pascal (Pa)');
-/*!40000 ALTER TABLE `ScanParametersService` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Schedule`
 --
 
@@ -5441,16 +3901,6 @@ CREATE TABLE `Schedule` (
   PRIMARY KEY (`scheduleId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Schedule`
---
-
-LOCK TABLES `Schedule` WRITE;
-/*!40000 ALTER TABLE `Schedule` DISABLE KEYS */;
-INSERT INTO `Schedule` VALUES (1,'Daily - 1 week'),(2,'Schedule 2'),(11,'Fibonacci'),(15,'3 Hour Interval');
-/*!40000 ALTER TABLE `Schedule` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ScheduleComponent`
@@ -5473,16 +3923,6 @@ CREATE TABLE `ScheduleComponent` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ScheduleComponent`
---
-
-LOCK TABLES `ScheduleComponent` WRITE;
-/*!40000 ALTER TABLE `ScheduleComponent` DISABLE KEYS */;
-INSERT INTO `ScheduleComponent` VALUES (1,1,0,1),(2,1,12,1),(3,1,24,1),(4,1,96,1),(5,1,48,1),(6,1,72,1),(8,2,24,1),(11,2,48,2),(14,11,0,1),(17,11,12,1),(20,11,24,1),(23,11,36,1),(26,11,60,1),(29,11,96,1),(32,11,156,1),(35,11,252,1),(38,11,408,1),(41,11,660,1),(44,11,1068,1),(47,11,1728,1),(50,11,2796,1),(54,15,3,1),(57,15,6,1),(60,15,9,1),(63,15,12,1),(66,15,18,1),(69,15,24,1),(72,15,30,1),(75,15,36,1),(78,15,42,1),(81,15,48,1),(84,1,120,1),(87,1,144,1),(90,1,168,1),(93,1,336,1),(96,1,504,1);
-/*!40000 ALTER TABLE `ScheduleComponent` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `SchemaStatus`
 --
 
@@ -5496,18 +3936,8 @@ CREATE TABLE `SchemaStatus` (
   `recordTimeStamp` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`schemaStatusId`),
   UNIQUE KEY `scriptName` (`scriptName`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `SchemaStatus`
---
-
-LOCK TABLES `SchemaStatus` WRITE;
-/*!40000 ALTER TABLE `SchemaStatus` DISABLE KEYS */;
-INSERT INTO `SchemaStatus` VALUES (6,'20180213_BLSample_subLocation.sql','DONE','2018-02-13 13:27:19'),(12,'20180213_DataCollectionFileAttachment_fileType.sql','DONE','2018-02-13 15:12:54');
-/*!40000 ALTER TABLE `SchemaStatus` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Screen`
@@ -5526,15 +3956,6 @@ CREATE TABLE `Screen` (
   CONSTRAINT `Screen_fk1` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Screen`
---
-
-LOCK TABLES `Screen` WRITE;
-/*!40000 ALTER TABLE `Screen` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Screen` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ScreenComponent`
@@ -5558,15 +3979,6 @@ CREATE TABLE `ScreenComponent` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ScreenComponent`
---
-
-LOCK TABLES `ScreenComponent` WRITE;
-/*!40000 ALTER TABLE `ScreenComponent` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ScreenComponent` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ScreenComponentGroup`
 --
 
@@ -5582,15 +3994,6 @@ CREATE TABLE `ScreenComponentGroup` (
   CONSTRAINT `ScreenComponentGroup_fk1` FOREIGN KEY (`screenId`) REFERENCES `Screen` (`screenId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ScreenComponentGroup`
---
-
-LOCK TABLES `ScreenComponentGroup` WRITE;
-/*!40000 ALTER TABLE `ScreenComponentGroup` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ScreenComponentGroup` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Screening`
@@ -5619,16 +4022,6 @@ CREATE TABLE `Screening` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Screening`
---
-
-LOCK TABLES `Screening` WRITE;
-/*!40000 ALTER TABLE `Screening` DISABLE KEYS */;
-INSERT INTO `Screening` VALUES (1894770,1052494,'2016-10-26 08:50:31','mosflm',NULL,'Mosflm native',NULL,1040398,NULL),(1894773,1052494,'2016-10-26 08:50:31','mosflm',NULL,'Mosflm anomalous',NULL,1040398,NULL),(1894774,1052494,'2016-10-26 08:50:31','EDNA MXv1','Standard Native Dataset Multiplicity=3 I/sig=2 Maxlifespan=202 s','EDNAStrategy1',NULL,1040398,NULL),(1894777,1052494,'2016-10-26 08:50:31','EDNA MXv1','strategy with target multiplicity=16, target I/sig=2 Maxlifespan=202 s','EDNAStrategy3',NULL,1040398,NULL),(1894780,1052494,'2016-10-26 08:50:31','EDNA MXv1','Gentle: Target Multiplicity=2 and target I/Sig 2 and Maxlifespan=20 s','EDNAStrategy4',NULL,1040398,NULL),(1894783,1052494,'2016-10-26 08:50:31','EDNA MXv1','Standard Anomalous Dataset Multiplicity=3 I/sig=2 Maxlifespan=202 s','EDNAStrategy2',NULL,1040398,NULL),(1894786,1052494,'2016-10-26 08:50:31','EDNA MXv1','UnderDEV Anomalous Dataset, RadDamage of standard protein','EDNAStrategy5',NULL,1040398,NULL),(1894807,1052503,'2016-10-26 08:50:31','EDNA MXv1','strategy with target multiplicity=16, target I/sig=2 Maxlifespan=202 s','EDNAStrategy3',NULL,1040407,NULL),(1894810,1052503,'2016-10-26 08:50:31','EDNA MXv1','Standard Anomalous Dataset Multiplicity=3 I/sig=2 Maxlifespan=202 s','EDNAStrategy2',NULL,1040407,NULL),(1894812,1052503,'2016-10-26 08:50:31','mosflm',NULL,'Mosflm native',NULL,1040407,NULL),(1894815,1052503,'2016-10-26 08:50:31','mosflm',NULL,'Mosflm anomalous',NULL,1040407,NULL),(1894816,1052503,'2016-10-26 08:50:31','EDNA MXv1','Gentle: Target Multiplicity=2 and target I/Sig 2 and Maxlifespan=20 s','EDNAStrategy4',NULL,1040407,NULL),(1894819,1052503,'2016-10-26 08:50:31','EDNA MXv1','UnderDEV Anomalous Dataset, RadDamage of standard protein','EDNAStrategy5',NULL,1040407,NULL),(1894822,1052503,'2016-10-26 08:50:31','EDNA MXv1','Standard Native Dataset Multiplicity=3 I/sig=2 Maxlifespan=202 s','EDNAStrategy1',NULL,1040407,NULL),(1927968,1066786,'2016-10-26 08:50:31','mosflm',NULL,'Mosflm native',NULL,1054243,NULL),(1927971,1066786,'2016-10-26 08:50:31','mosflm',NULL,'Mosflm anomalous',NULL,1054243,NULL),(1927972,1066786,'2016-10-26 08:50:31','EDNA MXv1','Standard Native Dataset Multiplicity=3 I/sig=2 Maxlifespan=4034 s','EDNAStrategy1',NULL,1054243,NULL),(1927981,1066786,'2016-10-26 08:50:31','EDNA MXv1','Gentle: Target Multiplicity=2 and target I/Sig 2 and Maxlifespan=403 s','EDNAStrategy4',NULL,1054243,NULL),(1927984,1066786,'2016-10-26 08:50:31','EDNA MXv1','strategy with target multiplicity=16, target I/sig=2 Maxlifespan=4034 s','EDNAStrategy3',NULL,1054243,NULL),(1927987,1066786,'2016-10-26 08:50:31','EDNA MXv1','Standard Anomalous Dataset Multiplicity=3 I/sig=2 Maxlifespan=4034 s','EDNAStrategy2',NULL,1054243,NULL),(1927990,1066786,'2016-10-26 08:50:31','EDNA MXv1','UnderDEV Anomalous Dataset, RadDamage of standard protein','EDNAStrategy5',NULL,1054243,NULL);
-/*!40000 ALTER TABLE `Screening` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ScreeningInput`
 --
 
@@ -5651,16 +4044,6 @@ CREATE TABLE `ScreeningInput` (
   CONSTRAINT `ScreeningInput_ibfk_1` FOREIGN KEY (`screeningId`) REFERENCES `Screening` (`screeningId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1013165 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ScreeningInput`
---
-
-LOCK TABLES `ScreeningInput` WRITE;
-/*!40000 ALTER TABLE `ScreeningInput` DISABLE KEYS */;
-INSERT INTO `ScreeningInput` VALUES (983791,1894774,208.731,214.298,NULL,NULL,NULL,NULL,NULL,NULL),(983794,1894777,208.731,214.298,NULL,NULL,NULL,NULL,NULL,NULL),(983797,1894780,208.731,214.298,NULL,NULL,NULL,NULL,NULL,NULL),(983800,1894783,208.731,214.298,NULL,NULL,NULL,NULL,NULL,NULL),(983803,1894786,208.731,214.298,NULL,NULL,NULL,NULL,NULL,NULL),(983821,1894807,208.32,214.339,NULL,NULL,NULL,NULL,NULL,NULL),(983824,1894810,208.32,214.339,NULL,NULL,NULL,NULL,NULL,NULL),(983827,1894816,208.32,214.339,NULL,NULL,NULL,NULL,NULL,NULL),(983830,1894819,208.32,214.339,NULL,NULL,NULL,NULL,NULL,NULL),(983833,1894822,208.32,214.339,NULL,NULL,NULL,NULL,NULL,NULL),(1013146,1927972,208.32,214.339,NULL,NULL,NULL,NULL,NULL,NULL),(1013155,1927981,208.32,214.339,NULL,NULL,NULL,NULL,NULL,NULL),(1013158,1927984,208.32,214.339,NULL,NULL,NULL,NULL,NULL,NULL),(1013161,1927987,208.32,214.339,NULL,NULL,NULL,NULL,NULL,NULL),(1013164,1927990,208.32,214.339,NULL,NULL,NULL,NULL,NULL,NULL);
-/*!40000 ALTER TABLE `ScreeningInput` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ScreeningOutput`
@@ -5704,16 +4087,6 @@ CREATE TABLE `ScreeningOutput` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ScreeningOutput`
---
-
-LOCK TABLES `ScreeningOutput` WRITE;
-/*!40000 ALTER TABLE `ScreeningOutput` DISABLE KEYS */;
-INSERT INTO `ScreeningOutput` VALUES (1489401,1894770,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1489404,1894773,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1489405,1894774,'Labelit: Indexing successful (I23). Integration successful. Strategy calculation successful.',NULL,NULL,0.197,NULL,-0.0094,-0.0618,303,303,0,1.2,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1489408,1894777,'Labelit: Indexing successful (I23). Integration successful. Strategy calculation successful.',NULL,NULL,0.197,NULL,-0.0094,-0.0618,303,303,0,1.2,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1489411,1894780,'Labelit: Indexing successful (I23). Integration successful. Strategy calculation successful.',NULL,NULL,0.197,NULL,-0.0094,-0.0618,303,303,0,1.2,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1489414,1894783,'Labelit: Indexing successful (I23). Integration successful. Strategy calculation successful.',NULL,NULL,0.197,NULL,-0.0094,-0.0618,303,303,0,1.2,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1489417,1894786,'Labelit: Indexing successful (I23). Integration successful. Strategy calculation successful.',NULL,NULL,0.197,NULL,-0.0094,-0.0618,303,303,0,1.2,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1489438,1894807,'Labelit: Indexing successful (I23). Integration successful. Strategy calculation successful.',NULL,NULL,0.184,NULL,0.0495,-0.0405,294,294,0,1.35,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1489441,1894810,'Labelit: Indexing successful (I23). Integration successful. Strategy calculation successful.',NULL,NULL,0.184,NULL,0.0495,-0.0405,294,294,0,1.35,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1489443,1894812,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1.6,NULL,NULL,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1489446,1894815,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1.6,NULL,NULL,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1489447,1894816,'Labelit: Indexing successful (I23). Integration successful. Strategy calculation successful.',NULL,NULL,0.184,NULL,0.0495,-0.0405,294,294,0,1.35,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1489450,1894819,'Labelit: Indexing successful (I23). Integration successful. Strategy calculation successful.',NULL,NULL,0.184,NULL,0.0495,-0.0405,294,294,0,1.35,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1489453,1894822,'Labelit: Indexing successful (I23). Integration successful. Strategy calculation successful.',NULL,NULL,0.184,NULL,0.0495,-0.0405,294,294,0,1.35,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1522596,1927968,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0.8,NULL,NULL,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1522599,1927971,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0.8,NULL,NULL,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1522600,1927972,'Labelit: Indexing successful (P4). Integration successful. Strategy calculation successful.',NULL,NULL,0.166,NULL,0.0195,-0.0105,434,434,0,0.7,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1522609,1927981,'Labelit: Indexing successful (P4). Integration successful. Strategy calculation successful.',NULL,NULL,0.166,NULL,0.0195,-0.0105,434,434,0,0.7,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1522612,1927984,'Labelit: Indexing successful (P4). Integration successful. Strategy calculation successful.',NULL,NULL,0.166,NULL,0.0195,-0.0105,434,434,0,0.7,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1522615,1927987,'Labelit: Indexing successful (P4). Integration successful. Strategy calculation successful.',NULL,NULL,0.166,NULL,0.0195,-0.0105,434,434,0,0.7,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0),(1522618,1927990,'Labelit: Indexing successful (P4). Integration successful. Strategy calculation successful.',NULL,NULL,0.166,NULL,0.0195,-0.0105,434,434,0,0.7,NULL,NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0);
-/*!40000 ALTER TABLE `ScreeningOutput` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ScreeningOutputLattice`
 --
 
@@ -5746,17 +4119,8 @@ CREATE TABLE `ScreeningOutputLattice` (
   PRIMARY KEY (`screeningOutputLatticeId`),
   KEY `ScreeningOutputLattice_FKIndex1` (`screeningOutputId`),
   CONSTRAINT `ScreeningOutputLattice_ibfk_1` FOREIGN KEY (`screeningOutputId`) REFERENCES `ScreeningOutput` (`screeningOutputId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1323848 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ScreeningOutputLattice`
---
-
-LOCK TABLES `ScreeningOutputLattice` WRITE;
-/*!40000 ALTER TABLE `ScreeningOutputLattice` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ScreeningOutputLattice` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ScreeningRank`
@@ -5780,15 +4144,6 @@ CREATE TABLE `ScreeningRank` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ScreeningRank`
---
-
-LOCK TABLES `ScreeningRank` WRITE;
-/*!40000 ALTER TABLE `ScreeningRank` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ScreeningRank` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ScreeningRankSet`
 --
 
@@ -5803,15 +4158,6 @@ CREATE TABLE `ScreeningRankSet` (
   PRIMARY KEY (`screeningRankSetId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ScreeningRankSet`
---
-
-LOCK TABLES `ScreeningRankSet` WRITE;
-/*!40000 ALTER TABLE `ScreeningRankSet` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ScreeningRankSet` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ScreeningStrategy`
@@ -5839,16 +4185,6 @@ CREATE TABLE `ScreeningStrategy` (
   CONSTRAINT `ScreeningStrategy_ibfk_1` FOREIGN KEY (`screeningOutputId`) REFERENCES `ScreeningOutput` (`screeningOutputId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1507124 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ScreeningStrategy`
---
-
-LOCK TABLES `ScreeningStrategy` WRITE;
-/*!40000 ALTER TABLE `ScreeningStrategy` DISABLE KEYS */;
-INSERT INTO `ScreeningStrategy` VALUES (1473909,1489401,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'mosflm - native',NULL,NULL),(1473912,1489404,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'mosflm - anomalous',NULL,NULL),(1473913,1489405,NULL,NULL,NULL,0.428,NULL,NULL,NULL,0,'BEST',1.41,NULL),(1473916,1489408,NULL,NULL,NULL,0.112,NULL,NULL,NULL,0,'BEST',1.41,NULL),(1473919,1489411,NULL,NULL,NULL,0.049,NULL,NULL,NULL,0,'BEST',1.49,NULL),(1473922,1489414,NULL,NULL,NULL,0.365,NULL,NULL,NULL,1,'BEST',1.41,NULL),(1473925,1489417,NULL,NULL,NULL,0.365,NULL,NULL,NULL,1,'BEST',1.41,NULL),(1473946,1489438,NULL,NULL,NULL,0.073,NULL,NULL,NULL,0,'BEST',1.44,NULL),(1473949,1489441,NULL,NULL,NULL,0.333,NULL,NULL,NULL,1,'BEST',1.47,NULL),(1473951,1489443,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'mosflm - native',NULL,NULL),(1473954,1489446,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'mosflm - anomalous',NULL,NULL),(1473955,1489447,NULL,NULL,NULL,0.086,NULL,NULL,NULL,0,'BEST',1.57,NULL),(1473958,1489450,NULL,NULL,NULL,0.333,NULL,NULL,NULL,1,'BEST',1.47,NULL),(1473961,1489453,NULL,NULL,NULL,0.296,NULL,NULL,NULL,0,'BEST',1.44,NULL),(1507101,1522596,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'mosflm - native',NULL,NULL),(1507104,1522599,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'mosflm - anomalous',NULL,NULL),(1507105,1522600,NULL,NULL,NULL,0.01,NULL,NULL,NULL,0,'BEST',1.13,NULL),(1507114,1522609,NULL,NULL,NULL,0.01,NULL,NULL,NULL,0,'BEST',1.23,NULL),(1507117,1522612,NULL,NULL,NULL,0.01,NULL,NULL,NULL,0,'BEST',1.14,NULL),(1507120,1522615,NULL,NULL,NULL,0.01,NULL,NULL,NULL,1,'BEST',1.16,NULL),(1507123,1522618,NULL,NULL,NULL,0.01,NULL,NULL,NULL,1,'BEST',1.16,NULL);
-/*!40000 ALTER TABLE `ScreeningStrategy` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ScreeningStrategySubWedge`
@@ -5880,16 +4216,6 @@ CREATE TABLE `ScreeningStrategySubWedge` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ScreeningStrategySubWedge`
---
-
-LOCK TABLES `ScreeningStrategySubWedge` WRITE;
-/*!40000 ALTER TABLE `ScreeningStrategySubWedge` DISABLE KEYS */;
-INSERT INTO `ScreeningStrategySubWedge` VALUES (1111566,1143792,NULL,'Omega',64,109,0,NULL,1.4,1,NULL,1.22,NULL,33,NULL),(1111569,1143795,NULL,'Omega',74,119,0,NULL,1.4,0.98,NULL,1.22,NULL,33,NULL),(1111570,1143796,1,'Omega',7,40,0.428,100,0.15,1,4.07,1.41,NULL,220,NULL),(1111573,1143799,1,'Omega',30,160.05,0.112,100,0.15,1,16.02,1.41,NULL,867,NULL),(1111576,1143802,1,'Omega',93,123.15,0.049,100,0.15,1,3.71,1.49,NULL,202,NULL),(1111579,1143805,1,'Omega',225,273,0.365,100,0.1,0.997,3.08,1.41,NULL,480,NULL),(1111582,1143808,1,'Omega',225,273,0.365,100,0.1,0.997,3.08,1.41,NULL,480,NULL),(1111603,1143829,1,'Omega',42,171,0.073,100,0.15,1,15.93,1.51,NULL,860,NULL),(1111606,1143832,1,'Omega',39,91.05,0.333,100,0.15,0.999,3.35,1.51,NULL,347,NULL),(1111608,1143834,NULL,'Omega',265,355,0,NULL,0.2,0.99,NULL,1.47,NULL,450,NULL),(1111611,1143837,NULL,'Omega',265,355,0,NULL,0.2,0.92,NULL,1.47,NULL,450,NULL),(1111612,1143838,1,'Omega',7,39.1,0.086,100,0.15,1,3.95,1.57,NULL,215,NULL),(1111615,1143841,1,'Omega',39,91.05,0.333,100,0.15,0.999,3.35,1.51,NULL,347,NULL),(1111618,1143844,1,'Omega',144,175.05,0.296,100,0.15,1,3.83,1.51,NULL,208,NULL),(1123965,1156191,NULL,'Omega',48,93,0,NULL,0.5,0.99,NULL,1.47,NULL,90,NULL),(1123968,1156194,NULL,'Omega',43,88,0,NULL,0.5,0.93,NULL,1.47,NULL,90,NULL),(1123969,1156195,1,'Omega',9,88,0.01,71.7436,0.1,0.999,3.34,1.51,NULL,790,NULL),(1123978,1156204,1,'Omega',10,88,0.01,72.4236,0.1,0.999,3.3,1.51,NULL,780,NULL),(1123981,1156207,1,'Omega',0,360,0.01,16.1595,0.1,1,15.21,1.51,NULL,3600,NULL),(1123984,1156210,1,'Omega',87,239,0.01,72.2048,0.1,0.99,3.29,1.51,NULL,1520,NULL),(1123987,1156213,1,'Omega',87,239,0.01,72.2048,0.1,0.99,3.29,1.51,NULL,1520,NULL);
-/*!40000 ALTER TABLE `ScreeningStrategySubWedge` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ScreeningStrategyWedge`
 --
 
@@ -5917,16 +4243,6 @@ CREATE TABLE `ScreeningStrategyWedge` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ScreeningStrategyWedge`
---
-
-LOCK TABLES `ScreeningStrategyWedge` WRITE;
-/*!40000 ALTER TABLE `ScreeningStrategyWedge` DISABLE KEYS */;
-INSERT INTO `ScreeningStrategyWedge` VALUES (1143792,1473909,1,1.22,1,NULL,NULL,33,NULL,NULL,NULL,NULL,NULL),(1143795,1473912,1,1.22,0.98,NULL,NULL,33,NULL,NULL,NULL,NULL,NULL),(1143796,1473913,1,1.41,1,4.07,0,220,NULL,NULL,NULL,NULL,NULL),(1143799,1473916,1,1.41,1,16.02,0,867,NULL,NULL,NULL,NULL,NULL),(1143802,1473919,1,1.49,1,3.71,0,202,NULL,NULL,NULL,NULL,NULL),(1143805,1473922,1,1.41,0.997,3.08,0,480,NULL,NULL,NULL,NULL,NULL),(1143808,1473925,1,1.41,0.997,3.08,0,480,NULL,NULL,NULL,NULL,NULL),(1143829,1473946,1,1.51,1,15.93,0,860,NULL,NULL,NULL,NULL,NULL),(1143832,1473949,1,1.51,0.999,3.35,0,347,NULL,NULL,NULL,NULL,NULL),(1143834,1473951,1,1.47,0.99,NULL,NULL,450,NULL,NULL,NULL,NULL,NULL),(1143837,1473954,1,1.47,0.92,NULL,NULL,450,NULL,NULL,NULL,NULL,NULL),(1143838,1473955,1,1.57,1,3.95,0,215,NULL,NULL,NULL,NULL,NULL),(1143841,1473958,1,1.51,0.999,3.35,0,347,NULL,NULL,NULL,NULL,NULL),(1143844,1473961,1,1.51,1,3.83,0,208,NULL,NULL,NULL,NULL,NULL),(1156191,1507101,1,1.47,0.99,NULL,NULL,90,NULL,NULL,NULL,NULL,NULL),(1156194,1507104,1,1.47,0.93,NULL,NULL,90,NULL,NULL,NULL,NULL,NULL),(1156195,1507105,1,1.51,0.999,3.34,0,790,NULL,NULL,NULL,NULL,NULL),(1156204,1507114,1,1.51,0.999,3.3,0,780,NULL,NULL,NULL,NULL,NULL),(1156207,1507117,1,1.51,1,15.21,0,3600,NULL,NULL,NULL,NULL,NULL),(1156210,1507120,1,1.51,0.99,3.29,0,1520,NULL,NULL,NULL,NULL,NULL),(1156213,1507123,1,1.51,0.99,3.29,0,1520,NULL,NULL,NULL,NULL,NULL);
-/*!40000 ALTER TABLE `ScreeningStrategyWedge` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `SessionType`
 --
 
@@ -5942,15 +4258,6 @@ CREATE TABLE `SessionType` (
   CONSTRAINT `SessionType_ibfk_1` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `SessionType`
---
-
-LOCK TABLES `SessionType` WRITE;
-/*!40000 ALTER TABLE `SessionType` DISABLE KEYS */;
-/*!40000 ALTER TABLE `SessionType` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Session_has_Person`
@@ -5971,16 +4278,6 @@ CREATE TABLE `Session_has_Person` (
   CONSTRAINT `Session_has_Person_ibfk_2` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Session_has_Person`
---
-
-LOCK TABLES `Session_has_Person` WRITE;
-/*!40000 ALTER TABLE `Session_has_Person` DISABLE KEYS */;
-INSERT INTO `Session_has_Person` VALUES (55167,1,'Co-Investigator',0),(55168,1,'Co-Investigator',0);
-/*!40000 ALTER TABLE `Session_has_Person` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Shipping`
@@ -6038,16 +4335,6 @@ CREATE TABLE `Shipping` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Shipping`
---
-
-LOCK TABLES `Shipping` WRITE;
-/*!40000 ALTER TABLE `Shipping` DISABLE KEYS */;
-INSERT INTO `Shipping` VALUES (474,141666,'cm-0001 1 processing',NULL,NULL,NULL,NULL,NULL,'processing',NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(477,141666,'cm-0001 2 processing',NULL,NULL,NULL,NULL,NULL,'processing',NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(480,141666,'cm-0001 3 processing',NULL,NULL,NULL,NULL,NULL,'processing',NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(6988,37027,'Default Shipping:cm14451-1',NULL,NULL,NULL,NULL,NULL,'processing',NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(7227,37027,'cm14451-2_Shipment1',NULL,NULL,NULL,NULL,NULL,'processing','2016-02-10 13:03:07',NULL,0,'2016-02-10 13:03:07',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(7231,37027,'VMXi Simulator Test shipment',NULL,NULL,NULL,NULL,NULL,'opened',NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-/*!40000 ALTER TABLE `Shipping` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ShippingHasSession`
 --
 
@@ -6064,16 +4351,6 @@ CREATE TABLE `ShippingHasSession` (
   CONSTRAINT `ShippingHasSession_ibfk_2` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ShippingHasSession`
---
-
-LOCK TABLES `ShippingHasSession` WRITE;
-/*!40000 ALTER TABLE `ShippingHasSession` DISABLE KEYS */;
-INSERT INTO `ShippingHasSession` VALUES (474,339525),(477,339528),(480,339531),(6988,55167),(7227,55168);
-/*!40000 ALTER TABLE `ShippingHasSession` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `SpaceGroup`
@@ -6098,15 +4375,6 @@ CREATE TABLE `SpaceGroup` (
   CONSTRAINT `SpaceGroup_ibfk_1` FOREIGN KEY (`geometryClassnameId`) REFERENCES `GeometryClassname` (`geometryClassnameId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `SpaceGroup`
---
-
-LOCK TABLES `SpaceGroup` WRITE;
-/*!40000 ALTER TABLE `SpaceGroup` DISABLE KEYS */;
-/*!40000 ALTER TABLE `SpaceGroup` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Specimen`
@@ -6145,15 +4413,6 @@ CREATE TABLE `Specimen` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Specimen`
---
-
-LOCK TABLES `Specimen` WRITE;
-/*!40000 ALTER TABLE `Specimen` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Specimen` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `StockSolution`
 --
 
@@ -6184,15 +4443,6 @@ CREATE TABLE `StockSolution` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `StockSolution`
---
-
-LOCK TABLES `StockSolution` WRITE;
-/*!40000 ALTER TABLE `StockSolution` DISABLE KEYS */;
-/*!40000 ALTER TABLE `StockSolution` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Stoichiometry`
 --
 
@@ -6211,15 +4461,6 @@ CREATE TABLE `Stoichiometry` (
   CONSTRAINT `StoichiometryToMacromolecule` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Stoichiometry`
---
-
-LOCK TABLES `Stoichiometry` WRITE;
-/*!40000 ALTER TABLE `Stoichiometry` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Stoichiometry` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Structure`
@@ -6241,15 +4482,6 @@ CREATE TABLE `Structure` (
   CONSTRAINT `StructureToMacromolecule` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Structure`
---
-
-LOCK TABLES `Structure` WRITE;
-/*!40000 ALTER TABLE `Structure` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Structure` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `SubstructureDetermination`
@@ -6276,15 +4508,6 @@ CREATE TABLE `SubstructureDetermination` (
   CONSTRAINT `SubstructureDetermination_spaceGroupfk_1` FOREIGN KEY (`spaceGroupId`) REFERENCES `SpaceGroup` (`spaceGroupId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `SubstructureDetermination`
---
-
-LOCK TABLES `SubstructureDetermination` WRITE;
-/*!40000 ALTER TABLE `SubstructureDetermination` DISABLE KEYS */;
-/*!40000 ALTER TABLE `SubstructureDetermination` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Subtraction`
@@ -6325,15 +4548,6 @@ CREATE TABLE `Subtraction` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Subtraction`
---
-
-LOCK TABLES `Subtraction` WRITE;
-/*!40000 ALTER TABLE `Subtraction` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Subtraction` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `SubtractionToAbInitioModel`
 --
 
@@ -6353,15 +4567,6 @@ CREATE TABLE `SubtractionToAbInitioModel` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `SubtractionToAbInitioModel`
---
-
-LOCK TABLES `SubtractionToAbInitioModel` WRITE;
-/*!40000 ALTER TABLE `SubtractionToAbInitioModel` DISABLE KEYS */;
-/*!40000 ALTER TABLE `SubtractionToAbInitioModel` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `UserGroup`
 --
 
@@ -6375,16 +4580,6 @@ CREATE TABLE `UserGroup` (
   UNIQUE KEY `UserGroup_idx1` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `UserGroup`
---
-
-LOCK TABLES `UserGroup` WRITE;
-/*!40000 ALTER TABLE `UserGroup` DISABLE KEYS */;
-INSERT INTO `UserGroup` VALUES (8,'developers'),(9,'ehc'),(6,'em_admin'),(10,'fault_admin'),(2,'mx_admin'),(14,'pdb_stats'),(4,'powder_admin'),(3,'saxs_admin'),(12,'sm_admin'),(1,'super_admin'),(5,'tomo_admin'),(11,'vmxi');
-/*!40000 ALTER TABLE `UserGroup` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `UserGroup_has_Permission`
@@ -6404,16 +4599,6 @@ CREATE TABLE `UserGroup_has_Permission` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `UserGroup_has_Permission`
---
-
-LOCK TABLES `UserGroup_has_Permission` WRITE;
-/*!40000 ALTER TABLE `UserGroup_has_Permission` DISABLE KEYS */;
-INSERT INTO `UserGroup_has_Permission` VALUES (1,1),(1,7),(1,8),(1,9),(1,10),(1,18),(2,1),(8,1),(8,2),(8,4),(8,7),(8,8),(8,9),(8,10),(8,11),(8,18),(9,1),(9,6),(10,12),(11,13),(11,15),(11,16),(11,17),(12,18),(14,1);
-/*!40000 ALTER TABLE `UserGroup_has_Permission` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `UserGroup_has_Person`
 --
 
@@ -6429,15 +4614,6 @@ CREATE TABLE `UserGroup_has_Person` (
   CONSTRAINT `userGroup_has_Person_fk2` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `UserGroup_has_Person`
---
-
-LOCK TABLES `UserGroup_has_Person` WRITE;
-/*!40000 ALTER TABLE `UserGroup_has_Person` DISABLE KEYS */;
-/*!40000 ALTER TABLE `UserGroup_has_Person` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Workflow`
@@ -6460,15 +4636,6 @@ CREATE TABLE `Workflow` (
   PRIMARY KEY (`workflowId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Workflow`
---
-
-LOCK TABLES `Workflow` WRITE;
-/*!40000 ALTER TABLE `Workflow` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Workflow` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `WorkflowMesh`
@@ -6499,15 +4666,6 @@ CREATE TABLE `WorkflowMesh` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `WorkflowMesh`
---
-
-LOCK TABLES `WorkflowMesh` WRITE;
-/*!40000 ALTER TABLE `WorkflowMesh` DISABLE KEYS */;
-/*!40000 ALTER TABLE `WorkflowMesh` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `WorkflowStep`
 --
 
@@ -6536,15 +4694,6 @@ CREATE TABLE `WorkflowStep` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `WorkflowStep`
---
-
-LOCK TABLES `WorkflowStep` WRITE;
-/*!40000 ALTER TABLE `WorkflowStep` DISABLE KEYS */;
-/*!40000 ALTER TABLE `WorkflowStep` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `WorkflowType`
 --
 
@@ -6559,15 +4708,6 @@ CREATE TABLE `WorkflowType` (
   PRIMARY KEY (`workflowTypeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `WorkflowType`
---
-
-LOCK TABLES `WorkflowType` WRITE;
-/*!40000 ALTER TABLE `WorkflowType` DISABLE KEYS */;
-/*!40000 ALTER TABLE `WorkflowType` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `XFEFluorescenceSpectrum`
@@ -6605,17 +4745,8 @@ CREATE TABLE `XFEFluorescenceSpectrum` (
   CONSTRAINT `XFE_ibfk_1` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `XFE_ibfk_2` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `XFE_ibfk_3` FOREIGN KEY (`blSubSampleId`) REFERENCES `BLSubSample` (`blSubSampleId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2006 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `XFEFluorescenceSpectrum`
---
-
-LOCK TABLES `XFEFluorescenceSpectrum` WRITE;
-/*!40000 ALTER TABLE `XFEFluorescenceSpectrum` DISABLE KEYS */;
-/*!40000 ALTER TABLE `XFEFluorescenceSpectrum` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `XRFFluorescenceMapping`
@@ -6639,15 +4770,6 @@ CREATE TABLE `XRFFluorescenceMapping` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `XRFFluorescenceMapping`
---
-
-LOCK TABLES `XRFFluorescenceMapping` WRITE;
-/*!40000 ALTER TABLE `XRFFluorescenceMapping` DISABLE KEYS */;
-/*!40000 ALTER TABLE `XRFFluorescenceMapping` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `XRFFluorescenceMappingROI`
 --
 
@@ -6666,15 +4788,6 @@ CREATE TABLE `XRFFluorescenceMappingROI` (
   PRIMARY KEY (`xrfFluorescenceMappingROIId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `XRFFluorescenceMappingROI`
---
-
-LOCK TABLES `XRFFluorescenceMappingROI` WRITE;
-/*!40000 ALTER TABLE `XRFFluorescenceMappingROI` DISABLE KEYS */;
-/*!40000 ALTER TABLE `XRFFluorescenceMappingROI` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Temporary table structure for view `v_Log4Stat`
@@ -7529,4 +5642,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-11 15:50:39
+-- Dump completed on 2018-09-19 13:54:39
