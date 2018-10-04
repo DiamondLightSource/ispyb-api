@@ -1,9 +1,10 @@
-[![Build Status](https://travis-ci.org/DiamondLightSource/ispyb-api.svg?branch=master)](https://travis-ci.org/DiamondLightSource/ispyb-api)
-[![Coverage Status](https://coveralls.io/repos/github/DiamondLightSource/ispyb-api/badge.svg?branch=master)](https://coveralls.io/github/DiamondLightSource/ispyb-api?branch=master)
-[![Documentation Status](//readthedocs.org/projects/ispyb/badge/?version=latest)](https://ispyb.readthedocs.io/en/latest/?badge=latest)
 [![PyPI version](https://img.shields.io/pypi/v/ispyb.svg)](https://pypi.python.org/pypi/ispyb)
 [![Development status](https://img.shields.io/pypi/status/ispyb.svg)](https://pypi.python.org/pypi/ispyb)
 [![Python versions](https://img.shields.io/pypi/pyversions/ispyb.svg)](https://pypi.python.org/pypi/ispyb)
+
+[![Build Status](https://travis-ci.org/DiamondLightSource/ispyb-api.svg?branch=master)](https://travis-ci.org/DiamondLightSource/ispyb-api)
+[![Coverage Status](https://coveralls.io/repos/github/DiamondLightSource/ispyb-api/badge.svg?branch=master)](https://coveralls.io/github/DiamondLightSource/ispyb-api?branch=master)
+[![Documentation Status](//readthedocs.org/projects/ispyb/badge/?version=latest)](https://ispyb.readthedocs.io/en/latest/?badge=latest)
 
 # ISPyB API
 
@@ -13,7 +14,7 @@ procedures, but the package is designed to allow for other methods as well, such
 as webservices.
 
 ### Documentation
-https://ispyb.readthedocs.io.
+Please see https://ispyb.readthedocs.io.
 
 ### Requirements
 * Python 2.7, 3.4, 3.5, 3.6, 3.7
@@ -21,25 +22,21 @@ https://ispyb.readthedocs.io.
 * MariaDB 10.0+ or MySQL 5.6+, but we recommend MariaDB 10.2 or later.
 * An ISPyB database installed on the above. See the [ispyb-database](https://github.com/DiamondLightSource/ispyb-database) repo for details.
 * If binary logging is enabled in the DB system, then execute this before
-importing the test schema: set global log_bin_trust_function_creators=ON;
+importing the test schema:
+  ```set global log_bin_trust_function_creators=ON;```
 
 ### Installation
-From the source code:
-```bash
-python setup.py clean --all
-python setup.py bdist_wheel
-pip2.7 install --user dist/ispyb-3.0.0-py2-none-any.whl
-```
-Or to install the source code in editable mode, simply do e.g.:
-```bash
-pip install -e --user /path/to/ispyb-api
-```
-
 From PyPI:
 ```bash
-pip2.7 install --user ispyb
+pip install --user ispyb
 ```
-(The --user option installs the package for your own user only.)
+The --user option installs the package for your own user only. You can leave it out if you want to install the package system-wide.
+
+To install the source code in editable mode for development:
+```bash
+git clone git@github.com:DiamondLightSource/ispyb-api.git
+pip install -e --user ispyb-api
+```
 
 ### Examples
 ```python
