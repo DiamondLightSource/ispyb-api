@@ -18,16 +18,21 @@ https://ispyb.readthedocs.io.
 ### Requirements
 * Python 2.7, 3.4, 3.5, 3.6, 3.7
 * The mysql.connector Python package.
-* An ISPyB database on either MariaDB 10.0+ or MySQL 5.6+
+* MariaDB 10.0+ or MySQL 5.6+, but we recommend MariaDB 10.2 or later.
+* An ISPyB database installed on the above. See the [ispyb-database](https://github.com/DiamondLightSource/ispyb-database) repo for details.
 * If binary logging is enabled in the DB system, then execute this before
 importing the test schema: set global log_bin_trust_function_creators=ON;
 
 ### Installation
-From the source core:
+From the source code:
 ```bash
 python setup.py clean --all
 python setup.py bdist_wheel
 pip2.7 install --user dist/ispyb-3.0.0-py2-none-any.whl
+```
+Or to install the source code in editable mode, simply do e.g.:
+```bash
+pip install -e --user /path/to/ispyb-api
 ```
 
 From PyPI:
@@ -63,4 +68,4 @@ with ispyb.open('config.cfg') as conn:
 See [```docs/pipeline2ispyb.py```](https://github.com/DiamondLightSource/ispyb-api/blob/master/docs/pipeline2ispyb.py) for a more detailed example of how to use the package.
 
 ### Tests
-Unit tests (pytests) are run by Travis against a real MariaDB ISPyB database schema.
+Unit tests (pytests) are run automatically by Travis against a real MariaDB ISPyB database schema. You can also run the tests in your Development environment if you have an ISPyB database.
