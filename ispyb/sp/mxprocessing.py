@@ -184,6 +184,10 @@ class MXProcessing(ispyb.interface.processing.IF):
     '''Retrieve the processing instances associated with the given processing job ID'''
     return self.get_connection().call_sp_retrieve(procname='retrieve_processing_programs_for_job_id', args=(id,))
 
+  def retrieve_program_attachments_for_data_collection_group_and_program(self, id, program):
+    '''Retrieve the processing program attachments associated with the given data collection group and processing program'''
+    return self.get_connection().call_sp_retrieve(procname='retrieve_processing_program_attachments_for_dc_group_and_program', args=(id,program))
+
   def upsert_job(self, values):
     '''Update or insert a new processing job entry'''
     return self.get_connection().call_sp_write(procname='upsert_processing_job', args=values)
