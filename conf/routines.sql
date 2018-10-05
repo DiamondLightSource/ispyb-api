@@ -2764,6 +2764,45 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_processing_program_attachments_for_dc_group_and_program` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_processing_program_attachments_for_dc_group_and_program`(p_id int unsigned, p_program varchar(255))
+    READS SQL DATA
+    COMMENT 'Returns a multi-row result-set with the processing program attachments for the given DC group ID'
+BEGIN
+    IF p_id IS NOT NULL AND p_program IS NOT NULL THEN
+      SELECT dc.dataCollectionId, app.autoProcProgramId,
+        app.processingStatus,
+        concat('[', group_concat(json_object('fileType', appa.fileType, 'fullFilePath', concat(appa.filePath, '/', appa.fileName))), ']') "processingAttachments"
+      FROM DataCollection dc
+        INNER JOIN AutoProcIntegration api
+          ON api.dataCollectionId = dc.dataCollectionId
+        INNER JOIN AutoProcProgram app
+          ON app.autoProcProgramId = api.autoProcProgramId
+        INNER JOIN AutoProcProgramAttachment appa
+          ON appa.autoProcProgramId = api.autoProcProgramId
+      WHERE
+        dc.dataCollectionGroupId = p_id AND app.processingPrograms = p_program
+      GROUP BY
+        dc.dataCollectionId, app.autoProcProgramId, app.processingStatus;
+    ELSE
+	    SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644,
+        MESSAGE_TEXT='Mandatory arguments p_id and p_program can not be NULL';
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `retrieve_reprocessing_by_dc` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -5898,4 +5937,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-09-21 14:35:28
+-- Dump completed on 2018-10-01 11:37:57
