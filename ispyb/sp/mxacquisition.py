@@ -84,7 +84,7 @@ class MXAcquisition(Acquisition):
     '''Insert or update the grid info associated with a data collection group'''
     return self.get_connection().call_sp_write('upsert_dcg_grid', values)
 
-  def get_dcg_grid(self, dcgid):
+  def retrieve_dcg_grid(self, dcgid):
     '''Retrieve a list of dictionaries containing the grid information for
        one data collection group id. Raises ISPyBNoResultException if there
        is no grid information available for the given DCGID.

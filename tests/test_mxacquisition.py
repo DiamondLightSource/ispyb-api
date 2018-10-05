@@ -58,7 +58,7 @@ def test_mxacquisition_methods(testconfig):
         iid = mxacquisition.upsert_image(list(params.values()))
 
         with pytest.raises(ispyb.exception.ISPyBNoResultException):
-          gridinfo = mxacquisition.get_dcg_grid(dcgid)
+          gridinfo = mxacquisition.retrieve_dcg_grid(dcgid)
 
         params = mxacquisition.get_dcg_grid_params()
         params['parentid'] = dcgid
@@ -76,9 +76,10 @@ def test_mxacquisition_methods(testconfig):
         dcg_grid_id = mxacquisition.upsert_dcg_grid(list(params.values()))
         assert dcg_grid_id and dcg_grid_id > 0
 
-        gridinfo = mxacquisition.get_dcg_grid(dcgid)
+        gridinfo = mxacquisition.retrieve_dcg_grid(dcgid)
         assert len(gridinfo) == 1
         gridinfo = gridinfo[0]
+        assert gridinfo['gridInfoId'] == dcg_grid_id
         assert gridinfo['dx_mm'] == params['dx_in_mm']
         assert gridinfo['dy_mm'] == params['dy_in_mm']
         assert gridinfo['meshAngle'] == params['mesh_angle']
