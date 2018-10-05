@@ -1,5 +1,6 @@
 from __future__ import absolute_import, division, print_function
 
+import ispyb.exception
 import ispyb.model
 
 class GridInfo(ispyb.model.DBCache):
@@ -24,7 +25,10 @@ class GridInfo(ispyb.model.DBCache):
 
   def reload(self):
     '''Load/update information from the database.'''
-    raise NotImplementedError('TODO: Not implemented yet')
+    try:
+      self._data = self._db.mx_acquisition.get_dcg_grid(self._dcgid)[0]
+    except ispyb.exception.ISPyBNoResultException:
+      self._data = None
 
   @property
   def dcgid(self):
