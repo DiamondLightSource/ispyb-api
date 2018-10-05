@@ -90,7 +90,7 @@ class MXAcquisition(Acquisition):
        is no grid information available for the given DCGID.
        Generally the list will only contain a single dictionary.
     '''
-    return self.get_connection().call_sp_retrieve('retrieve_grid_info_for_dcg', (dcgid,))
+    return self.get_connection().call_sp_retrieve(procname='retrieve_grid_info_for_dcg', args=(dcgid,))
 
   @classmethod
   def get_energy_scan_params(cls):
