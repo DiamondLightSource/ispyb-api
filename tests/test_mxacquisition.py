@@ -1,8 +1,11 @@
 from __future__ import absolute_import, division, print_function
 
-import context
 from datetime import datetime
+
+import context
 import ispyb
+import ispyb.exception
+import pytest
 
 def test_mxacquisition_methods(testconfig):
   with ispyb.open(testconfig) as conn:
@@ -54,12 +57,15 @@ def test_mxacquisition_methods(testconfig):
         params['comments'] = 'Forgot to comment!'
         iid = mxacquisition.upsert_image(list(params.values()))
 
+        with pytest.raises(ispyb.exception.ISPyBNoResultException):
+          gridinfo = mxacquisition.retrieve_dcg_grid(dcgid)
+
         params = mxacquisition.get_dcg_grid_params()
         params['parentid'] = dcgid
         params['dx_in_mm'] = 1.2
         params['dy_in_mm'] = 1.3
         params['steps_x'] = 20
-        params['steps_x'] = 31
+        params['steps_y'] = 31
         params['mesh_angle'] = 45.5
         params['pixelsPerMicronX'] = 11
         params['pixelsPerMicronY'] = 11
@@ -68,8 +74,23 @@ def test_mxacquisition_methods(testconfig):
         params['orientation'] = 'horizontal'
         params['snaked'] = False
         dcg_grid_id = mxacquisition.upsert_dcg_grid(list(params.values()))
-        assert dcg_grid_id is not None
-        assert dcg_grid_id > 0
+        assert dcg_grid_id and dcg_grid_id > 0
+
+        gridinfo = mxacquisition.retrieve_dcg_grid(dcgid)
+        assert len(gridinfo) == 1
+        gridinfo = gridinfo[0]
+        assert gridinfo['gridInfoId'] == dcg_grid_id
+        assert gridinfo['dx_mm'] == params['dx_in_mm']
+        assert gridinfo['dy_mm'] == params['dy_in_mm']
+        assert gridinfo['meshAngle'] == params['mesh_angle']
+        assert gridinfo['orientation'] == params['orientation']
+        assert gridinfo['pixelsPerMicronX'] == params['pixelsPerMicronX']
+        assert gridinfo['pixelsPerMicronY'] == params['pixelsPerMicronY']
+        assert gridinfo['snaked'] == 0
+        assert gridinfo['snapshot_offsetXPixel'] == params['snapshotOffsetXPixel']
+        assert gridinfo['snapshot_offsetYPixel'] == params['snapshotOffsetYPixel']
+        assert gridinfo['steps_x'] == params['steps_x']
+        assert gridinfo['steps_y'] == params['steps_y']
 
         params = mxacquisition.get_dc_position_params()
         params['id'] = id1

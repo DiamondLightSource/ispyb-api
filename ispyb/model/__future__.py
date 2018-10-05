@@ -79,19 +79,8 @@ def enable(configuration_file, section='ispyb'):
 
   import ispyb.model.datacollection
   ispyb.model.datacollection.DataCollection.integrations = _get_linked_autoprocintegration_for_dc
-  import ispyb.model.gridinfo
-  ispyb.model.gridinfo.GridInfo.reload = _get_gridinfo
   import ispyb.model.processingprogram
   ispyb.model.processingprogram.ProcessingProgram.reload = _get_autoprocprogram
-
-def _get_gridinfo(self):
-  # https://jira.diamond.ac.uk/browse/MXSW-1173
-  with _db_cc() as cursor:
-    cursor.run("SELECT * "
-               "FROM GridInfo "
-               "WHERE dataCollectionGroupId = %s "
-               "LIMIT 1;", self._dcgid)
-    self._data = cursor.fetchone()
 
 def _get_autoprocprogram(self):
   # https://jira.diamond.ac.uk/browse/SCI-7414
@@ -117,3 +106,10 @@ def _get_linked_autoprocintegration_for_dc(self):
         ispyb.model.integration.IntegrationResult(ir['autoProcIntegrationId'], self._db, preload=ir)
         for ir in cursor.fetchall()
     ]
+
+def test_connection():
+  '''A test function to verify that the database connection is alive.'''
+  with _db_cc() as cursor:
+    cursor.run("SELECT 1")
+    data = cursor.fetchall()
+  assert data == [{'1': 1}]
