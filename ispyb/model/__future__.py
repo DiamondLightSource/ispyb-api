@@ -106,3 +106,10 @@ def _get_linked_autoprocintegration_for_dc(self):
         ispyb.model.integration.IntegrationResult(ir['autoProcIntegrationId'], self._db, preload=ir)
         for ir in cursor.fetchall()
     ]
+
+def test_connection():
+  '''A test function to verify that the database connection is alive.'''
+  with _db_cc() as cursor:
+    cursor.run("SELECT 1")
+    data = cursor.fetchall()
+  assert data == [{'1': 1}]

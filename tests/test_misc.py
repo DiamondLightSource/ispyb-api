@@ -60,9 +60,10 @@ def test_database_reconnects_on_connection_failure(testconfig, testdb):
   assert dcid, "Could not create dummy data collection"
 
   # Test the database connections
-  # This goes from DCID to DCGID using the default connection,
-  # and looks into the GridInfo table using the __future__ connection.
+  # This goes from DCID to DCGID to GridInfo using the default connection,
   assert bool(testdb.get_data_collection(dcid).group.gridinfo) is False
+  # Test the model.__future__ connection separately
+  ispyb.model.__future__.test_connection()
 
   fconn = ispyb.model.__future__._db
   iconn = testdb.conn
@@ -87,3 +88,4 @@ def test_database_reconnects_on_connection_failure(testconfig, testdb):
 
   # Test implicit reconnect
   assert bool(testdb.get_data_collection(dcid).group.gridinfo) is False
+  ispyb.model.__future__.test_connection()
