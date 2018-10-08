@@ -68,7 +68,7 @@ def test_processing_jobs(testconfig):
         assert job.sweeps[0].DCID == 993677
         assert job.sweeps[0].sweep_id == id
 
-def test_processing(testdb):
+def test_processing1(testdb):
   mxprocessing = testdb.mx_processing
 
   program_start = datetime.datetime.now()
@@ -85,6 +85,7 @@ def test_processing(testdb):
   assert rs and len(rs) >= 1
 
   # Find programs using the processing job ID and verify stored values
+  programs = mxprocessing.get_processing_job(5).programs
   program = list(filter(lambda p: p.app_id == program_id, programs))
   assert program and len(program) == 1
   program = program[0]
@@ -113,8 +114,8 @@ def test_processing(testdb):
   assert program.message == 'starting...'
   assert program.status is None
   assert program.status_text == 'running'
-  assert program.time_start == program_start
-  assert program.time_update == program_start
+  assert program.time_start == program_start.replace(microsecond=0)
+  assert program.time_update == program_start.replace(microsecond=0)
 
   # Mark program run as success
   program_id = mxprocessing.upsert_program_ex(
@@ -130,7 +131,7 @@ def test_processing(testdb):
   assert program.status == 1
   assert program.status_text == 'success'
 
-def test_processing(testconfig):
+def test_processing2(testconfig):
   with ispyb.open(testconfig) as conn:
         mxprocessing = conn.mx_processing
 
@@ -141,6 +142,7 @@ def test_processing(testconfig):
         id = mxprocessing.upsert_program(list(params.values()))
         assert id is not None
         assert id > 0
+        print('id: %d' % id)
 
         rs = mxprocessing.retrieve_programs_for_job_id(5)
         assert rs is not None
@@ -175,6 +177,12 @@ def test_processing(testconfig):
         id = mxprocessing.upsert_program_attachment(list(params.values()))
         assert id is not None
         assert id > 0
+
+        pa2 = mxprocessing.retrieve_program_attachments_for_program_id(programid)
+        assert len(pa2) > 0
+        assert pa2[0]['fileName'] == params['file_name']
+        assert pa2[0]['filePath'] == params['file_path']
+        assert pa2[0]['fileType'] == params['file_type']
 
         params = mxprocessing.get_integration_params()
         params['datacollectionid'] = 993677
