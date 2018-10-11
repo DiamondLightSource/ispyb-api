@@ -53,8 +53,10 @@ class IntegrationResult(ispyb.model.DBCache):
   @property
   def unit_cell(self):
     '''Returns the unit cell model'''
-    return ispyb.model.integration.UnitCell(self._data['cell_a'], self._data['cell_b'],self._data['cell_c'],
-                                            self._data['cell_alpha'], self._data['cell_beta'], self._data['cell_gamma'])
+    return ispyb.model.integration.UnitCell(
+        self._data['cell_a'], self._data['cell_b'],self._data['cell_c'],
+        self._data['cell_alpha'], self._data['cell_beta'], self._data['cell_gamma']
+    )
 
   @property
   def APIID(self):
@@ -100,20 +102,21 @@ ispyb.model.add_properties(IntegrationResult, (
     ('timestamp', 'recordTimeStamp'),
 ))
 
-class UnitCell():
-  '''An object representing the parameters of the unit cell I.e unit cell edges and angles
+class UnitCell(object):
+  '''A read-only object representing the parameters of the unit cell,
+     ie. edges and angles.
   '''
 
   def __init__(self, a, b, c, alpha, beta, gamma):
     '''Unit cell object
 
-       :param a: Edge a
-       :param b: Edge b
-       :param c: Edge c
+       :param a: Edge a in Angstrom
+       :param b: Edge b in Angstrom
+       :param c: Edge c in Angstrom
        :param alpha: Angle alpha
        :param beta: Angle beta
        :param gamma: Angle gamma
-       :return: A unitcell object
+       :return: A UnitCell object
     '''
     self._a = a
     self._b = b
@@ -122,7 +125,6 @@ class UnitCell():
     self._beta = beta
     self._gamma = gamma
 
-   
   @property
   def a(self):
     '''Returns dimension a of unit cell in Angstroms'''
@@ -152,7 +154,7 @@ class UnitCell():
   def gamma(self):
     '''Returns angle gamma of unit cell'''
     return self._gamma
- 
+
   def __str__(self):
     '''Returns a pretty-printed object representation.'''
     return ('\n'.join((
@@ -163,4 +165,3 @@ class UnitCell():
       '  beta      : {uc.beta}',
       '  gamma     : {uc.gamma}',
     ))).format(uc=self)
-
