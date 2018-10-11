@@ -160,6 +160,57 @@ class MXProcessing(ispyb.interface.processing.IF):
   def upsert_quality_indicators(self, values):
     return self.get_connection().call_sp_write(procname='upsert_quality_indicators', args=values)
 
+  def upsert_quality_indicators_bulk(self, values):
+    '''Store new or update existing image quality indicators.
+       This function is the extension of upsert_quality_indicators for bulk
+       operation. It is useful to update many rows within a single transaction.
+
+       :param values: An iterator of dictionaries, each of which contains the
+                      following keys, the first two of which must have values:
+                      datacollectionid, image_number, spot_total,
+                      good_bragg_candidates, method1_res, method2_res,
+                      total_integrated_signal, dozor_score, drift_factor.
+    '''
+    c = self.get_connection().create_cursor()
+    try:
+      c.execute('START TRANSACTION');
+      for qi in values:
+        assert qi.get('datacollectionid') and qi.get('image_number')
+        c.execute(
+            'SELECT 1 FROM ImageQualityIndicators WHERE dataCollectionId = %s AND imageNumber = %s;',
+            (qi['datacollectionid'], qi['image_number']),
+        )
+        result = c.fetchone()
+        if result:
+          c.execute(
+              'UPDATE ImageQualityIndicators '
+              'SET spotTotal = IFNULL(%s, spotTotal),'
+              'goodBraggCandidates = IFNULL(%s, goodBraggCandidates),'
+              'method1Res = IFNULL(%s, method1Res),'
+              'method2Res = IFNULL(%s, method2Res),'
+              'totalIntegratedSignal = IFNULL(%s, totalIntegratedSignal),'
+              'dozor_score = IFNULL(%s, dozor_score),'
+              'driftFactor = IFNULL(%s, driftFactor) '
+              'WHERE dataCollectionId = %s AND imageNumber = %s;',
+              (qi['spot_total'], qi['good_bragg_candidates'], qi['method1_res'], qi['method2_res'],
+               qi['total_integrated_signal'], qi['dozor_score'], qi['drift_factor'],
+               qi['datacollectionid'], qi['image_number']),
+          )
+        else:
+          c.execute(
+              'INSERT INTO ImageQualityIndicators ('
+              'dataCollectionId, imageNumber, spotTotal, goodBraggCandidates, '
+              'method1Res, method2Res, totalIntegratedSignal, dozor_score, driftFactor)'
+              'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)',
+              (qi['datacollectionid'], qi['image_number'], qi['spot_total'],
+               qi['good_bragg_candidates'], qi['method1_res'], qi['method2_res'],
+               qi['total_integrated_signal'], qi['dozor_score'], qi['drift_factor']),
+          )
+      c.execute('COMMIT');
+      return True
+    finally:
+      c.close()
+
   def upsert_run(self, values):
     '''Update or insert new entry with info about an MX molecular replacement run, e.g. Dimple.'''
     return self.get_connection().call_sp_write(procname='upsert_mrrun', args=values)
