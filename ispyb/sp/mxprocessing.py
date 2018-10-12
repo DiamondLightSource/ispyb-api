@@ -7,6 +7,7 @@
 # Methods to store data from MX processing
 #
 
+from contextlib import closing
 import copy
 
 import ispyb.interface.processing
@@ -171,9 +172,8 @@ class MXProcessing(ispyb.interface.processing.IF):
                       good_bragg_candidates, method1_res, method2_res,
                       total_integrated_signal, dozor_score, drift_factor.
     '''
-    c = self.get_connection().create_cursor()
-    try:
-      c.execute('START TRANSACTION');
+    with closing(self.get_connection().create_cursor()) as c:
+      c.execute('START TRANSACTION;')
       for qi in values:
         assert qi.get('datacollectionid') and qi.get('image_number')
         c.execute(
@@ -201,15 +201,13 @@ class MXProcessing(ispyb.interface.processing.IF):
               'INSERT INTO ImageQualityIndicators ('
               'dataCollectionId, imageNumber, spotTotal, goodBraggCandidates, '
               'method1Res, method2Res, totalIntegratedSignal, dozor_score, driftFactor)'
-              'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)',
+              'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);',
               (qi['datacollectionid'], qi['image_number'], qi['spot_total'],
                qi['good_bragg_candidates'], qi['method1_res'], qi['method2_res'],
                qi['total_integrated_signal'], qi['dozor_score'], qi['drift_factor']),
           )
-      c.execute('COMMIT');
+      c.execute('COMMIT;')
       return True
-    finally:
-      c.close()
 
   def upsert_run(self, values):
     '''Update or insert new entry with info about an MX molecular replacement run, e.g. Dimple.'''
