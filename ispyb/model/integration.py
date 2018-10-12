@@ -61,6 +61,14 @@ class IntegrationResult(ispyb.model.DBCache):
     '''Returns the AutoProcIntegrationID.'''
     return self._apiid
 
+  @property
+  def program(self):
+    '''Returns the AutoProcProgram model object for the processing program
+       responsible for this integration result.'''
+    if self._cache_app is None:
+      self._cache_app = ispyb.model.processingprogram.ProcessingProgram(self.APPID, self._db)
+    return self._cache_app
+
   def __repr__(self):
     '''Returns an object representation, including the AutoProcIntegrationID,
        the database connection interface object, and the cache status.'''
