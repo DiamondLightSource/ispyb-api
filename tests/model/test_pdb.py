@@ -19,6 +19,16 @@ def test_pdb_values_can_be_read_back():
   assert P.rawfile == mock.sentinel.rawfile
   assert P.code == mock.sentinel.code
 
+  P = ispyb.model.pdb.PDB()
+  assert P.name is None
+  assert P.rawfile is None
+  assert P.code is None
+
+  P = ispyb.model.pdb.PDB(name='', rawfile='', code='')
+  assert P.name == ''
+  assert P.rawfile is None
+  assert P.code is None
+
 def test_pdb_object_representation():
   P = ispyb.model.pdb.PDB(name='somename', rawfile='x'*100, code='somecode')
   assert repr(P) == '<PDB somename>'

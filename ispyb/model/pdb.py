@@ -16,8 +16,8 @@ class PDB(object):
        :param code: A 4 character string referencing a PDB entry, or None
     '''
     self._name = name
-    self._rawfile = rawfile
-    self._code = code
+    self._rawfile = rawfile or None
+    self._code = code or None
 
   @property
   def name(self):
