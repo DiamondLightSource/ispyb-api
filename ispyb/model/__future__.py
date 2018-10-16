@@ -119,18 +119,19 @@ def _get_linked_pdb_for_dc(self):
                "INNER JOIN BLSample b ON b.crystalid = c.crystalid "
                "INNER JOIN DataCollection d ON b.blsampleid = d.blsampleid "
                "INNER JOIN PDB pdb ON pp.pdbid = pdb.pdbid "
-               "WHERE d.datacollectionid = %s "
-               "LIMIT 1;", self._dcid)
-    pdb_data = cursor.fetchone()
-  import ispyb.model.pdb
-  if pdb_data:
-    return ispyb.model.pdb.PDB(
-      name=pdb_data['name'],
-      rawfile=pdb_data['contents'],
-      code=pdb_data['code'],
-    )
-  else:
-    return ispyb.model.pdb.PDB()
+               "WHERE d.datacollectionid = %s;", self._dcid)
+    pdb_data = cursor.fetchall()
+    if not pdb_data:
+      return []
+    import ispyb.model.pdb
+    return [
+      ispyb.model.pdb.PDB(
+        name=row['name'],
+        rawfile=row['contents'],
+        code=row['code'],
+      )
+      for row in pdb_data
+    ]
 
 def test_connection():
   '''A test function to verify that the database connection is alive.'''
