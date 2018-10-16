@@ -123,11 +123,14 @@ def _get_linked_pdb_for_dc(self):
                "LIMIT 1;", self._dcid)
     pdb_data = cursor.fetchone()
   import ispyb.model.pdb
-  return ispyb.model.pdb.PDB(
-    name=pdb_data['name'],
-    rawfile=pdb_data['contents'],
-    code=pdb_data['code'],
-  )
+  if pdb_data:
+    return ispyb.model.pdb.PDB(
+      name=pdb_data['name'],
+      rawfile=pdb_data['contents'],
+      code=pdb_data['code'],
+    )
+  else:
+    return ispyb.model.pdb.PDB()
 
 def test_connection():
   '''A test function to verify that the database connection is alive.'''
