@@ -79,6 +79,7 @@ def enable(configuration_file, section='ispyb'):
 
   import ispyb.model.datacollection
   ispyb.model.datacollection.DataCollection.integrations = _get_linked_autoprocintegration_for_dc
+  ispyb.model.datacollection.DataCollection.pdb = _get_linked_pdb_for_dc
   import ispyb.model.processingprogram
   ispyb.model.processingprogram.ProcessingProgram.reload = _get_autoprocprogram
 
@@ -106,6 +107,27 @@ def _get_linked_autoprocintegration_for_dc(self):
         ispyb.model.integration.IntegrationResult(ir['autoProcIntegrationId'], self._db, preload=ir)
         for ir in cursor.fetchall()
     ]
+
+@property
+def _get_linked_pdb_for_dc(self):
+  # https://jira.diamond.ac.uk/browse/SCI-7915
+  with _db_cc() as cursor:
+    cursor.run("SELECT pdb.name AS name, pdb.contents AS contents, pdb.code AS code "
+               "FROM Protein p "
+               "INNER JOIN Crystal c ON c.proteinid = p.proteinid "
+               "INNER JOIN Protein_has_PDB pp ON p.proteinid = pp.proteinid "
+               "INNER JOIN BLSample b ON b.crystalid = c.crystalid "
+               "INNER JOIN DataCollection d ON b.blsampleid = d.blsampleid "
+               "INNER JOIN PDB pdb ON pp.pdbid = pdb.pdbid "
+               "WHERE d.datacollectionid = %s "
+               "LIMIT 1;", self._dcid)
+    pdb_data = cursor.fetchone()
+  import ispyb.model.pdb
+  return ispyb.model.pdb.PDB(
+    name=pdb_data['name'],
+    rawfile=pdb_data['contents'],
+    code=pdb_data['code'],
+  )
 
 def test_connection():
   '''A test function to verify that the database connection is alive.'''

@@ -70,6 +70,11 @@ class DataCollection(ispyb.model.DBCache):
         count=1,
     )
 
+  @property
+  def pdb(self):
+    '''Returns a PDB object for the sample of this datacollection.'''
+    raise NotImplementedError('TODO: Not implemented yet')
+
   def __repr__(self):
     '''Returns an object representation, including the DataCollectionID,
        the database connection interface object, and the cache status.'''
