@@ -76,13 +76,16 @@ def store_result(conn, dir, scaling_id):
     params['output_MTZ_file'] = dir + '/final.mtz'
     params['output_coord_file'] = dir + '/final.pdb'
     params['cmd_line'] = log.get('workflow', 'prog') + ' ' + log.get('workflow', 'args').replace('\n', ' ')
-    mr_id = mx_processing.upsert_run(params.values())
+    mr_id = mx_processing.upsert_run(list(params.values()))
 
     for n in (1,2):
         if os.path.exists(dir+'/blob{0}v1.png'.format(n)):
-            mrblob_id = mx_processing.upsert_run_blob(mr_id,
-                'blob{0}v1.png'.format(n), 'blob{0}v2.png'.format(n),
-                'blob{0}v3.png'.format(n))
+            blobparam = mx_processing.get_run_blob_params()
+            blobparam['parentid'] = mr_id
+            blobparam['view1'] = 'blob{0}v1.png'.format(n)
+            blobparam['view2'] = 'blob{0}v2.png'.format(n)
+            blobparam['view3'] = 'blob{0}v3.png'.format(n)
+            mrblob_id = mx_processing.upsert_run_blob(list(blobparam.values()))
 
 
 def store_failure(conn, run_dir, scaling_id):
@@ -95,7 +98,7 @@ def store_failure(conn, run_dir, scaling_id):
     params['success'] = 0
     params['message'] = 'Unknown error'
     params['run_dir'] = run_dir
-    mr_id = mx_processing.upsert_run(params.values())
+    mr_id = mx_processing.upsert_run(list(params.values()))
 
 
 # Configure logging
