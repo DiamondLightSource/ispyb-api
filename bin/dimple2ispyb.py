@@ -80,9 +80,12 @@ def store_result(conn, dir, scaling_id):
 
     for n in (1,2):
         if os.path.exists(dir+'/blob{0}v1.png'.format(n)):
-            mrblob_id = mx_processing.upsert_run_blob(mr_id,
-                'blob{0}v1.png'.format(n), 'blob{0}v2.png'.format(n),
-                'blob{0}v3.png'.format(n))
+            blobparam = mx_processing.get_run_blob_params()
+            blobparam['parentid'] = mr_id
+            blobparam['view1'] = 'blob{0}v1.png'.format(n)
+            blobparam['view2'] = 'blob{0}v2.png'.format(n)
+            blobparam['view3'] = 'blob{0}v3.png'.format(n)
+            mrblob_id = mx_processing.upsert_run_blob(blobparam.values())
 
 
 def store_failure(conn, run_dir, scaling_id):
