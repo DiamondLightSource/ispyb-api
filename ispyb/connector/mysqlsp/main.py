@@ -9,13 +9,13 @@ import ispyb.interface.connection
 import mysql.connector
 from ispyb.exception import (ISPyBConnectionException, ISPyBNoResultException,
                                 ISPyBRetrieveFailed, ISPyBWriteFailed)
-from mysql.connector.errors import DatabaseError, DataError, Error
+from mysql.connector.errors import DatabaseError, DataError, Error, InterfaceError
 
 class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
   '''Provides a connector to an ISPyB MySQL/MariaDB database through stored procedures.
   '''
 
-  def __init__(self, user=None, pw=None, host='localhost', db=None, port=3306, conn_inactivity=360):
+  def __init__(self, user=None, pw=None, host='localhost', db=None, port=3306, conn_inactivity=360, reconn_attempts=6, reconn_delay=1):
     self.lock = threading.Lock()
     self.connect(user=user, pw=pw, host=host, db=db, port=port)
 
@@ -28,7 +28,7 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
   def __exit__(self, type, value, traceback):
     self.disconnect()
 
-  def connect(self, user=None, pw=None, host='localhost', db=None, port=3306, conn_inactivity=360):
+  def connect(self, user=None, pw=None, host='localhost', db=None, port=3306, conn_inactivity=360, reconn_attempts=6, reconn_delay=1):
     self.disconnect()
 
     self.conn = mysql.connector.connect(user=user,
@@ -39,6 +39,8 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
     if not self.conn:
       raise ISPyBConnectionException('Could not connect to database')
     self.conn.autocommit = True
+    self.reconn_attempts = reconn_attempts
+    self.reconn_delay = reconn_delay
 
   def __del__(self):
     self.disconnect()
@@ -55,7 +57,10 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
   def create_cursor(self, dictionary=False):
     if not self.conn:
       raise ISPyBConnectionException('Not connected to database')
-    self.conn.ping(reconnect=True)
+    try:
+      self.conn.ping(reconnect=True, attempts=self.reconn_attempts, delay=self.reconn_delay)
+    except InterfaceError:
+      raise ISPyBConnectionException('Failed to ping connection')
     cursor = self.conn.cursor(dictionary=dictionary)
     if not cursor:
       raise ISPyBConnectionException('Could not create database cursor')

@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.3.9-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.16  Distrib 10.3.10-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: ispyb_build
 -- ------------------------------------------------------
--- Server version	10.3.9-MariaDB
+-- Server version	10.3.10-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -3014,18 +3014,22 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_sessions_for_person_login`(p_login varchar(45))
     READS SQL DATA
     COMMENT 'Returns a multi-row result-set with info about the sessions associated with a person with login=p_login'
 BEGIN
     IF p_login IS NOT NULL THEN
-      SELECT bs.sessionId "id", bs.proposalId "proposalId", bs.startDate "startDate", bs.endDate "endDate",
-        bs.beamlineName "beamline", bs.visit_number "sessionNumber", bs.comments "comments", shp.role "personRoleOnSession", shp.remote "personRemoteOnSession"
+      SELECT bs.sessionId "id", bs.proposalId "proposalId",
+        bs.startDate "startDate", bs.endDate "endDate",
+        bs.beamlineName "beamline", pr.proposalCode "proposalCode", pr.proposalNumber "proposalNumber", bs.visit_number "sessionNumber",
+        bs.comments "comments",
+        shp.role "personRoleOnSession", shp.remote "personRemoteOnSession"
       FROM BLSession bs
-        INNER JOIN Session_has_Person shp on shp.sessionId = bs.sessionId
-        INNER JOIN Person p on p.personId = shp.personId
+        INNER JOIN Session_has_Person shp ON shp.sessionId = bs.sessionId
+        INNER JOIN Person p ON p.personId = shp.personId
+        INNER JOIN Proposal pr ON pr.proposalId = bs.proposalId
 	    WHERE p.login = p_login
       ORDER BY bs.startDate;
     ELSE
@@ -3477,6 +3481,37 @@ BEGIN
 	ELSE
         SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_dcId is NULL';  
     END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_processing_program_for_id_range` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `update_processing_program_for_id_range`(p_startId int unsigned, p_endId int unsigned)
+    MODIFIES SQL DATA
+    COMMENT 'Maintenance procedure to update processingPrograms based on contents of processingCommandLine'
+BEGIN
+  UPDATE AutoProcProgram
+  SET AutoProcProgram.processingPrograms = CONCAT(
+    'xia2 ',
+    REGEXP_REPLACE(
+      processingCommandLine,
+      '^xia2.*?(-|pipeline=)(2d[[:alnum:]]*|3d[[:alnum:]]*|dials)[[:space:]]*.*',
+      '\\2'
+    )
+  )
+  WHERE autoProcProgramId BETWEEN p_startId AND p_endId AND
+          AutoProcProgram.processingPrograms = 'xia2';
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -5966,4 +6001,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-10-05 14:30:01
+-- Dump completed on 2018-11-09 16:36:34

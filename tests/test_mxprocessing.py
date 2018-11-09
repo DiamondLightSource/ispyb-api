@@ -148,7 +148,7 @@ def test_processing2(testconfig):
         assert rs is not None
         assert len(rs) > 0
 
-        pa = mxprocessing.retrieve_program_attachments_for_data_collection_group_and_program(996311, 'xia2')
+        pa = mxprocessing.retrieve_program_attachments_for_data_collection_group_and_program(996311, 'xia2 dials')
         assert len(pa) > 0
 
         # Find program using the processing job ID and verify stored values
