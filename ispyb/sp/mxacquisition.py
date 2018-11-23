@@ -68,6 +68,17 @@ class MXAcquisition(Acquisition):
   _fluo_mapping_roi_params =\
     StrictOrderedDict([('id',None), ('start_energy',None), ('end_energy',None), ('element',None), ('edge',None), ('r',None), ('g',None), ('b',None)])
 
+  _xray_centring_params =\
+   StrictOrderedDict([('id',None), ('grid_info_id',None), ('method',None), ('status',None), ('x',None), ('y',None)])
+
+  @classmethod
+  def get_xray_centring_result_params(cls):
+      return copy.deepcopy(cls._xray_centring_params)
+
+  def upsert_xray_centring_result(self, values):
+    '''Insert or update the xray centring result associated with a grid info'''
+    return self.get_connection().call_sp_write('upsert_xray_centring_result', values)
+
   @classmethod
   def get_dc_position_params(cls):
     return copy.deepcopy(cls._dc_position_params)
