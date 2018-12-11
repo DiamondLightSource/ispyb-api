@@ -1,4 +1,5 @@
 [![PyPI version](https://img.shields.io/pypi/v/ispyb.svg)](https://pypi.python.org/pypi/ispyb)
+[![Conda Version](https://img.shields.io/conda/vn/conda-forge/ispyb.svg)](https://anaconda.org/conda-forge/ispyb)
 [![Development status](https://img.shields.io/pypi/status/ispyb.svg)](https://pypi.python.org/pypi/ispyb)
 [![Python versions](https://img.shields.io/pypi/pyversions/ispyb.svg)](https://pypi.python.org/pypi/ispyb)
 
