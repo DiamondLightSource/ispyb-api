@@ -130,6 +130,10 @@ class Core(ispyb.interface.core.IF):
     '''Get a result-set with the persons associated with a given proposal specified by proposal code, proposal_number'''
     return self.get_connection().call_sp_retrieve(procname='retrieve_persons_for_proposal', args=(proposal_code, proposal_number))
 
+  def retrieve_persons_for_session(self, proposal_code, proposal_number, visit_number):
+    '''Get a result-set with the persons associated with a given session specified by proposal code, proposal_number, visit_number'''
+    return self.get_connection().call_sp_retrieve(procname='retrieve_persons_for_session', args=(proposal_code, proposal_number, visit_number))
+
   def retrieve_current_cm_sessions(self, beamline):
     '''Get a result-set with the currently active commissioning (cm) sessions on the given beamline.'''
     return self.get_connection().call_sp_retrieve(procname='retrieve_current_cm_sessions', args=(beamline,))
