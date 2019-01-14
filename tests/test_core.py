@@ -119,6 +119,13 @@ def test_retrieve_persons_for_proposal(testconfig):
         login = rs[0]['login']
         assert login is not None
 
+def test_retrieve_persons_for_session(testconfig):
+  with ispyb.open(testconfig) as conn:
+        rs = conn.core.retrieve_persons_for_session('cm', 14451, 1)
+        assert len(rs) == 1
+        login = rs[0]['login']
+        assert login is not None
+
 def test_retrieve_current_cm_sessions(testconfig):
   with ispyb.open(testconfig) as conn:
         rs = conn.core.retrieve_current_cm_sessions('i03')
