@@ -92,19 +92,19 @@ def test_mxacquisition_methods(testconfig):
         assert gridinfo['steps_x'] == params['steps_x']
         assert gridinfo['steps_y'] == params['steps_y']
 
-        params = mxacquisition.get_xray_centring_result_params()
-        params['grid_info_id'] = dcg_grid_id
-        params['method'] = 'diffraction'
-        params['status'] = 'pending'
-        xray_cr_id = mxacquisition.upsert_xray_centring_result(list(params.values()))
+        xray_cr_id = mxacquisition.upsert_xray_centring_result(
+            grid_info_id=dcg_grid_id,
+            method="diffraction",
+            status="pending",
+        )
         assert xray_cr_id and xray_cr_id > 0
 
-        params = mxacquisition.get_xray_centring_result_params()
-        params['id'] = xray_cr_id
-        params['status'] = 'success'
-        params['x'] = 19.7
-        params['y'] = 22.4
-        mxacquisition.upsert_xray_centring_result(list(params.values()))
+        mxacquisition.upsert_xray_centring_result(
+            result_id=xray_cr_id,
+            status="success",
+            x=19.7,
+            y=22.4,
+        )
 
         params = mxacquisition.get_dc_position_params()
         params['id'] = id1
