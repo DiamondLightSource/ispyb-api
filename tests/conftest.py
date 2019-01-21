@@ -16,9 +16,9 @@ def testconfig():
   return config_file
 
 @pytest.fixture
-def testdb():
+def testdb(testconfig):
   '''Return an ISPyB connection object for the test database configuration.'''
-  with ispyb.open(testconfig()) as conn:
+  with ispyb.open(testconfig) as conn:
     yield conn
 
 @pytest.fixture
