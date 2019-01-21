@@ -49,7 +49,7 @@ def test_processing_jobs(testconfig):
 
         # Retrieve same information via object model
 
-        job = mxprocessing.get_processing_job(job_id)
+        job = conn.get_processing_job(job_id)
         assert job.name == 'test_job'
         assert job.DCID == 993677
         assert job.comment == 'Test job by the unit test system ...'
@@ -85,7 +85,7 @@ def test_processing1(testdb):
   assert rs and len(rs) >= 1
 
   # Find programs using the processing job ID and verify stored values
-  programs = mxprocessing.get_processing_job(5).programs
+  programs = testdb.get_processing_job(5).programs
   program = list(filter(lambda p: p.app_id == program_id, programs))
   assert program and len(program) == 1
   program = program[0]
@@ -107,7 +107,7 @@ def test_processing1(testdb):
     time_start=program_start,
     time_update=program_start,
   )
-  programs = mxprocessing.get_processing_job(5).programs
+  programs = testdb.get_processing_job(5).programs
   program = list(filter(lambda p: p.app_id == program_id, programs))
   assert program and len(program) == 1
   program = program[0]
@@ -123,7 +123,7 @@ def test_processing1(testdb):
     status=1,
     message='done',
   )
-  programs = mxprocessing.get_processing_job(5).programs
+  programs = testdb.get_processing_job(5).programs
   program = list(filter(lambda p: p.app_id == program_id, programs))
   assert program and len(program) == 1
   program = program[0]
@@ -152,7 +152,7 @@ def test_processing2(testconfig):
         assert len(pa) > 0
 
         # Find program using the processing job ID and verify stored values
-        programs = mxprocessing.get_processing_job(5).programs
+        programs = conn.get_processing_job(5).programs
         assert programs
         assert len(programs) >= 1
         programs = list(filter(lambda p: p.app_id == id, programs))
