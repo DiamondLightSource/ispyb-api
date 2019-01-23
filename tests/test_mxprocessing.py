@@ -2,11 +2,9 @@ from __future__ import absolute_import, division, print_function
 
 import context
 import datetime
-import ispyb
 
-def test_processing_jobs(testconfig):
-  with ispyb.open(testconfig) as conn:
-        mxprocessing = conn.mx_processing
+def test_processing_jobs(testdb):
+        mxprocessing = testdb.mx_processing
 
         params = mxprocessing.get_job_params()
         params['datacollectionid'] = 993677
@@ -49,7 +47,7 @@ def test_processing_jobs(testconfig):
 
         # Retrieve same information via object model
 
-        job = conn.get_processing_job(job_id)
+        job = testdb.get_processing_job(job_id)
         assert job.name == 'test_job'
         assert job.DCID == 993677
         assert job.comment == 'Test job by the unit test system ...'
@@ -131,9 +129,8 @@ def test_processing1(testdb):
   assert program.status == 1
   assert program.status_text == 'success'
 
-def test_processing2(testconfig):
-  with ispyb.open(testconfig) as conn:
-        mxprocessing = conn.mx_processing
+def test_processing2(testdb):
+        mxprocessing = testdb.mx_processing
 
         params = mxprocessing.get_program_params()
         params['cmd_line'] = 'ls -ltr'
@@ -152,7 +149,7 @@ def test_processing2(testconfig):
         assert len(pa) > 0
 
         # Find program using the processing job ID and verify stored values
-        programs = conn.get_processing_job(5).programs
+        programs = testdb.get_processing_job(5).programs
         assert programs
         assert len(programs) >= 1
         programs = list(filter(lambda p: p.app_id == id, programs))
@@ -253,9 +250,8 @@ def test_processing2(testconfig):
         id = mxprocessing.upsert_quality_indicators(list(params.values()))
         assert id is not None
 
-def test_post_processing(testconfig):
-  with ispyb.open(testconfig) as conn:
-        mxprocessing = conn.mx_processing
+def test_post_processing(testdb):
+        mxprocessing = testdb.mx_processing
 
         params = mxprocessing.get_run_params()
         params['parentid'] = 596133 # some autoProcScalingId

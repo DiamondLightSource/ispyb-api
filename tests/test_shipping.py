@@ -1,16 +1,13 @@
 from __future__ import absolute_import, division, print_function
 
 import context
-import ispyb
 
-def test_update_container_assign(testconfig):
-  with ispyb.open(testconfig) as conn:
-        conn.shipping.update_container_assign('i04', 'DLS-0001', 10)
+def test_update_container_assign(testdb):
+        testdb.shipping.update_container_assign('i04', 'DLS-0001', 10)
 
 
-def test_upsert_dewar(testconfig):
-  with ispyb.open(testconfig) as conn:
-        shipping = conn.shipping
+def test_upsert_dewar(testdb):
+        shipping = testdb.shipping
         params = shipping.get_dewar_params()
         params['shipping_id'] = 474
         params['name'] = 'Test-dewar'
@@ -30,7 +27,6 @@ def test_upsert_dewar(testconfig):
         assert did2 is not None
         assert did2 > 0
 
-def test_retrieve_dewars(testconfig):
-  with ispyb.open(testconfig) as conn:
-        rs = conn.shipping.retrieve_dewars_for_proposal_code_number('cm', 1)
+def test_retrieve_dewars(testdb):
+        rs = testdb.shipping.retrieve_dewars_for_proposal_code_number('cm', 1)
         assert len(rs) > 0

@@ -1,12 +1,10 @@
 from __future__ import absolute_import, division, print_function
 
 import context
-import ispyb
 import time
 
-def test_insert_session_for_proposal_code_number(testconfig):
-  with ispyb.open(testconfig) as conn:
-        core = conn.core
+def test_insert_session_for_proposal_code_number(testdb):
+        core = testdb.core
 
         # Test upsert_person:
         params = core.get_person_params()
@@ -70,9 +68,8 @@ def test_insert_session_for_proposal_code_number(testconfig):
         assert phpid is not None
         assert phpid > 0
 
-def test_upsert_sample(testconfig):
-  with ispyb.open(testconfig) as conn:
-        core = conn.core
+def test_upsert_sample(testdb):
+        core = testdb.core
         params = core.get_sample_params()
         params['containerid'] = 1326
         params['crystalid'] = 3918
@@ -87,56 +84,46 @@ def test_upsert_sample(testconfig):
         id = core.upsert_sample(list(params.values()))
         assert id is not None
 
-def test_retrieve_visit_id(testconfig):
-  with ispyb.open(testconfig) as conn:
-        id = conn.core.retrieve_visit_id('cm14451-2')
+def test_retrieve_visit_id(testdb):
+        id = testdb.core.retrieve_visit_id('cm14451-2')
         assert id == 55168
 
-def test_retrieve_current_sessions(testconfig):
-  with ispyb.open(testconfig) as conn:
-        rs = conn.core.retrieve_current_sessions('i03', 24*60*30000)
+def test_retrieve_current_sessions(testdb):
+        rs = testdb.core.retrieve_current_sessions('i03', 24*60*30000)
         assert len(rs) > 0
 
-def test_retrieve_sessions_for_person_login(testconfig):
-  with ispyb.open(testconfig) as conn:
-        rs = conn.core.retrieve_sessions_for_person_login('boaty')
+def test_retrieve_sessions_for_person_login(testdb):
+        rs = testdb.core.retrieve_sessions_for_person_login('boaty')
         assert len(rs) > 0
 
-def test_retrieve_current_sessions_for_person(testconfig):
-  with ispyb.open(testconfig) as conn:
-        rs = conn.core.retrieve_current_sessions_for_person('i03', 'boaty', tolerance_mins=24*60*30000)
+def test_retrieve_current_sessions_for_person(testdb):
+        rs = testdb.core.retrieve_current_sessions_for_person('i03', 'boaty', tolerance_mins=24*60*30000)
         assert len(rs) > 0
 
-def test_retrieve_most_recent_session(testconfig):
-  with ispyb.open(testconfig) as conn:
-        rs = conn.core.retrieve_most_recent_session('i03', 'cm')
+def test_retrieve_most_recent_session(testdb):
+        rs = testdb.core.retrieve_most_recent_session('i03', 'cm')
         assert len(rs) == 1
 
-def test_retrieve_persons_for_proposal(testconfig):
-  with ispyb.open(testconfig) as conn:
-        rs = conn.core.retrieve_persons_for_proposal('cm', 14451)
+def test_retrieve_persons_for_proposal(testdb):
+        rs = testdb.core.retrieve_persons_for_proposal('cm', 14451)
         assert len(rs) == 1
         login = rs[0]['login']
         assert login is not None
 
-def test_retrieve_persons_for_session(testconfig):
-  with ispyb.open(testconfig) as conn:
-        rs = conn.core.retrieve_persons_for_session('cm', 14451, 1)
+def test_retrieve_persons_for_session(testdb):
+        rs = testdb.core.retrieve_persons_for_session('cm', 14451, 1)
         assert len(rs) == 1
         login = rs[0]['login']
         assert login is not None
 
-def test_retrieve_current_cm_sessions(testconfig):
-  with ispyb.open(testconfig) as conn:
-        rs = conn.core.retrieve_current_cm_sessions('i03')
+def test_retrieve_current_cm_sessions(testdb):
+        rs = testdb.core.retrieve_current_cm_sessions('i03')
         assert len(rs) > 0
 
-def test_retrieve_active_plates(testconfig):
-  with ispyb.open(testconfig) as conn:
-        rs = conn.core.retrieve_active_plates('i02-2')
+def test_retrieve_active_plates(testdb):
+        rs = testdb.core.retrieve_active_plates('i02-2')
         assert len(rs) >= 0
 
-def test_retrieve_proposal_title(testconfig):
-  with ispyb.open(testconfig) as conn:
-        title = conn.core.retrieve_proposal_title('cm', 14451)
+def test_retrieve_proposal_title(testdb):
+        title = testdb.core.retrieve_proposal_title('cm', 14451)
         assert title.strip() == 'I03 Commissioning Directory 2016'

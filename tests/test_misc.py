@@ -9,9 +9,8 @@ import ispyb.model.__future__
 import mysql.connector.errors
 import pytest
 
-def test_multi_threads_upsert(testconfig):
-  with ispyb.open(testconfig) as conn:
-        mxprocessing = conn.mx_processing
+def test_multi_threads_upsert(testdb):
+        mxprocessing = testdb.mx_processing
 
         params = mxprocessing.get_program_params()
         params['cmd_line'] = 'dials -xia2 /path/to/files'
@@ -41,10 +40,9 @@ def test_multi_threads_upsert(testconfig):
         for worker in worker_list:
             worker.join()
 
-def test_retrieve_failure(testconfig):
-  with ispyb.open(testconfig) as conn:
+def test_retrieve_failure(testdb):
     with pytest.raises(ispyb.exception.ISPyBNoResultException):
-      rs = conn.mx_acquisition.retrieve_data_collection_main(0)
+      rs = testdb.mx_acquisition.retrieve_data_collection_main(0)
 
 def test_database_reconnects_on_connection_failure(testconfig, testdb):
   ispyb.model.__future__.enable(testconfig, section='ispyb_mysql_sp')
