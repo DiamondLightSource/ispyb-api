@@ -2,14 +2,11 @@ from __future__ import absolute_import, division, print_function
 
 from datetime import datetime
 
-import context
-import ispyb
 
-def test_insert_all_screening(testconfig):
-  with ispyb.open(testconfig) as conn:
-        core = conn.core
-        mxscreening = conn.mx_screening
-        mxacquisition = conn.mx_acquisition
+def test_insert_all_screening(testdb):
+        core = testdb.core
+        mxscreening = testdb.mx_screening
+        mxacquisition = testdb.mx_acquisition
 
         test_session = 'cm14451-2'
         session_id = core.retrieve_visit_id(test_session)

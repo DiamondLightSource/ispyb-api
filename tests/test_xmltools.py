@@ -2,13 +2,10 @@ from __future__ import absolute_import, division, print_function
 
 import os
 
-import context
-import ispyb
 from ispyb.xmltools import mx_data_reduction_to_ispyb, xml_file_to_dict
 
-def test_mx_data_reduction_xml_to_ispyb(testconfig):
-  with ispyb.open(testconfig) as conn:
-        mxprocessing = conn.mx_processing
+def test_mx_data_reduction_xml_to_ispyb(testdb):
+        mxprocessing = testdb.mx_processing
 
         xml_file = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data/mx_data_reduction_pipeline_results.xml'))
         # Find the datacollection associated with this data reduction run
@@ -16,7 +13,7 @@ def test_mx_data_reduction_xml_to_ispyb(testconfig):
         try:
             dc_id = int(open(os.path.join(xml_dir, '.dc_id'), 'r').read())
             print('Got DC ID %d from file system' % dc_id)
-        except:
+        except Exception:
             dc_id = None
 
         mx_data_reduction_dict = xml_file_to_dict(xml_file)

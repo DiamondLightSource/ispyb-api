@@ -1,11 +1,8 @@
 from __future__ import absolute_import, division, print_function
 
-import context
-import ispyb
 
-def test_insert_movie(testconfig):
-  with ispyb.open(testconfig) as conn:
-        emacquisition = conn.em_acquisition
+def test_insert_movie(testdb):
+        emacquisition = testdb.em_acquisition
         group_params = emacquisition.get_data_collection_group_params()
         group_params['parentid'] = 55168
         group_id = emacquisition.insert_data_collection_group(list(group_params.values()))
@@ -23,9 +20,8 @@ def test_insert_movie(testconfig):
         assert movie_id is not None
         assert movie_id > 0
 
-def test_insert_motion_correction(testconfig):
-  with ispyb.open(testconfig) as conn:
-        emacquisition = conn.em_acquisition
+def test_insert_motion_correction(testdb):
+        emacquisition = testdb.em_acquisition
         group_params = emacquisition.get_data_collection_group_params()
         group_params['parentid'] = 55168
         group_id = emacquisition.insert_data_collection_group(list(group_params.values()))
@@ -46,9 +42,8 @@ def test_insert_motion_correction(testconfig):
         motion_cor_id = emacquisition.insert_motion_correction(list(params.values()))
         assert motion_cor_id is not None
 
-def test_insert_ctf(testconfig):
-  with ispyb.open(testconfig) as conn:
-        emacquisition = conn.em_acquisition
+def test_insert_ctf(testdb):
+        emacquisition = testdb.em_acquisition
         group_params = emacquisition.get_data_collection_group_params()
         group_params['parentid'] = 55168
         group_id = emacquisition.insert_data_collection_group(list(group_params.values()))
@@ -73,9 +68,8 @@ def test_insert_ctf(testconfig):
         ctf_id = emacquisition.insert_ctf(list(params.values()))
         assert ctf_id is not None
 
-def test_insert_drift(testconfig):
-  with ispyb.open(testconfig) as conn:
-        emacquisition = conn.em_acquisition
+def test_insert_drift(testdb):
+        emacquisition = testdb.em_acquisition
         group_params = emacquisition.get_data_collection_group_params()
         group_params['parentid'] = 55168
         group_id = emacquisition.insert_data_collection_group(list(group_params.values()))

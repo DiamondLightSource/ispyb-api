@@ -2,14 +2,11 @@ from __future__ import absolute_import, division, print_function
 
 from datetime import datetime
 
-import context
-import ispyb
 import ispyb.exception
 import pytest
 
-def test_mxacquisition_methods(testconfig):
-  with ispyb.open(testconfig) as conn:
-        mxacquisition = conn.mx_acquisition
+def test_mxacquisition_methods(testdb):
+        mxacquisition = testdb.mx_acquisition
 
         params = mxacquisition.get_data_collection_group_params()
         params['parentid'] = 55168 # sessionId
@@ -41,7 +38,7 @@ def test_mxacquisition_methods(testconfig):
         rs = mxacquisition.retrieve_data_collection_main(id1)
         assert rs[0]['groupId'] == dcgid
 
-        dc = conn.get_data_collection(id1)
+        dc = testdb.get_data_collection(id1)
         assert dc.image_count == 360
         assert dc.dcgid == dcgid
         assert dc.group.dcgid == dcgid
