@@ -1,6 +1,5 @@
 from __future__ import absolute_import, division, print_function
 
-import context
 import datetime
 
 def test_processing_jobs(testdb):

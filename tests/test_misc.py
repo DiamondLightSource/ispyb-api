@@ -2,8 +2,6 @@ from __future__ import absolute_import, division, print_function
 
 import threading
 
-import context
-import ispyb
 import ispyb.exception
 import ispyb.model.__future__
 import mysql.connector.errors

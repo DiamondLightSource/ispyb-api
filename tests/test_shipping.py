@@ -1,6 +1,5 @@
 from __future__ import absolute_import, division, print_function
 
-import context
 
 def test_update_container_assign(testdb):
         testdb.shipping.update_container_assign('i04', 'DLS-0001', 10)

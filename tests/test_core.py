@@ -1,6 +1,5 @@
 from __future__ import absolute_import, division, print_function
 
-import context
 import time
 
 def test_insert_session_for_proposal_code_number(testdb):

@@ -1,14 +1,13 @@
-import context
+from __future__ import absolute_import, division, print_function
+
 from ispyb.strictordereddict import StrictOrderedDict
+
+import pytest
 
 def test_keyerror():
     d = StrictOrderedDict([('c',None), ('b',None), ('a',None)])
-    try:
+    with pytest.raises(KeyError):
         d['new_key'] = 'some value'
-    except KeyError:
-        assert True
-    else:
-        assert False
 
 def test_order():
     d = StrictOrderedDict([('c',1), ('b',2), ('a',3)])

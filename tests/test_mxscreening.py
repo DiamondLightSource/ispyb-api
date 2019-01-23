@@ -2,7 +2,6 @@ from __future__ import absolute_import, division, print_function
 
 from datetime import datetime
 
-import context
 
 def test_insert_all_screening(testdb):
         core = testdb.core

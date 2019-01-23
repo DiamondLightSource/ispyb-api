@@ -1,6 +1,5 @@
 from __future__ import absolute_import, division, print_function
 
-import context
 
 def test_insert_movie(testdb):
         emacquisition = testdb.em_acquisition

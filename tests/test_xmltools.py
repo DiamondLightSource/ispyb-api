@@ -2,7 +2,6 @@ from __future__ import absolute_import, division, print_function
 
 import os
 
-import context
 from ispyb.xmltools import mx_data_reduction_to_ispyb, xml_file_to_dict
 
 def test_mx_data_reduction_xml_to_ispyb(testdb):
