@@ -39,7 +39,7 @@ class XmlDictConfig(dict):
     '''
     def __init__(self, parent_element):
         childrenNames = []
-        for child in parent_element.getchildren():
+        for child in parent_element:
             childrenNames.append(child.tag)
 
         if list(parent_element.items()):

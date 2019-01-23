@@ -121,6 +121,8 @@ class MXProcessing(ispyb.interface.processing.IF):
 
   def upsert_program(self, values):
     '''Store new or update existing program params.'''
+    import warnings
+    warnings.warn("Function upsert_program using the ordered dictionary parameter is deprecated and will be removed in the next release. Use the function upsert_program_ex instead.", DeprecationWarning)
     return self.get_connection().call_sp_write(procname='upsert_processing_program', args=values) # doesn't work with dict cursors
 
   def upsert_program_ex(self, program_id=None, job_id=None, name=None,
