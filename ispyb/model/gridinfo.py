@@ -1,6 +1,6 @@
 from __future__ import absolute_import, division, print_function
 
-import ispyb.exception
+import ispyb
 import ispyb.model
 
 class GridInfo(ispyb.model.DBCache):
@@ -27,7 +27,7 @@ class GridInfo(ispyb.model.DBCache):
     '''Load/update information from the database.'''
     try:
       self._data = self._db.mx_acquisition.retrieve_dcg_grid(self._dcgid)[0]
-    except ispyb.exception.ISPyBNoResultException:
+    except ispyb.NoResult:
       self._data = None
 
   @property

@@ -7,8 +7,7 @@ import traceback
 
 import ispyb.interface.connection
 import mysql.connector
-from ispyb.exception import (ISPyBConnectionException, ISPyBNoResultException,
-                                ISPyBRetrieveFailed, ISPyBWriteFailed)
+from ispyb import (ConnectionError, NoResult, ReadWriteError)
 from mysql.connector.errors import DatabaseError, DataError, Error, InterfaceError
 
 class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
@@ -23,7 +22,7 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
     if hasattr(self, 'conn') and self.conn is not None:
         return self
     else:
-        raise ISPyBConnectionException
+        raise ConnectionError
 
   def __exit__(self, type, value, traceback):
     self.disconnect()
@@ -37,7 +36,7 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
         database=db,
         port=int(port))
     if not self.conn:
-      raise ISPyBConnectionException('Could not connect to database')
+      raise ConnectionError('Could not connect to database')
     self.conn.autocommit = True
     self.reconn_attempts = reconn_attempts
     self.reconn_delay = reconn_delay
@@ -56,14 +55,14 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
 
   def create_cursor(self, dictionary=False):
     if not self.conn:
-      raise ISPyBConnectionException('Not connected to database')
+      raise ConnectionError('Not connected to database')
     try:
       self.conn.ping(reconnect=True, attempts=self.reconn_attempts, delay=self.reconn_delay)
     except InterfaceError:
-      raise ISPyBConnectionException('Failed to ping connection')
+      raise ConnectionError('Failed to ping connection')
     cursor = self.conn.cursor(dictionary=dictionary)
     if not cursor:
-      raise ISPyBConnectionException('Could not create database cursor')
+      raise ConnectionError('Could not create database cursor')
     return cursor
 
   def call_sp_write(self, procname, args):
@@ -72,7 +71,7 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
         try:
             result_args = cursor.callproc(procname=procname, args=args)
         except DataError as e:
-            raise ISPyBWriteFailed("DataError({0}): {1}".format(e.errno, traceback.format_exc()))
+            raise ReadWriteError("DataError({0}): {1}".format(e.errno, traceback.format_exc()))
         finally:
             cursor.close()
     if result_args is not None and len(result_args) > 0:
@@ -84,7 +83,7 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
         try:
             cursor.callproc(procname=procname, args=args)
         except DataError as e:
-            raise ISPyBRetrieveFailed("DataError({0}): {1}".format(e.errno, traceback.format_exc()))
+            raise ReadWriteError("DataError({0}): {1}".format(e.errno, traceback.format_exc()))
 
         result = []
         for recordset in cursor.stored_results():
@@ -96,7 +95,7 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
 
         cursor.close()
     if result == []:
-        raise ISPyBNoResultException
+        raise NoResult
     return result
 
   def call_sf_retrieve(self, funcname, args):
@@ -105,14 +104,14 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
         try:
             cursor.execute(('select %s' % funcname) + ' (%s)' % ','.join(['%s'] * len(args)), args)
         except DataError as e:
-            raise ISPyBRetrieveFailed("DataError({0}): {1}".format(e.errno, traceback.format_exc()))
+            raise ReadWriteError("DataError({0}): {1}".format(e.errno, traceback.format_exc()))
         result = None
         rs = cursor.fetchone()
         if len(rs) > 0:
             result = next(iter(rs.items()))[1]  #iter(rs.items()).next()[1]
         cursor.close()
     if result is None:
-        raise ISPyBNoResultException
+        raise NoResult
     return result
 
   def call_sf_write(self, funcname, args):
@@ -121,7 +120,7 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
         try:
             cursor.execute(('select %s' % funcname) + ' (%s)' % ','.join(['%s'] * len(args)), args)
         except DataError as e:
-            raise ISPyBWriteFailed("DataError({0}): {1}".format(e.errno, traceback.format_exc()))
+            raise ReadWriteError("DataError({0}): {1}".format(e.errno, traceback.format_exc()))
         result = None
         rs = cursor.fetchone()
         if len(rs) > 0:

@@ -164,7 +164,7 @@ class ProcessingJobParameters(ispyb.model.DBCache):
                p['parameterKey'], p['parameterValue'], p['parameterId']))
           for p in self._db.retrieve_job_parameters(self._jobid)
       ]
-    except ispyb.exception.ISPyBNoResultException:
+    except ispyb.NoResult:
       self._data = []
     self._data_dict = collections.OrderedDict(self._data)
 
@@ -261,7 +261,7 @@ class ProcessingJobImageSweeps(ispyb.model.DBCache):
           ProcessingJobImageSweep(p['dataCollectionId'], p['startImage'], p['endImage'], p['sweepId'], self._db)
           for p in self._db.retrieve_job_image_sweeps(self._jobid)
       ]
-    except ispyb.exception.ISPyBNoResultException:
+    except ispyb.NoResult:
       self._data = []
 
   def __getitem__(self, item):
@@ -307,7 +307,7 @@ class ProcessingJobPrograms(ispyb.model.DBCache):
           ispyb.model.processingprogram.ProcessingProgram(p['id'], self._db, preload=p)
           for p in self._db.retrieve_programs_for_job_id(self._jobid)
       ]
-    except ispyb.exception.ISPyBNoResultException:
+    except ispyb.NoResult:
       self._data = []
 
   def __getitem__(self, item):

@@ -1,9 +1,9 @@
+from __future__ import absolute_import, division, print_function
+
 # XML-to-dict code from here:
 # http://code.activestate.com/recipes/410469-xml-as-dictionary/
 
 from xml.etree import ElementTree
-
-from ispyb.exception import ISPyBKeyProblem
 
 class XmlListConfig(list):
     def __init__(self, aList):
@@ -100,11 +100,11 @@ def mx_data_reduction_to_ispyb(xmldict, dc_id = None, mxprocessing = None):
     scaling = xmldict['AutoProcScalingContainer']['AutoProcScaling']
 
     if proc == None:
-        raise ISPyBKeyProblem("Missing key 'AutoProc'")
+        raise KeyError("Missing key 'AutoProc'")
     if scaling == None:
-        raise ISPyBKeyProblem("Missing key 'AutoProcScaling'")
+        raise KeyError("Missing key 'AutoProcScaling'")
     if int_containers == None:
-        raise ISPyBKeyProblem("Missing key 'AutoProcIntegrationContainer'")
+        raise KeyError("Missing key 'AutoProcIntegrationContainer'")
 
     s = [None, None, None]
     for i in range(0,3):
@@ -117,7 +117,7 @@ def mx_data_reduction_to_ispyb(xmldict, dc_id = None, mxprocessing = None):
             s[2] = stats
 
     if s[0] == None or s[1] == None or s[2] == None:
-        raise ISPyBKeyProblem("Need 3 'AutoProcScalingStatistics' keys in 'AutoProcScalingContainer'")
+        raise KeyError("Need 3 'AutoProcScalingStatistics' keys in 'AutoProcScalingContainer'")
 
     for int_container in int_containers:
         integration = int_container['AutoProcIntegration']
@@ -125,7 +125,7 @@ def mx_data_reduction_to_ispyb(xmldict, dc_id = None, mxprocessing = None):
             if dc_id is not None:
     	        integration['dataCollectionId'] = dc_id
             else:
-                raise ISPyBKeyProblem("Missing key 'dataCollectionId'")
+                raise KeyError("Missing key 'dataCollectionId'")
 
     # Store results from MX data reduction pipelines
     # ...first the program info

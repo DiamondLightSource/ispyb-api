@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 from datetime import datetime
 
-import ispyb.exception
+import ispyb
 import pytest
 
 def test_mxacquisition_methods(testdb):
@@ -54,7 +54,7 @@ def test_mxacquisition_methods(testdb):
         params['comments'] = 'Forgot to comment!'
         iid = mxacquisition.upsert_image(list(params.values()))
 
-        with pytest.raises(ispyb.exception.ISPyBNoResultException):
+        with pytest.raises(ispyb.NoResult):
           gridinfo = mxacquisition.retrieve_dcg_grid(dcgid)
 
         params = mxacquisition.get_dcg_grid_params()
