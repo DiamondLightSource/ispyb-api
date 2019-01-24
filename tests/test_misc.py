@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import threading
 
-import ispyb.exception
+import ispyb
 import ispyb.model.__future__
 import mysql.connector.errors
 import pytest
@@ -39,7 +39,7 @@ def test_multi_threads_upsert(testdb):
             worker.join()
 
 def test_retrieve_failure(testdb):
-    with pytest.raises(ispyb.exception.ISPyBNoResultException):
+    with pytest.raises(ispyb.NoResult):
       rs = testdb.mx_acquisition.retrieve_data_collection_main(0)
 
 def test_database_reconnects_on_connection_failure(testconfig, testdb):

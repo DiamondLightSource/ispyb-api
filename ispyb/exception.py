@@ -1,20 +1,14 @@
-class ISPyBException(Exception):
-  '''Base class for all exceptions'''
+from __future__ import absolute_import, division, print_function
 
-class ISPyBConnectionException(ISPyBException):
-  '''Unable to connect or connection has been closed.'''
+import warnings
 
-class ISPyBNoResultException(ISPyBException):
-  '''Query returned no result.'''
+import ispyb
 
-class ISPyBWriteFailed(ISPyBException):
-  '''Record could not be inserted, updated or deleted. This could be due to
-  illegal values, the wrong number of parameters, a violation of table or
-  index constraints, or a database failure.'''
+warnings.warn("ispyb.exceptions is deprecated and will be removed in the next release. Use the exceptions underneath ispyb. instead.", DeprecationWarning)
 
-class ISPyBRetrieveFailed(ISPyBException):
-  '''Record(s) could not be retrieved. This could be due to invalid argument
-  values, or a database failure. '''
-
-class ISPyBKeyProblem(ISPyBException):
-  '''A mandatory key is missing or its value is None.'''
+ISPyBException = ispyb.ISPyBException
+ISPyBConnectionException = ispyb.ConnectionError
+ISPyBNoResultException = ispyb.NoResult
+ISPyBWriteFailed = ispyb.ReadWriteError
+ISPyBRetrieveFailed = ispyb.ReadWriteError
+ISPyBKeyProblem = KeyError

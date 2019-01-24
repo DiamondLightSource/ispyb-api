@@ -38,3 +38,18 @@ def open(configuration_file):
     raise AttributeError('No supported connection type found in %s' % configuration_file)
 
   return conn
+
+
+class ISPyBException(Exception):
+  '''Base class for all exceptions'''
+
+class ConnectionError(ISPyBException):
+  '''Unable to connect or connection has been closed.'''
+
+class NoResult(ISPyBException):
+  '''Query returned no result.'''
+
+class ReadWriteError(ISPyBException):
+  '''Record could not be read, inserted, updated or deleted. This could be due to
+  illegal values, the wrong number of parameters, a violation of table or
+  index constraints, or a database failure.'''
