@@ -23,19 +23,18 @@ def open(configuration_file):
     raise AttributeError('No configuration found at %s' % configuration_file)
 
   conn = None
-  if config.has_section('ispyb_mysql_sp'):
+  if config.has_section('ispyb_mariadb_sp'):
     from ispyb.connector.mysqlsp.main import ISPyBMySQLSPConnector as Connector
-    credentials = dict(config.items('ispyb_mysql_sp'))
-    _log.debug('Creating MySQL Stored Procedure connection from %s', configuration_file)
+    credentials = dict(config.items('ispyb_mariadb_sp'))
+    _log.debug('Creating MariaDB Stored Procedure connection from %s', configuration_file)
     conn = Connector(**credentials)
-
   elif config.has_section('ispyb_ws'):
     from ispyb.connector.ws.main import ISPyBWSConnector as Connector
     credentials = dict(config.items('ispyb_ws'))
     _log.debug('Creating Webservices connection from %s', configuration_file)
     conn = Connector(**credentials)
   else:
-    raise AttributeError('No supported connection type found in %s' % configuration_file)
+    raise AttributeError('No supported connection type found in %s. For an example of a valid config file, please see config.example.cfg.' % configuration_file)
 
   return conn
 
