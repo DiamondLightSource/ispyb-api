@@ -1,8 +1,8 @@
--- MySQL dump 10.17  Distrib 10.3.11-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.17  Distrib 10.3.13-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: ispyb_build
 -- ------------------------------------------------------
--- Server version	10.3.11-MariaDB
+-- Server version	10.3.13-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -2126,6 +2126,62 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_container_subsamples_v2` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_container_subsamples_v2`(IN p_barcode varchar(45))
+    READS SQL DATA
+    COMMENT 'Returns a mutli-row result-set with general info about submitted subsamples on submitted container p_barcode'
+BEGIN
+  IF NOT (p_barcode IS NULL) THEN
+    SELECT blss.blSubSampleId "id", bls.location "sampleLocation", pos1.posX "ROIPos1x", pos1.posY "ROIPos1y", pos1.posZ "ROIPos1z", pos2.posX "ROIPos2x", pos2.posY "ROIPos2y", pos2.posZ "ROIPos2z",
+	  blsi.imageFullPath "lastVisibleImgFullPath", blss.imgFilePath "uploadedImgFilePath", blss.imgFileName "uploadedImgFileName",
+      dp.experimentKind "experimentKind", dp.exposureTime "exposureTime",
+      dp.preferredBeamSizeX "preferredBeamSizeX", dp.preferredBeamSizeY "preferredBeamSizeY", dp.requiredResolution "requiredResolution",
+      dp.monochromator "monochromator", 12398.42 / dp.energy "wavelength", dp.transmission "transmission",
+      dp.boxSizeX "boxSizeX", dp.boxSizeY "boxSizeY",
+      dp.kappaStart "kappaStart", dp.axisStart "axisStart", dp.axisRange "axisRange", dp.numberOfImages "numberOfImages",
+      count(dc.dataCollectionId) "numDCs"
+    FROM Container c
+	    INNER JOIN ContainerQueue cq ON c.containerId = cq.containerId
+      INNER JOIN ContainerQueueSample cqs ON cq.containerQueueId = cqs.containerQueueId
+      INNER JOIN BLSubSample blss ON blss.blSubSampleId = cqs.blSubSampleId
+      INNER JOIN BLSample bls ON blss.blSampleId = bls.blSampleId
+      INNER JOIN Position pos1 ON pos1.positionId = blss.positionId
+      LEFT OUTER JOIN Position pos2 ON pos2.positionId = blss.position2Id
+      INNER JOIN DiffractionPlan dp ON dp.diffractionPlanId = blss.diffractionPlanId
+      LEFT OUTER JOIN BLSampleImage blsi ON blsi.blSampleId = bls.blSampleId AND blsi.blSampleImageId = (
+        SELECT max(blsi2.blSampleImageId)
+        FROM BLSampleImage blsi2
+          INNER JOIN ContainerInspection ci ON blsi2.containerInspectionId = ci.containerInspectionId
+          INNER JOIN InspectionType it ON ci.inspectionTypeId = it.inspectionTypeId
+        WHERE blsi2.blSampleId = bls.blSampleId AND it.name = 'Visible'
+      )
+      LEFT OUTER JOIN DataCollection dc on dc.blSubSampleId = blss.blSubSampleId
+	WHERE c.barcode = p_barcode
+    GROUP BY blss.blSubSampleId, location, pos1.posX, pos1.posY, pos1.posZ, pos2.posX, pos2.posY, pos2.posZ,
+	  blsi.imageFullPath, blss.imgFilePath, blss.imgFileName,
+      dp.experimentKind, dp.exposureTime,
+      dp.preferredBeamSizeX, dp.preferredBeamSizeY, dp.requiredResolution,
+      dp.monochromator, 12398.42 / dp.energy, dp.transmission,
+      dp.boxSizeX, dp.boxSizeY,
+      dp.kappaStart, dp.axisStart, dp.axisRange, dp.numberOfImages;
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_barcode is NULL';
+  END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `retrieve_current_cm_sessions` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2156,15 +2212,17 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_current_sessions`(IN p_beamline varchar(15), IN p_tolerance_minutes int)
+    READS SQL DATA
+    COMMENT 'Returns a multi-row result-set with the current (within tolerance p_tolerance_minutes)\nsession(s) (mx12345-123), their start and end dates for beamline p_beamline'
 BEGIN
 	set p_tolerance_minutes = IFNULL(p_tolerance_minutes, 0);
     SELECT concat(p.proposalCode, p.proposalNumber, '-', bs.visit_number) `session`, bs.startDate, bs.endDate
     FROM Proposal p
       INNER JOIN BLSession bs on p.proposalId = bs.proposalId
-	WHERE bs.beamlinename = p_beamline AND now() BETWEEN bs.startDate - INTERVAL p_tolerance_minutes MINUTE and bs.endDate + INTERVAL p_tolerance_minutes MINUTE 
+	WHERE bs.beamlinename = p_beamline AND bs.visit_number <> 0 AND now() BETWEEN bs.startDate - INTERVAL p_tolerance_minutes MINUTE and bs.endDate + INTERVAL p_tolerance_minutes MINUTE
     ORDER BY bs.startDate;
 END ;;
 DELIMITER ;
@@ -2180,18 +2238,50 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_current_sessions_for_person`(IN p_beamline varchar(15), IN p_fed_id varchar(24), IN p_tolerance_minutes int)
+    READS SQL DATA
+    COMMENT 'Returns a multi-row result-set with the current (within tolerance p_tolerance_minutes)\nsession(s) (mx12345-123), their start and end dates for person p_fed_id and beamline p_beamline'
 BEGIN
-	set p_tolerance_minutes = IFNULL(p_tolerance_minutes, 0);
+	  SET p_tolerance_minutes = IFNULL(p_tolerance_minutes, 0);
     SELECT concat(p.proposalCode, p.proposalNumber, '-', bs.visit_number) `session`, bs.startDate, bs.endDate
     FROM Proposal p
       INNER JOIN BLSession bs on p.proposalId = bs.proposalId
-      INNER JOIN Session_has_Person shp ON shp.sessionId = bs.sessionId 
-	  INNER JOIN Person per ON shp.personId = per.personId
-	WHERE bs.beamlinename = p_beamline AND per.login = p_fed_id AND now() BETWEEN bs.startDate - INTERVAL p_tolerance_minutes MINUTE and bs.endDate + INTERVAL p_tolerance_minutes MINUTE
+      INNER JOIN Session_has_Person shp ON shp.sessionId = bs.sessionId
+	    INNER JOIN Person per ON shp.personId = per.personId
+	  WHERE bs.beamlinename = p_beamline AND bs.visit_number <> 0 AND per.login = p_fed_id AND now() BETWEEN bs.startDate - INTERVAL p_tolerance_minutes MINUTE and bs.endDate + INTERVAL p_tolerance_minutes MINUTE
     ORDER BY bs.startDate;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_dc_group` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_dc_group`(p_id int unsigned)
+    READS SQL DATA
+    COMMENT 'Returns a single-row result-set with the columns for the given data collection group id'
+BEGIN
+    IF p_id IS NOT NULL THEN
+      SELECT sessionId, blSampleId "sampleId", experimentType "experimenttype", startTime "starttime", endTime "endtime",
+        crystalClass, detectorMode, actualSampleBarcode, actualSampleSlotInContainer, actualContainerBarcode, actualContainerSlotInSC,
+        comments, xtalSnapshotFullPath, scanParameters
+      FROM DataCollectionGroup
+      WHERE datacollectionGroupId = p_id;
+    ELSE
+	    SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644,
+        MESSAGE_TEXT='Mandatory argument p_id can not be NULL';
+	END IF;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2571,14 +2661,16 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE PROCEDURE `retrieve_most_recent_session`(IN p_beamline varchar(15), IN p_proposal_code varchar(5))
+    READS SQL DATA
+    COMMENT 'Returns a single-row result-set with the session (mx12345-123), its start and end dates\nfor beamline p_beamline and proposal code p_proposal_code (e.g. cm, mx, nt, in, ee)'
 BEGIN
     SELECT concat(p.proposalCode, p.proposalNumber, '-', bs.visit_number) `session`, bs.startDate, bs.endDate
     FROM Proposal p
       INNER JOIN BLSession bs on p.proposalId = bs.proposalId
-	WHERE p.proposalCode = p_proposal_code AND bs.beamlinename = p_beamline AND now() > bs.startDate
+	WHERE p.proposalCode = p_proposal_code AND bs.beamlinename = p_beamline AND bs.visit_number <> 0 AND now() > bs.startDate
     ORDER BY bs.startDate DESC
     LIMIT 1;
 END ;;
@@ -3265,6 +3357,50 @@ BEGIN
     ELSE
         SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_status does not have a valid value';
   END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_container_unassign_all_for_beamline` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `update_container_unassign_all_for_beamline`(IN p_beamline varchar(20))
+    MODIFIES SQL DATA
+    COMMENT 'Unassigns all containers on a given beamline one by one by calling update_container_assign on each.'
+BEGIN
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE row_registry_barcode VARCHAR(20);
+    DECLARE row_position VARCHAR(20);
+    DECLARE cur CURSOR FOR SELECT cr.barcode, c.sampleChangerLocation  
+        FROM Container c
+            INNER JOIN ContainerRegistry cr ON cr.containerRegistryId = c.containerRegistryId
+            INNER JOIN BLSession bs ON bs.sessionId = c.sessionId
+        WHERE bs.beamlineName = p_beamline AND c.containerStatus = 'processing';
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    IF NOT (p_beamline IS NULL) THEN
+        OPEN cur;
+        call_loop: LOOP
+            FETCH cur INTO row_registry_barcode, row_position;
+            IF done THEN
+                LEAVE call_loop;
+            END IF;
+            CALL update_container_assign(p_beamline, row_registry_barcode, row_position);
+        END LOOP;
+        CLOSE cur;
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_beamline is NULL';
+    END IF;
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -4303,6 +4439,106 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_dc_group_v3` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_dc_group_v3`(
+	 INOUT p_id int(11) unsigned,
+     p_sessionId int(10) unsigned,
+     p_proposalCode varchar(3),
+     p_proposalNumber int(10),
+     p_sessionNumber int(10),
+     p_sampleId int(10) unsigned,
+     p_sampleBarcode varchar(45),
+     p_experimenttype varchar(45), 
+     p_starttime datetime,
+     p_endtime datetime,
+     p_crystalClass varchar(20),
+     p_detectorMode varchar(255),
+     p_actualSampleBarcode varchar(45),
+     p_actualSampleSlotInContainer integer(10),
+     p_actualContainerBarcode varchar(45),
+     p_actualContainerSlotInSC integer(10),
+     p_comments varchar(1024),
+     p_xtalSnapshotFullPath	varchar(255),
+		 p_scanParameters longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin
+     )
+    MODIFIES SQL DATA
+    COMMENT 'Inserts or updates info about data collection group (p_id).\nMandatory columns:\nFor insert: Either p_sessionId or a valid session described by (p_proposalCode, p_proposalNumber, p_sessionNumber)\nFor update: p_id\nNote: In order to associate the data collection group with a sample, one of the following sets of parameters are required:\n* p_sampleId\n* p_proposalCode, p_proposalNumber, p_sessionNumber + p_sampleBarcode\n* p_actualContainerBarcode + p_actualSampleSlotInContainer\nReturns: Record ID in p_id.'
+BEGIN
+	DECLARE row_proposal_id int(10) unsigned DEFAULT NULL;
+	DECLARE row_sample_id int(10) unsigned DEFAULT NULL;
+
+	IF p_sessionId IS NULL AND p_proposalCode IS NOT NULL AND p_proposalNumber IS NOT NULL AND p_sessionNumber IS NOT NULL THEN
+      SELECT max(bs.sessionid), p.proposalId INTO p_sessionId, row_proposal_id
+      FROM Proposal p INNER JOIN BLSession bs ON p.proposalid = bs.proposalid
+      WHERE p.proposalCode = p_proposalCode AND p.proposalNumber = p_proposalNumber AND bs.visit_number = p_sessionNumber;
+	END IF;
+
+	IF p_id IS NOT NULL OR p_sessionId IS NOT NULL THEN
+	  
+      IF p_sessionId IS NOT NULL AND p_sampleId IS NULL AND p_sampleBarcode IS NOT NULL THEN
+	    IF row_proposal_id IS NULL THEN
+          SELECT proposalId INTO row_proposal_id
+          FROM BLSession
+          WHERE sessionId = p_sessionId;
+	    END IF;
+        SELECT max(bls.blSampleId) INTO p_sampleId
+        FROM BLSample bls
+		  INNER JOIN Container c on c.containerId = bls.containerId
+          INNER JOIN Dewar d on d.dewarId = c.dewarId
+          INNER JOIN Shipping s on s.shippingId = d.shippingId
+        WHERE bls.code = p_sampleBarcode AND s.proposalId = row_proposal_id;
+	  END IF;
+
+	  IF p_sampleId IS NULL AND (p_actualContainerBarcode IS NOT NULL) AND (p_actualSampleSlotInContainer IS NOT NULL) THEN
+	    SELECT max(bls.blSampleId) INTO p_sampleId
+        FROM BLSample bls
+          INNER JOIN Container c on c.containerId = bls.containerId
+	    WHERE c.barcode = p_actualContainerBarcode AND bls.location = p_actualSampleSlotInContainer;
+      END IF;
+
+      INSERT INTO DataCollectionGroup (datacollectionGroupId, sessionId, blsampleId, experimenttype, starttime, endtime,
+        crystalClass, detectorMode, actualSampleBarcode, actualSampleSlotInContainer, actualContainerBarcode, actualContainerSlotInSC,
+        comments, xtalSnapshotFullPath, scanParameters)
+        VALUES (p_id, p_sessionId, p_sampleId, p_experimenttype, p_starttime, p_endtime, p_crystalClass, p_detectorMode,
+        p_actualSampleBarcode, p_actualSampleSlotInContainer, p_actualContainerBarcode, p_actualContainerSlotInSC,
+        p_comments, p_xtalSnapshotFullPath, p_scanParameters)
+	    ON DUPLICATE KEY UPDATE
+		  sessionId = IFNULL(p_sessionId, sessionId),
+          blsampleId = IFNULL(p_sampleId, blsampleId),
+          experimenttype = IFNULL(p_experimenttype, experimenttype),
+          starttime = IFNULL(p_starttime, starttime),
+          endtime = IFNULL(p_endtime, endtime),
+          crystalClass = IFNULL(p_crystalClass, crystalClass),
+          detectorMode = IFNULL(p_detectorMode, detectorMode),
+          actualSampleBarcode = IFNULL(p_actualSampleBarcode, actualSampleBarcode),
+          actualSampleSlotInContainer = IFNULL(p_actualSampleSlotInContainer, actualSampleSlotInContainer),
+          actualContainerBarcode = IFNULL(p_actualContainerBarcode, actualContainerBarcode),
+          actualContainerSlotInSC = IFNULL(p_actualContainerSlotInSC, actualContainerSlotInSC),
+          comments = IFNULL(p_comments, comments),
+          xtalSnapshotFullPath = IFNULL(p_xtalSnapshotFullPath, xtalSnapshotFullPath),
+					scanParameters = IFNULL (p_scanParameters, scanParameters);
+
+	    IF p_id IS NULL THEN
+		    SET p_id = LAST_INSERT_ID();
+      END IF;
+    ELSE
+      SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument(s) are NULL: p_id OR p_sessionId OR a valid session described by (p_proposalCode and p_proposalNumber and p_sessionNumber) must be non-NULL.';
+    END IF;
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `upsert_dc_main` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -4534,7 +4770,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE PROCEDURE `upsert_dewar`(
 	 INOUT p_id int(10) unsigned,
@@ -6066,6 +6302,25 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `Warnings` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `Warnings`()
+BEGIN
+select * from mysql.user;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -6075,4 +6330,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-14  9:50:25
+-- Dump completed on 2019-03-22 13:18:44
