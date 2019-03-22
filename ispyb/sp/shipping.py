@@ -38,6 +38,10 @@ class Shipping(ispyb.interface.shipping.IF):
     '''Assign a container'''
     self.get_connection().call_sp_write(procname='update_container_assign', args=(beamline, registry_barcode, position))
 
+  def update_container_unassign_all_for_beamline(self, beamline):
+    '''Unassign all containers for a given beamline. Assumes container.sessionId and container.containerRegistryId are populated.'''
+    self.get_connection().call_sp_write(procname='update_container_unassign_all_for_beamline', args=(beamline,))
+
   def upsert_dewar(self, values):
     '''Insert or update a dewar or parcel'''
     return self.get_connection().call_sp_write('upsert_dewar', values)
