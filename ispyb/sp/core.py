@@ -63,10 +63,6 @@ class Core(ispyb.interface.core.IF):
     return copy.deepcopy(cls._person_params)
 
   @classmethod
-  def get_person_params(cls):
-    return copy.deepcopy(cls._person_params)
-
-  @classmethod
   def get_proposal_has_person_params(cls):
     return copy.deepcopy(cls._proposal_has_person_params)
 
