@@ -124,5 +124,10 @@ def test_retrieve_active_plates(testdb):
         assert len(rs) >= 0
 
 def test_retrieve_proposal_title(testdb):
-        title = testdb.core.retrieve_proposal_title('cm', 14451)
+        rs = testdb.core.retrieve_proposal_title('cm', 14451)
+        title = rs[0]['title']
+        assert title.strip() == 'I03 Commissioning Directory 2016'
+
+        rs = testdb.core.retrieve_proposal_title('cm', 14451, 'boaty')
+        title = rs[0]['title']
         assert title.strip() == 'I03 Commissioning Directory 2016'
