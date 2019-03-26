@@ -170,29 +170,35 @@ class MXProcessing(ispyb.interface.processing.IF):
     '''Update or insert new entry with info about views (image paths) for an MX molecular replacement run, e.g. Dimple.'''
     return self.get_connection().call_sp_write(procname='upsert_mrrun_blob', args=values)
 
-  def retrieve_job(self, id):
+  def retrieve_job(self, id, auth_login=None):
     '''Retrieve info about the processing job with id=id'''
-    return self.get_connection().call_sp_retrieve(procname='retrieve_processing_job', args=(id,))
+    return self.get_connection().call_sp_retrieve(procname='retrieve_processing_job_v2', args=(id, auth_login))
 
-  def retrieve_job_parameters(self, id):
+  def retrieve_job_parameters(self, id, auth_login=None):
     '''Retrieve info about the parameters for processing job with id=id'''
-    return self.get_connection().call_sp_retrieve(procname='retrieve_processing_job_parameters', args=(id,))
+    return self.get_connection().call_sp_retrieve(procname='retrieve_processing_job_parameters_v2', args=(id, auth_login))
 
-  def retrieve_job_image_sweeps(self, id):
+  def retrieve_job_image_sweeps(self, id, auth_login=None):
     '''Retrieve info about the image sweeps for job with id=id'''
-    return self.get_connection().call_sp_retrieve(procname='retrieve_processing_job_image_sweeps', args=(id,))
+    return self.get_connection().call_sp_retrieve(procname='retrieve_processing_job_image_sweeps_v2', args=(id, auth_login))
 
-  def retrieve_programs_for_job_id(self, id):
+  def retrieve_programs_for_job_id(self, id, auth_login=None):
     '''Retrieve the processing instances associated with the given processing job ID'''
-    return self.get_connection().call_sp_retrieve(procname='retrieve_processing_programs_for_job_id', args=(id,))
+    return self.get_connection().call_sp_retrieve(procname='retrieve_processing_programs_for_job_id_v2', args=(id, auth_login))
 
-  def retrieve_program_attachments_for_data_collection_group_and_program(self, id, program):
+  def retrieve_program_attachments_for_data_collection_group_and_program(self, id, program, auth_login=None):
     '''Retrieve the processing program attachments associated with the given data collection group and processing program'''
-    return self.get_connection().call_sp_retrieve(procname='retrieve_processing_program_attachments_for_dc_group_and_program', args=(id,program))
+    return self.get_connection().call_sp_retrieve(
+      procname='retrieve_processing_program_attachments_for_dc_group_program_v2', 
+      args=(id, program, auth_login)
+    )
 
-  def retrieve_program_attachments_for_program_id(self, id):
+  def retrieve_program_attachments_for_program_id(self, id, auth_login=None):
     '''Retrieve the processing program attachments associated with the given processing program ID'''
-    return self.get_connection().call_sp_retrieve(procname='retrieve_processing_program_attachments_for_program_id', args=(id,))
+    return self.get_connection().call_sp_retrieve(
+      procname='retrieve_processing_program_attachments_for_program_id_v2', 
+      args=(id, auth_login)
+    )
 
   def upsert_job(self, values):
     '''Update or insert a new processing job entry'''

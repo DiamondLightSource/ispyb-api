@@ -94,13 +94,13 @@ class MXAcquisition(Acquisition):
     '''Insert or update the grid info associated with a data collection group'''
     return self.get_connection().call_sp_write('upsert_dcg_grid', values)
 
-  def retrieve_dcg_grid(self, dcgid):
+  def retrieve_dcg_grid(self, dcgid, auth_login=None):
     '''Retrieve a list of dictionaries containing the grid information for
        one data collection group id. Raises ISPyBNoResultException if there
        is no grid information available for the given DCGID.
        Generally the list will only contain a single dictionary.
     '''
-    return self.get_connection().call_sp_retrieve(procname='retrieve_grid_info_for_dcg', args=(dcgid,))
+    return self.get_connection().call_sp_retrieve(procname='retrieve_grid_info_for_dcg_v2', args=(dcgid, auth_login))
 
   @classmethod
   def get_energy_scan_params(cls):

@@ -31,3 +31,5 @@ def test_upsert_dewar(testdb):
 def test_retrieve_dewars(testdb):
         rs = testdb.shipping.retrieve_dewars_for_proposal_code_number('cm', 1)
         assert len(rs) > 0
+        rs = testdb.shipping.retrieve_dewars_for_proposal_code_number('cm', 14451, 'boaty')
+        assert len(rs) > 0
