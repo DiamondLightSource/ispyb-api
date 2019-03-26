@@ -63,10 +63,6 @@ class Core(ispyb.interface.core.IF):
     return copy.deepcopy(cls._person_params)
 
   @classmethod
-  def get_person_params(cls):
-    return copy.deepcopy(cls._person_params)
-
-  @classmethod
   def get_proposal_has_person_params(cls):
     return copy.deepcopy(cls._proposal_has_person_params)
 
@@ -80,35 +76,35 @@ class Core(ispyb.interface.core.IF):
 
   def upsert_proposal(self, values):
     '''Insert or update a proposal'''
-    return self.get_connection().call_sp_write('upsert_proposal', values)
+    return self.get_connection().call_sp_write(procname='upsert_proposal', args=values)
 
   def upsert_session_for_proposal_code_number(self, values):
     '''Insert or update a session for a certain proposal with given proposal code and number.'''
-    return self.get_connection().call_sp_write('upsert_session_for_proposal_code_number', values)
+    return self.get_connection().call_sp_write(procname='upsert_session_for_proposal_code_number', args=values)
 
   def upsert_person(self, values):
     '''Insert or update a person'''
-    return self.get_connection().call_sp_write('upsert_person', values)
+    return self.get_connection().call_sp_write(procname='upsert_person', args=values)
 
   def upsert_session_has_person(self, values):
     '''Insert or update a session-person association'''
-    return self.get_connection().call_sp_write('upsert_session_has_person', values)
+    return self.get_connection().call_sp_write(procname='upsert_session_has_person', args=values)
 
   def upsert_proposal_has_person(self, values):
     '''Insert or update a proposal-person association'''
-    return self.get_connection().call_sp_write('upsert_proposal_has_person', values)
+    return self.get_connection().call_sp_write(procname='upsert_proposal_has_person', args=values)
 
   def upsert_sample(self, values):
     '''Insert or update sample.'''
-    return self.get_connection().call_sf_write('upsert_sample', values)
+    return self.get_connection().call_sf_write(funcname='upsert_sample', args=values)
 
   def retrieve_visit_id(self, visit):
     '''Get the database ID for a visit on the form mx1234-5.'''
-    return self.get_connection().call_sf_retrieve('retrieve_visit_id', [visit])
+    return self.get_connection().call_sf_retrieve(funcname='retrieve_visit_id', args=(visit,))
 
   def retrieve_datacollection_id(self, img_filename, img_fileloc):
     '''Get the database ID for the data collection corresponding to the given diffraction image file.'''
-    return self.get_connection().call_sf_retrieve('retrieve_datacollection_id', [img_filename, img_fileloc])
+    return self.get_connection().call_sf_retrieve(funcname='retrieve_datacollection_id', args=(img_filename, img_fileloc))
 
   def retrieve_current_sessions(self, beamline, tolerance_mins=0):
     '''Get a result-set with the currently active sessions on the given beamline.'''
@@ -140,8 +136,8 @@ class Core(ispyb.interface.core.IF):
 
   def retrieve_active_plates(self, beamline):
     '''Get a result-set with the submitted plates not yet in local storage on a given beamline'''
-    return self.get_connection().call_sp_retrieve(procname="retrieve_containers_submitted_non_ls", args=(beamline,))
+    return self.get_connection().call_sp_retrieve(procname='retrieve_containers_submitted_non_ls', args=(beamline,))
 
   def retrieve_proposal_title(self, proposal_code, proposal_number):
     '''Get the title of a given proposal'''
-    return self.get_connection().call_sf_retrieve('retrieve_proposal_title', [proposal_code, proposal_number])
+    return self.get_connection().call_sf_retrieve(funcname='retrieve_proposal_title', args=(proposal_code, proposal_number))
