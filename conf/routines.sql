@@ -2371,6 +2371,86 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_dc_main_v2` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_dc_main_v2`(p_id int unsigned, p_authLogin varchar(45))
+    READS SQL DATA
+    COMMENT 'Returns a single-row result-set with the main data collection info for the given ID'
+BEGIN
+    IF p_id IS NOT NULL THEN
+
+    	IF p_authLogin IS NOT NULL THEN
+    	
+
+				SELECT dc.dataCollectionGroupId "groupId",
+					dc.detectorId "detectorId",
+					dc.blSubSampleId "blSubSampleId",
+					dc.dataCollectionNumber "dcNumber",
+					dc.startTime "startTime",
+					dc.endTime "endTime",
+					dc.runStatus "status",
+					dc.numberOfImages "noImages",
+					dc.startImageNumber "startImgNumber",
+					dc.numberOfPasses "noPasses",
+					dc.imageDirectory "imgDir",
+					dc.imagePrefix "imgPrefix",
+					dc.imageSuffix "imgSuffix",
+					dc.fileTemplate "fileTemplate",
+					dc.xtalSnapshotFullPath1 "snapshot1",
+					dc.xtalSnapshotFullPath2 "snapshot2",
+					dc.xtalSnapshotFullPath3 "snapshot3",
+					dc.xtalSnapshotFullPath4 "snapshot4",
+					dc.comments "comments"
+				FROM DataCollection dc
+					INNER JOIN DataCollectionGroup dcg ON dc.dataCollectionGroupId = dcg.dataCollectionGroupId
+        	INNER JOIN BLSession bs ON dcg.sessionId = bs.sessionId 
+        	INNER JOIN Session_has_Person shp ON bs.sessionId = shp.sessionId
+        	INNER JOIN Person p ON p.personId = shp.personId
+	  		WHERE p.login = p_authLogin AND	dc.dataCollectionId = p_id;
+
+    	ELSE 
+
+				SELECT dataCollectionGroupId "groupId",
+					detectorId "detectorId",
+					blSubSampleId "blSubSampleId",
+					dataCollectionNumber "dcNumber",
+					startTime "startTime",
+					endTime "endTime",
+					runStatus "status",
+					numberOfImages "noImages",
+					startImageNumber "startImgNumber",
+					numberOfPasses "noPasses",
+					imageDirectory "imgDir",
+					imagePrefix "imgPrefix",
+					imageSuffix "imgSuffix",
+					fileTemplate "fileTemplate",
+					xtalSnapshotFullPath1 "snapshot1",
+					xtalSnapshotFullPath2 "snapshot2",
+					xtalSnapshotFullPath3 "snapshot3",
+					xtalSnapshotFullPath4 "snapshot4",
+					comments "comments"
+				FROM DataCollection 
+				WHERE dataCollectionId = p_id;
+
+    	END IF;
+
+    ELSE
+	  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory arguments p_id can not be NULL';
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `retrieve_dc_plans_for_sample` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2535,6 +2615,60 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_dewars_for_proposal_code_number_v2` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_dewars_for_proposal_code_number_v2`(
+    p_proposalCode varchar(3), 
+    p_proposalNumber int unsigned, 
+    p_authLogin varchar(45))
+    READS SQL DATA
+    COMMENT 'Return multi-row result-set with dewar ID + other dewar info associated with shipments in a given proposal specified by proposal code, proposal_number'
+BEGIN
+    IF NOT (p_proposalCode IS NULL OR p_proposalNumber IS NULL) THEN
+
+        IF p_authLogin IS NOT NULL THEN
+            SELECT
+                d.dewarId "id", d.shippingId "shippingId", d.code "name", d.comments "comments", d.storageLocation "storageLocation",
+                d.dewarStatus "status", d.isStorageDewar "isStorageDewar", d.barCode "barCode", d.firstExperimentId "firstSessionId",
+				d.type "type", d.facilityCode "facilityCode", d.weight "weight", d.deliveryAgent_barcode "deliveryAgentBarcode"
+            FROM Dewar d
+                INNER JOIN Shipping s ON s.shippingId = d.shippingId
+		        INNER JOIN Proposal p ON p.proposalId = s.proposalId
+                INNER JOIN BLSession bs ON bs.proposalId = s.proposalId
+                INNER JOIN Session_has_Person shp ON bs.sessionId = shp.sessionId
+                INNER JOIN Person per ON per.personId = shp.personId
+            WHERE per.login = p_authLogin AND p.proposalCode = p_proposalCode AND p.proposalNumber = p_proposalNumber
+            GROUP BY d.dewarId, d.shippingId, d.code, d.comments, d.storageLocation,
+                d.dewarStatus, d.isStorageDewar, d.barCode, d.firstExperimentId,
+				d.type, d.facilityCode, d.weight, d.deliveryAgent_barcode;
+        ELSE
+            SELECT
+                d.dewarId "id", d.shippingId "shippingId", d.code "name", d.comments "comments", d.storageLocation "storageLocation",
+                d.dewarStatus "status", d.isStorageDewar "isStorageDewar", d.barCode "barCode", d.firstExperimentId "firstSessionId",
+				d.type "type", d.facilityCode "facilityCode", d.weight "weight", d.deliveryAgent_barcode "deliveryAgentBarcode"
+            FROM Dewar d
+                INNER JOIN Shipping s ON s.shippingId = d.shippingId
+		        INNER JOIN Proposal p ON p.proposalId = s.proposalId
+            WHERE p.proposalCode = p_proposalCode AND p.proposalNumber = p_proposalNumber;
+        END IF;
+
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory arguments p_proposalCode and/or p_proposalNumber are NULL';
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `retrieve_grid_info_for_dcg` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2566,6 +2700,80 @@ BEGIN
     FROM GridInfo gi
     WHERE gi.dataCollectionGroupId = p_dcgId
     ORDER BY gi.gridInfoId ASC;
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_dcgId is NULL';
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_grid_info_for_dcg_v2` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_grid_info_for_dcg_v2`(IN p_dcgId int unsigned, p_authLogin varchar(45))
+    READS SQL DATA
+    COMMENT 'Return multi-row result-set with grid info values for the dcg'
+BEGIN
+    IF NOT (p_dcgId IS NULL) THEN
+        IF p_authLogin IS NOT NULL THEN
+            SELECT
+                gi.gridInfoId,
+                gi.dx_mm,
+                gi.dy_mm,
+                gi.steps_x,
+                gi.steps_y,
+                gi.meshAngle,
+                gi.pixelsPerMicronX,
+                gi.pixelsPerMicronY,
+                gi.snapshot_offsetXPixel,
+                gi.snapshot_offsetYPixel,
+                gi.orientation,
+                gi.snaked
+            FROM GridInfo gi
+                INNER JOIN DataCollectionGroup dcg ON gi.dataCollectionGroupId = dcg.dataCollectionGroupId
+                INNER JOIN Session_has_Person shp ON dcg.sessionId = shp.sessionId
+                INNER JOIN Person per ON per.personId = shp.personId
+            WHERE per.login = p_authLogin AND gi.dataCollectionGroupId = p_dcgId
+            GROUP BY gi.gridInfoId,
+                gi.dx_mm,
+                gi.dy_mm,
+                gi.steps_x,
+                gi.steps_y,
+                gi.meshAngle,
+                gi.pixelsPerMicronX,
+                gi.pixelsPerMicronY,
+                gi.snapshot_offsetXPixel,
+                gi.snapshot_offsetYPixel,
+                gi.orientation,
+                gi.snaked
+            ORDER BY gi.gridInfoId ASC;
+        ELSE         
+            SELECT
+                gi.gridInfoId,
+                gi.dx_mm,
+                gi.dy_mm,
+                gi.steps_x,
+                gi.steps_y,
+                gi.meshAngle,
+                gi.pixelsPerMicronX,
+                gi.pixelsPerMicronY,
+                gi.snapshot_offsetXPixel,
+                gi.snapshot_offsetYPixel,
+                gi.orientation,
+                gi.snaked
+            FROM GridInfo gi
+            WHERE gi.dataCollectionGroupId = p_dcgId
+            ORDER BY gi.gridInfoId ASC;
+        END IF;
     ELSE
         SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_dcgId is NULL';
     END IF;
@@ -2825,6 +3033,49 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_processing_job_image_sweeps_v2` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_processing_job_image_sweeps_v2`(p_id int unsigned, p_authLogin varchar(45))
+    READS SQL DATA
+    COMMENT 'Returns a multi-row result-set with sweep info for the given processing job ID'
+BEGIN
+    IF p_id IS NOT NULL THEN
+        IF p_authLogin IS NOT NULL THEN
+            SELECT pjs.processingJobImageSweepId "sweepId", pjs.dataCollectionId "dataCollectionId", pjs.startImage "startImage", pjs.endImage "endImage"
+            FROM ProcessingJobImageSweep pjs
+                INNER JOIN ProcessingJob pj ON pj.processingJobId = pjp.processingJobId
+                INNER JOIN DataCollection dc ON dc.dataCollectionId = pj.dataCollectionId
+                INNER JOIN DataCollectionGroup dcg ON dcg.dataCollectionGroupId = dc.dataCollectionGroupId
+                INNER JOIN Session_has_Person shp ON shp.sessionId = dcg.sessionId
+                INNER JOIN Person per ON per.personId = shp.personId 
+	        WHERE pjs.processingJobId = p_id AND per.login = p_authLogin
+            GROUP BY pjs.processingJobImageSweepId, pjs.dataCollectionId, pjs.startImage, pjs.endImage
+            ORDER BY pjs.processingJobImageSweepId ASC
+            LIMIT 1000;
+        ELSE
+            SELECT pjs.processingJobImageSweepId "sweepId", pjs.dataCollectionId "dataCollectionId", pjs.startImage "startImage", pjs.endImage "endImage"
+            FROM ProcessingJobImageSweep pjs  
+	        WHERE pjs.processingJobId = p_id
+            ORDER BY pjs.processingJobImageSweepId ASC
+            LIMIT 1000;
+        END IF;
+    ELSE
+	  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory arguments p_id can not be NULL';
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `retrieve_processing_job_parameters` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2845,6 +3096,90 @@ BEGIN
 	  WHERE processingJobId = p_id
       ORDER BY processingJobParameterId ASC
       LIMIT 1000;
+    ELSE
+	  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory arguments p_id can not be NULL';
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_processing_job_parameters_v2` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_processing_job_parameters_v2`(p_id int unsigned, p_authLogin varchar(45))
+    READS SQL DATA
+    COMMENT 'Returns a multi-row result-set (max 1000) with parameters for the given processing job ID'
+BEGIN
+    IF p_id IS NOT NULL THEN
+        IF p_authLogin IS NOT NULL THEN
+            SELECT pjp.processingJobParameterId "parameterId", pjp.parameterKey "parameterKey", pjp.parameterValue "parameterValue"
+            FROM ProcessingJobParameter pjp 
+                INNER JOIN ProcessingJob pj ON pj.processingJobId = pjp.processingJobId
+                INNER JOIN DataCollection dc ON dc.dataCollectionId = pj.dataCollectionId
+                INNER JOIN DataCollectionGroup dcg ON dcg.dataCollectionGroupId = dc.dataCollectionGroupId
+                INNER JOIN Session_has_Person shp ON shp.sessionId = dcg.sessionId
+                INNER JOIN Person per ON per.personId = shp.personId 
+	        WHERE pjp.processingJobId = p_id AND per.login = p_authLogin
+            GROUP BY pjp.processingJobParameterId, pjp.parameterKey, pjp.parameterValue 
+            ORDER BY pjp.processingJobParameterId ASC
+            LIMIT 1000;
+        ELSE
+            SELECT pjp.processingJobParameterId "parameterId", pjp.parameterKey "parameterKey", pjp.parameterValue "parameterValue"
+            FROM ProcessingJobParameter pjp 
+	        WHERE pjp.processingJobId = p_id
+            ORDER BY pjp.processingJobParameterId ASC
+            LIMIT 1000;
+        END IF;
+    ELSE
+	  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory arguments p_id can not be NULL';
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_processing_job_v2` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_processing_job_v2`(p_id int unsigned, p_authLogin varchar(45))
+    READS SQL DATA
+    COMMENT 'Returns a single-row result-set with info about the processing job for the given ID'
+BEGIN
+    IF p_id IS NOT NULL THEN
+        IF p_authLogin IS NOT NULL THEN
+            SELECT pj.dataCollectionId "dataCollectionId", pj.displayName "displayName", pj.comments "comments",
+                pj.recordTimestamp "recordTimestamp", pj.recipe "recipe", pj.automatic "automatic"
+            FROM ProcessingJob pj
+                INNER JOIN DataCollection dc ON dc.dataCollectionId = pj.dataCollectionId
+                INNER JOIN DataCollectionGroup dcg ON dcg.dataCollectionGroupId = dc.dataCollectionGroupId
+                INNER JOIN Session_has_Person shp ON shp.sessionId = dcg.sessionId
+                INNER JOIN Person per ON per.personId = shp.personId 
+	        WHERE pj.processingJobId = p_id AND per.login = p_authLogin
+            LIMIT 1;
+        ELSE
+            SELECT pj.dataCollectionId "dataCollectionId", pj.displayName "displayName", pj.comments "comments",
+                pj.recordTimestamp "recordTimestamp", pj.recipe "recipe", pj.automatic "automatic"
+            FROM ProcessingJob pj
+	        WHERE pj.processingJobId = p_id
+            LIMIT 1;
+        END IF;
     ELSE
 	  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory arguments p_id can not be NULL';
 	END IF;
@@ -2877,6 +3212,58 @@ BEGIN
 	  WHERE processingJobId = p_id
       ORDER BY autoProcProgramId ASC
       LIMIT 1000;
+    ELSE
+	  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_id can not be NULL';
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_processing_programs_for_job_id_v2` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_processing_programs_for_job_id_v2`(p_id int unsigned, p_authLogin varchar(45))
+    READS SQL DATA
+    COMMENT 'Returns a multi-row result-set with processing program instances for the given processing job ID'
+BEGIN
+    IF p_id IS NOT NULL THEN
+        IF p_authLogin IS NOT NULL THEN
+            SELECT app.autoProcProgramId "id", app.processingCommandLine "commandLine", app.processingPrograms "programs",
+                app.processingStatus "status", app.processingMessage "message", app.processingStartTime "startTime",
+                app.processingEndTime "endTime", app.processingEnvironment "environment",
+                app.recordTimeStamp "recordTimeStamp", app.processingJobId "jobId"
+            FROM AutoProcProgram app  
+                INNER JOIN ProcessingJob pj ON pj.processingJobId = app.processingJobId
+                INNER JOIN DataCollection dc ON dc.dataCollectionId = pj.dataCollectionId
+                INNER JOIN DataCollectionGroup dcg ON dcg.dataCollectionGroupId = dc.dataCollectionGroupId
+                INNER JOIN Session_has_Person shp ON shp.sessionId = dcg.sessionId
+                INNER JOIN Person per ON per.personId = shp.personId 
+	        WHERE app.processingJobId = p_id AND per.login = p_authLogin
+            GROUP BY app.autoProcProgramId, app.processingCommandLine, app.processingPrograms,
+                app.processingStatus, app.processingMessage, app.processingStartTime,
+                app.processingEndTime, app.processingEnvironment,
+                app.recordTimeStamp, app.processingJobId
+            ORDER BY app.autoProcProgramId ASC
+            LIMIT 1000;
+        ELSE
+            SELECT app.autoProcProgramId "id", app.processingCommandLine "commandLine", app.processingPrograms "programs",
+                app.processingStatus "status", app.processingMessage "message", app.processingStartTime "startTime",
+                app.processingEndTime "endTime", app.processingEnvironment "environment",
+                app.recordTimeStamp "recordTimeStamp", app.processingJobId "jobId"
+            FROM AutoProcProgram app  
+	        WHERE app.processingJobId = p_id
+            ORDER BY app.autoProcProgramId ASC
+            LIMIT 1000;
+        END IF;
     ELSE
 	  SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_id can not be NULL';
 	END IF;
@@ -2925,6 +3312,63 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_processing_program_attachments_for_dc_group_program_v2` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_processing_program_attachments_for_dc_group_program_v2`(
+    p_id int unsigned, 
+    p_program varchar(255),
+    p_authLogin varchar(45)
+)
+    READS SQL DATA
+    COMMENT 'Returns a multi-row result-set with the processing program attachments for the given DC group ID'
+BEGIN
+    IF p_id IS NOT NULL AND p_program IS NOT NULL THEN
+        IF p_authLogin IS NOT NULL THEN
+            SELECT dc.dataCollectionId, app.autoProcProgramId,
+                app.processingStatus,
+                concat('[', group_concat(json_object('fileType', appa.fileType, 'fullFilePath', concat(appa.filePath, '/', appa.fileName))), ']') "processingAttachments"
+            FROM DataCollection dc
+                INNER JOIN AutoProcIntegration api ON api.dataCollectionId = dc.dataCollectionId
+                INNER JOIN AutoProcProgram app ON app.autoProcProgramId = api.autoProcProgramId
+                INNER JOIN AutoProcProgramAttachment appa ON appa.autoProcProgramId = api.autoProcProgramId
+                INNER JOIN DataCollectionGroup dcg ON dcg.dataCollectionGroupId = dc.dataCollectionGroupId
+                INNER JOIN Session_has_Person shp ON shp.sessionId = dcg.sessionId
+                INNER JOIN Person per ON per.personId = shp.personId 
+            WHERE
+                dc.dataCollectionGroupId = p_id AND app.processingPrograms = p_program AND per.login = p_authLogin
+            GROUP BY
+                dc.dataCollectionId, app.autoProcProgramId, app.processingStatus;
+        ELSE 
+            SELECT dc.dataCollectionId, app.autoProcProgramId,
+                app.processingStatus,
+                concat('[', group_concat(json_object('fileType', appa.fileType, 'fullFilePath', concat(appa.filePath, '/', appa.fileName))), ']') "processingAttachments"
+            FROM DataCollection dc
+                INNER JOIN AutoProcIntegration api ON api.dataCollectionId = dc.dataCollectionId
+                INNER JOIN AutoProcProgram app ON app.autoProcProgramId = api.autoProcProgramId
+                INNER JOIN AutoProcProgramAttachment appa ON appa.autoProcProgramId = api.autoProcProgramId
+            WHERE
+                dc.dataCollectionGroupId = p_id AND app.processingPrograms = p_program
+            GROUP BY
+                dc.dataCollectionId, app.autoProcProgramId, app.processingStatus;
+        END IF;
+    ELSE
+	    SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644,
+        MESSAGE_TEXT='Mandatory arguments p_id and p_program can not be NULL';
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `retrieve_processing_program_attachments_for_program_id` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2948,6 +3392,92 @@ BEGIN
 	    SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644,
         MESSAGE_TEXT='Mandatory argument p_id can not be NULL';
 	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_processing_program_attachments_for_program_id_v2` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_processing_program_attachments_for_program_id_v2`(
+    p_id int unsigned,	
+    p_authLogin varchar(45)
+)
+    READS SQL DATA
+    COMMENT 'Returns a multi-row result-set with the processing program attachments for the given processing program id'
+BEGIN
+    IF p_id IS NOT NULL THEN
+        IF p_authLogin IS NOT NULL THEN
+            SELECT
+                appa.autoProcProgramAttachmentId "attachmentId", appa.fileType "fileType", appa.filePath "filePath", appa.fileName "fileName"
+            FROM AutoProcProgramAttachment appa
+                INNER JOIN AutoProcProgram app ON app.autoProcProgramId = appa.autoProcProgramId
+                INNER JOIN ProcessingJob pj ON pj.processingJobId = app.processingJobId
+                INNER JOIN DataCollection dc ON dc.dataCollectionId = pj.dataCollectionId
+                INNER JOIN DataCollectionGroup dcg ON dcg.dataCollectionGroupId = dc.dataCollectionGroupId
+                INNER JOIN Session_has_Person shp ON shp.sessionId = dcg.sessionId
+                INNER JOIN Person per ON per.personId = shp.personId 
+            WHERE appa.autoProcProgramId = p_id AND per.login = p_authLogin
+            GROUP BY appa.autoProcProgramAttachmentId, appa.fileType, appa.filePath, appa.fileName;
+        ELSE
+            SELECT
+                appa.autoProcProgramAttachmentId "attachmentId", appa.fileType "fileType", appa.filePath "filePath", appa.fileName "fileName"
+            FROM AutoProcProgramAttachment appa
+            WHERE appa.autoProcProgramId = p_id;
+        END IF;
+    ELSE
+	    SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_id can not be NULL';
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_proposal_title` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_proposal_title`(p_proposal_code varchar(5), p_proposal_number int, p_authLogin varchar(45))
+    READS SQL DATA
+    COMMENT 'Returns a single-row, single-column result set with the title of the proposal p_proposal_code + p_proposal_number'
+BEGIN
+
+    IF p_authLogin IS NOT NULL THEN
+    
+
+      SELECT pr.title
+      FROM Proposal pr
+        INNER JOIN BLSession bs ON pr.proposalid = bs.proposalid 
+        INNER JOIN Session_has_Person shp ON bs.sessionId = shp.sessionId
+        INNER JOIN Person p ON p.personId = shp.personId
+	    WHERE p.login = p_authLogin AND pr.proposalCode = p_proposal_code AND pr.proposalNumber = p_proposal_number
+      LIMIT 1;
+
+    ELSE 
+
+      SELECT title
+      FROM Proposal 
+	    WHERE proposalCode = p_proposal_code AND proposalNumber = p_proposal_number
+      LIMIT 1;
+
+    END IF;
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -3185,6 +3715,46 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `retrieve_session_id_v2` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `retrieve_session_id_v2`(p_session varchar(15), p_authLogin varchar(45))
+    READS SQL DATA
+    COMMENT 'Returns the session ID (an integer) for p_session (e.g. mx12345-123)'
+BEGIN
+
+    IF p_authLogin IS NOT NULL THEN
+    
+
+      SELECT max(bs.sessionid) 
+      FROM Proposal p 
+        INNER JOIN BLSession bs ON p.proposalid = bs.proposalid 
+        INNER JOIN Session_has_Person shp ON bs.sessionId = shp.sessionId
+        INNER JOIN Person per ON per.personId = shp.personId
+      WHERE per.login = p_authLogin AND concat(p.proposalcode, p.proposalnumber, '-', bs.visit_number) = p_session;
+
+    ELSE 
+
+      SELECT max(bs.sessionid) 
+      FROM Proposal p 
+        INNER JOIN BLSession bs ON p.proposalid = bs.proposalid 
+      WHERE concat(p.proposalcode, p.proposalnumber, '-', bs.visit_number) = p_session;
+
+    END IF;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `retrieve_test` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -3213,14 +3783,15 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE PROCEDURE `update_container_assign`(IN p_beamline varchar(20), IN p_registry_barcode varchar(45), IN p_position int)
     MODIFIES SQL DATA
-    COMMENT 'Toggles the ''assign'' status of a container (barcode = p_barcode) between ''processing'' and ''at facility''. Sets the sampleChangerLocation, beamlineLocation. If the containerStatus is set to ''processing'' then sets the same status for its dewar and shipping.'
+    COMMENT 'Toggles "assign" status of container (p_barcode).\nSets the s.c. position and beamline.\nIf assigned then: 1) Also assign its dewar and shipping. 2) Unassigns other containers in the same proposal on that beamline and s.c. position.\nIf unassign then: \n'
 BEGIN
     DECLARE row_containerId int(10) unsigned DEFAULT NULL;
     DECLARE row_containerStatus varchar(45) DEFAULT NULL;
+    DECLARE currentContainerStatus varchar(45) DEFAULT NULL;
     DECLARE row_dewarId int(10) unsigned DEFAULT NULL;
     DECLARE row_beamlineLocation varchar(20) DEFAULT NULL;
     DECLARE row_sampleChangerLocation varchar(20) DEFAULT NULL;
@@ -3239,25 +3810,29 @@ BEGIN
         ORDER BY c.containerId DESC
         LIMIT 1;
 
+        SELECT row_containerStatus INTO currentContainerStatus;
+
         
         IF NOT row_containerId IS NULL THEN
-          IF row_containerStatus <> 'processing' OR (row_beamlineLocation = p_beamline AND row_sampleChangerLocation = p_position) THEN
+          IF (NOT row_containerStatus <=> 'processing') OR (row_beamlineLocation = p_beamline AND row_sampleChangerLocation = p_position) THEN
 
             
             UPDATE Container c
-            INNER JOIN Dewar d ON d.dewarId = c.dewarId
-            INNER JOIN Shipping s ON s.shippingId = d.shippingId
+              INNER JOIN Dewar d ON d.dewarId = c.dewarId
+              INNER JOIN Shipping s ON s.shippingId = d.shippingId
             SET
-              c.sampleChangerLocation = IF(row_containerStatus='processing', '', p_position),
+              c.sampleChangerLocation = IF(row_containerStatus<=>'processing', '', p_position),
               c.beamlineLocation = p_beamline,
-              c.containerStatus = IF(row_containerStatus='processing', 'at facility', 'processing'),
-			        d.dewarStatus = IF(row_containerStatus='processing', d.dewarStatus, 'processing'),
-              d.storageLocation = IF(row_containerStatus='processing', d.storageLocation, p_beamline),
-              s.shippingStatus = IF(row_containerStatus='processing', s.shippingStatus, 'processing')
+              c.containerStatus = IF(row_containerStatus<=>'processing', 'at facility', 'processing'),
+              d.dewarStatus = IF(row_containerStatus<=>'processing', d.dewarStatus, 'processing'),
+              d.storageLocation = IF(row_containerStatus<=>'processing', d.storageLocation, p_beamline),
+              s.shippingStatus = IF(row_containerStatus<=>'processing', s.shippingStatus, 'processing')
             WHERE
               c.containerId = row_containerId;
 
-            IF row_containerStatus <> 'processing' THEN
+            SELECT IF(row_containerStatus<=>'processing', 'at facility', 'processing') INTO currentContainerStatus;
+
+            IF NOT row_containerStatus <=> 'processing' THEN
               
               
               UPDATE Container c
@@ -3275,7 +3850,7 @@ BEGIN
 
             
             INSERT INTO ContainerHistory (containerId, location, status, beamlineName)
-              VALUES (row_containerId, p_position, IF(row_containerStatus='processing', 'at facility', 'processing'), p_beamline);
+              VALUES (row_containerId, p_position, IF(row_containerStatus<=>'processing', 'at facility', 'processing'), p_beamline);
           END IF;
         ELSE
           SIGNAL SQLSTATE '02000' SET MYSQL_ERRNO=1643, MESSAGE_TEXT='Container with p_registry_barcode not found';
@@ -3285,6 +3860,7 @@ BEGIN
     ELSE
         SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument p_registry_barcode is NULL';
     END IF;
+    SELECT row_containerId as "containerId", currentContainerStatus as "containerStatus";
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -4850,6 +5426,114 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_dewar_v2` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_dewar_v2`(
+
+	 INOUT p_id int(10) unsigned,
+	 p_authLogin varchar(45),
+	 p_shippingId int(10) unsigned,
+	 p_name varchar(45),
+	 p_comments tinytext,
+	 p_storageLocation varchar(45),
+	 p_status varchar(45),
+	 p_isStorageDewar tinyint(1),
+	 p_barcode varchar(45),
+	 p_firstSessionId int(10) unsigned,
+	 p_customsValue int(11) unsigned,
+	 p_transportValue int(11) unsigned,
+	 p_trackingNumberToSynchrotron varchar(30),
+	 p_trackingNumberFromSynchrotron varchar(30),
+	 p_type varchar(40),
+	 p_facilityCode varchar(20),
+	 p_weight float,
+	 p_deliveryAgentBarcode varchar(30)
+ )
+    MODIFIES SQL DATA
+    COMMENT 'Inserts or updates info about a dewar/parcel (p_id).\nMandatory columns:\nFor insert: none\nFor update: p_id \nReturns: Record ID in p_id.'
+BEGIN
+	DECLARE row_storageLocation varchar(45) DEFAULT NULL;
+	DECLARE row_dewarStatus varchar(45) DEFAULT NULL;
+  DECLARE row_count int unsigned DEFAULT 0;
+
+  IF p_authLogin IS NOT NULL AND p_shippingId IS NOT NULL THEN
+
+    
+    
+    SELECT count(*) INTO row_count
+    FROM Shipping s
+      INNER JOIN BLSession bs ON bs.proposalId = s.proposalId
+      INNER JOIN Session_has_Person shp ON bs.sessionId = shp.sessionId
+      INNER JOIN Person p ON p.personId = shp.personId
+    WHERE p.login = p_authLogin AND s.shippingId = p_shippingId; 
+
+    IF row_count = 0 THEN
+        SIGNAL SQLSTATE '02000'
+            SET MYSQL_ERRNO=1643, MESSAGE_TEXT = 'Dewar not in a shipping belonging to one of the p_authLogin Person sessions';
+    END IF;
+  END IF;
+
+  IF p_id IS NULL THEN
+		  IF p_type IS NOT NULL THEN
+        INSERT INTO Dewar(dewarId,shippingId,code,comments,storageLocation,dewarStatus,isStorageDewar,barCode,firstExperimentId,customsValue,transportValue,
+			    trackingNumberToSynchrotron,trackingNumberFromSynchrotron,`type`,FACILITYCODE,weight,deliveryAgent_barcode)
+			    VALUES (p_id, p_shippingId, p_name, p_comments, p_storageLocation, p_status, p_isStorageDewar, p_barcode, p_firstSessionId, p_customsValue, p_transportValue,
+				    p_trackingNumberToSynchrotron, p_trackingNumberFromSynchrotron, p_type, p_facilityCode, p_weight, p_deliveryAgentBarcode);
+			  SET p_id = LAST_INSERT_ID();
+			ELSE
+				SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument is NULL: p_type must be non-NULL.';
+			END IF;
+	ELSE
+
+    SELECT storageLocation, dewarStatus INTO row_storageLocation, row_dewarStatus FROM Dewar WHERE dewarId = p_id;
+
+		UPDATE Dewar
+			SET shippingId = IFNULL(p_shippingId, shippingId),
+			code = IFNULL(p_name, code),
+			comments = IFNULL(p_comments, comments),
+			storageLocation = IFNULL(p_storageLocation, storageLocation),
+			dewarStatus = IFNULL(p_status, dewarStatus),
+			isStorageDewar = IFNULL(p_isStorageDewar, isStorageDewar),
+			barCode = IFNULL(p_barcode, barCode),
+			firstExperimentId = IFNULL(p_firstSessionId, firstExperimentId),
+			customsValue = IFNULL(p_customsValue, customsValue),
+			transportValue = IFNULL(p_transportValue, transportValue),
+			trackingNumberToSynchrotron = IFNULL(p_trackingNumberToSynchrotron, trackingNumberToSynchrotron),
+			trackingNumberFromSynchrotron = IFNULL(p_trackingNumberFromSynchrotron, trackingNumberFromSynchrotron),
+			`type` = IFNULL(p_type, `type`),
+			FACILITYCODE = IFNULL(p_facilityCode, FACILITYCODE),
+			weight = IFNULL(p_weight, weight),
+			deliveryAgent_barcode = IFNULL(p_deliveryAgentBarcode, deliveryAgent_barcode)
+		WHERE dewarId = p_id;
+
+		
+    IF row_storageLocation <> p_storageLocation OR row_dewarStatus <> p_status THEN
+      INSERT INTO DewarTransportHistory (dewarId, dewarStatus, storageLocation, arrivalDate)
+				VALUES (p_id, p_status, p_storageLocation, NOW());
+    END IF;
+
+		
+		IF row_storageLocation <> p_storageLocation THEN
+			
+      UPDATE Container
+			SET sampleChangerLocation = '', containerStatus = 'at facility'
+			WHERE dewarId = p_id;
+		END IF;
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `upsert_energy_scan` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -6009,6 +6693,100 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `upsert_sample` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `upsert_sample`(
+	 INOUT p_id int(10) unsigned,
+     p_authLogin varchar(45), 
+	   p_crystalId int(10) unsigned,
+     p_containerId int(10) unsigned, 
+     p_name varchar(45),
+     p_code varchar(45),
+     p_location varchar(45),
+     p_holderLength float, 
+     p_loopLength float, 
+     p_loopType varchar(45), 
+     p_wireWidth float, 
+     p_comments varchar(1024),
+     p_blSampleStatus varchar(20),
+     p_isInSampleChanger boolean 
+)
+    MODIFIES SQL DATA
+    COMMENT 'Inserts or updates info about sample (p_id).'
+BEGIN
+
+  DECLARE row_count int unsigned DEFAULT 0;
+  DECLARE row_count2 int unsigned DEFAULT 0;
+
+  IF p_authLogin IS NOT NULL AND (p_containerId IS NOT NULL OR p_id IS NOT NULL) THEN
+
+    
+    
+
+    SELECT count(*) INTO row_count
+    FROM Container c
+      INNER JOIN Dewar d ON d.dewarId = c.dewarId
+      INNER JOIN Shipping s ON s.shippingId = d.shippingId
+      INNER JOIN BLSession bs ON bs.proposalId = s.proposalId
+      INNER JOIN Session_has_Person shp ON bs.sessionId = shp.sessionId
+      INNER JOIN Person p ON p.personId = shp.personId
+    WHERE p.login = p_authLogin AND c.containerId = p_containerId; 
+
+    IF row_count = 0 THEN
+      SELECT count(*) INTO row_count2
+      FROM Container c
+        INNER JOIN BLSession bs ON bs.sessionId = c.sessionId
+        INNER JOIN BLSession bs2 ON bs.proposalId = bs2.proposalId
+        INNER JOIN Session_has_Person shp ON bs2.sessionId = shp.sessionId
+        INNER JOIN Person p ON p.personId = shp.personId
+      WHERE p.login = p_authLogin AND c.containerId = p_containerId; 
+
+      IF row_count2 = 0 THEN
+        SIGNAL SQLSTATE '02000'
+          SET MYSQL_ERRNO=1643, MESSAGE_TEXT = 'Sample not in a container belonging to one of the p_authLogin Person sessions';
+      END IF;
+    END IF;
+  END IF;
+
+  IF p_containerId IS NOT NULL OR p_id IS NOT NULL THEN
+
+    INSERT INTO BLSample (blsampleId, crystalId, containerId, `name`, code, `location`, holderLength, loopLength, loopType, wireWidth, comments, blSampleStatus, isInSampleChanger)
+      VALUES (p_id, p_crystalId, p_containerId, p_name, p_code, p_location, p_holderLength, p_loopLength, p_loopType, p_wireWidth, p_comments, p_blSampleStatus, p_isInSampleChanger)
+      ON DUPLICATE KEY UPDATE
+		    crystalId = IFNULL(p_crystalId, crystalId),
+        containerId = IFNULL(p_containerId, containerId), 
+        `name` = IFNULL(p_name, `name`), 
+        `code` = IFNULL(p_code, `code`), 
+        location = IFNULL(p_location, location), 
+        holderLength = IFNULL(p_holderLength, holderLength), 
+        loopLength = IFNULL(p_loopLength, loopLength), 
+        wireWidth = IFNULL(p_wireWidth, wireWidth), 
+        comments = IFNULL(p_comments, comments), 
+        blSampleStatus = IFNULL(p_blSampleStatus, blSampleStatus), 
+        isInSampleChanger = IFNULL(p_isInSampleChanger, isInSampleChanger);
+
+    IF p_id IS NULL THEN 
+	    SET p_id = LAST_INSERT_ID();
+    END IF;
+
+  ELSE
+    SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=1644, MESSAGE_TEXT='Mandatory argument is NULL: p_id or p_containerId must be non-NULL.';
+
+  END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `upsert_sample_image_analysis` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -6330,4 +7108,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-22 13:18:44
+-- Dump completed on 2019-03-26 18:05:46

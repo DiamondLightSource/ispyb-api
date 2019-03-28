@@ -46,7 +46,7 @@ class Core(ispyb.interface.core.IF):
     StrictOrderedDict([('session_id',None), ('person_id',None), ('role',None), ('remote',None)])
 
   _sample_params =\
-    StrictOrderedDict([('id',None), ('crystalid',None), ('containerid',None), ('name',None), ('code',None),
+    StrictOrderedDict([('id',None), ('authLogin',None), ('crystalid',None), ('containerid',None), ('name',None), ('code',None),
                          ('location',None), ('holder_length',None), ('loop_length',None), ('loop_type',None),
                          ('wire_width',None), ('comments',None), ('status',None), ('is_in_sc',None)])
 
@@ -96,7 +96,7 @@ class Core(ispyb.interface.core.IF):
 
   def upsert_sample(self, values):
     '''Insert or update sample.'''
-    return self.get_connection().call_sf_write(funcname='upsert_sample', args=values)
+    return self.get_connection().call_sp_write(procname='upsert_sample', args=values)
 
   def retrieve_visit_id(self, visit):
     '''Get the database ID for a visit on the form mx1234-5.'''
@@ -138,6 +138,6 @@ class Core(ispyb.interface.core.IF):
     '''Get a result-set with the submitted plates not yet in local storage on a given beamline'''
     return self.get_connection().call_sp_retrieve(procname='retrieve_containers_submitted_non_ls', args=(beamline,))
 
-  def retrieve_proposal_title(self, proposal_code, proposal_number):
+  def retrieve_proposal_title(self, proposal_code, proposal_number, auth_login=None):
     '''Get the title of a given proposal'''
-    return self.get_connection().call_sf_retrieve(funcname='retrieve_proposal_title', args=(proposal_code, proposal_number))
+    return self.get_connection().call_sp_retrieve(procname='retrieve_proposal_title', args=(proposal_code, proposal_number, auth_login))

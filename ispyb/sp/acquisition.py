@@ -70,9 +70,9 @@ class Acquisition(ispyb.interface.acquisition.IF):
     '''Insert or update a data collection file attachment.'''
     return self.get_connection().call_sp_write('upsert_dc_file_attachment', values)
 
-  def retrieve_data_collection_main(self, id):
+  def retrieve_data_collection_main(self, id, auth_login=None):
     '''Retrieve main data collection parameters for row with given id'''
-    return self.get_connection().call_sp_retrieve(procname='retrieve_dc_main', args=(id,))
+    return self.get_connection().call_sp_retrieve(procname='retrieve_dc_main_v2', args=(id, auth_login))
 
   def upsert_robot_action(self, values):
     '''Insert or update a robot action event.'''

@@ -24,7 +24,7 @@ class Shipping(ispyb.interface.shipping.IF):
     pass
 
   _dewar_params =\
-    StrictOrderedDict([('id',None), ('shippingId',None), ('name',None), ('comments',None), ('storageLocation',None),
+    StrictOrderedDict([('id',None), ('authLogin',None), ('shippingId',None), ('name',None), ('comments',None), ('storageLocation',None),
                          ('status',None), ('isStorageDewar',None), ('barCode',None), ('firstSessionId',None),
                          ('customsValue',None), ('transportValue',None), ('trackingNumberToSynchrotron',None),
                          ('trackingNumberFromSynchrotron',None), ('type',None),
@@ -36,7 +36,7 @@ class Shipping(ispyb.interface.shipping.IF):
 
   def update_container_assign(self, beamline, registry_barcode, position):
     '''Assign a container'''
-    self.get_connection().call_sp_write(procname='update_container_assign', args=(beamline, registry_barcode, position))
+    return self.get_connection().call_sp_retrieve(procname='update_container_assign', args=(beamline, registry_barcode, position))
 
   def update_container_unassign_all_for_beamline(self, beamline):
     '''Unassign all containers for a given beamline. Assumes container.sessionId and container.containerRegistryId are populated.'''
@@ -44,8 +44,11 @@ class Shipping(ispyb.interface.shipping.IF):
 
   def upsert_dewar(self, values):
     '''Insert or update a dewar or parcel'''
-    return self.get_connection().call_sp_write('upsert_dewar', values)
+    return self.get_connection().call_sp_write('upsert_dewar_v2', values)
 
-  def retrieve_dewars_for_proposal_code_number(self, proposal_code, proposal_number):
+  def retrieve_dewars_for_proposal_code_number(self, proposal_code, proposal_number, auth_login=None):
     '''Get a result-set with the dewars associated with shipments in a given proposal specified by proposal code, proposal_number'''
-    return self.get_connection().call_sp_retrieve(procname='retrieve_dewars_for_proposal_code_number', args=(proposal_code, proposal_number))
+    return self.get_connection().call_sp_retrieve(
+      procname='retrieve_dewars_for_proposal_code_number_v2', 
+      args=(proposal_code, proposal_number, auth_login)
+    )

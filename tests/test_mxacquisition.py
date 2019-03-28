@@ -38,6 +38,9 @@ def test_mxacquisition_methods(testdb):
         rs = mxacquisition.retrieve_data_collection_main(id1)
         assert rs[0]['groupId'] == dcgid
 
+        rs = mxacquisition.retrieve_data_collection_main(id1, 'boaty')
+        assert rs[0]['groupId'] == dcgid
+
         dc = testdb.get_data_collection(id1)
         assert dc.image_count == 360
         assert dc.dcgid == dcgid
@@ -88,6 +91,9 @@ def test_mxacquisition_methods(testdb):
         assert gridinfo['snapshot_offsetYPixel'] == params['snapshotOffsetYPixel']
         assert gridinfo['steps_x'] == params['steps_x']
         assert gridinfo['steps_y'] == params['steps_y']
+
+        gridinfo = mxacquisition.retrieve_dcg_grid(dcgid, 'boaty')
+        assert len(gridinfo) == 1
 
         xray_cr_id = mxacquisition.upsert_xray_centring_result(
             grid_info_id=dcg_grid_id,
