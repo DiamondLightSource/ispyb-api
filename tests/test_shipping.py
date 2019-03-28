@@ -2,9 +2,13 @@ from __future__ import absolute_import, division, print_function
 
 
 def test_update_container(testdb):
-        testdb.shipping.update_container_assign('i02-2', 'VMXiSim-001', 10)
+        rs = testdb.shipping.update_container_assign('i02-2', 'VMXiSim-001', 10)
+        assert len(rs) > 0
+        assert rs[0]['containerStatus'] in ('processing', 'at facility')
         testdb.shipping.update_container_unassign_all_for_beamline('i02-2')
-        testdb.shipping.update_container_assign('i02-2', 'VMXiSim-001', 10)
+        rs = testdb.shipping.update_container_assign('i02-2', 'VMXiSim-001', 10)
+        assert len(rs) > 0
+        assert rs[0]['containerStatus'] in ('processing', 'at facility')
         testdb.shipping.update_container_unassign_all_for_beamline('i02-2')
 
 def test_upsert_dewar(testdb):

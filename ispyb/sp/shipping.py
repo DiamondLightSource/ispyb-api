@@ -36,7 +36,7 @@ class Shipping(ispyb.interface.shipping.IF):
 
   def update_container_assign(self, beamline, registry_barcode, position):
     '''Assign a container'''
-    self.get_connection().call_sp_write(procname='update_container_assign', args=(beamline, registry_barcode, position))
+    return self.get_connection().call_sp_retrieve(procname='update_container_assign', args=(beamline, registry_barcode, position))
 
   def update_container_unassign_all_for_beamline(self, beamline):
     '''Unassign all containers for a given beamline. Assumes container.sessionId and container.containerRegistryId are populated.'''
