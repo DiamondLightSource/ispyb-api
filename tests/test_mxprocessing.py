@@ -131,11 +131,13 @@ def test_processing1(testdb):
 def test_processing2(testdb):
         mxprocessing = testdb.mx_processing
 
-        params = mxprocessing.get_program_params()
-        params['cmd_line'] = 'ls -ltr'
-        params['message'] = 'Just started ...'
-        params['processing_job_id'] = 5
-        id = mxprocessing.upsert_program(list(params.values()))
+        command='ls -ltr'
+        message='Just started ...'
+        id = mxprocessing.upsert_program_ex(
+          job_id=5,
+          command=command,
+          message=message,
+        )
         assert id is not None
         assert id > 0
         print('id: %d' % id)
@@ -155,13 +157,16 @@ def test_processing2(testdb):
         assert programs
         program = programs[0]
         assert program.job_id == 5
-        assert program.command == params['cmd_line']
-        assert program.message == params['message']
+        assert program.command == command
+        assert program.message == message
 
-        params['id'] = id
-        params['status'] = True
-        params['message'] = 'Finished'
-        programid = mxprocessing.upsert_program(list(params.values()))
+        message = 'Finished'
+        programid = mxprocessing.upsert_program_ex(
+          program_id=id,
+          status=True,
+          command=command,
+          message=message,
+        )
         assert programid is not None
         assert programid > 0
 

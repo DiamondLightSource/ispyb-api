@@ -7,10 +7,6 @@ from ispyb.interface.dataarea import DataArea
 class IF(DataArea):
 
   @abc.abstractmethod
-  def get_program_params(self):
-      pass
-
-  @abc.abstractmethod
   def get_program_attachment_params(self):
       pass
 

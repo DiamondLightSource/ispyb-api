@@ -15,10 +15,6 @@ from ispyb.strictordereddict import StrictOrderedDict
 class MXProcessing(ispyb.interface.processing.IF):
   '''MXProcessing provides methods to store MX processing data.'''
 
-  _program_params = StrictOrderedDict([('id',None), ('cmd_line',None), ('programs',None),
-    ('status',None), ('message',None), ('starttime',None), ('updatetime',None), ('environment',None), ('processing_job_id',None),
-    ('recordtime',None)])
-
   _program_attachment_params = StrictOrderedDict([('id',None), ('parentid', None), ('file_name',None), ('file_path',None), ('file_type',None)])
 
   _processing_params = StrictOrderedDict([('id',None), ('parentid',None), ('spacegroup',None),
@@ -70,10 +66,6 @@ class MXProcessing(ispyb.interface.processing.IF):
     return copy.deepcopy(cls._run_blob_params)
 
   @classmethod
-  def get_program_params(cls):
-    return copy.deepcopy(cls._program_params)
-
-  @classmethod
   def get_program_attachment_params(cls):
     return copy.deepcopy(cls._program_attachment_params)
 
@@ -118,12 +110,6 @@ class MXProcessing(ispyb.interface.processing.IF):
   @classmethod
   def get_job_image_sweep_params(cls):
      return copy.deepcopy(cls._job_image_sweep_params)
-
-  def upsert_program(self, values):
-    '''Store new or update existing program params.'''
-    import warnings
-    warnings.warn("Function upsert_program using the ordered dictionary parameter is deprecated and will be removed in the next release. Use the function upsert_program_ex instead.", DeprecationWarning)
-    return self.get_connection().call_sp_write(procname='upsert_processing_program', args=values) # doesn't work with dict cursors
 
   def upsert_program_ex(self, program_id=None, job_id=None, name=None,
       command=None, environment=None, message=None, status=None,

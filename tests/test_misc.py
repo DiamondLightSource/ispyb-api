@@ -10,10 +10,10 @@ import pytest
 def test_multi_threads_upsert(testdb):
         mxprocessing = testdb.mx_processing
 
-        params = mxprocessing.get_program_params()
-        params['cmd_line'] = 'dials -xia2 /path/to/files'
-        params['message'] = 'Just started ...'
-        programid = mxprocessing.upsert_program(list(params.values()))
+        programid = mxprocessing.upsert_program_ex(
+          command='dials -xia2 /path/to/files',
+          message='Just started ...',
+        )
         assert programid is not None
 
         params_list = []
