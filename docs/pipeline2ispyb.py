@@ -86,12 +86,13 @@ with ispyb.open(sys.argv[1]) as conn:
     print "scr_in_id: %i" % scr_in_id
 
     # Store results from XIA2 / MX data reduction pipelines
-    params = mxprocessing.get_program_params()
-    params['programs'] = 'xia2'
-    params['cmd_line'] = 'xia2 -3dii ........'
-    params['starttime'] = datetime.strptime('2014-09-24 14:30:01', '%Y-%m-%d %H:%M:%S')
-    params['updatetime'] = datetime.strptime('2014-09-24 14:30:27', '%Y-%m-%d %H:%M:%S')
-    app_id = mxprocessing.upsert_program(list(params.values()))
+    app_id = mxprocessing.upsert_program_ex(
+        job_id = job_id,
+        name = 'xia2',
+        command='xia2 -3dii ........',
+        time_start = datetime.strptime('2014-09-24 14:30:01', '%Y-%m-%d %H:%M:%S'),
+        time_update = datetime.strptime('2014-09-24 14:30:27', '%Y-%m-%d %H:%M:%S'),
+    )
     print "app_id: %i" % app_id
 
     # ...first the top-level processing entry
