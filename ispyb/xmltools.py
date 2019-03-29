@@ -129,14 +129,20 @@ def mx_data_reduction_to_ispyb(xmldict, dc_id = None, mxprocessing = None):
 
     # Store results from MX data reduction pipelines
     # ...first the program info
-    params = mxprocessing.get_program_params()
+    programs = None
+    command = None
+    job_id = None    
     if 'processingPrograms' in program:
-        params['programs'] = program['processingPrograms']
+        programs = program['processingPrograms']
     if 'processingCommandLine' in program:
-        params['cmd_line'] = program['processingCommandLine']
+        command = program['processingCommandLine']
     if 'reprocessingId' in program:
-        params['reprocessingid'] = program['reprocessingId']
-    app_id = mxprocessing.upsert_program(list(params.values()))
+        job_id = program['reprocessingId']
+    app_id = mxprocessing.upsert_program_ex(
+        job_id = job_id,
+        name = programs,
+        command=command,
+    )
 
     if attachments != None:
         params = mxprocessing.get_program_attachment_params()
