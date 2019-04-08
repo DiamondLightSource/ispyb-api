@@ -8,7 +8,7 @@ History
 Breaking changes:
 
 * configuration file section ispyb_mysql_sp renamed to ispyb_mariadb_sp
-* mxprocessing: upsert_program replaced with upsert_program_ex
+* mxprocessing: upsert_program has been removed. Use upsert_program_ex instead.
 * processing interface: removed get_processing_job
 
 Future breaking changes:
