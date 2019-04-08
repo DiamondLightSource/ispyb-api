@@ -22,9 +22,6 @@ Please see https://ispyb.readthedocs.io.
 * The mysql.connector Python package.
 * MariaDB 10.0+ or MySQL 5.6+, but we recommend MariaDB 10.2 or later.
 * An ISPyB database installed on the above. See the [ispyb-database](https://github.com/DiamondLightSource/ispyb-database) repo for details.
-* If binary logging is enabled in the DB system, then execute this before
-importing the test schema:
-  ```set global log_bin_trust_function_creators=ON;```
 
 ### Installation
 From PyPI:
