@@ -25,12 +25,12 @@ def test_mxacquisition_methods(testdb):
         assert id1 is not None
         assert id1 > 0
 
-        params = mxacquisition.get_data_collection_params()
-        params['id'] = id1
-        params['parentid'] = dcgid
-        params['axis_start'] = 0
-        params['axis_end'] = 90
-        id2 = mxacquisition.update_data_collection(list(params.values()))
+        params2 = mxacquisition.get_data_collection_params()
+        params2['id'] = id1
+        params2['parentid'] = dcgid
+        params2['axis_start'] = 0
+        params2['axis_end'] = 90
+        id2 = mxacquisition.update_data_collection(list(params2.values()))
         assert id2 is not None
         assert id2 > 0
         assert id1 == id2
@@ -40,6 +40,18 @@ def test_mxacquisition_methods(testdb):
 
         rs = mxacquisition.retrieve_data_collection_main(id1, 'boaty')
         assert rs[0]['groupId'] == dcgid
+
+        rs = mxacquisition.retrieve_data_collection(id1)
+        assert rs[0]['groupId'] == dcgid
+
+        rs = mxacquisition.retrieve_data_collection(id1, 'boaty')
+        assert rs[0]['groupId'] == dcgid
+        assert rs[0]['axisStart'] == params2['axis_start']
+        assert rs[0]['axisEnd'] == params2['axis_end']
+        assert rs[0]['dcNumber'] == params['datacollection_number']
+        assert rs[0]['status'] == params['run_status']
+        assert rs[0]['noImages'] == params['n_images']
+        assert rs[0]['imgContainerSubPath'] == params['img_container_sub_path']
 
         dc = testdb.get_data_collection(id1)
         assert dc.image_count == 360
