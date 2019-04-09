@@ -70,6 +70,10 @@ class Acquisition(ispyb.interface.acquisition.IF):
     '''Insert or update a data collection file attachment.'''
     return self.get_connection().call_sp_write('upsert_dc_file_attachment', values)
 
+  def retrieve_data_collection(self, id, auth_login=None):
+    '''Retrieve data collection parameters for row with given id'''
+    return self.get_connection().call_sp_retrieve(procname='retrieve_dc', args=(id, auth_login))
+
   def retrieve_data_collection_main(self, id, auth_login=None):
     '''Retrieve main data collection parameters for row with given id'''
     return self.get_connection().call_sp_retrieve(procname='retrieve_dc_main_v2', args=(id, auth_login))
