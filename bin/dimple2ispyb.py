@@ -3,12 +3,9 @@
 import ConfigParser
 import logging
 import os
-import pickle
-import pipes
 import re
 import sys
 import time
-import traceback
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
 

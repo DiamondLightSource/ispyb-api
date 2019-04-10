@@ -8,15 +8,9 @@
 # python put_program.py --....
 
 import logging
-import os
-import string
 import sys
-import time
-from logging.handlers import RotatingFileHandler
 
-import cx_Oracle
-
-# AutoProcProgram.processingStatus: 
+# AutoProcProgram.processingStatus:
 # no row = didn't run
 # NULL (None) = running
 # 0 = failed
@@ -25,7 +19,6 @@ import cx_Oracle
 if __name__ == '__main__' :
 
     from ispyb_api.dbconnection import dbconnection
-    from ispyb_api.core import core
     from ispyb_api.mxdatareduction import mxdatareduction
 
     from datetime import datetime
@@ -35,9 +28,9 @@ if __name__ == '__main__' :
         if not message is None:
             print(message)
         sys.exit(code)
-    
+
     logging.info("test")
-    
+
     import optparse
     parser = optparse.OptionParser()
     parser.add_option("--id", dest="id", help="Id for program run", metavar="INTEGER")
@@ -53,7 +46,7 @@ if __name__ == '__main__' :
     (opts, args) = parser.parse_args()
 
     cursor = None
-    if opts.db is None or opts.db == "prod": 
+    if opts.db is None or opts.db == "prod":
         cursor = dbconnection.connect_to_prod()
     elif opts.db == "dev":
         cursor = dbconnection.connect_to_dev()
@@ -84,9 +77,9 @@ if __name__ == '__main__' :
 #    params['filename3'] = ''
 #    params['filepath3'] = ''
 #    params['filetype3'] = ''
-    
+
     p_id = mxdatareduction.put_program(cursor, params.values())
-    
+
     if p_id is None:
         exit(1, "ERROR: p_id is None.") # exit code 1 - indicates error
     exit(0, "--p_id=%d" % p_id)

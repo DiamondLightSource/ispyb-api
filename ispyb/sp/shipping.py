@@ -8,10 +8,6 @@
 #
 
 import copy
-import datetime
-import os
-import sys
-import time
 
 import ispyb.interface.shipping
 from ispyb.strictordereddict import StrictOrderedDict
@@ -49,6 +45,6 @@ class Shipping(ispyb.interface.shipping.IF):
   def retrieve_dewars_for_proposal_code_number(self, proposal_code, proposal_number, auth_login=None):
     '''Get a result-set with the dewars associated with shipments in a given proposal specified by proposal code, proposal_number'''
     return self.get_connection().call_sp_retrieve(
-      procname='retrieve_dewars_for_proposal_code_number_v2', 
+      procname='retrieve_dewars_for_proposal_code_number_v2',
       args=(proposal_code, proposal_number, auth_login)
     )

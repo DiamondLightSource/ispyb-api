@@ -14,12 +14,8 @@
 
 import datetime
 import logging
-import os
-import string
 import sys
-import time
 from datetime import datetime
-from logging.handlers import RotatingFileHandler
 
 from ispyb.core import core
 from ispyb.dbconnection import DBConnection
@@ -93,7 +89,7 @@ if __name__ == '__main__' :
 
     result = None
     if visitid is not None or opts.movieid is not None:
-	# EMMovieId, blsessionId,blsampleId,movieFile,p_NOImages,frameLength,totalExposure,magnification,samplePixSize,dosePerFrame,totalDose,runStatus,comments,runDirectory,binning,particleDiameter,pixelSize,boxSize,minResolution,maxResolution, minDefocus, maxDefocus, defocusStepSize, amountAstigmatism, extractSize, starttime, endtime
+        # EMMovieId, blsessionId,blsampleId,movieFile,p_NOImages,frameLength,totalExposure,magnification,samplePixSize,dosePerFrame,totalDose,runStatus,comments,runDirectory,binning,particleDiameter,pixelSize,boxSize,minResolution,maxResolution, minDefocus, maxDefocus, defocusStepSize, amountAstigmatism, extractSize, starttime, endtime
 
         # Store a movie data collection ...
         params = mxacquisition.get_data_collection_params()
