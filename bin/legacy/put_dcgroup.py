@@ -8,13 +8,7 @@
 # python put_dcgroup.py --movieid=1 --x=123.4 --y=50.02
 
 import logging
-import os
-import string
 import sys
-import time
-from logging.handlers import RotatingFileHandler
-
-import cx_Oracle
 
 if __name__ == '__main__' :
 
@@ -29,9 +23,9 @@ if __name__ == '__main__' :
         if not message is None:
             print(message)
         sys.exit(code)
-    
+
     logging.info("test")
-    
+
     import optparse
     parser = optparse.OptionParser()
     parser.add_option("--id", dest="id", help="Id for d.c.group", metavar="INTEGER")
@@ -49,7 +43,7 @@ if __name__ == '__main__' :
     (opts, args) = parser.parse_args()
 
     cursor = None
-    if opts.db is None or opts.db == "prod": 
+    if opts.db is None or opts.db == "prod":
         cursor = dbconnection.connect_to_prod()
     elif opts.db == "dev":
         cursor = dbconnection.connect_to_dev()
@@ -57,7 +51,7 @@ if __name__ == '__main__' :
         cursor = dbconnection.connect_to_test()
     else:
         exit(1, "ERROR: Invalid database")
-    
+
     # Find the id for a given visit
     visitid = core.retrieve_visit_id(cursor, opts.visit)
     if visitid is None:
@@ -81,7 +75,7 @@ if __name__ == '__main__' :
     params['actual_sample_barcode'] = opts.actual_sample_barcode
     params['comments'] = opts.comments
     dcg_id = mxacquisition.put_data_collection_group(cursor, params.values())
-    
+
     if dcg_id is None:
         exit(1, "ERROR: dc_group is None.") # exit code 1 - indicates error
     exit(0, "--dcg_id=%d" % dcg_id)

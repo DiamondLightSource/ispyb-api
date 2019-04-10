@@ -1,7 +1,5 @@
 from __future__ import absolute_import, division, print_function
 
-import os
-import sys
 import threading
 import traceback
 
@@ -47,7 +45,7 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
   def disconnect(self):
     '''Release the connection previously created.'''
     if hasattr(self, 'conn') and self.conn is not None:
-    	self.conn.close()
+        self.conn.close()
     self.conn = None
 
   def get_data_area_package(self):

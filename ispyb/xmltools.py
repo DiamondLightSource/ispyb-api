@@ -99,11 +99,11 @@ def mx_data_reduction_to_ispyb(xmldict, dc_id = None, mxprocessing = None):
         attachments = [attachments]
     scaling = xmldict['AutoProcScalingContainer']['AutoProcScaling']
 
-    if proc == None:
+    if proc is None:
         raise KeyError("Missing key 'AutoProc'")
-    if scaling == None:
+    if scaling is None:
         raise KeyError("Missing key 'AutoProcScaling'")
-    if int_containers == None:
+    if int_containers is None:
         raise KeyError("Missing key 'AutoProcIntegrationContainer'")
 
     s = [None, None, None]
@@ -116,14 +116,14 @@ def mx_data_reduction_to_ispyb(xmldict, dc_id = None, mxprocessing = None):
         elif stats['scalingStatisticsType'] == 'overall':
             s[2] = stats
 
-    if s[0] == None or s[1] == None or s[2] == None:
+    if s[0] is None or s[1] is None or s[2] is None:
         raise KeyError("Need 3 'AutoProcScalingStatistics' keys in 'AutoProcScalingContainer'")
 
     for int_container in int_containers:
         integration = int_container['AutoProcIntegration']
         if 'dataCollectionId' not in integration:
             if dc_id is not None:
-    	        integration['dataCollectionId'] = dc_id
+                integration['dataCollectionId'] = dc_id
             else:
                 raise KeyError("Missing key 'dataCollectionId'")
 
@@ -131,7 +131,7 @@ def mx_data_reduction_to_ispyb(xmldict, dc_id = None, mxprocessing = None):
     # ...first the program info
     programs = None
     command = None
-    job_id = None    
+    job_id = None
     if 'processingPrograms' in program:
         programs = program['processingPrograms']
     if 'processingCommandLine' in program:

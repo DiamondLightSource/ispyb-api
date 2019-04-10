@@ -10,7 +10,6 @@
 
 import os
 import sys
-from datetime import datetime
 
 import ispyb
 from ispyb.xmltools import mx_data_reduction_to_ispyb, xml_file_to_dict

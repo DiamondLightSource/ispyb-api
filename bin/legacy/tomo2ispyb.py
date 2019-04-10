@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 
-import logging
-import os
-import pipes
-import re
-import sys
-import time
-import traceback
-from datetime import datetime
+# from datetime import datetime
 
 from ispyb_api.core import core
 from ispyb_api.dbconnection import dbconnection
@@ -36,7 +29,7 @@ def store_dc(cursor, parentid):
     #params['frames'] = parentid
     #params['comments'] = parentid
     return tomo.insert_dc(cursor, params.values())
-    
+
 def store_recon(cursor, parentid):
     '''Populate dict and store tomography reconstruction'''
     params = tomo.get_recon_params()
@@ -50,7 +43,7 @@ def store_recon(cursor, parentid):
     #params['histogram'] = parentid
     #params['report'] = parentid
     return tomo.insert_recon(cursor, params.values())
-    
+
 
 cursor = dbconnection.connect_to_prod()
 
