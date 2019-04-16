@@ -41,3 +41,18 @@ install:
 script:
 - coverage run --source=ispyb setup.py test
 after_success: coveralls
+
+# Assuming you have installed the travis-ci CLI tool, after you
+# create the Github repo and add it to Travis, run the
+# following command to finish PyPI deployment setup:
+# $ travis encrypt --add deploy.password
+deploy:
+  provider: pypi
+  distributions: sdist bdist_wheel
+  user: mgerstel
+  password:
+    secure: ushpKCFhI2FId4G4H5r0SZnLiN2+0ORnLA7YMDCXdEEnUvMBceB4IO1x22ScCI5GsSahc9jhxjismrQ4r7p1gfW8YiQneSeZbo5Yorqm6+GEMLQ75akge3ZMpCLfPF25Zz0VN1Ra8YMny6k3s8tmBi7r7TneCUn7hQ5C51OdPgBIcUPEAkUxkJReuAoVO+iKk2Re/r3cGkE+FzZ52aMmDT5I5wg9aP8l7e1PZ4k8S8oiy70yzsqrcXatPA61NHh2ux7Hhys5yRS4j2QPDyjweQKl9rgrsLFnBCD1IswVAUjjqjsp1NCfeb/Ba7xRDpqM0bhXjTn0WlqHV/n5C4NWCKiTGwnL+w7Dh21p+pLgEcXhhll0+2WP0KuY0vwCUJ8JwSlGi7sJ/QgdQl3FUDXbtttoLpY9o5El5/l4gbb/+iskH1LxYHtJiPjgK+6Pu/hKTNF/PCnAd5IFjvzulQ1l2AUu/0ZhCh0FBmu/cemULsyMB0QM/8VqvvmK7Mtc3NjKaPQKi3sdn7lb+r9yVDssxoAZAyZ9VHn84VuzsGK1DD7KmHyl8zfEwG5TMgn3FpEzeiCEud2elAqgqkzOMte/HgfNi7sJ097p6ev0sJBnRpSVqdHf5r4j+Fql0c2aH+ivFRxuwXthTb+usdQzx8XzwHKiVea5mDhGBKrXm3fuM0s=
+  on:
+    tags: true
+    repo: DiamondLightSource/ispyb-api
+    python: 3.7
