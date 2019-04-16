@@ -92,6 +92,10 @@ class EncapsulatedValue(object):
     '''Python 2: value when used in bool() context.'''
     return bool(self._value)
 
+  def __hash__(self):
+    '''Pass on the hash value of the inner object.'''
+    return hash(self._value)
+
 
 def add_properties(objectclass, property_list):
   '''Generate class properties for a model that provide read-only access
