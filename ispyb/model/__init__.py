@@ -7,9 +7,6 @@ class DBCache(object):
      in self._data. Cached data should be accessed as self._data. On first
      uncached access reload() is called.'''
 
-  def __init__(self):
-    '''Data has not yet been loaded from the database.'''
-
   def load(self):
     '''Ensure data is loaded from the database.'''
     if not self.cached:
