@@ -7,9 +7,6 @@ class DBCache(object):
      in self._data. Cached data should be accessed as self._data. On first
      uncached access reload() is called.'''
 
-  def __init__(self):
-    '''Data has not yet been loaded from the database.'''
-
   def load(self):
     '''Ensure data is loaded from the database.'''
     if not self.cached:
@@ -94,6 +91,10 @@ class EncapsulatedValue(object):
   def __nonzero__(self):
     '''Python 2: value when used in bool() context.'''
     return bool(self._value)
+
+  def __hash__(self):
+    '''Pass on the hash value of the inner object.'''
+    return hash(self._value)
 
 
 def add_properties(objectclass, property_list):

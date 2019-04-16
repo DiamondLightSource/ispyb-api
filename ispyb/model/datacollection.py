@@ -29,7 +29,7 @@ class DataCollection(ispyb.model.DBCache):
 
   def reload(self):
     '''Load/update information from the database.'''
-    self._data = self._db.retrieve_data_collection_main(self._dcid)[0]
+    self._data = self._db.retrieve_data_collection(self._dcid)[0]
 
   @property
   def dcid(self):
@@ -98,15 +98,26 @@ class DataCollection(ispyb.model.DBCache):
     ))).format(self)
 
 ispyb.model.add_properties(DataCollection, (
+    ('comment', 'comments', 'A free comment field for the data collection.'),
     ('dcgid', 'groupId', 'Returns the Data Collection Group ID associated with this data collection. '
         'You can use .group to get the data collection group model object instead'),
+    ('detector_distance', 'detectorDistance', 'Distance from the sample to the detector in mm'),
+    ('detector_2theta', 'detector2Theta', '2Theta angle between the main beam and the detector normal in degrees'),
     ('file_template', 'fileTemplate', 'Template for file names with the character \'#\' standing in for image number digits.'),
     ('file_directory', 'imgDir', 'Fully qualified path to the image files'),
     ('time_start', 'startTime', None),
+    ('time_exposure', 'exposureTime', 'Exposure time per frame in seconds'),
     ('time_end', 'endTime', None),
     ('image_count', 'noImages', None),
     ('image_start_number', 'startImgNumber', None),
+    ('resolution', 'resolution', 'Inscribed resolution circle in Angstrom. Currently only well-defined for data collections with 2theta=0'),
     ('status', 'status', 'Returns a string representing the current data collection status.'),
+    ('snapshot1', 'snapshot1', 'One of four possible fields to store file paths to image files relating to the data collection'),
+    ('snapshot2', 'snapshot2', 'One of four possible fields to store file paths to image files relating to the data collection'),
+    ('snapshot3', 'snapshot3', 'One of four possible fields to store file paths to image files relating to the data collection'),
+    ('snapshot4', 'snapshot4', 'One of four possible fields to store file paths to image files relating to the data collection'),
+    ('transmission', 'transmission', 'Beam transmission, in per cent'),
+    ('wavelength', 'wavelength', 'Beam wavelength in Angstrom'),
 ))
 
 
