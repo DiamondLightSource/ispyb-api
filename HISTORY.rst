@@ -2,6 +2,11 @@
 History
 =======
 
+5.1.0 (2019-04-16)
+------------------
+
+Added more fields to the `datacollection object model <https://ispyb.readthedocs.io/en/latest/api.html#module-ispyb.model.datacollection>`_.
+
 5.0.0 (2019-03-29)
 ------------------
 
