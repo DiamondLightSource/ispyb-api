@@ -7,6 +7,7 @@
 # Usage example:
 # python put_program.py --....
 
+from __future__ import print_function
 import logging
 import sys
 

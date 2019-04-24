@@ -8,6 +8,7 @@
 # Script to store e.g. xia2 and fast_dp results using the ispyb_api.
 #
 
+from __future__ import print_function
 import os
 import sys
 

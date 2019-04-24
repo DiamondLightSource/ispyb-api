@@ -7,6 +7,7 @@
 # Usage example:
 # python em_put_sample.py --proposal=em1234 --x=123.4 --y=50.02
 
+from __future__ import print_function
 import logging
 import sys
 

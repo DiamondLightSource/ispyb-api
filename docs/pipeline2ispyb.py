@@ -10,7 +10,7 @@
 # data acquisition and processing pipeline.
 #
 
-from __future__ import absolute_import, division
+from __future__ import absolute_import, division, print_function
 
 import sys
 from datetime import datetime
@@ -35,7 +35,7 @@ with ispyb.open(sys.argv[1]) as conn:
     params['endtime'] = datetime.strptime('2014-09-25 13:00:10', '%Y-%m-%d %H:%M:%S')
     params['comments'] = 'This is a test of data collection group.'
     dcg_id = mxacquisition.insert_data_collection_group(list(params.values()))
-    print "dcg_id: %i" % dcg_id
+    print("dcg_id: %i" % dcg_id)
 
     # Store a data collection ...
     params = mxacquisition.get_data_collection_params()
@@ -48,7 +48,7 @@ with ispyb.open(sys.argv[1]) as conn:
     params['starttime'] = datetime.strptime('2014-09-25 13:00:00', '%Y-%m-%d %H:%M:%S')
     params['comments'] = 'This is a test of data collection.'
     dc_id = mxacquisition.insert_data_collection(list(params.values()))
-    print "dc_id: %i" % dc_id
+    print("dc_id: %i" % dc_id)
 
     # ... then update its end time:
     params = mxacquisition.get_data_collection_params()
@@ -56,13 +56,13 @@ with ispyb.open(sys.argv[1]) as conn:
     params['parentid'] = dcg_id
     params['endtime'] = datetime.strptime('2014-09-25 13:00:05', '%Y-%m-%d %H:%M:%S')
     dc_id = mxacquisition.update_data_collection(list(params.values()))
-    print "dc_id: %i" % dc_id
+    print("dc_id: %i" % dc_id)
 
     params = mxprocessing.get_quality_indicators_params()
     params['datacollectionid'] = dc_id
     params['image_number'] = 1
     iqi_id = mxprocessing.upsert_quality_indicators(list(params.values()))
-    print "iqi_id: %i" % iqi_id
+    print("iqi_id: %i" % iqi_id)
 
     # Store results from the EDNA / MX data collection strategy pipelines
     params = mxscreening.get_screening_params()
@@ -72,7 +72,7 @@ with ispyb.open(sys.argv[1]) as conn:
     params['comments'] = 'such and such parameters and values'
     params['program_version'] = 'EDNA MXv1'
     scr_id = mxscreening.insert_screening(list(params.values()))
-    print "scr_id: %i" % scr_id
+    print("scr_id: %i" % scr_id)
 
     params = mxscreening.get_screening_input_params()
     params['screening_id'] = scr_id
@@ -83,7 +83,7 @@ with ispyb.open(sys.argv[1]) as conn:
     params['max_fraction_rejected'] = 0.5
     params['min_signal2noise'] = 0.1
     scr_in_id = mxscreening.insert_screening_input(list(params.values()))
-    print "scr_in_id: %i" % scr_in_id
+    print("scr_in_id: %i" % scr_in_id)
 
     # Store results from XIA2 / MX data reduction pipelines
     app_id = mxprocessing.upsert_program_ex(
@@ -93,7 +93,7 @@ with ispyb.open(sys.argv[1]) as conn:
         time_start = datetime.strptime('2014-09-24 14:30:01', '%Y-%m-%d %H:%M:%S'),
         time_update = datetime.strptime('2014-09-24 14:30:27', '%Y-%m-%d %H:%M:%S'),
     )
-    print "app_id: %i" % app_id
+    print("app_id: %i" % app_id)
 
     # ...first the top-level processing entry
     params = mxprocessing.get_processing_params()
@@ -106,7 +106,7 @@ with ispyb.open(sys.argv[1]) as conn:
     params['refinedcell_beta'] = 90.0
     params['refinedcell_gamma'] = 90.0
     ap_id = mxprocessing.upsert_processing(list(params.values()))
-    print "ap_id: %i" % ap_id
+    print("ap_id: %i" % ap_id)
 
     # ... then the scaling results
     params1 = mxprocessing.get_outer_shell_scaling_params()
@@ -117,14 +117,14 @@ with ispyb.open(sys.argv[1]) as conn:
     params3['cc_half'] = 0.6
     params3['cc_anom'] = 0.6
     scaling_id = mxprocessing.insert_scaling(ap_id, list(params1.values()), list(params2.values()), list(params3.values()))
-    print "scaling_id: %i" % scaling_id
+    print("scaling_id: %i" % scaling_id)
 
     # ... and finally the integration results
     params = mxprocessing.get_integration_params()
     params['parentid'] = scaling_id
     params['datacollectionid'] = dc_id
     integration_id = mxprocessing.upsert_integration(list(params.values()))
-    print "integration_id: %i" % integration_id
+    print("integration_id: %i" % integration_id)
 
     # Store results from DIMPLE / MX molecular replacement pipeline
     params = mxprocessing.get_run_params()
@@ -136,7 +136,7 @@ with ispyb.open(sys.argv[1]) as conn:
     params['pipeline'] = 'CCP4 DIMPLE v1.0'
     params['cmd_line'] = 'dimple file1 file2 file3'
     mr_id = mxprocessing.upsert_run(list(params.values()))
-    print "mr_id: %i" % mr_id
+    print("mr_id: %i" % mr_id)
 
     params = mxprocessing.get_run_blob_params()
     params['parentid'] = mr_id
@@ -144,4 +144,4 @@ with ispyb.open(sys.argv[1]) as conn:
     params['view2'] = '/dls/i03/data/2014/cm4950-3/file2.png'
     params['view3'] = '/dls/i03/data/2014/cm4950-3/file3.png'
     mrblob_id = mxprocessing.upsert_run_blob(list(params.values()))
-    print "mrblob_id: %i" % mrblob_id
+    print("mrblob_id: %i" % mrblob_id)

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
 import ConfigParser
 import logging
 import os
@@ -22,7 +23,7 @@ def get_scaling_id(dir):
     id_file = os.path.join(dir, "ispyb_ids.xml")
 
     if (not os.path.isfile(id_file)) or (not os.access(id_file, os.R_OK)):
-        print "Either file %s is missing or is not readable" % id_file
+        print("Either file %s is missing or is not readable" % id_file)
         return None
     xml = None
     with open(id_file, 'rb') as f:
@@ -43,7 +44,7 @@ def store_result(conn, dir, scaling_id):
 
     log_file = os.path.join(dir, "dimple.log")
     if (not os.path.isfile(log_file)) or (not os.access(log_file, os.R_OK)):
-        print "Either file %s is missing or is not readable" % log_file
+        print("Either file %s is missing or is not readable" % log_file)
         return None
 
     log = ConfigParser.RawConfigParser()
