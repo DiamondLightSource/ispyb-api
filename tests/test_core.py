@@ -91,6 +91,10 @@ def test_retrieve_current_sessions(testdb):
         rs = testdb.core.retrieve_current_sessions('i03', 24*60*30000)
         assert len(rs) > 0
 
+def test_retrieve_sessions_for_beamline_and_run(testdb):
+        rs = testdb.core.retrieve_sessions_for_beamline_and_run('i03', '2016-01')
+        assert len(rs) > 0
+
 def test_retrieve_sessions_for_person_login(testdb):
         rs = testdb.core.retrieve_sessions_for_person_login('boaty')
         assert len(rs) > 0
