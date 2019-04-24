@@ -11,7 +11,7 @@ from __future__ import print_function
 import logging
 import sys
 
-if __name__ == '__main__' :
+if __name__ == "__main__":
 
     from ispyb_api.dbconnection import dbconnection
     from ispyb_api.core import core
@@ -25,12 +25,26 @@ if __name__ == '__main__' :
     logging.info("test")
 
     import optparse
+
     parser = optparse.OptionParser()
-    parser.add_option("--sampleid", dest="sampleid", help="Id for sample", metavar="INTEGER")
-    parser.add_option("--longname", dest="longname", help="Long name for sample", metavar="STRING")
-    parser.add_option("--shortname", dest="shortname", help="Short name for sample", metavar="STRING")
-    parser.add_option("--comments", dest="comments", help="User comments", metavar="STRING")
-    parser.add_option("--db", dest="db", help="Database to use: dev, test or prod (default)", metavar="STRING")
+    parser.add_option(
+        "--sampleid", dest="sampleid", help="Id for sample", metavar="INTEGER"
+    )
+    parser.add_option(
+        "--longname", dest="longname", help="Long name for sample", metavar="STRING"
+    )
+    parser.add_option(
+        "--shortname", dest="shortname", help="Short name for sample", metavar="STRING"
+    )
+    parser.add_option(
+        "--comments", dest="comments", help="User comments", metavar="STRING"
+    )
+    parser.add_option(
+        "--db",
+        dest="db",
+        help="Database to use: dev, test or prod (default)",
+        metavar="STRING",
+    )
 
     (opts, args) = parser.parse_args()
 
@@ -44,13 +58,12 @@ if __name__ == '__main__' :
     else:
         exit(1, "ERROR: Invalid database")
 
-
     params = core.get_sample_params()
     if not opts.sampleid is None:
-        params['id'] = int(opts.sampleid)
-    params['name'] = opts.longname
-    params['code'] = opts.shortname
-    params['comments'] = opts.comments
+        params["id"] = int(opts.sampleid)
+    params["name"] = opts.longname
+    params["code"] = opts.shortname
+    params["comments"] = opts.comments
 
     s_id = core.put_sample(cursor, params.values())
     exit(0, "--sampleid=%d" % s_id)

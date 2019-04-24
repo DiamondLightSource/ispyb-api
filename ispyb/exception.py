@@ -4,7 +4,10 @@ import warnings
 
 import ispyb
 
-warnings.warn("ispyb.exceptions is deprecated and will be removed in the next release. Use the exceptions underneath ispyb. instead.", DeprecationWarning)
+warnings.warn(
+    "ispyb.exceptions is deprecated and will be removed in the next release. Use the exceptions underneath ispyb. instead.",
+    DeprecationWarning,
+)
 
 ISPyBException = ispyb.ISPyBException
 ISPyBConnectionException = ispyb.ConnectionError

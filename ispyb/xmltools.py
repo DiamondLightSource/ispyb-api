@@ -5,6 +5,7 @@ from __future__ import absolute_import, division, print_function
 
 from xml.etree import ElementTree
 
+
 class XmlListConfig(list):
     def __init__(self, aList):
         for element in aList:
@@ -22,8 +23,9 @@ class XmlListConfig(list):
             elif list(element.items()):
                 self.append(OrderedDict(list(element.items())))
 
+
 class XmlDictConfig(dict):
-    '''
+    """
     Example usage:
 
     >>> tree = ElementTree.parse('your_file.xml')
@@ -36,7 +38,8 @@ class XmlDictConfig(dict):
     >>> xmldict = XmlDictConfig(root)
 
     And then use xmldict for what it is... a dict.
-    '''
+    """
+
     def __init__(self, parent_element):
         childrenNames = []
         for child in parent_element:
@@ -66,8 +69,10 @@ class XmlDictConfig(dict):
                         currentValue = self[element.tag]
                         currentValue.append(aDict)
                         self.update({element.tag: currentValue})
-                    except: #the first of its kind, an empty list must be created
-                        self.update({element.tag: [aDict]}) #aDict is written in [], i.e. it will be a list
+                    except:  # the first of its kind, an empty list must be created
+                        self.update(
+                            {element.tag: [aDict]}
+                        )  # aDict is written in [], i.e. it will be a list
 
                 else:
                     self.update({element.tag: aDict})
@@ -82,22 +87,24 @@ class XmlDictConfig(dict):
             else:
                 self.update({element.tag: element.text})
 
-def xml_file_to_dict(xml_file):
-    '''Convert the XML file to a dictionary'''
-    tree = ElementTree.parse(xml_file)
-    return XmlDictConfig( tree.getroot() )
 
-def mx_data_reduction_to_ispyb(xmldict, dc_id = None, mxprocessing = None):
+def xml_file_to_dict(xml_file):
+    """Convert the XML file to a dictionary"""
+    tree = ElementTree.parse(xml_file)
+    return XmlDictConfig(tree.getroot())
+
+
+def mx_data_reduction_to_ispyb(xmldict, dc_id=None, mxprocessing=None):
     # Convenience pointers and sanity checks
-    int_containers = xmldict['AutoProcScalingContainer']['AutoProcIntegrationContainer']
-    if isinstance(int_containers, dict): # Make it a list regardless
+    int_containers = xmldict["AutoProcScalingContainer"]["AutoProcIntegrationContainer"]
+    if isinstance(int_containers, dict):  # Make it a list regardless
         int_containers = [int_containers]
-    proc = xmldict['AutoProc']
-    program = xmldict['AutoProcProgramContainer']['AutoProcProgram']
-    attachments = xmldict['AutoProcProgramContainer']['AutoProcProgramAttachment']
-    if isinstance(attachments, dict): # Make it a list regardless
+    proc = xmldict["AutoProc"]
+    program = xmldict["AutoProcProgramContainer"]["AutoProcProgram"]
+    attachments = xmldict["AutoProcProgramContainer"]["AutoProcProgramAttachment"]
+    if isinstance(attachments, dict):  # Make it a list regardless
         attachments = [attachments]
-    scaling = xmldict['AutoProcScalingContainer']['AutoProcScaling']
+    scaling = xmldict["AutoProcScalingContainer"]["AutoProcScaling"]
 
     if proc is None:
         raise KeyError("Missing key 'AutoProc'")
@@ -107,23 +114,25 @@ def mx_data_reduction_to_ispyb(xmldict, dc_id = None, mxprocessing = None):
         raise KeyError("Missing key 'AutoProcIntegrationContainer'")
 
     s = [None, None, None]
-    for i in range(0,3):
-        stats = xmldict['AutoProcScalingContainer']['AutoProcScalingStatistics'][i]
-        if stats['scalingStatisticsType'] == 'outerShell':
+    for i in range(0, 3):
+        stats = xmldict["AutoProcScalingContainer"]["AutoProcScalingStatistics"][i]
+        if stats["scalingStatisticsType"] == "outerShell":
             s[0] = stats
-        elif stats['scalingStatisticsType'] == 'innerShell':
+        elif stats["scalingStatisticsType"] == "innerShell":
             s[1] = stats
-        elif stats['scalingStatisticsType'] == 'overall':
+        elif stats["scalingStatisticsType"] == "overall":
             s[2] = stats
 
     if s[0] is None or s[1] is None or s[2] is None:
-        raise KeyError("Need 3 'AutoProcScalingStatistics' keys in 'AutoProcScalingContainer'")
+        raise KeyError(
+            "Need 3 'AutoProcScalingStatistics' keys in 'AutoProcScalingContainer'"
+        )
 
     for int_container in int_containers:
-        integration = int_container['AutoProcIntegration']
-        if 'dataCollectionId' not in integration:
+        integration = int_container["AutoProcIntegration"]
+        if "dataCollectionId" not in integration:
             if dc_id is not None:
-                integration['dataCollectionId'] = dc_id
+                integration["dataCollectionId"] = dc_id
             else:
                 raise KeyError("Missing key 'dataCollectionId'")
 
@@ -132,112 +141,114 @@ def mx_data_reduction_to_ispyb(xmldict, dc_id = None, mxprocessing = None):
     programs = None
     command = None
     job_id = None
-    if 'processingPrograms' in program:
-        programs = program['processingPrograms']
-    if 'processingCommandLine' in program:
-        command = program['processingCommandLine']
-    if 'reprocessingId' in program:
-        job_id = program['reprocessingId']
+    if "processingPrograms" in program:
+        programs = program["processingPrograms"]
+    if "processingCommandLine" in program:
+        command = program["processingCommandLine"]
+    if "reprocessingId" in program:
+        job_id = program["reprocessingId"]
     app_id = mxprocessing.upsert_program_ex(
-        job_id = job_id,
-        name = programs,
-        command=command,
+        job_id=job_id, name=programs, command=command
     )
 
     if attachments != None:
         params = mxprocessing.get_program_attachment_params()
         for attachment in attachments:
-            params['parentid'] = app_id
-            if 'fileName' in attachment:
-                params['file_name'] = attachment['fileName']
-            if 'filePath' in attachment:
-                params['file_path'] = attachment['filePath']
-            if 'fileType' in attachment:
-                params['file_type'] = attachment['fileType']
+            params["parentid"] = app_id
+            if "fileName" in attachment:
+                params["file_name"] = attachment["fileName"]
+            if "filePath" in attachment:
+                params["file_path"] = attachment["filePath"]
+            if "fileType" in attachment:
+                params["file_type"] = attachment["fileType"]
             mxprocessing.upsert_program_attachment(list(params.values()))
 
     # ...then the top-level processing entry
     params = mxprocessing.get_processing_params()
-    params['spacegroup'] = proc['spaceGroup']
-    params['parentid'] = app_id
-    params['refinedcell_a'] = proc['refinedCell_a']
-    params['refinedcell_b'] = proc['refinedCell_b']
-    params['refinedcell_c'] = proc['refinedCell_c']
-    params['refinedcell_alpha'] = proc['refinedCell_alpha']
-    params['refinedcell_beta'] = proc['refinedCell_beta']
-    params['refinedcell_gamma'] = proc['refinedCell_gamma']
+    params["spacegroup"] = proc["spaceGroup"]
+    params["parentid"] = app_id
+    params["refinedcell_a"] = proc["refinedCell_a"]
+    params["refinedcell_b"] = proc["refinedCell_b"]
+    params["refinedcell_c"] = proc["refinedCell_c"]
+    params["refinedcell_alpha"] = proc["refinedCell_alpha"]
+    params["refinedcell_beta"] = proc["refinedCell_beta"]
+    params["refinedcell_gamma"] = proc["refinedCell_gamma"]
     ap_id = mxprocessing.upsert_processing(list(params.values()))
 
     # ... then the scaling results
-    p = [mxprocessing.get_outer_shell_scaling_params(),
-         mxprocessing.get_inner_shell_scaling_params(),
-         mxprocessing.get_overall_scaling_params()]
+    p = [
+        mxprocessing.get_outer_shell_scaling_params(),
+        mxprocessing.get_inner_shell_scaling_params(),
+        mxprocessing.get_overall_scaling_params(),
+    ]
 
     for i in 0, 1, 2:
-      if 'rMerge' in s[i]:
-          p[i]['r_merge'] = s[i]['rMerge']
-      if 'rMeasAllIPlusIMinus' in s[i]:
-          p[i]['r_meas_all_iplusi_minus'] = s[i]['rMeasAllIPlusIMinus']
-      if 'rMeasWithinIPlusIMinus' in s[i]:
-          p[i]['r_meas_within_iplusi_minus'] = s[i]['rMeasWithinIPlusIMinus']
-      if 'resolutionLimitLow' in s[i]:
-          p[i]['res_lim_low'] = s[i]['resolutionLimitLow']
-      if 'resolutionLimitHigh' in s[i]:
-          p[i]['res_lim_high'] = s[i]['resolutionLimitHigh']
-      if 'meanIOverSigI' in s[i]:
-          p[i]['mean_i_sig_i'] = s[i]['meanIOverSigI']
-      if 'completeness' in s[i]:
-          p[i]['completeness'] = s[i]['completeness']
-      if 'multiplicity' in s[i]:
-          p[i]['multiplicity'] = s[i]['multiplicity']
-      if 'anomalousCompleteness' in s[i]:
-          p[i]['anom_completeness'] = s[i]['anomalousCompleteness']
-      if 'anomalousMultiplicity' in s[i]:
-          p[i]['anom_multiplicity'] = s[i]['anomalousMultiplicity']
-      if 'anomalous' in s[i]:
-          p[i]['anom'] = s[i]['anomalous']
-      if 'ccHalf' in s[i]:
-          p[i]['cc_half'] = s[i]['ccHalf']
-      if 'ccAnomalous' in s[i]:
-          p[i]['cc_anom'] = s[i]['ccAnomalous']
-      if 'nTotalObservations' in s[i]:
-          p[i]['n_tot_obs'] = s[i]['nTotalObservations']
-      if 'nTotalUniqueObservations' in s[i]:
-          p[i]['n_tot_unique_obs'] = s[i]['nTotalUniqueObservations']
-      if 'rPimWithinIPlusIMinus' in s[i]:
-          p[i]['r_pim_within_iplusi_minus'] = s[i]['rPimWithinIPlusIMinus']
-      if 'rPimAllIPlusIMinus' in s[i]:
-          p[i]['r_pim_all_iplusi_minus'] = s[i]['rPimAllIPlusIMinus']
+        if "rMerge" in s[i]:
+            p[i]["r_merge"] = s[i]["rMerge"]
+        if "rMeasAllIPlusIMinus" in s[i]:
+            p[i]["r_meas_all_iplusi_minus"] = s[i]["rMeasAllIPlusIMinus"]
+        if "rMeasWithinIPlusIMinus" in s[i]:
+            p[i]["r_meas_within_iplusi_minus"] = s[i]["rMeasWithinIPlusIMinus"]
+        if "resolutionLimitLow" in s[i]:
+            p[i]["res_lim_low"] = s[i]["resolutionLimitLow"]
+        if "resolutionLimitHigh" in s[i]:
+            p[i]["res_lim_high"] = s[i]["resolutionLimitHigh"]
+        if "meanIOverSigI" in s[i]:
+            p[i]["mean_i_sig_i"] = s[i]["meanIOverSigI"]
+        if "completeness" in s[i]:
+            p[i]["completeness"] = s[i]["completeness"]
+        if "multiplicity" in s[i]:
+            p[i]["multiplicity"] = s[i]["multiplicity"]
+        if "anomalousCompleteness" in s[i]:
+            p[i]["anom_completeness"] = s[i]["anomalousCompleteness"]
+        if "anomalousMultiplicity" in s[i]:
+            p[i]["anom_multiplicity"] = s[i]["anomalousMultiplicity"]
+        if "anomalous" in s[i]:
+            p[i]["anom"] = s[i]["anomalous"]
+        if "ccHalf" in s[i]:
+            p[i]["cc_half"] = s[i]["ccHalf"]
+        if "ccAnomalous" in s[i]:
+            p[i]["cc_anom"] = s[i]["ccAnomalous"]
+        if "nTotalObservations" in s[i]:
+            p[i]["n_tot_obs"] = s[i]["nTotalObservations"]
+        if "nTotalUniqueObservations" in s[i]:
+            p[i]["n_tot_unique_obs"] = s[i]["nTotalUniqueObservations"]
+        if "rPimWithinIPlusIMinus" in s[i]:
+            p[i]["r_pim_within_iplusi_minus"] = s[i]["rPimWithinIPlusIMinus"]
+        if "rPimAllIPlusIMinus" in s[i]:
+            p[i]["r_pim_all_iplusi_minus"] = s[i]["rPimAllIPlusIMinus"]
 
-    scaling_id = mxprocessing.insert_scaling(ap_id, list(p[0].values()), list(p[1].values()), list(p[2].values()))
+    scaling_id = mxprocessing.insert_scaling(
+        ap_id, list(p[0].values()), list(p[1].values()), list(p[2].values())
+    )
 
     # ... and finally the integration results
     for int_container in int_containers:
-        integration = int_container['AutoProcIntegration']
+        integration = int_container["AutoProcIntegration"]
 
         params = mxprocessing.get_integration_params()
-        params['parentid'] = scaling_id
-        if 'dataCollectionId' in integration:
-            params['datacollectionid'] = integration['dataCollectionId']
-        params['programid'] = app_id
-        params['cell_a'] = integration['cell_a']
-        params['cell_b'] = integration['cell_b']
-        params['cell_c'] = integration['cell_c']
-        params['cell_alpha'] = integration['cell_alpha']
-        params['cell_beta'] = integration['cell_beta']
-        params['cell_gamma'] = integration['cell_gamma']
-        if 'startImageNumber' in integration:
-            params['start_image_no'] = integration['startImageNumber']
-        if 'endImageNumber' in integration:
-            params['end_image_no'] = integration['endImageNumber']
-        if 'refinedDetectorDistance' in integration:
-            params['refined_detector_dist'] = integration['refinedDetectorDistance']
-        if 'refinedXBeam' in integration:
-            params['refined_xbeam'] = integration['refinedXBeam']
-        if 'refinedYBeam' in integration:
-            params['refined_ybeam'] = integration['refinedYBeam']
-        if 'anomalous' in integration:
-            params['anom'] = integration['anomalous']
+        params["parentid"] = scaling_id
+        if "dataCollectionId" in integration:
+            params["datacollectionid"] = integration["dataCollectionId"]
+        params["programid"] = app_id
+        params["cell_a"] = integration["cell_a"]
+        params["cell_b"] = integration["cell_b"]
+        params["cell_c"] = integration["cell_c"]
+        params["cell_alpha"] = integration["cell_alpha"]
+        params["cell_beta"] = integration["cell_beta"]
+        params["cell_gamma"] = integration["cell_gamma"]
+        if "startImageNumber" in integration:
+            params["start_image_no"] = integration["startImageNumber"]
+        if "endImageNumber" in integration:
+            params["end_image_no"] = integration["endImageNumber"]
+        if "refinedDetectorDistance" in integration:
+            params["refined_detector_dist"] = integration["refinedDetectorDistance"]
+        if "refinedXBeam" in integration:
+            params["refined_xbeam"] = integration["refinedXBeam"]
+        if "refinedYBeam" in integration:
+            params["refined_ybeam"] = integration["refinedYBeam"]
+        if "anomalous" in integration:
+            params["anom"] = integration["anomalous"]
 
         integration_id = mxprocessing.upsert_integration(list(params.values()))
 
