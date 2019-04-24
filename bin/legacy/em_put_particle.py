@@ -11,7 +11,7 @@ from __future__ import print_function
 import logging
 import sys
 
-if __name__ == '__main__' :
+if __name__ == "__main__":
 
     from ispyb_api.dbconnection import dbconnection
     from ispyb_api.em import em
@@ -25,12 +25,20 @@ if __name__ == '__main__' :
     logging.info("test")
 
     import optparse
+
     parser = optparse.OptionParser()
-    parser.add_option("--particleid", dest="particleid", help="Id for particle", metavar="INTEGER")
+    parser.add_option(
+        "--particleid", dest="particleid", help="Id for particle", metavar="INTEGER"
+    )
     parser.add_option("--movieid", dest="dcid", help="Id for movie", metavar="INTEGER")
     parser.add_option("--x", dest="x", help="x coordinate", metavar="FLOAT")
     parser.add_option("--y", dest="y", help="y coordinate", metavar="FLOAT")
-    parser.add_option("--db", dest="db", help="Database to use: dev, test or prod (default)", metavar="STRING")
+    parser.add_option(
+        "--db",
+        dest="db",
+        help="Database to use: dev, test or prod (default)",
+        metavar="STRING",
+    )
 
     (opts, args) = parser.parse_args()
 
