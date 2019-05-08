@@ -28,6 +28,21 @@ class ProcessingJob(ispyb.model.DBCache):
         self._db = db_area
         self._jobid = int(jobid)
 
+    def __eq__(self, other):
+        """Equality of the model object depends on the equality of the
+        underlying database reference."""
+        if not isinstance(other, ProcessingJob):
+            return False
+        return self._jobid == other._jobid and self._db == other._db
+
+    def __ne__(self, other):
+        """Test for non-equality. Implementation required for Python 2."""
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        """Generates a 'unique' hash value for the object."""
+        return hash(("ProcessingJob", self._db, self._jobid))
+
     def reload(self):
         """Load/update information from the database."""
         self._data = self._db.retrieve_job(self._jobid)[0]
