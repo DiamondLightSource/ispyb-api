@@ -31,5 +31,6 @@ setup(
         "Operating System :: OS Independent",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
+    entry_points={"libtbx.precommit": ["ispyb = ispyb"]},
     project_urls={"Documentation": "https://ispyb.readthedocs.io"},
 )
