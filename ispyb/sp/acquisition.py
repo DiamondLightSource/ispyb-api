@@ -27,6 +27,7 @@ class Acquisition(ispyb.interface.acquisition.IF):
             ("actual_container_slot_in_sc", None),
             ("comments", None),
             ("xtal_snapshot_full_path", None),
+            ("scan_params", None),
         ]
     )
 
@@ -158,7 +159,7 @@ class Acquisition(ispyb.interface.acquisition.IF):
 
     def upsert_data_collection_group(self, values):
         """Insert or update MX data collection group."""
-        return self.get_connection().call_sp_write("upsert_dc_group_v2", values)
+        return self.get_connection().call_sp_write("upsert_dc_group_v3", values)
 
     def upsert_data_collection(self, values):
         """Insert or update data collection."""
@@ -167,6 +168,12 @@ class Acquisition(ispyb.interface.acquisition.IF):
     def upsert_data_collection_file_attachment(self, values):
         """Insert or update a data collection file attachment."""
         return self.get_connection().call_sp_write("upsert_dc_file_attachment", values)
+
+    def retrieve_data_collection_group(self, id, auth_login=None):
+        """Retrieve data collection group parameters for row with given id"""
+        return self.get_connection().call_sp_retrieve(
+            procname="retrieve_dc_group_v2", args=(id, auth_login)
+        )
 
     def retrieve_data_collection(self, id, auth_login=None):
         """Retrieve data collection parameters for row with given id"""
