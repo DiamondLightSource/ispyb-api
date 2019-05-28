@@ -92,6 +92,7 @@ def enable(configuration_file, section="ispyb"):
         _get_linked_autoprocintegration_for_dc
     )
     ispyb.model.datacollection.DataCollection.pdb = _get_linked_pdb_for_dc
+    ispyb.model.datacollection.DataCollectionGroup.reload = _get_datacollectiongroup
     import ispyb.model.processingprogram
 
     ispyb.model.processingprogram.ProcessingProgram.reload = _get_autoprocprogram
@@ -109,6 +110,19 @@ def _get_autoprocprogram(self):
             "WHERE autoProcProgramId = %s "
             "LIMIT 1;",
             self._app_id,
+        )
+        self._data = cursor.fetchone()
+
+
+def _get_datacollectiongroup(self):
+    # https://jira.diamond.ac.uk/browse/SCI-8698
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT * "
+            "FROM DataCollectionGroup "
+            "WHERE dataCollectionGroupId = %s "
+            "LIMIT 1;",
+            self._dcgid,
         )
         self._data = cursor.fetchone()
 

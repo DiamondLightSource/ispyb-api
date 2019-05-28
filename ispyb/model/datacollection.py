@@ -223,3 +223,16 @@ class DataCollectionGroup(ispyb.model.DBCache):
                 "DataCollectionGroup #%d (not yet loaded from database)" % self._dcgid
             )
         return ("\n".join(("DataCollectionGroup #{0.dcgid}",))).format(self)
+
+
+ispyb.model.add_properties(
+    DataCollectionGroup,
+    (
+        (
+            "experiment_type",
+            "experimentType",
+            "The type of the underlying experiment,"
+            "for example 'Mesh' describes what is also known as a grid scan",
+        ),
+    ),
+)
