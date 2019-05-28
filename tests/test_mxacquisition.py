@@ -8,13 +8,22 @@ import pytest
 
 def test_mxacquisition_methods(testdb):
     mxacquisition = testdb.mx_acquisition
+    sessionid = 55168
 
     params = mxacquisition.get_data_collection_group_params()
-    params["parentid"] = 55168  # sessionId
+    params["parentid"] = sessionid
     params["experimenttype"] = "OSC"
     dcgid = mxacquisition.insert_data_collection_group(list(params.values()))
     assert dcgid is not None
     assert dcgid > 0
+
+    rs = mxacquisition.retrieve_data_collection_group(dcgid)
+    assert rs[0]["sessionId"] == params["parentid"]
+    assert rs[0]["experimenttype"] == params["experimenttype"]
+
+    rs = mxacquisition.retrieve_data_collection_group(dcgid, "boaty")
+    assert rs[0]["sessionId"] == params["parentid"]
+    assert rs[0]["experimenttype"] == params["experimenttype"]
 
     params = mxacquisition.get_data_collection_params()
     params["parentid"] = dcgid
