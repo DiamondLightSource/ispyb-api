@@ -193,7 +193,7 @@ class DataCollectionGroup(ispyb.model.DBCache):
 
     def reload(self):
         """Load/update information from the database."""
-        raise NotImplementedError("TODO: Loading not yet supported")
+        self._data = self._db.mx_acquisition.retrieve_data_collection_group(self._dcgid)[0]
 
     @property
     def dcgid(self):
@@ -230,7 +230,7 @@ ispyb.model.add_properties(
     (
         (
             "experiment_type",
-            "experimentType",
+            "experimenttype",
             "The type of the underlying experiment,"
             "for example 'Mesh' describes what is also known as a grid scan",
         ),
