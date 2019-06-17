@@ -2,6 +2,14 @@
 History
 =======
 
+5.2.0 (2019-06-17)
+------------------
+
+* New methods:
+
+  * retrieve_sessions_for_beamline_and_run, `#75 <https://github.com/DiamondLightSource/ispyb-api/pull/75>`_
+  * retrieve_data_collection_group, `#81 <https://github.com/DiamondLightSource/ispyb-api/pull/81>`_
+
 5.1.0 (2019-04-16)
 ------------------
 
