@@ -1,6 +1,12 @@
 from __future__ import absolute_import, division, print_function
 
 from setuptools import find_packages, setup
+import sys
+
+INSTALL_REQUIRES = ['mysql-connector<2.2.3']
+
+if sys.version_info.major == 2:
+    INSTALL_REQUIRES.append('enum34')
 
 setup(
     name="ispyb",
@@ -15,7 +21,7 @@ setup(
     packages=find_packages(),
     scripts=["bin/dimple2ispyb.py", "bin/mxdatareduction2ispyb.py"],
     license="Apache License, Version 2.0",
-    install_requires=["enum-compat", "mysql-connector<2.2.3"],
+    install_requires=INSTALL_REQUIRES,
     setup_requires=["pytest-runner"],
     tests_require=["mock", "pytest"],
     classifiers=[
