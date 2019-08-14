@@ -154,6 +154,13 @@ class Core(ispyb.interface.core.IF):
             procname="upsert_sample", args=values
         )
 
+    def retrieve_samples_not_loaded_for_container_reg_barcode(self, barcode):
+        """Retrieve the not-yet loaded samples in the most recent container that corresponds with the given container registry barcode"""
+        return self.get_connection().call_sp_retrieve(
+            procname="retrieve_samples_not_loaded_for_container_reg_barcode",
+            args=(barcode,),
+        )
+
     def retrieve_visit_id(self, visit):
         """Get the database ID for a visit on the form mx1234-5."""
         return self.get_connection().call_sf_retrieve(

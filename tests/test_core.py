@@ -69,6 +69,12 @@ def test_insert_session_for_proposal_code_number(testdb):
     assert phpid > 0
 
 
+def test_retrieve_samples_not_loaded_for_container_reg_barcode(testdb):
+    core = testdb.core
+    rs = core.retrieve_samples_not_loaded_for_container_reg_barcode("DLS-0001")
+    assert len(rs) > 0
+
+
 def test_upsert_sample(testdb):
     core = testdb.core
     params = core.get_sample_params()
