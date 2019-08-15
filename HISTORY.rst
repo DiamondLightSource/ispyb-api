@@ -2,6 +2,13 @@
 History
 =======
 
+5.3.0 (2019-08-15)
+------------------
+
+New method:
+
+  * retrieve_samples_not_loaded_for_container_reg_barcode, `#85 <https://github.com/DiamondLightSource/ispyb-api/pull/85>`_
+
 5.2.0 (2019-06-17)
 ------------------
 
