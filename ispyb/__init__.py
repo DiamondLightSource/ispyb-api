@@ -6,7 +6,7 @@ except ImportError:
     import ConfigParser as configparser
 import logging
 
-__version__ = "5.2.1"
+__version__ = "5.3.0"
 
 _log = logging.getLogger("ispyb")
 
