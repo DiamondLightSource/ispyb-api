@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 from setuptools import find_packages, setup
 import sys
 
-INSTALL_REQUIRES = ["mysql-connector<2.2.3"]
+INSTALL_REQUIRES = ["mysql-connector-python"]
 
 if sys.version_info.major == 2:
     INSTALL_REQUIRES.append("enum34")
