@@ -47,7 +47,12 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
         self.disconnect()
 
         self.conn = mysql.connector.connect(
-            user=user, password=pw, host=host, database=db, port=int(port)
+            user=user,
+            password=pw,
+            host=host,
+            database=db,
+            port=int(port),
+            use_pure=True,
         )
         if not self.conn:
             raise ConnectionError("Could not connect to database")
