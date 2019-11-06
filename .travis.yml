@@ -14,7 +14,7 @@ matrix:
     - env: OPTIONAL=1
 
 addons:
-  mariadb: 10.2
+  mariadb: 10.3
 
 before_install:
 - wget https://github.com/DiamondLightSource/ispyb-database/releases/download/v1.6.0/ispyb-database-1.6.0.tar.gz
