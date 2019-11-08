@@ -204,6 +204,15 @@ class Core(ispyb.interface.core.IF):
             procname="retrieve_most_recent_session", args=(beamline, proposal_code)
         )
 
+    def retrieve_expired_sessions_for_instrument_and_period(
+        self, instrument, start_date, end_date
+    ):
+        """Returns a multi-row result-set with the sessions that ended within the window defined by start_ate and end_date on instrument given by p_instrument (can contain database wildcards)"""
+        return self.get_connection().call_sp_retrieve(
+            procname="retrieve_expired_sessions_for_instrument_and_period",
+            args=(instrument, start_date, end_date),
+        )
+
     def retrieve_persons_for_proposal(self, proposal_code, proposal_number):
         """Get a result-set with the persons associated with a given proposal specified by proposal code, proposal_number"""
         return self.get_connection().call_sp_retrieve(
