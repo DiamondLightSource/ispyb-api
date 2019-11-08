@@ -23,6 +23,7 @@ class MXProcessing(ispyb.interface.processing.IF):
             ("file_name", None),
             ("file_path", None),
             ("file_type", None),
+            ("importance_Rank", None),
         ]
     )
 
@@ -272,7 +273,7 @@ class MXProcessing(ispyb.interface.processing.IF):
     def upsert_program_attachment(self, values):
         """Store new or update existing program attachment params."""
         return self.get_connection().call_sp_write(
-            procname="upsert_processing_program_attachment", args=values
+            procname="upsert_processing_program_attachment_v2", args=values
         )
 
     def upsert_processing(self, values):
