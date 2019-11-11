@@ -119,6 +119,13 @@ def test_retrieve_current_sessions_for_person(testdb):
     assert len(rs) > 0
 
 
+def retrieve_expired_sessions_for_instrument_and_period(testdb):
+    rs = testdb.core.retrieve_expired_sessions_for_instrument_and_period(
+        "i0%", "2016-01-01 00:00:00", "2016-10-01 00:00:00"
+    )
+    assert len(rs) > 0
+
+
 def test_retrieve_most_recent_session(testdb):
     rs = testdb.core.retrieve_most_recent_session("i03", "cm")
     assert len(rs) == 1
