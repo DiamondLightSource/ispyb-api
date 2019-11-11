@@ -23,7 +23,7 @@ class MXProcessing(ispyb.interface.processing.IF):
             ("file_name", None),
             ("file_path", None),
             ("file_type", None),
-            ("importance_Rank", None),
+            ("importance_rank", None),
         ]
     )
 
