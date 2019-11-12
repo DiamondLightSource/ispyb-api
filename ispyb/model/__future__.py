@@ -51,7 +51,12 @@ def enable(configuration_file, section="ispyb"):
 
     # Open a direct MySQL connection
     _db = mysql.connector.connect(
-        host=host, port=port, user=username, password=password, database=database
+        host=host,
+        port=port,
+        user=username,
+        password=password,
+        database=database,
+        use_pure=True,
     )
     _db.autocommit = True
     _db_config = configuration_file
