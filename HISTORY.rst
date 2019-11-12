@@ -2,6 +2,18 @@
 History
 =======
 
+5.4.1 (2019-11-12)
+------------------
+
+Fix segmentation fault when enabling the SQL future methods.
+
+5.4.0 (2019-11-11)
+------------------
+
+Breaking change:
+
+  * Database connection package changed from mysql-connector to mysql-connector-python
+
 5.3.0 (2019-08-15)
 ------------------
 
