@@ -16,6 +16,16 @@ import mysql.connector
 _db_config = None
 
 
+def disable():
+    """Disable access to future features. Disconnect if connected."""
+
+    global _db, _db_cc, _db_config
+
+    if _db_config:
+        _db.close()
+        _db, _db_cc, _db_config = None, None, None
+
+
 def enable(configuration_file, section="ispyb"):
     """Enable access to features that are currently under development."""
 
@@ -28,8 +38,7 @@ def enable(configuration_file, section="ispyb"):
         logging.getLogger("ispyb").warn(
             "__future__ configuration file change requested"
         )
-        _db.close()
-        _db, _db_cc, _db_config = None, None, None
+        disable()
 
     logging.getLogger("ispyb").info(
         "NOTICE: This code uses __future__ functionality in the ISPyB API. "
@@ -58,8 +67,8 @@ def enable(configuration_file, section="ispyb"):
         database=database,
         use_pure=True,
     )
-    _db.autocommit = True
     _db_config = configuration_file
+    _db.autocommit = True
 
     class DictionaryCursorContextManager(object):
         """This class creates dictionary cursors for mysql.connector connections.
