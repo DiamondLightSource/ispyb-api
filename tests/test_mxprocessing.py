@@ -181,6 +181,18 @@ def test_processing2(testdb):
     assert pa2[0]["filePath"] == params["file_path"]
     assert pa2[0]["fileType"] == params["file_type"]
 
+    pmid = mxprocessing.upsert_program_message(
+        id=None,
+        program_id=programid,
+        severity="WARNING",
+        message="Missing images",
+        description="Images # 3, 14-27, 29, 37, 42, 59-63, 97, 118, 121 missing from data collection directory",
+    )
+    assert pmid is not None
+
+    pmid2 = mxprocessing.upsert_program_message(id=pmid, severity="ERROR")
+    assert pmid == pmid2
+
     params = mxprocessing.get_integration_params()
     params["datacollectionid"] = 993677
     params["start_image_no"] = 1
