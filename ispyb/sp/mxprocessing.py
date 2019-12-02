@@ -276,6 +276,21 @@ class MXProcessing(ispyb.interface.processing.IF):
             procname="upsert_processing_program_attachment_v2", args=values
         )
 
+    def upsert_program_message(
+        self, id=None, program_id=None, severity=None, message=None, description=None
+    ):
+        """Store new or update existing program message params.
+
+        :param severity: ERROR,WARNING or INFO
+        :param message: The message - max 200 characters
+        :param description: A more detailed description of the message
+        :return: The program_message_id.
+        """
+        return self.get_connection().call_sp_write(
+            procname="upsert_processing_program_message",
+            args=[id, program_id, severity, message, description],
+        )
+
     def upsert_processing(self, values):
         return self.get_connection().call_sp_write(
             procname="upsert_processing", args=values
