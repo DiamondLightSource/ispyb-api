@@ -380,3 +380,19 @@ class MXProcessing(ispyb.interface.processing.IF):
         return self.get_connection().call_sp_write(
             procname="upsert_processing_job_image_sweep", args=values
         )
+
+    def upsert_sample_image_auto_score(
+        self, image_full_path, schema_name, score_class, probability
+    ):
+        """Store new or update existing automatic score for a sample image.
+
+        :param image_full_path: The full path to the sample image
+        :param schema_name: The name of the scoring schema, e.g. MARCO
+        :param score_class: A string that describes the thing we're scoring, e.g. crystal, clear, precipitant, other
+        :param probability: A float indicating the probability that the image contains the score_class
+        :return: Nothing.
+        """
+        self.get_connection().call_sp_write(
+            procname="upsert_sample_image_auto_score",
+            args=[image_full_path, schema_name, score_class, probability],
+        )

@@ -292,3 +292,11 @@ def test_post_processing(testdb):
     id = mxprocessing.upsert_run_blob(list(params.values()))
     assert id is not None
     assert id > 0
+
+
+def test_sample_image_scoring(testdb):
+    mxprocessing = testdb.mx_processing
+
+    mxprocessing.upsert_sample_image_auto_score(
+        "/dls/i03/data/2016/cm1234-5/something.jpg", "MARCO", "crystal", 0.65
+    )

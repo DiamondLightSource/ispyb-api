@@ -17,8 +17,8 @@ addons:
   mariadb: 10.3
 
 before_install:
-- wget https://github.com/DiamondLightSource/ispyb-database/releases/download/v1.9.1/ispyb-database-1.9.1.tar.gz
-- tar xvfz ispyb-database-1.9.1.tar.gz
+- wget https://github.com/DiamondLightSource/ispyb-database/releases/download/v1.10.2/ispyb-database-1.10.2.tar.gz
+- tar xvfz ispyb-database-1.10.2.tar.gz
 - mysql_upgrade -u root
 - mysql -u root -e "CREATE DATABASE ispybtest; SET GLOBAL log_bin_trust_function_creators=ON;"
 - mysql -u root -D ispybtest < schema/tables.sql
