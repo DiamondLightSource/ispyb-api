@@ -102,11 +102,23 @@ def enable(configuration_file, section="ispyb"):
     ispyb.model.processingprogram.ProcessingProgram.reload = _get_autoprocprogram
 
     import ispyb.model.screening
+
     ispyb.model.screening.Screening.screening_outputs = _get_linked_outputs_for_screening
     ispyb.model.screening.Screening.reload = _get_screening
+
     ispyb.model.screening.ScreeningOutput.lattices = _get_linked_lattices_for_screening_output
+    ispyb.model.screening.ScreeningOutput.strategies = _get_linked_strategies_for_screening_output
     ispyb.model.screening.ScreeningOutput.reload = _get_screening_output
+
     ispyb.model.screening.ScreeningOutputLattice.reload = _get_screening_output_lattice
+
+    ispyb.model.screening.ScreeningStrategy.wedges = _get_linked_wedges_for_screening_strategy
+    ispyb.model.screening.ScreeningStrategy.reload = _get_screening_strategy
+
+    ispyb.model.screening.ScreeningStrategyWedge.sub_wedges = _get_linked_sub_wedges_for_screening_strategy_wedge
+    ispyb.model.screening.ScreeningStrategyWedge.reload = _get_screening_strategy_wedge
+
+    ispyb.model.screening.ScreeningStrategySubWedge.reload = _get_screening_strategy_sub_wedge
 
 
 def _get_autoprocprogram(self):
@@ -189,16 +201,6 @@ def _get_linked_outputs_for_screening(self):
             for ir in cursor.fetchall()
         ]
 
-def _get_screening(self):
-    with _db_cc() as cursor:
-        cursor.run(
-            "SELECT comments, shortComments, programVersion "
-            "FROM Screening "
-            "WHERE screeningId = %s",
-            self._screening_id,
-        )
-        self._data = cursor.fetchone()
-
 @property
 def _get_linked_lattices_for_screening_output(self):
     import ispyb.model.screening
@@ -220,6 +222,74 @@ def _get_linked_lattices_for_screening_output(self):
             for ir in cursor.fetchall()
         ]
 
+@property
+def _get_linked_strategies_for_screening_output(self):
+    import ispyb.model.screening
+
+    with _db_cc() as cursor:
+        cursor.run(
+            #"SELECT screeningStrategyId, anomalous, program "
+            "SELECT * "
+            "FROM ScreeningStrategy "
+            "WHERE screeningoutputid = %s "
+            "ORDER BY screeningStrategyId",
+            self._output_id,
+        )
+        return [
+            ispyb.model.screening.ScreeningStrategy(
+                ir["screeningStrategyId"], self._db, preload=ir
+            )
+            for ir in cursor.fetchall()
+        ]
+
+@property
+def _get_linked_wedges_for_screening_strategy(self):
+    import ispyb.model.screening
+
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT * "
+            "FROM ScreeningStrategyWedge "
+            "WHERE screeningStrategyId = %s "
+            "ORDER BY screeningStrategyWedgeId",
+            self._strategy_id,
+        )
+        return [
+            ispyb.model.screening.ScreeningStrategyWedge(
+                ir["screeningStrategyWedgeId"], self._db, preload=ir
+            )
+            for ir in cursor.fetchall()
+        ]
+
+@property
+def _get_linked_sub_wedges_for_screening_strategy_wedge(self):
+    import ispyb.model.screening
+
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT * "
+            "FROM ScreeningStrategySubWedge "
+            "WHERE screeningStrategyWedgeId = %s "
+            "ORDER BY screeningStrategySubWedgeId",
+            self._strategy_wedge_id,
+        )
+        return [
+            ispyb.model.screening.ScreeningStrategySubWedge(
+                ir["screeningStrategySubWedgeId"], self._db, preload=ir
+            )
+            for ir in cursor.fetchall()
+        ]
+
+def _get_screening(self):
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT comments, shortComments, programVersion "
+            "FROM Screening "
+            "WHERE screeningId = %s",
+            self._screening_id,
+        )
+        self._data = cursor.fetchone()
+
 def _get_screening_output(self):
     with _db_cc() as cursor:
         cursor.run(
@@ -238,6 +308,36 @@ def _get_screening_output_lattice(self):
             "FROM ScreeningOutputLattice "
             "WHERE screeningOutputLatticeId = %s",
             self._lattice_id,
+        )
+        self._data = cursor.fetchone()
+
+def _get_screening_strategy(self):
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT anomalous, program "
+            "FROM ScreeningStrategy "
+            "WHERE screeningStrategyId = %s",
+            self._strategy_id,
+        )
+        self._data = cursor.fetchone()
+
+def _get_screening_strategy_wedge(self):
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT * "
+            "FROM ScreeningStrategyWedge "
+            "WHERE screeningStrategyWedgeId = %s",
+            self._strategy_wedge_id,
+        )
+        self._data = cursor.fetchone()
+
+def _get_screening_strategy_sub_wedge(self):
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT * "
+            "FROM ScreeningStrategySubWedge "
+            "WHERE screeningStrategySubWedgeId = %s",
+            self._strategy_sub_wedge_id,
         )
         self._data = cursor.fetchone()
 

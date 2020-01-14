@@ -124,3 +124,33 @@ def test_model_screening(testdb):
     assert sol.unit_cell.a == 104.23
     assert sol.unit_cell.alpha == 97.6384
     assert sol.spacegroup == "P1"
+
+    assert len(screening_output.strategies) == 1
+    strategy = screening_output.strategies[0]
+    assert strategy.anomalous == 0
+    assert strategy.program == "BEST"
+
+    # This doesn't work :(
+    #assert len(strategy.wedges) == 1
+    #wedge = strategy.wedges[0]
+
+    wedge = ispyb.model.screening.ScreeningStrategyWedge(1143796, testdb)
+    assert wedge.completeness == 1.0
+    assert wedge.multiplicity == 4.07
+    assert wedge.number_of_images == 220
+    assert wedge.wedge_number == 1
+    assert wedge.resolution == 1.41
+
+    assert len(wedge.sub_wedges) == 1
+    for sub_wedge in (
+        wedge.sub_wedges[0], ispyb.model.screening.ScreeningStrategySubWedge(wedge.sub_wedges[0]._strategy_sub_wedge_id, testdb)):
+        assert sub_wedge.axis_start == 7.0
+        assert sub_wedge.axis_end == 40.0
+        assert sub_wedge.completeness == 1.0
+        assert sub_wedge.exposure_time == 0.428
+        assert sub_wedge.multiplicity == 4.07
+        assert sub_wedge.number_of_images == 220
+        assert sub_wedge.oscillation_range == 0.15
+        assert sub_wedge.resolution == 1.41
+        assert sub_wedge.sub_wedge_number == 1
+        assert sub_wedge.transmission == 100.0

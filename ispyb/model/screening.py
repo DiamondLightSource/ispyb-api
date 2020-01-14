@@ -57,6 +57,8 @@ class ScreeningOutput(ispyb.model.DBCache):
     def lattices(self):
         raise NotImplementedError()
 
+    def strategies(self):
+        raise NotImplementedError()
 
 ispyb.model.add_properties(
     ScreeningOutput,
@@ -97,5 +99,86 @@ ispyb.model.add_properties(
     ScreeningOutputLattice,
     (
         ("spacegroup", "spaceGroup"),
+    ),
+)
+
+
+class ScreeningStrategy(ispyb.model.DBCache):
+
+    def __init__(self, strategy_id, db_conn, preload=None):
+        self._db = db_conn
+        self._strategy_id = strategy_id
+        if preload:
+            self._data = preload
+
+    def reload(self):
+        """Load/update information from the database."""
+        raise NotImplementedError()
+
+    def wedges(self):
+        raise NotImplementedError()
+
+ispyb.model.add_properties(
+    ScreeningStrategy,
+    (
+        ("anomalous", "anomalous"),
+        ("program", "program"),
+    ),
+)
+
+
+class ScreeningStrategyWedge(ispyb.model.DBCache):
+
+    def __init__(self, strategy_wedge_id, db_conn, preload=None):
+        self._db = db_conn
+        self._strategy_wedge_id = strategy_wedge_id
+        if preload:
+            self._data = preload
+
+    def reload(self):
+        """Load/update information from the database."""
+        raise NotImplementedError()
+
+    def sub_wedges(self):
+        raise NotImplementedError()
+
+ispyb.model.add_properties(
+    ScreeningStrategyWedge,
+    (
+        ("completeness", "completeness"),
+        ("multiplicity", "multiplicity"),
+        ("number_of_images", "numberOfImages"),
+        ("resolution", "resolution"),
+        ("wedge_number", "wedgeNumber"),
+    ),
+)
+
+
+class ScreeningStrategySubWedge(ispyb.model.DBCache):
+
+    def __init__(self, strategy_sub_wedge_id, db_conn, preload=None):
+        self._db = db_conn
+        self._strategy_sub_wedge_id = strategy_sub_wedge_id
+        if preload:
+            self._data = preload
+
+    def reload(self):
+        """Load/update information from the database."""
+        raise NotImplementedError()
+
+ispyb.model.add_properties(
+    ScreeningStrategySubWedge,
+    (
+        ("axis_end", "axisEnd"),
+        ("axis_start", "axisStart"),
+        ("completeness", "completeness"),
+        ("exposure_time", "exposureTime"),
+        ("multiplicity", "multiplicity"),
+        ("number_of_images", "numberOfImages"),
+        ("oscillation_range", "oscillationRange"),
+        ("resolution", "resolution"),
+        ("rotation_axis", "rotationAxis"),
+        ("sub_wedge_number", "subWedgeNumber"),
+        ("transmission", "transmission"),
     ),
 )
