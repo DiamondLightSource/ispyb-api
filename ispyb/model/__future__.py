@@ -101,6 +101,13 @@ def enable(configuration_file, section="ispyb"):
 
     ispyb.model.processingprogram.ProcessingProgram.reload = _get_autoprocprogram
 
+    import ispyb.model.screening
+    ispyb.model.screening.Screening.screening_outputs = _get_linked_outputs_for_screening
+    ispyb.model.screening.Screening.reload = _get_screening
+    ispyb.model.screening.ScreeningOutput.lattices = _get_linked_lattices_for_screening_output
+    ispyb.model.screening.ScreeningOutput.reload = _get_screening_output
+    ispyb.model.screening.ScreeningOutputLattice.reload = _get_screening_output_lattice
+
 
 def _get_autoprocprogram(self):
     # https://jira.diamond.ac.uk/browse/SCI-7414
@@ -163,6 +170,71 @@ def _get_linked_pdb_for_dc(self):
             for row in pdb_data
         ]
 
+@property
+def _get_linked_outputs_for_screening(self):
+    import ispyb.model.screening
+
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT * "
+            "FROM ScreeningOutput "
+            "WHERE screeningid = %s",
+            self._screening_id,
+        )
+        return [
+            ispyb.model.screening.ScreeningOutput(
+                ir["screeningOutputId"], self._db, preload=ir
+            )
+            for ir in cursor.fetchall()
+        ]
+
+def _get_screening(self):
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT * "
+            "FROM Screening "
+            "WHERE screeningId = %s",
+            self._screening_id,
+        )
+        self._data = cursor.fetchone()
+
+@property
+def _get_linked_lattices_for_screening_output(self):
+    import ispyb.model.screening
+
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT * "
+            "FROM ScreeningOutputLattice "
+            "WHERE screeningoutputid = %s",
+            self._output_id,
+        )
+        return [
+            ispyb.model.screening.ScreeningOutputLattice(
+                ir["screeningOutputLatticeId"], self._db, preload=ir
+            )
+            for ir in cursor.fetchall()
+        ]
+
+def _get_screening_output(self):
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT * "
+            "FROM ScreeningOutput "
+            "WHERE screeningOutputId = %s",
+            self._output_id,
+        )
+        self._data = cursor.fetchone()
+
+def _get_screening_output_lattice(self):
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT * "
+            "FROM ScreeningOutputLattice "
+            "WHERE screeningOutputLatticeId = %s",
+            self._lattice_id,
+        )
+        self._data = cursor.fetchone()
 
 def test_connection():
     """A test function to verify that the database connection is alive."""

@@ -103,3 +103,24 @@ def test_insert_all_screening(testdb):
     id = mxscreening.insert_screening_strategy_sub_wedge(list(params.values()))
     assert id is not None
     assert id > 0
+
+
+def test_model_screening(testdb):
+    import ispyb.model.__future__
+
+    ispyb.model.__future__.enable("/dls_sw/apps/zocalo/secrets/credentials-ispyb.cfg")
+
+    import ispyb.model.screening
+
+    screening = ispyb.model.screening.Screening(1928002, testdb)
+    assert screening.program_version == 'EDNA MXv1'
+    assert screening.comments == u'Gentle: Target Multiplicity=2 and target I/Sig 2 and Maxlifespan=21 '
+    assert screening.short_comments == 'EDNAStrategy4'
+
+    assert len(screening.screening_outputs) == 1
+    screening_output = screening.screening_outputs[0]
+    assert len(screening_output.lattices) == 1
+    sol = screening_output.lattices[0]
+    assert sol.unit_cell.a == 104.23
+    assert sol.unit_cell.alpha == 97.6384
+    assert sol.spacegroup == "P1"
