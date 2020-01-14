@@ -176,9 +176,9 @@ def _get_linked_outputs_for_screening(self):
 
     with _db_cc() as cursor:
         cursor.run(
-            "SELECT * "
+            "SELECT screeningOutputId, alignmentSuccess, indexingSuccess, strategySuccess, program "
             "FROM ScreeningOutput "
-            "WHERE screeningid = %s",
+            "WHERE screeningid = %s ",
             self._screening_id,
         )
         return [
@@ -191,7 +191,7 @@ def _get_linked_outputs_for_screening(self):
 def _get_screening(self):
     with _db_cc() as cursor:
         cursor.run(
-            "SELECT * "
+            "SELECT comments, shortComments, programVersion "
             "FROM Screening "
             "WHERE screeningId = %s",
             self._screening_id,
@@ -204,7 +204,9 @@ def _get_linked_lattices_for_screening_output(self):
 
     with _db_cc() as cursor:
         cursor.run(
-            "SELECT * "
+            "SELECT screeningOutputLatticeId, spaceGroup, "
+            "unitCell_a, unitCell_b, unitCell_c, "
+            "unitCell_alpha, unitCell_beta, unitCell_gamma "
             "FROM ScreeningOutputLattice "
             "WHERE screeningoutputid = %s",
             self._output_id,
@@ -219,7 +221,7 @@ def _get_linked_lattices_for_screening_output(self):
 def _get_screening_output(self):
     with _db_cc() as cursor:
         cursor.run(
-            "SELECT * "
+            "SELECT alignmentSuccess, indexingSuccess, strategySuccess, program "
             "FROM ScreeningOutput "
             "WHERE screeningOutputId = %s",
             self._output_id,
@@ -229,7 +231,8 @@ def _get_screening_output(self):
 def _get_screening_output_lattice(self):
     with _db_cc() as cursor:
         cursor.run(
-            "SELECT * "
+            "SELECT spaceGroup, unitCell_a, unitCell_b, unitCell_c, "
+            "unitCell_alpha, unitCell_beta, unitCell_gamma "
             "FROM ScreeningOutputLattice "
             "WHERE screeningOutputLatticeId = %s",
             self._lattice_id,
