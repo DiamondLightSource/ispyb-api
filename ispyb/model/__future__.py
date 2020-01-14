@@ -178,7 +178,8 @@ def _get_linked_outputs_for_screening(self):
         cursor.run(
             "SELECT screeningOutputId, alignmentSuccess, indexingSuccess, strategySuccess, program "
             "FROM ScreeningOutput "
-            "WHERE screeningid = %s ",
+            "WHERE screeningid = %s "
+            "ORDER BY screeningOutputId",
             self._screening_id,
         )
         return [
@@ -208,7 +209,8 @@ def _get_linked_lattices_for_screening_output(self):
             "unitCell_a, unitCell_b, unitCell_c, "
             "unitCell_alpha, unitCell_beta, unitCell_gamma "
             "FROM ScreeningOutputLattice "
-            "WHERE screeningoutputid = %s",
+            "WHERE screeningoutputid = %s "
+            "ORDER BY screeningOutputLatticeId",
             self._output_id,
         )
         return [
