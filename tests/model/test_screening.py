@@ -5,7 +5,7 @@ import ispyb.model.__future__
 
 
 def test_model_screening(testdb, testconfig):
-    ispyb.model.__future__.enable(testconfig, section="ispyb_mariadb_sp")
+    ispyb.model.__future__.enable(testconfig)
     dc = ispyb.model.datacollection.DataCollection(1052494, testdb)
     assert len(dc.screenings) == 7
 
