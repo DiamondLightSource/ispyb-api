@@ -112,38 +112,63 @@ def test_model_screening(testdb):
 
     import ispyb.model.screening
 
-    screening = ispyb.model.screening.Screening(1928002, testdb)
-    assert screening.program_version == 'EDNA MXv1'
-    assert screening.comments == u'Gentle: Target Multiplicity=2 and target I/Sig 2 and Maxlifespan=21 '
-    assert screening.short_comments == 'EDNAStrategy4'
+    screening = ispyb.model.screening.Screening(1894774, testdb)
+    assert screening.program_version == "EDNA MXv1"
+    assert (
+        screening.comments
+        == "Standard Native Dataset Multiplicity=3 I/sig=2 Maxlifespan=202 s"
+    )
+    assert screening.short_comments == "EDNAStrategy1"
 
     assert len(screening.screening_outputs) == 1
     screening_output = screening.screening_outputs[0]
     assert len(screening_output.lattices) == 1
-    sol = screening_output.lattices[0]
-    assert sol.unit_cell.a == 104.23
-    assert sol.unit_cell.alpha == 97.6384
-    assert sol.spacegroup == "P1"
-
     assert len(screening_output.strategies) == 1
-    strategy = screening_output.strategies[0]
-    assert strategy.anomalous == 0
-    assert strategy.program == "BEST"
 
-    # This doesn't work :(
-    #assert len(strategy.wedges) == 1
-    #wedge = strategy.wedges[0]
+    for sol in (
+        screening_output.lattices[0],
+        ispyb.model.screening.ScreeningOutputLattice(
+            screening_output.lattices[0]._lattice_id, testdb
+        ),
+    ):
+        assert sol.unit_cell.a == 76.3
+        assert sol.unit_cell.a == 76.3
+        assert sol.unit_cell.b == 76.3
+        assert sol.unit_cell.c == 76.3
+        assert sol.unit_cell.alpha == 90.0
+        assert sol.unit_cell.beta == 90.0
+        assert sol.unit_cell.gamma == 90.0
+        assert sol.spacegroup == "I23"
 
-    wedge = ispyb.model.screening.ScreeningStrategyWedge(1143796, testdb)
-    assert wedge.completeness == 1.0
-    assert wedge.multiplicity == 4.07
-    assert wedge.number_of_images == 220
-    assert wedge.wedge_number == 1
-    assert wedge.resolution == 1.41
+    for strategy in (
+        screening_output.strategies[0],
+        ispyb.model.screening.ScreeningStrategy(
+            screening_output.strategies[0]._strategy_id, testdb
+        ),
+    ):
+        assert strategy.anomalous == 0
+        assert strategy.program == "BEST"
+        assert len(strategy.wedges) == 1
+
+    for wedge in (
+        strategy.wedges[0],
+        ispyb.model.screening.ScreeningStrategyWedge(
+            strategy.wedges[0]._strategy_wedge_id, testdb
+        ),
+    ):
+        assert wedge.completeness == 1.0
+        assert wedge.multiplicity == 4.07
+        assert wedge.number_of_images == 220
+        assert wedge.wedge_number == 1
+        assert wedge.resolution == 1.41
 
     assert len(wedge.sub_wedges) == 1
     for sub_wedge in (
-        wedge.sub_wedges[0], ispyb.model.screening.ScreeningStrategySubWedge(wedge.sub_wedges[0]._strategy_sub_wedge_id, testdb)):
+        wedge.sub_wedges[0],
+        ispyb.model.screening.ScreeningStrategySubWedge(
+            wedge.sub_wedges[0]._strategy_sub_wedge_id, testdb
+        ),
+    ):
         assert sub_wedge.axis_start == 7.0
         assert sub_wedge.axis_end == 40.0
         assert sub_wedge.completeness == 1.0
