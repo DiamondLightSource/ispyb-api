@@ -96,6 +96,7 @@ def enable(configuration_file, section="ispyb"):
     ispyb.model.datacollection.DataCollection.integrations = (
         _get_linked_autoprocintegration_for_dc
     )
+    ispyb.model.datacollection.DataCollection.screenings = _get_linked_screenings_for_dc
     ispyb.model.datacollection.DataCollection.pdb = _get_linked_pdb_for_dc
     import ispyb.model.processingprogram
 
@@ -192,6 +193,24 @@ def _get_linked_pdb_for_dc(self):
                 name=row["name"], rawfile=row["contents"], code=row["code"]
             )
             for row in pdb_data
+        ]
+
+
+@property
+def _get_linked_screenings_for_dc(self):
+    import ispyb.model.screening
+
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT screeningId, comments, shortComments, programVersion "
+            "FROM Screening "
+            "WHERE dataCollectionId = %s "
+            "ORDER BY screeningId",
+            self.dcid,
+        )
+        return [
+            ispyb.model.screening.Screening(ir["screeningId"], self._db, preload=ir)
+            for ir in cursor.fetchall()
         ]
 
 

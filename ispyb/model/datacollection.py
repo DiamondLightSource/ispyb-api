@@ -50,6 +50,11 @@ class DataCollection(ispyb.model.DBCache):
         raise NotImplementedError("TODO: Not implemented yet")
 
     @property
+    def screenings(self):
+        """Returns the list of Screening objects associated with this DC."""
+        raise NotImplementedError("TODO: Not implemented yet")
+
+    @property
     def file_template_full(self):
         """Template for file names with full directory path. As with file_template
         \'#\' characters stand in for image number digits."""

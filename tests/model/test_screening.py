@@ -1,4 +1,5 @@
 from __future__ import absolute_import, division, print_function
+import ispyb.model.datacollection
 import ispyb.model.screening
 import ispyb.model.__future__
 
@@ -7,15 +8,21 @@ ispyb.model.__future__.enable("/dls_sw/apps/zocalo/secrets/credentials-ispyb.cfg
 
 def test_model_screening(testdb):
 
-    screening = ispyb.model.screening.Screening(1894774, testdb)
-    assert screening.program_version == "EDNA MXv1"
-    assert (
-        screening.comments
-        == "Standard Native Dataset Multiplicity=3 I/sig=2 Maxlifespan=202 s"
-    )
-    assert screening.short_comments == "EDNAStrategy1"
+    dc = ispyb.model.datacollection.DataCollection(1052494, testdb)
+    assert len(dc.screenings) == 7
 
-    assert len(screening.screening_outputs) == 1
+    for screening in (
+        dc.screenings[2],
+        ispyb.model.screening.Screening(dc.screenings[2]._screening_id, testdb),
+    ):
+        assert screening.program_version == "EDNA MXv1"
+        assert (
+            screening.comments
+            == "Standard Native Dataset Multiplicity=3 I/sig=2 Maxlifespan=202 s"
+        )
+        assert screening.short_comments == "EDNAStrategy1"
+        assert len(screening.screening_outputs) == 1
+
     screening_output = screening.screening_outputs[0]
     assert len(screening_output.lattices) == 1
     assert len(screening_output.strategies) == 1
