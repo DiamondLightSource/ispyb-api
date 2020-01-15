@@ -193,7 +193,9 @@ class DataCollectionGroup(ispyb.model.DBCache):
 
     def reload(self):
         """Load/update information from the database."""
-        self._data = self._db.mx_acquisition.retrieve_data_collection_group(self._dcgid)[0]
+        self._data = self._db.mx_acquisition.retrieve_data_collection_group(
+            self._dcgid
+        )[0]
 
     @property
     def dcgid(self):

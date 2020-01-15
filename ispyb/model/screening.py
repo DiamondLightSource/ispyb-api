@@ -32,6 +32,7 @@ class Screening(ispyb.model.DBCache):
     def screening_outputs(self):
         raise NotImplementedError()
 
+
 ispyb.model.add_properties(
     Screening,
     (
@@ -43,7 +44,6 @@ ispyb.model.add_properties(
 
 
 class ScreeningOutput(ispyb.model.DBCache):
-
     def __init__(self, output_id, db_conn, preload=None):
         self._db = db_conn
         self._output_id = output_id
@@ -60,6 +60,7 @@ class ScreeningOutput(ispyb.model.DBCache):
     def strategies(self):
         raise NotImplementedError()
 
+
 ispyb.model.add_properties(
     ScreeningOutput,
     (
@@ -72,7 +73,6 @@ ispyb.model.add_properties(
 
 
 class ScreeningOutputLattice(ispyb.model.DBCache):
-
     def __init__(self, lattice_id, db_conn, preload=None):
         self._db = db_conn
         self._lattice_id = lattice_id
@@ -86,7 +86,7 @@ class ScreeningOutputLattice(ispyb.model.DBCache):
     @property
     def unit_cell(self):
         """Returns the unit cell model"""
-        return ispyb.model.integration.UnitCell(
+        return UnitCell(
             self._data["unitCell_a"],
             self._data["unitCell_b"],
             self._data["unitCell_c"],
@@ -95,16 +95,11 @@ class ScreeningOutputLattice(ispyb.model.DBCache):
             self._data["unitCell_gamma"],
         )
 
-ispyb.model.add_properties(
-    ScreeningOutputLattice,
-    (
-        ("spacegroup", "spaceGroup"),
-    ),
-)
+
+ispyb.model.add_properties(ScreeningOutputLattice, (("spacegroup", "spaceGroup"),))
 
 
 class ScreeningStrategy(ispyb.model.DBCache):
-
     def __init__(self, strategy_id, db_conn, preload=None):
         self._db = db_conn
         self._strategy_id = strategy_id
@@ -118,17 +113,13 @@ class ScreeningStrategy(ispyb.model.DBCache):
     def wedges(self):
         raise NotImplementedError()
 
+
 ispyb.model.add_properties(
-    ScreeningStrategy,
-    (
-        ("anomalous", "anomalous"),
-        ("program", "program"),
-    ),
+    ScreeningStrategy, (("anomalous", "anomalous"), ("program", "program"))
 )
 
 
 class ScreeningStrategyWedge(ispyb.model.DBCache):
-
     def __init__(self, strategy_wedge_id, db_conn, preload=None):
         self._db = db_conn
         self._strategy_wedge_id = strategy_wedge_id
@@ -141,6 +132,7 @@ class ScreeningStrategyWedge(ispyb.model.DBCache):
 
     def sub_wedges(self):
         raise NotImplementedError()
+
 
 ispyb.model.add_properties(
     ScreeningStrategyWedge,
@@ -155,7 +147,6 @@ ispyb.model.add_properties(
 
 
 class ScreeningStrategySubWedge(ispyb.model.DBCache):
-
     def __init__(self, strategy_sub_wedge_id, db_conn, preload=None):
         self._db = db_conn
         self._strategy_sub_wedge_id = strategy_sub_wedge_id
@@ -165,6 +156,7 @@ class ScreeningStrategySubWedge(ispyb.model.DBCache):
     def reload(self):
         """Load/update information from the database."""
         raise NotImplementedError()
+
 
 ispyb.model.add_properties(
     ScreeningStrategySubWedge,

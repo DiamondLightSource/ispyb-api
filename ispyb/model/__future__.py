@@ -103,22 +103,34 @@ def enable(configuration_file, section="ispyb"):
 
     import ispyb.model.screening
 
-    ispyb.model.screening.Screening.screening_outputs = _get_linked_outputs_for_screening
+    ispyb.model.screening.Screening.screening_outputs = (
+        _get_linked_outputs_for_screening
+    )
     ispyb.model.screening.Screening.reload = _get_screening
 
-    ispyb.model.screening.ScreeningOutput.lattices = _get_linked_lattices_for_screening_output
-    ispyb.model.screening.ScreeningOutput.strategies = _get_linked_strategies_for_screening_output
+    ispyb.model.screening.ScreeningOutput.lattices = (
+        _get_linked_lattices_for_screening_output
+    )
+    ispyb.model.screening.ScreeningOutput.strategies = (
+        _get_linked_strategies_for_screening_output
+    )
     ispyb.model.screening.ScreeningOutput.reload = _get_screening_output
 
     ispyb.model.screening.ScreeningOutputLattice.reload = _get_screening_output_lattice
 
-    ispyb.model.screening.ScreeningStrategy.wedges = _get_linked_wedges_for_screening_strategy
+    ispyb.model.screening.ScreeningStrategy.wedges = (
+        _get_linked_wedges_for_screening_strategy
+    )
     ispyb.model.screening.ScreeningStrategy.reload = _get_screening_strategy
 
-    ispyb.model.screening.ScreeningStrategyWedge.sub_wedges = _get_linked_sub_wedges_for_screening_strategy_wedge
+    ispyb.model.screening.ScreeningStrategyWedge.sub_wedges = (
+        _get_linked_sub_wedges_for_screening_strategy_wedge
+    )
     ispyb.model.screening.ScreeningStrategyWedge.reload = _get_screening_strategy_wedge
 
-    ispyb.model.screening.ScreeningStrategySubWedge.reload = _get_screening_strategy_sub_wedge
+    ispyb.model.screening.ScreeningStrategySubWedge.reload = (
+        _get_screening_strategy_sub_wedge
+    )
 
 
 def _get_autoprocprogram(self):
@@ -182,6 +194,7 @@ def _get_linked_pdb_for_dc(self):
             for row in pdb_data
         ]
 
+
 @property
 def _get_linked_outputs_for_screening(self):
     import ispyb.model.screening
@@ -200,6 +213,7 @@ def _get_linked_outputs_for_screening(self):
             )
             for ir in cursor.fetchall()
         ]
+
 
 @property
 def _get_linked_lattices_for_screening_output(self):
@@ -222,13 +236,14 @@ def _get_linked_lattices_for_screening_output(self):
             for ir in cursor.fetchall()
         ]
 
+
 @property
 def _get_linked_strategies_for_screening_output(self):
     import ispyb.model.screening
 
     with _db_cc() as cursor:
         cursor.run(
-            #"SELECT screeningStrategyId, anomalous, program "
+            # "SELECT screeningStrategyId, anomalous, program "
             "SELECT * "
             "FROM ScreeningStrategy "
             "WHERE screeningoutputid = %s "
@@ -241,6 +256,7 @@ def _get_linked_strategies_for_screening_output(self):
             )
             for ir in cursor.fetchall()
         ]
+
 
 @property
 def _get_linked_wedges_for_screening_strategy(self):
@@ -261,6 +277,7 @@ def _get_linked_wedges_for_screening_strategy(self):
             for ir in cursor.fetchall()
         ]
 
+
 @property
 def _get_linked_sub_wedges_for_screening_strategy_wedge(self):
     import ispyb.model.screening
@@ -280,6 +297,7 @@ def _get_linked_sub_wedges_for_screening_strategy_wedge(self):
             for ir in cursor.fetchall()
         ]
 
+
 def _get_screening(self):
     with _db_cc() as cursor:
         cursor.run(
@@ -290,6 +308,7 @@ def _get_screening(self):
         )
         self._data = cursor.fetchone()
 
+
 def _get_screening_output(self):
     with _db_cc() as cursor:
         cursor.run(
@@ -299,6 +318,7 @@ def _get_screening_output(self):
             self._output_id,
         )
         self._data = cursor.fetchone()
+
 
 def _get_screening_output_lattice(self):
     with _db_cc() as cursor:
@@ -311,6 +331,7 @@ def _get_screening_output_lattice(self):
         )
         self._data = cursor.fetchone()
 
+
 def _get_screening_strategy(self):
     with _db_cc() as cursor:
         cursor.run(
@@ -320,6 +341,7 @@ def _get_screening_strategy(self):
             self._strategy_id,
         )
         self._data = cursor.fetchone()
+
 
 def _get_screening_strategy_wedge(self):
     with _db_cc() as cursor:
@@ -331,6 +353,7 @@ def _get_screening_strategy_wedge(self):
         )
         self._data = cursor.fetchone()
 
+
 def _get_screening_strategy_sub_wedge(self):
     with _db_cc() as cursor:
         cursor.run(
@@ -340,6 +363,7 @@ def _get_screening_strategy_sub_wedge(self):
             self._strategy_sub_wedge_id,
         )
         self._data = cursor.fetchone()
+
 
 def test_connection():
     """A test function to verify that the database connection is alive."""
