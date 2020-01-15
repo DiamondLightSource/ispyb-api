@@ -147,7 +147,9 @@ def test_model_screening(testdb):
         ),
     ):
         assert strategy.anomalous == 0
+        assert strategy.exposure_time == 0.428
         assert strategy.program == "BEST"
+        assert strategy.ranking_resolution == 1.41
         assert len(strategy.wedges) == 1
 
     for wedge in (
@@ -161,6 +163,9 @@ def test_model_screening(testdb):
         assert wedge.number_of_images == 220
         assert wedge.wedge_number == 1
         assert wedge.resolution == 1.41
+        assert wedge.chi is None
+        assert wedge.phi is None
+        assert wedge.kappa is None
 
     assert len(wedge.sub_wedges) == 1
     for sub_wedge in (

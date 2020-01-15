@@ -115,7 +115,13 @@ class ScreeningStrategy(ispyb.model.DBCache):
 
 
 ispyb.model.add_properties(
-    ScreeningStrategy, (("anomalous", "anomalous"), ("program", "program"))
+    ScreeningStrategy,
+    (
+        ("anomalous", "anomalous"),
+        ("exposure_time", "exposureTime"),
+        ("program", "program"),
+        ("ranking_resolution", "rankingResolution"),
+    ),
 )
 
 
@@ -137,9 +143,12 @@ class ScreeningStrategyWedge(ispyb.model.DBCache):
 ispyb.model.add_properties(
     ScreeningStrategyWedge,
     (
+        ("chi", "chi"),
         ("completeness", "completeness"),
+        ("kappa", "kappa"),
         ("multiplicity", "multiplicity"),
         ("number_of_images", "numberOfImages"),
+        ("phi", "phi"),
         ("resolution", "resolution"),
         ("wedge_number", "wedgeNumber"),
     ),

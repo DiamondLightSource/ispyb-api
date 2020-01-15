@@ -243,8 +243,8 @@ def _get_linked_strategies_for_screening_output(self):
 
     with _db_cc() as cursor:
         cursor.run(
-            # "SELECT screeningStrategyId, anomalous, program "
-            "SELECT * "
+            "SELECT screeningStrategyId, anomalous, program, "
+            "exposureTime, rankingResolution "
             "FROM ScreeningStrategy "
             "WHERE screeningoutputid = %s "
             "ORDER BY screeningStrategyId",
@@ -264,7 +264,8 @@ def _get_linked_wedges_for_screening_strategy(self):
 
     with _db_cc() as cursor:
         cursor.run(
-            "SELECT * "
+            "SELECT screeningStrategyWedgeId, chi, completeness, kappa, "
+            "multiplicity, numberOfImages, phi, resolution, wedgeNumber "
             "FROM ScreeningStrategyWedge "
             "WHERE screeningStrategyId = %s "
             "ORDER BY screeningStrategyWedgeId",
@@ -284,7 +285,10 @@ def _get_linked_sub_wedges_for_screening_strategy_wedge(self):
 
     with _db_cc() as cursor:
         cursor.run(
-            "SELECT * "
+            "SELECT axisEnd, axisStart, completeness, exposureTime, "
+            "multiplicity, numberOfImages, oscillationRange, resolution, "
+            "rotationAxis, subWedgeNumber, transmission, "
+            "screeningStrategySubWedgeId "
             "FROM ScreeningStrategySubWedge "
             "WHERE screeningStrategyWedgeId = %s "
             "ORDER BY screeningStrategySubWedgeId",
@@ -335,7 +339,7 @@ def _get_screening_output_lattice(self):
 def _get_screening_strategy(self):
     with _db_cc() as cursor:
         cursor.run(
-            "SELECT anomalous, program "
+            "SELECT anomalous, program, exposureTime, rankingResolution "
             "FROM ScreeningStrategy "
             "WHERE screeningStrategyId = %s",
             self._strategy_id,
@@ -346,7 +350,8 @@ def _get_screening_strategy(self):
 def _get_screening_strategy_wedge(self):
     with _db_cc() as cursor:
         cursor.run(
-            "SELECT * "
+            "SELECT chi, completeness, kappa, multiplicity, numberOfImages, "
+            "phi, resolution, wedgeNumber "
             "FROM ScreeningStrategyWedge "
             "WHERE screeningStrategyWedgeId = %s",
             self._strategy_wedge_id,
@@ -357,7 +362,9 @@ def _get_screening_strategy_wedge(self):
 def _get_screening_strategy_sub_wedge(self):
     with _db_cc() as cursor:
         cursor.run(
-            "SELECT * "
+            "SELECT axisEnd, axisStart, completeness, exposureTime, "
+            "multiplicity, numberOfImages, oscillationRange, resolution, "
+            "rotationAxis, subWedgeNumber, transmission "
             "FROM ScreeningStrategySubWedge "
             "WHERE screeningStrategySubWedgeId = %s",
             self._strategy_sub_wedge_id,
