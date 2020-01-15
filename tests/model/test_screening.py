@@ -3,11 +3,9 @@ import ispyb.model.datacollection
 import ispyb.model.screening
 import ispyb.model.__future__
 
-ispyb.model.__future__.enable("/dls_sw/apps/zocalo/secrets/credentials-ispyb.cfg")
 
-
-def test_model_screening(testdb):
-
+def test_model_screening(testdb, testconfig):
+    ispyb.model.__future__.enable(testconfig, section="ispyb_mariadb_sp")
     dc = ispyb.model.datacollection.DataCollection(1052494, testdb)
     assert len(dc.screenings) == 7
 
