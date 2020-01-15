@@ -36,6 +36,21 @@ class Screening(ispyb.model.DBCache):
            database entry."""
         raise NotImplementedError()
 
+    def __str__(self):
+        """Returns a pretty-printed object representation."""
+        if not self.cached:
+            return "Screening #%d (not yet loaded from database)" % self._screening_id
+        return (
+            "\n".join(
+                (
+                    "Screening #{0._screening_id}",
+                    "  comments         : {0.comments}",
+                    "  short_comments   : {0.short_comments}",
+                    "  program_version  : {0.program_version}",
+                )
+            )
+        ).format(self)
+
 
 ispyb.model.add_properties(
     Screening,
@@ -84,6 +99,24 @@ class ScreeningOutput(ispyb.model.DBCache):
         """Returns the list of ScreeningStrategy objects associated with this
            database entry."""
         raise NotImplementedError()
+
+    def __str__(self):
+        """Returns a pretty-printed object representation."""
+        if not self.cached:
+            return (
+                "ScreeningOutput #%d (not yet loaded from database)" % self._output_id
+            )
+        return (
+            "\n".join(
+                (
+                    "ScreeningOutput #{0._output_id}",
+                    "  alignment_success  : {0.alignment_success}",
+                    "  indexing_success   : {0.indexing_success}",
+                    "  strategy_success   : {0.strategy_success}",
+                    "  program            : {0.program}",
+                )
+            )
+        ).format(self)
 
 
 ispyb.model.add_properties(
@@ -135,6 +168,23 @@ class ScreeningOutputLattice(ispyb.model.DBCache):
             self._data["unitCell_gamma"],
         )
 
+    def __str__(self):
+        """Returns a pretty-printed object representation."""
+        if not self.cached:
+            return (
+                "ScreeningOutputLattice #%d (not yet loaded from database)"
+                % self._lattice_id
+            )
+        return (
+            "\n".join(
+                (
+                    "ScreeningOutputLattice #{0._lattice_id}",
+                    "  spacegroup  : {0.spacegroup}",
+                    "{0.unit_cell}",
+                )
+            )
+        ).format(self)
+
 
 ispyb.model.add_properties(ScreeningOutputLattice, (("spacegroup", "spaceGroup"),))
 
@@ -170,6 +220,25 @@ class ScreeningStrategy(ispyb.model.DBCache):
         """Returns the list of ScreeningStrategyWedge objects associated with
            this database entry."""
         raise NotImplementedError()
+
+    def __str__(self):
+        """Returns a pretty-printed object representation."""
+        if not self.cached:
+            return (
+                "ScreeningStrategy #%d (not yet loaded from database)"
+                % self._strategy_id
+            )
+        return (
+            "\n".join(
+                (
+                    "ScreeningStrategy #{0._strategy_id}",
+                    "  anomalous           : {0.anomalous}",
+                    "  exposure_time       : {0.exposure_time}",
+                    "  program             : {0.program}",
+                    "  ranking_resolution  : {0.ranking_resolution}",
+                )
+            )
+        ).format(self)
 
 
 ispyb.model.add_properties(
@@ -215,6 +284,29 @@ class ScreeningStrategyWedge(ispyb.model.DBCache):
            this database entry."""
         raise NotImplementedError()
 
+    def __str__(self):
+        """Returns a pretty-printed object representation."""
+        if not self.cached:
+            return (
+                "ScreeningStrategyWedge #%d (not yet loaded from database)"
+                % self._strategy_wedge_id
+            )
+        return (
+            "\n".join(
+                (
+                    "ScreeningStrategyWedge #{0._strategy_wedge_id}",
+                    "  chi               : {0.chi}",
+                    "  kappa             : {0.kappa}",
+                    "  phi               : {0.phi}",
+                    "  completeness      : {0.completeness}",
+                    "  multiplicity      : {0.multiplicity}",
+                    "  number_of_images  : {0.number_of_images}",
+                    "  resolution        : {0.resolution}",
+                    "  wedge_number      : {0.wedge_number}",
+                )
+            )
+        ).format(self)
+
 
 ispyb.model.add_properties(
     ScreeningStrategyWedge,
@@ -256,6 +348,32 @@ class ScreeningStrategySubWedge(ispyb.model.DBCache):
     def reload(self):
         """Load/update information from the database."""
         raise NotImplementedError()
+
+    def __str__(self):
+        """Returns a pretty-printed object representation."""
+        if not self.cached:
+            return (
+                "ScreeningStrategySubWedge #%d (not yet loaded from database)"
+                % self._strategy_sub_wedge_id
+            )
+        return (
+            "\n".join(
+                (
+                    "ScreeningStrategySubWedge #{0._strategy_sub_wedge_id}",
+                    "  axis_end           : {0.axis_end}",
+                    "  axis_start         : {0.axis_start}",
+                    "  completeness       : {0.completeness}",
+                    "  exposure_time      : {0.exposure_time}",
+                    "  multiplicity       : {0.multiplicity}",
+                    "  number_of_images   : {0.number_of_images}",
+                    "  oscillation_range  : {0.oscillation_range}",
+                    "  resolution         : {0.resolution}",
+                    "  rotation_axis      : {0.rotation_axis}",
+                    "  transmission       : {0.transmission}",
+                    "  sub_wedge_number   : {0.sub_wedge_number}",
+                )
+            )
+        ).format(self)
 
 
 ispyb.model.add_properties(
