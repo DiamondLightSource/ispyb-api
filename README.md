@@ -45,22 +45,22 @@ import ispyb
 from datetime import datetime
 
 # Get a connection and data area objects
-with ispyb.open('config.cfg') as conn:
-  core = conn.core
-  mx_acquisition = conn.mx_acquisition
+with ispyb.open("config.cfg") as conn:
+    core = conn.core
+    mx_acquisition = conn.mx_acquisition
 
-  # Find the id for a given visit
-  sessionid = core.retrieve_visit_id('cm14451-2')
+    # Find the id for a given visit
+    sessionid = core.retrieve_visit_id("cm14451-2")
 
-  # Create a new data collection group entry:
-  params = mx_acquisition.get_data_collection_group_params()
-  params['parentid'] = sessionid
-  params['experimenttype'] = 'OSC'
-  params['starttime'] = datetime.strptime('2017-09-21 13:00:00', '%Y-%m-%d %H:%M:%S')
-  params['endtime'] = datetime.strptime('2017-09-21 13:00:10', '%Y-%m-%d %H:%M:%S')
-  params['comments'] = 'This is a test of data collection group.'
-  dcg_id = mx_acquisition.insert_data_collection_group(list(params.values()))
-  print("dcg_id: %i" % dcg_id)
+    # Create a new data collection group entry:
+    params = mx_acquisition.get_data_collection_group_params()
+    params["parentid"] = sessionid
+    params["experimenttype"] = "OSC"
+    params["starttime"] = datetime.strptime("2017-09-21 13:00:00", "%Y-%m-%d %H:%M:%S")
+    params["endtime"] = datetime.strptime("2017-09-21 13:00:10", "%Y-%m-%d %H:%M:%S")
+    params["comments"] = "This is a test of data collection group."
+    dcg_id = mx_acquisition.insert_data_collection_group(list(params.values()))
+    print("dcg_id: %i" % dcg_id)
 ```
 
 See [```docs/pipeline2ispyb.py```](https://github.com/DiamondLightSource/ispyb-api/blob/master/docs/pipeline2ispyb.py) for a more detailed example of how to use the package.
