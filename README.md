@@ -36,7 +36,7 @@ The --user option installs the package for your own user only. You can leave it 
 To install the source code in editable mode for development:
 ```bash
 git clone git@github.com:DiamondLightSource/ispyb-api.git
-pip install -e --user ispyb-api
+pip install --user -e ispyb-api
 ```
 
 ### Examples
