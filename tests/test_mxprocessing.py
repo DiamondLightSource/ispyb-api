@@ -295,6 +295,7 @@ def test_post_processing(testdb):
 
 
 def test_sample_image_scoring(testdb):
+    testdb.set_role("ispyb_import")
     mxprocessing = testdb.mx_processing
 
     mxprocessing.upsert_sample_image_auto_score(
