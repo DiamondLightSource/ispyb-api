@@ -95,7 +95,7 @@ def test_model_screening_str(testdb, testconfig):
 Screening #1894774
   comment         : Standard Native Dataset Multiplicity=3 I/sig=2 Maxlifespan=202 s
   short_comment   : EDNAStrategy1
-  program  : EDNA MXv1"""
+  program         : EDNA MXv1"""
     )
 
 

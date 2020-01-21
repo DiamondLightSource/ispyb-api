@@ -51,7 +51,7 @@ class Screening(ispyb.model.DBCache):
                     "Screening #{0.screening_id}",
                     "  comment         : {0.comment}",
                     "  short_comment   : {0.short_comment}",
-                    "  program  : {0.program}",
+                    "  program         : {0.program}",
                 )
             )
         ).format(self)
