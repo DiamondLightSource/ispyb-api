@@ -31,6 +31,11 @@ class Screening(ispyb.model.DBCache):
         raise NotImplementedError()
 
     @property
+    def screening_id(self):
+        """Returns the ScreeningId."""
+        return self._screening_id
+
+    @property
     def outputs(self):
         """Returns the list of ScreeningOutput objects associated with this
            database entry."""
@@ -43,7 +48,7 @@ class Screening(ispyb.model.DBCache):
         return (
             "\n".join(
                 (
-                    "Screening #{0._screening_id}",
+                    "Screening #{0.screening_id}",
                     "  comment         : {0.comment}",
                     "  short_comment   : {0.short_comment}",
                     "  program  : {0.program}",
@@ -89,6 +94,11 @@ class ScreeningOutput(ispyb.model.DBCache):
         raise NotImplementedError()
 
     @property
+    def output_id(self):
+        """Returns the ScreeningOutputId."""
+        return self._output_id
+
+    @property
     def lattices(self):
         """Returns the list of ScreeningOutputLattice objects associated with
            this database entry."""
@@ -109,7 +119,7 @@ class ScreeningOutput(ispyb.model.DBCache):
         return (
             "\n".join(
                 (
-                    "ScreeningOutput #{0._output_id}",
+                    "ScreeningOutput #{0.output_id}",
                     "  alignment_success  : {0.alignment_success}",
                     "  indexing_success   : {0.indexing_success}",
                     "  strategy_success   : {0.strategy_success}",
@@ -157,6 +167,11 @@ class ScreeningOutputLattice(ispyb.model.DBCache):
         raise NotImplementedError()
 
     @property
+    def lattice_id(self):
+        """Returns the ScreeningOutputLatticeId."""
+        return self._lattice_id
+
+    @property
     def unit_cell(self):
         """Returns the unit cell model."""
         return UnitCell(
@@ -178,7 +193,7 @@ class ScreeningOutputLattice(ispyb.model.DBCache):
         return (
             "\n".join(
                 (
-                    "ScreeningOutputLattice #{0._lattice_id}",
+                    "ScreeningOutputLattice #{0.lattice_id}",
                     "  spacegroup  : {0.spacegroup}",
                     "{0.unit_cell}",
                 )
@@ -216,6 +231,11 @@ class ScreeningStrategy(ispyb.model.DBCache):
         raise NotImplementedError()
 
     @property
+    def strategy_id(self):
+        """Returns the ScreeningStrategyId."""
+        return self._strategy_id
+
+    @property
     def wedges(self):
         """Returns the list of ScreeningStrategyWedge objects associated with
            this database entry."""
@@ -231,7 +251,7 @@ class ScreeningStrategy(ispyb.model.DBCache):
         return (
             "\n".join(
                 (
-                    "ScreeningStrategy #{0._strategy_id}",
+                    "ScreeningStrategy #{0.strategy_id}",
                     "  anomalous           : {0.anomalous}",
                     "  exposure_time       : {0.exposure_time}",
                     "  program             : {0.program}",
@@ -258,7 +278,7 @@ class ScreeningStrategyWedge(ispyb.model.DBCache):
     exposes record data as python attributes.
     """
 
-    def __init__(self, strategy_wedge_id, db_conn, preload=None):
+    def __init__(self, wedge_id, db_conn, preload=None):
         """Create a ScreeningStrategyWedge object for a defined ScreeningStrategyWedgeId.
 
         Requires a database connection object exposing further data access
@@ -270,13 +290,18 @@ class ScreeningStrategyWedge(ispyb.model.DBCache):
                  for the specified ScreeningStrategyWedgeId
         """
         self._db = db_conn
-        self._strategy_wedge_id = strategy_wedge_id
+        self._wedge_id = wedge_id
         if preload:
             self._data = preload
 
     def reload(self):
         """Load/update information from the database."""
         raise NotImplementedError()
+
+    @property
+    def wedge_id(self):
+        """Returns the ScreeningStrategyWedgeId."""
+        return self._wedge_id
 
     @property
     def sub_wedges(self):
@@ -289,12 +314,12 @@ class ScreeningStrategyWedge(ispyb.model.DBCache):
         if not self.cached:
             return (
                 "ScreeningStrategyWedge #%d (not yet loaded from database)"
-                % self._strategy_wedge_id
+                % self._wedge_id
             )
         return (
             "\n".join(
                 (
-                    "ScreeningStrategyWedge #{0._strategy_wedge_id}",
+                    "ScreeningStrategyWedge #{0.wedge_id}",
                     "  chi               : {0.chi}",
                     "  kappa             : {0.kappa}",
                     "  phi               : {0.phi}",
@@ -329,7 +354,7 @@ class ScreeningStrategySubWedge(ispyb.model.DBCache):
     exposes record data as python attributes.
     """
 
-    def __init__(self, strategy_sub_wedge_id, db_conn, preload=None):
+    def __init__(self, sub_wedge_id, db_conn, preload=None):
         """Create a ScreeningStrategySubWedge object for a defined ScreeningStrategySubWedgeId.
 
         Requires a database connection object exposing further data access
@@ -341,7 +366,7 @@ class ScreeningStrategySubWedge(ispyb.model.DBCache):
                  for the specified ScreeningStrategySubWedgeId
         """
         self._db = db_conn
-        self._strategy_sub_wedge_id = strategy_sub_wedge_id
+        self._sub_wedge_id = sub_wedge_id
         if preload:
             self._data = preload
 
@@ -349,17 +374,22 @@ class ScreeningStrategySubWedge(ispyb.model.DBCache):
         """Load/update information from the database."""
         raise NotImplementedError()
 
+    @property
+    def sub_wedge_id(self):
+        """Returns the ScreeningStrategySubWedgeId."""
+        return self._sub_wedge_id
+
     def __str__(self):
         """Returns a pretty-printed object representation."""
         if not self.cached:
             return (
                 "ScreeningStrategySubWedge #%d (not yet loaded from database)"
-                % self._strategy_sub_wedge_id
+                % self._sub_wedge_id
             )
         return (
             "\n".join(
                 (
-                    "ScreeningStrategySubWedge #{0._strategy_sub_wedge_id}",
+                    "ScreeningStrategySubWedge #{0.sub_wedge_id}",
                     "  axis_end           : {0.axis_end}",
                     "  axis_start         : {0.axis_start}",
                     "  completeness       : {0.completeness}",

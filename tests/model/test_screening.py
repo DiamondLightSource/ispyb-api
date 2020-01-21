@@ -11,7 +11,7 @@ def test_model_screening(testdb, testconfig):
 
     for screening in (
         dc.screenings[2],
-        ispyb.model.screening.Screening(dc.screenings[2]._screening_id, testdb),
+        ispyb.model.screening.Screening(dc.screenings[2].screening_id, testdb),
     ):
         assert screening.program == "EDNA MXv1"
         assert (
@@ -28,7 +28,7 @@ def test_model_screening(testdb, testconfig):
     for sol in (
         screening_output.lattices[0],
         ispyb.model.screening.ScreeningOutputLattice(
-            screening_output.lattices[0]._lattice_id, testdb
+            screening_output.lattices[0].lattice_id, testdb
         ),
     ):
         assert sol.unit_cell.a == 76.3
@@ -42,7 +42,7 @@ def test_model_screening(testdb, testconfig):
     for strategy in (
         screening_output.strategies[0],
         ispyb.model.screening.ScreeningStrategy(
-            screening_output.strategies[0]._strategy_id, testdb
+            screening_output.strategies[0].strategy_id, testdb
         ),
     ):
         assert strategy.anomalous == 0
@@ -54,7 +54,7 @@ def test_model_screening(testdb, testconfig):
     for wedge in (
         strategy.wedges[0],
         ispyb.model.screening.ScreeningStrategyWedge(
-            strategy.wedges[0]._strategy_wedge_id, testdb
+            strategy.wedges[0].wedge_id, testdb
         ),
     ):
         assert wedge.completeness == 1.0
@@ -70,7 +70,7 @@ def test_model_screening(testdb, testconfig):
     for sub_wedge in (
         wedge.sub_wedges[0],
         ispyb.model.screening.ScreeningStrategySubWedge(
-            wedge.sub_wedges[0]._strategy_sub_wedge_id, testdb
+            wedge.sub_wedges[0].sub_wedge_id, testdb
         ),
     ):
         assert sub_wedge.axis_start == 7.0

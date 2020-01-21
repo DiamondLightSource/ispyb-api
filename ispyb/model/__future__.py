@@ -309,7 +309,7 @@ def _get_linked_sub_wedges_for_screening_strategy_wedge(self):
             "FROM ScreeningStrategySubWedge "
             "WHERE screeningStrategyWedgeId = %s "
             "ORDER BY screeningStrategySubWedgeId",
-            self._strategy_wedge_id,
+            self._wedge_id,
         )
         return [
             ispyb.model.screening.ScreeningStrategySubWedge(
@@ -371,7 +371,7 @@ def _get_screening_strategy_wedge(self):
             "phi, resolution, wedgeNumber "
             "FROM ScreeningStrategyWedge "
             "WHERE screeningStrategyWedgeId = %s",
-            self._strategy_wedge_id,
+            self._wedge_id,
         )
         self._data = cursor.fetchone()
 
@@ -384,7 +384,7 @@ def _get_screening_strategy_sub_wedge(self):
             "rotationAxis, subWedgeNumber, transmission "
             "FROM ScreeningStrategySubWedge "
             "WHERE screeningStrategySubWedgeId = %s",
-            self._strategy_sub_wedge_id,
+            self._sub_wedge_id,
         )
         self._data = cursor.fetchone()
 
