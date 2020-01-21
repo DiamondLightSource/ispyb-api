@@ -137,4 +137,4 @@ class ImageQualityIndicatorsList(ispyb.model.DBCache, collections.Sequence):
         rows = []
         for qi in self:
             rows.append([getattr(qi, k) for k in headers])
-        return tabulate(rows, headers=headers, tablefmt="psql")
+        return tabulate.tabulate(rows, headers=headers, tablefmt="psql")
