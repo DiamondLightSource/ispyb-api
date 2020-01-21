@@ -87,7 +87,7 @@ def test_model_screening(testdb, testconfig):
 
 def test_model_screening_str(testdb, testconfig):
     ispyb.model.__future__.enable(testconfig)
-    screening = ispyb.model.screening.Screening(1894774, testdb)
+    screening = testdb.get_screening(1894774)
     screening.load()
     assert (
         str(screening)
@@ -101,7 +101,7 @@ Screening #1894774
 
 def test_model_screening_output_str(testdb, testconfig):
     ispyb.model.__future__.enable(testconfig)
-    screening_output = ispyb.model.screening.ScreeningOutput(1489405, testdb)
+    screening_output = testdb.get_screening_output(1489405)
     screening_output.load()
     assert (
         str(screening_output)
@@ -116,9 +116,7 @@ ScreeningOutput #1489405
 
 def test_model_screening_output_lattice_str(testdb, testconfig):
     ispyb.model.__future__.enable(testconfig)
-    screening_output_lattice = ispyb.model.screening.ScreeningOutputLattice(
-        1309570, testdb
-    )
+    screening_output_lattice = testdb.get_screening_output_lattice(1309570)
     screening_output_lattice.load()
     assert (
         str(screening_output_lattice)
@@ -136,7 +134,7 @@ ScreeningOutputLattice #1309570
 
 def test_model_screening_strategy_str(testdb, testconfig):
     ispyb.model.__future__.enable(testconfig)
-    screening_strategy = ispyb.model.screening.ScreeningStrategy(1473913, testdb)
+    screening_strategy = testdb.get_screening_strategy(1473913)
     screening_strategy.load()
     assert (
         str(screening_strategy)
@@ -151,9 +149,7 @@ ScreeningStrategy #1473913
 
 def test_model_screening_strategy_wedge_str(testdb, testconfig):
     ispyb.model.__future__.enable(testconfig)
-    screening_strategy_wedge = ispyb.model.screening.ScreeningStrategyWedge(
-        1143796, testdb
-    )
+    screening_strategy_wedge = testdb.get_screening_strategy_wedge(1143796)
     screening_strategy_wedge.load()
     assert (
         str(screening_strategy_wedge)
@@ -172,9 +168,7 @@ ScreeningStrategyWedge #1143796
 
 def test_model_screening_strategy_sub_wedge_str(testdb, testconfig):
     ispyb.model.__future__.enable(testconfig)
-    screening_strategy_sub_wedge = ispyb.model.screening.ScreeningStrategySubWedge(
-        1111570, testdb
-    )
+    screening_strategy_sub_wedge = testdb.get_screening_strategy_sub_wedge(1111570)
     screening_strategy_sub_wedge.load()
     assert (
         str(screening_strategy_sub_wedge)
