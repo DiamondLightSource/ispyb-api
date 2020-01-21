@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function
 import ispyb.model.datacollection
 import ispyb.model.processingprogram
 import ispyb.model.processingjob
+import ispyb.model.screening
 
 
 class ObjectModelMixIn:
@@ -24,6 +25,42 @@ class ObjectModelMixIn:
         return ispyb.model.processingjob.ProcessingJob(jobid, self.mx_processing)
 
     def get_processing_program(self, appid):
-        """Return an ProcessingProgram object representing the information
+        """Return a ProcessingProgram object representing the information
         about a processing program invocation."""
         return ispyb.model.processingprogram.ProcessingProgram(appid, self)
+
+    def get_screening(self, screening_id):
+        """Return a Screening object representing the information
+        about a Screening result."""
+        return ispyb.model.screening.Screening(screening_id, self)
+
+    def get_screening_output(self, screening_output_id):
+        """Return a ScreeningOutput object representing the information
+        about a ScreeningOutput result."""
+        return ispyb.model.screening.ScreeningOutput(screening_output_id, self)
+
+    def get_screening_output_lattice(self, screening_output_lattice_id):
+        """Return a ScreeningOutputLattice object representing the information
+        about a ScreeningOutputLattice result."""
+        return ispyb.model.screening.ScreeningOutputLattice(
+            screening_output_lattice_id, self
+        )
+
+    def get_screening_strategy(self, screening_strategy_id):
+        """Return a ScreeningStrategy object representing the information
+        about a ScreeningStrategy result."""
+        return ispyb.model.screening.ScreeningStrategy(screening_strategy_id, self)
+
+    def get_screening_strategy_wedge(self, screening_strategy_wedge_id):
+        """Return a ScreeningStrategyWedge object representing the information
+        about a ScreeningStrategyWedge result."""
+        return ispyb.model.screening.ScreeningStrategyWedge(
+            screening_strategy_wedge_id, self
+        )
+
+    def get_screening_strategy_sub_wedge(self, screening_strategy_sub_wedge_id):
+        """Return a ScreeningStrategySubWedge object representing the
+        information about a ScreeningStrategySubWedge result."""
+        return ispyb.model.screening.ScreeningStrategySubWedge(
+            screening_strategy_sub_wedge_id, self
+        )
