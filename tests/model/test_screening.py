@@ -32,7 +32,6 @@ def test_model_screening(testdb, testconfig):
         ),
     ):
         assert sol.unit_cell.a == 76.3
-        assert sol.unit_cell.a == 76.3
         assert sol.unit_cell.b == 76.3
         assert sol.unit_cell.c == 76.3
         assert sol.unit_cell.alpha == 90.0
