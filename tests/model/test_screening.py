@@ -13,12 +13,12 @@ def test_model_screening(testdb, testconfig):
         dc.screenings[2],
         ispyb.model.screening.Screening(dc.screenings[2]._screening_id, testdb),
     ):
-        assert screening.program_version == "EDNA MXv1"
+        assert screening.program == "EDNA MXv1"
         assert (
-            screening.comments
+            screening.comment
             == "Standard Native Dataset Multiplicity=3 I/sig=2 Maxlifespan=202 s"
         )
-        assert screening.short_comments == "EDNAStrategy1"
+        assert screening.short_comment == "EDNAStrategy1"
         assert len(screening.outputs) == 1
 
     screening_output = screening.outputs[0]
@@ -93,9 +93,9 @@ def test_model_screening_str(testdb, testconfig):
         str(screening)
         == """\
 Screening #1894774
-  comments         : Standard Native Dataset Multiplicity=3 I/sig=2 Maxlifespan=202 s
-  short_comments   : EDNAStrategy1
-  program_version  : EDNA MXv1"""
+  comment         : Standard Native Dataset Multiplicity=3 I/sig=2 Maxlifespan=202 s
+  short_comment   : EDNAStrategy1
+  program  : EDNA MXv1"""
     )
 
 
