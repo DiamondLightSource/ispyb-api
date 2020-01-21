@@ -140,6 +140,20 @@ def enable(configuration_file, section="ispyb"):
         _get_screening_strategy_sub_wedge
     )
 
+    import ispyb.model.image_quality_indicators
+
+    ispyb.model.image_quality_indicators.ImageQualityIndicators.reload = (
+        _get_image_quality_indicators
+    )
+
+    ispyb.model.image_quality_indicators.ImageQualityIndicatorsList.reload = (
+        _get_image_quality_indicators_for_dcid
+    )
+
+    ispyb.model.datacollection.DataCollection.image_quality = (
+        _get_linked_image_quality_indicators_for_data_collection
+    )
+
 
 def _get_autoprocprogram(self):
     # https://jira.diamond.ac.uk/browse/SCI-7414
@@ -328,6 +342,23 @@ def _get_linked_sub_wedges_for_screening_strategy_wedge(self):
         ]
 
 
+@property
+def _get_linked_image_quality_indicators_for_data_collection(self):
+    import ispyb.model.image_quality_indicators
+
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT imageNumber, spotTotal, goodBraggCandidates, method1Res, "
+            "method2Res, totalIntegratedSignal "
+            "FROM ImageQualityIndicators "
+            "WHERE dataCollectionId = %s",
+            self._dcid,
+        )
+        return ispyb.model.image_quality_indicators.ImageQualityIndicatorsList(
+            self._dcid, self._db, preload=cursor.fetchall()
+        )
+
+
 def _get_screening(self):
     with _db_cc() as cursor:
         cursor.run(
@@ -396,6 +427,31 @@ def _get_screening_strategy_sub_wedge(self):
             self._sub_wedge_id,
         )
         self._data = cursor.fetchone()
+
+
+def _get_image_quality_indicators(self):
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT spotTotal, goodBraggCandidates, method1Res, method2Res, "
+            "totalIntegratedSignal "
+            "FROM ImageQualityIndicators "
+            "WHERE dataCollectionId = %s AND imageNumber = %s",
+            self._dcid,
+            self._image_number,
+        )
+        self._data = cursor.fetchone()
+
+
+def _get_image_quality_indicators_for_dcid(self):
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT imageNumber, spotTotal, goodBraggCandidates, method1Res, "
+            "method2Res, totalIntegratedSignal "
+            "FROM ImageQualityIndicators "
+            "WHERE dataCollectionId = %s",
+            self._dcid,
+        )
+        self._data = cursor.fetchall()
 
 
 def test_connection():
