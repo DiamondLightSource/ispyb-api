@@ -104,9 +104,7 @@ def enable(configuration_file, section="ispyb"):
 
     import ispyb.model.screening
 
-    ispyb.model.screening.Screening.screening_outputs = (
-        _get_linked_outputs_for_screening
-    )
+    ispyb.model.screening.Screening.outputs = _get_linked_outputs_for_screening
     ispyb.model.screening.Screening.reload = _get_screening
 
     ispyb.model.screening.ScreeningOutput.lattices = (

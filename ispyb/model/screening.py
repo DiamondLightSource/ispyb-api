@@ -31,7 +31,7 @@ class Screening(ispyb.model.DBCache):
         raise NotImplementedError()
 
     @property
-    def screening_outputs(self):
+    def outputs(self):
         """Returns the list of ScreeningOutput objects associated with this
            database entry."""
         raise NotImplementedError()

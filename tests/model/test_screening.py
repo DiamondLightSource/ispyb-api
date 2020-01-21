@@ -19,9 +19,9 @@ def test_model_screening(testdb, testconfig):
             == "Standard Native Dataset Multiplicity=3 I/sig=2 Maxlifespan=202 s"
         )
         assert screening.short_comments == "EDNAStrategy1"
-        assert len(screening.screening_outputs) == 1
+        assert len(screening.outputs) == 1
 
-    screening_output = screening.screening_outputs[0]
+    screening_output = screening.outputs[0]
     assert len(screening_output.lattices) == 1
     assert len(screening_output.strategies) == 1
 
