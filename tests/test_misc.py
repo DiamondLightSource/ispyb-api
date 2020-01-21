@@ -47,7 +47,7 @@ def test_retrieve_failure(testdb):
 
 
 def test_database_reconnects_on_connection_failure(testconfig, testdb):
-    ispyb.model.__future__.enable(testconfig, section="ispyb_mariadb_sp")
+    ispyb.model.__future__.enable(testconfig)
 
     # Create minimal data collection and data collection group for test
     params = testdb.mx_acquisition.get_data_collection_group_params()

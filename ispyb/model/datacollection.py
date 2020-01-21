@@ -50,6 +50,11 @@ class DataCollection(ispyb.model.DBCache):
         raise NotImplementedError("TODO: Not implemented yet")
 
     @property
+    def screenings(self):
+        """Returns the list of Screening objects associated with this DC."""
+        raise NotImplementedError("TODO: Not implemented yet")
+
+    @property
     def file_template_full(self):
         """Template for file names with full directory path. As with file_template
         \'#\' characters stand in for image number digits."""
@@ -193,7 +198,9 @@ class DataCollectionGroup(ispyb.model.DBCache):
 
     def reload(self):
         """Load/update information from the database."""
-        self._data = self._db.mx_acquisition.retrieve_data_collection_group(self._dcgid)[0]
+        self._data = self._db.mx_acquisition.retrieve_data_collection_group(
+            self._dcgid
+        )[0]
 
     @property
     def dcgid(self):

@@ -105,10 +105,40 @@ def enable(configuration_file, section="ispyb"):
     ispyb.model.datacollection.DataCollection.integrations = (
         _get_linked_autoprocintegration_for_dc
     )
+    ispyb.model.datacollection.DataCollection.screenings = _get_linked_screenings_for_dc
     ispyb.model.datacollection.DataCollection.pdb = _get_linked_pdb_for_dc
     import ispyb.model.processingprogram
 
     ispyb.model.processingprogram.ProcessingProgram.reload = _get_autoprocprogram
+
+    import ispyb.model.screening
+
+    ispyb.model.screening.Screening.outputs = _get_linked_outputs_for_screening
+    ispyb.model.screening.Screening.reload = _get_screening
+
+    ispyb.model.screening.ScreeningOutput.lattices = (
+        _get_linked_lattices_for_screening_output
+    )
+    ispyb.model.screening.ScreeningOutput.strategies = (
+        _get_linked_strategies_for_screening_output
+    )
+    ispyb.model.screening.ScreeningOutput.reload = _get_screening_output
+
+    ispyb.model.screening.ScreeningOutputLattice.reload = _get_screening_output_lattice
+
+    ispyb.model.screening.ScreeningStrategy.wedges = (
+        _get_linked_wedges_for_screening_strategy
+    )
+    ispyb.model.screening.ScreeningStrategy.reload = _get_screening_strategy
+
+    ispyb.model.screening.ScreeningStrategyWedge.sub_wedges = (
+        _get_linked_sub_wedges_for_screening_strategy_wedge
+    )
+    ispyb.model.screening.ScreeningStrategyWedge.reload = _get_screening_strategy_wedge
+
+    ispyb.model.screening.ScreeningStrategySubWedge.reload = (
+        _get_screening_strategy_sub_wedge
+    )
 
 
 def _get_autoprocprogram(self):
@@ -171,6 +201,201 @@ def _get_linked_pdb_for_dc(self):
             )
             for row in pdb_data
         ]
+
+
+@property
+def _get_linked_screenings_for_dc(self):
+    import ispyb.model.screening
+
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT screeningId, comments, shortComments, programVersion "
+            "FROM Screening "
+            "WHERE dataCollectionId = %s "
+            "ORDER BY screeningId",
+            self.dcid,
+        )
+        return [
+            ispyb.model.screening.Screening(ir["screeningId"], self._db, preload=ir)
+            for ir in cursor.fetchall()
+        ]
+
+
+@property
+def _get_linked_outputs_for_screening(self):
+    import ispyb.model.screening
+
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT screeningOutputId, alignmentSuccess, indexingSuccess, strategySuccess, program "
+            "FROM ScreeningOutput "
+            "WHERE screeningid = %s "
+            "ORDER BY screeningOutputId",
+            self._screening_id,
+        )
+        return [
+            ispyb.model.screening.ScreeningOutput(
+                ir["screeningOutputId"], self._db, preload=ir
+            )
+            for ir in cursor.fetchall()
+        ]
+
+
+@property
+def _get_linked_lattices_for_screening_output(self):
+    import ispyb.model.screening
+
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT screeningOutputLatticeId, spaceGroup, "
+            "unitCell_a, unitCell_b, unitCell_c, "
+            "unitCell_alpha, unitCell_beta, unitCell_gamma "
+            "FROM ScreeningOutputLattice "
+            "WHERE screeningoutputid = %s "
+            "ORDER BY screeningOutputLatticeId",
+            self._output_id,
+        )
+        return [
+            ispyb.model.screening.ScreeningOutputLattice(
+                ir["screeningOutputLatticeId"], self._db, preload=ir
+            )
+            for ir in cursor.fetchall()
+        ]
+
+
+@property
+def _get_linked_strategies_for_screening_output(self):
+    import ispyb.model.screening
+
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT screeningStrategyId, anomalous, program, "
+            "exposureTime, rankingResolution "
+            "FROM ScreeningStrategy "
+            "WHERE screeningoutputid = %s "
+            "ORDER BY screeningStrategyId",
+            self._output_id,
+        )
+        return [
+            ispyb.model.screening.ScreeningStrategy(
+                ir["screeningStrategyId"], self._db, preload=ir
+            )
+            for ir in cursor.fetchall()
+        ]
+
+
+@property
+def _get_linked_wedges_for_screening_strategy(self):
+    import ispyb.model.screening
+
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT screeningStrategyWedgeId, chi, completeness, kappa, "
+            "multiplicity, numberOfImages, phi, resolution, wedgeNumber "
+            "FROM ScreeningStrategyWedge "
+            "WHERE screeningStrategyId = %s "
+            "ORDER BY screeningStrategyWedgeId",
+            self._strategy_id,
+        )
+        return [
+            ispyb.model.screening.ScreeningStrategyWedge(
+                ir["screeningStrategyWedgeId"], self._db, preload=ir
+            )
+            for ir in cursor.fetchall()
+        ]
+
+
+@property
+def _get_linked_sub_wedges_for_screening_strategy_wedge(self):
+    import ispyb.model.screening
+
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT axisEnd, axisStart, completeness, exposureTime, "
+            "multiplicity, numberOfImages, oscillationRange, resolution, "
+            "rotationAxis, subWedgeNumber, transmission, "
+            "screeningStrategySubWedgeId "
+            "FROM ScreeningStrategySubWedge "
+            "WHERE screeningStrategyWedgeId = %s "
+            "ORDER BY screeningStrategySubWedgeId",
+            self._wedge_id,
+        )
+        return [
+            ispyb.model.screening.ScreeningStrategySubWedge(
+                ir["screeningStrategySubWedgeId"], self._db, preload=ir
+            )
+            for ir in cursor.fetchall()
+        ]
+
+
+def _get_screening(self):
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT comments, shortComments, programVersion "
+            "FROM Screening "
+            "WHERE screeningId = %s",
+            self._screening_id,
+        )
+        self._data = cursor.fetchone()
+
+
+def _get_screening_output(self):
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT alignmentSuccess, indexingSuccess, strategySuccess, program "
+            "FROM ScreeningOutput "
+            "WHERE screeningOutputId = %s",
+            self._output_id,
+        )
+        self._data = cursor.fetchone()
+
+
+def _get_screening_output_lattice(self):
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT spaceGroup, unitCell_a, unitCell_b, unitCell_c, "
+            "unitCell_alpha, unitCell_beta, unitCell_gamma "
+            "FROM ScreeningOutputLattice "
+            "WHERE screeningOutputLatticeId = %s",
+            self._lattice_id,
+        )
+        self._data = cursor.fetchone()
+
+
+def _get_screening_strategy(self):
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT anomalous, program, exposureTime, rankingResolution "
+            "FROM ScreeningStrategy "
+            "WHERE screeningStrategyId = %s",
+            self._strategy_id,
+        )
+        self._data = cursor.fetchone()
+
+
+def _get_screening_strategy_wedge(self):
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT chi, completeness, kappa, multiplicity, numberOfImages, "
+            "phi, resolution, wedgeNumber "
+            "FROM ScreeningStrategyWedge "
+            "WHERE screeningStrategyWedgeId = %s",
+            self._wedge_id,
+        )
+        self._data = cursor.fetchone()
+
+
+def _get_screening_strategy_sub_wedge(self):
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT axisEnd, axisStart, completeness, exposureTime, "
+            "multiplicity, numberOfImages, oscillationRange, resolution, "
+            "rotationAxis, subWedgeNumber, transmission "
+            "FROM ScreeningStrategySubWedge "
+            "WHERE screeningStrategySubWedgeId = %s",
+            self._sub_wedge_id,
+        )
+        self._data = cursor.fetchone()
 
 
 def test_connection():
