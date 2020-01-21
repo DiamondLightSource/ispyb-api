@@ -44,8 +44,8 @@ class Screening(ispyb.model.DBCache):
             "\n".join(
                 (
                     "Screening #{0._screening_id}",
-                    "  comments         : {0.comments}",
-                    "  short_comments   : {0.short_comments}",
+                    "  comment         : {0.comments}",
+                    "  short_comment   : {0.short_comments}",
                     "  program_version  : {0.program_version}",
                 )
             )
@@ -55,8 +55,8 @@ class Screening(ispyb.model.DBCache):
 ispyb.model.add_properties(
     Screening,
     (
-        ("comments", "comments"),
-        ("short_comments", "shortComments"),
+        ("comment", "comments"),
+        ("short_comment", "shortComments"),
         ("program_version", "programVersion"),
     ),
 )
