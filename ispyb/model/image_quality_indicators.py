@@ -1,5 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
+import tabulate
+
 import ispyb.model
 
 
@@ -41,6 +43,28 @@ class ImageQualityIndicators(ispyb.model.DBCache):
     def image_number(self):
         """Returns the ImageNumber."""
         return self._image_number
+
+    def __str__(self):
+        """Returns a pretty-printed object representation."""
+        if not self.cached:
+            return (
+                "ImageQualityIndicators dcid: %d, imageNumber: %d (not yet loaded from database)"
+                % (self._dcid, self._image_number)
+            )
+        return (
+            "\n".join(
+                (
+                    "ImageQualityIndicators",
+                    "  dcid                    : {0.dcid}",
+                    "  image_number            : {0.image_number}",
+                    "  spot_count              : {0.spot_count}",
+                    "  bragg_candidates        : {0.bragg_candidates}",
+                    "  resolution_method_1     : {0.resolution_method_1}",
+                    "  resolution_method_2     : {0.resolution_method_2}",
+                    "  total_integrated_signal : {0.total_integrated_signal}",
+                )
+            )
+        ).format(self)
 
 
 ispyb.model.add_properties(
@@ -98,3 +122,19 @@ class ImageQualityIndicatorsList(ispyb.model.DBCache, collections.Sequence):
         return ImageQualityIndicators(
             self._dcid, data["imageNumber"], self._db, preload=data
         )
+
+    def __str__(self):
+        """Returns a pretty-printed object representation."""
+        headers = (
+            "dcid",
+            "image_number",
+            "spot_count",
+            "bragg_candidates",
+            "resolution_method_1",
+            "resolution_method_2",
+            "total_integrated_signal",
+        )
+        rows = []
+        for qi in self:
+            rows.append([getattr(qi, k) for k in headers])
+        return tabulate(rows, headers=headers, tablefmt="psql")

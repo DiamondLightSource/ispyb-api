@@ -14,6 +14,18 @@ def test_image_quality_indicators(testdb, testconfig):
     assert qi.resolution_method_2 == 1.63
     assert qi.spot_count == 1132
     assert qi.total_integrated_signal == 2.09
+    assert (
+        str(qi)
+        == """\
+ImageQualityIndicators
+  dcid                    : 1066786
+  image_number            : 1
+  spot_count              : 1132
+  bragg_candidates        : 872
+  resolution_method_1     : 1.63
+  resolution_method_2     : 1.63
+  total_integrated_signal : 2.09"""
+    )
 
 
 def test_image_quality_indicators_list(testdb, testconfig):
@@ -25,6 +37,17 @@ def test_image_quality_indicators_list(testdb, testconfig):
     assert len(qi_list) == 3
     for i, qi in enumerate(qi_list):
         assert qi.image_number == (i + 1)
+    assert (
+        str(qi_list)
+        == """\
++---------+----------------+--------------+--------------------+-----------------------+-----------------------+---------------------------+
+|    dcid |   image_number |   spot_count |   bragg_candidates |   resolution_method_1 |   resolution_method_2 |   total_integrated_signal |
+|---------+----------------+--------------+--------------------+-----------------------+-----------------------+---------------------------|
+| 1066786 |              1 |         1132 |                872 |                  1.63 |                  1.63 |                      2.09 |
+| 1066786 |              2 |          848 |                652 |                  1.56 |                  1.56 |                      2.03 |
+| 1066786 |              3 |          922 |                735 |                  1.57 |                  1.57 |                      2.13 |
++---------+----------------+--------------+--------------------+-----------------------+-----------------------+---------------------------+"""
+    )
 
 
 def test_dc_image_quality(testdb, testconfig):
