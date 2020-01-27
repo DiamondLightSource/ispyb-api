@@ -5,8 +5,8 @@ import traceback
 
 import ispyb.interface.connection
 import mysql.connector
-from ispyb import ConnectionError, NoResult, ReadWriteError
-from mysql.connector.errors import DatabaseError, DataError, Error, InterfaceError
+from ispyb import ISPyBException, ConnectionError, NoResult, ReadWriteError
+from mysql.connector.errors import DatabaseError, DataError, InterfaceError
 
 
 class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
@@ -165,3 +165,12 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
                     result = rs[0]
             cursor.close()
         return result
+
+    def set_role(self, role):
+        cursor = self.create_cursor()
+        try:
+            cursor.execute("SET ROLE %s" % role)
+        except DatabaseError as e:
+            raise ISPyBException(
+                "DatabaseError({0}): {1}".format(e.errno, traceback.format_exc())
+            )
