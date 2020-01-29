@@ -6,7 +6,12 @@ import traceback
 import ispyb.interface.connection
 import mysql.connector
 from ispyb import ISPyBException, ConnectionError, NoResult, ReadWriteError
-from mysql.connector.errors import DatabaseError, DataError, InterfaceError
+from mysql.connector.errors import (
+    DatabaseError,
+    DataError,
+    IntegrityError,
+    InterfaceError,
+)
 
 
 class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
@@ -95,6 +100,10 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
                 raise ReadWriteError(
                     "DataError({0}): {1}".format(e.errno, traceback.format_exc())
                 )
+            except IntegrityError as e:
+                raise ReadWriteError(
+                    "IntegrityError({0}): {1}".format(e.errno, traceback.format_exc())
+                )
             finally:
                 cursor.close()
         if result_args is not None and len(result_args) > 0:
@@ -155,6 +164,10 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
             except DataError as e:
                 raise ReadWriteError(
                     "DataError({0}): {1}".format(e.errno, traceback.format_exc())
+                )
+            except IntegrityError as e:
+                raise ReadWriteError(
+                    "IntegrityError({0}): {1}".format(e.errno, traceback.format_exc())
                 )
             result = None
             rs = cursor.fetchone()
