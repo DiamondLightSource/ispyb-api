@@ -2,6 +2,20 @@
 History
 =======
 
+Unreleased / master
+-------------------
+
+* Object model for Screening tables
+* set_role
+* New module for crystal imaging: xtalimaging
+
+5.5.0 (2020-01-07)
+------------------
+
+New methods:
+ * upsert_program_message
+ * upsert_sample_image_auto_score
+
 5.4.1 (2019-11-12)
 ------------------
 
