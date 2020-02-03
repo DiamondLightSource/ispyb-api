@@ -44,7 +44,7 @@ class FactoryMixIn(object):
 
     @property
     def xtal_imaging(self):
-        """MX screening tables"""
+        """Crystal imaging tables"""
         return self._get_data_area("xtalimaging", "XtalImaging")
 
     @property
