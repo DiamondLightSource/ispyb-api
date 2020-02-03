@@ -27,7 +27,7 @@ def test_xtal_imaging(testdb):
         image_full_path=si_full_path,
     )
 
-    assert sid is not None
-    assert sid > 0
+    assert siid is not None
+    assert siid > 0
 
     xtalimaging.upsert_sample_image_auto_score(si_full_path, "MARCO", "crystal", 0.65)
