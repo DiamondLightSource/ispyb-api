@@ -31,3 +31,9 @@ def test_xtal_imaging(testdb):
     assert siid > 0
 
     xtalimaging.upsert_sample_image_auto_score(si_full_path, "MARCO", "crystal", 0.65)
+
+    container = xtalimaging.retrieve_container_for_inspection_id(4)
+    cid2 = container[0]["containerId"]
+
+    assert cid2 is not None
+    assert cid2 == 34874
