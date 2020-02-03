@@ -1,11 +1,4 @@
-# xtalimaging.py
-#
-#    Copyright (C) 2020 Diamond Light Source, Karl Levik
-#
-# 2020-01-22
-#
-# Methods for accessing crystal imaging tables in the ISPyB database
-#
+from __future__ import absolute_import, division, print_function
 
 from ispyb.interface.dataarea import DataArea
 
@@ -50,7 +43,6 @@ class XtalImaging(DataArea):
         :param schema_name: The name of the scoring schema, e.g. MARCO
         :param score_class: A string that describes the thing we're scoring, e.g. crystal, clear, precipitant, other
         :param probability: A float indicating the probability that the image contains the score_class
-        :return: Nothing.
         """
         self.get_connection().call_sp_write(
             procname="upsert_sample_image_auto_score",
@@ -70,7 +62,7 @@ class XtalImaging(DataArea):
         )
 
     def retrieve_sample_for_container_id_and_location(self, container_id, location):
-        """Retrieve info about the sample identified by the given container ID its location."""
+        """Retrieve info about the sample identified by the given container ID and its location."""
         return self.get_connection().call_sp_retrieve(
             procname="retrieve_sample_for_container_id_and_location",
             args=[container_id, location],
