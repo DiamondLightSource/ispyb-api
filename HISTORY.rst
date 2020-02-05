@@ -5,9 +5,14 @@ History
 Unreleased / master
 -------------------
 
-* Object model for Screening tables
-* set_role
-* New module for crystal imaging: xtalimaging
+5.6.0 (2020-02-05)
+------------------
+
+* Object model for Screening tables `#91 <https://github.com/DiamondLightSource/ispyb-api/pull/91>`_ and ImageQualityIndicators `#95 <https://github.com/DiamondLightSource/ispyb-api/pull/95>`_
+* set_role, new method to change the current role of the DB user. `#94 <https://github.com/DiamondLightSource/ispyb-api/pull/94>`_
+* New module for crystal imaging: xtalimaging `#96 <https://github.com/DiamondLightSource/ispyb-api/pull/96>`_
+* Add method to close additional future connections `#88 <https://github.com/DiamondLightSource/ispyb-api/pull/88>`_
+* mysql/mariadb IntegrityError is now translated to ISPyBException `#97 <https://github.com/DiamondLightSource/ispyb-api/pull/97>`_
 
 5.5.0 (2020-01-07)
 ------------------
