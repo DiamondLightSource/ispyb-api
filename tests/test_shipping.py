@@ -43,5 +43,7 @@ def test_retrieve_dewars(testdb):
 
 def test_retrieve_container_for_sample_id(testdb):
     shipping = testdb.shipping
-    rs = shipping.retrieve_container_for_sample_id(11583, None)
-    assert len(rs) > 0
+    rs = shipping.retrieve_container_for_sample_id(374695, None)
+    assert len(rs) == 1
+    rs = shipping.retrieve_container_for_sample_id(374695, "boaty")
+    assert len(rs) == 1
