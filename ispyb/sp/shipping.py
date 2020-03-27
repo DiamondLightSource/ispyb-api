@@ -71,3 +71,9 @@ class Shipping(ispyb.interface.shipping.IF):
             procname="retrieve_dewars_for_proposal_code_number_v2",
             args=(proposal_code, proposal_number, auth_login),
         )
+
+    def retrieve_container_for_sample_id(self, sample_id, auth_login=None):
+        """Get a single row result-set with the container info for the sample identified by sample_id"""
+        return self.get_connection().call_sp_retrieve(
+            procname="retrieve_container_for_sample_id", args=(sample_id, auth_login)
+        )
