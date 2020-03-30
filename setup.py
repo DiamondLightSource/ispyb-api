@@ -10,7 +10,7 @@ if sys.version_info.major == 2:
 
 setup(
     name="ispyb",
-    version="5.6.0",
+    version="5.6.1",
     description="Python package to access ISPyB database",
     long_description="This package provides a python interface to ISPyB. It can access the ISPyB database directly or (in future versions) run on top of the official ISPyB webservices API.",
     url="https://github.com/DiamondLightSource/ispyb-api",
