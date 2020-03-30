@@ -39,3 +39,11 @@ def test_retrieve_dewars(testdb):
     assert len(rs) > 0
     rs = testdb.shipping.retrieve_dewars_for_proposal_code_number("cm", 14451, "boaty")
     assert len(rs) > 0
+
+
+def test_retrieve_container_for_sample_id(testdb):
+    shipping = testdb.shipping
+    rs = shipping.retrieve_container_for_sample_id(374695, None)
+    assert len(rs) == 1
+    rs = shipping.retrieve_container_for_sample_id(374695, "boaty")
+    assert len(rs) == 1
