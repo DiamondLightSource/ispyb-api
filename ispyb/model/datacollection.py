@@ -227,6 +227,10 @@ class DataCollectionGroup(ispyb.model.DBCache):
         """Returns the container information for the DataCollectionGroup sample."""
         if self._cache_container is None:
             self.load()
+            if not self._data["sampleId"]:
+                # Can not have a container without a sample
+                self._cache_container = False
+                return self._cache_container
             container = self._db.shipping.retrieve_container_for_sample_id(
                 self._data["sampleId"]
             )
