@@ -4,6 +4,7 @@ import os
 import re
 
 import ispyb.model
+import ispyb.model.container
 import ispyb.model.gridinfo
 
 
@@ -196,6 +197,7 @@ class DataCollectionGroup(ispyb.model.DBCache):
         :return: A DataCollectionGroup object representing the database entry for
                  the specified DataCollectionGroupID
         """
+        self._cache_container = None
         self._cache_gridinfo = None
         self._db = db_conn
         self._dcgid = int(dcgid)
@@ -219,6 +221,26 @@ class DataCollectionGroup(ispyb.model.DBCache):
         if self._cache_gridinfo is None:
             self._cache_gridinfo = ispyb.model.gridinfo.GridInfo(self.dcgid, self._db)
         return self._cache_gridinfo
+
+    @property
+    def container(self):
+        """Returns the container information for the DataCollectionGroup sample."""
+        if self._cache_container is None:
+            self.load()
+            if not self._data["sampleId"]:
+                # Can not have a container without a sample
+                self._cache_container = False
+                return self._cache_container
+            container = self._db.shipping.retrieve_container_for_sample_id(
+                self._data["sampleId"]
+            )
+            if not container:
+                self._cache_container = False
+            else:
+                self._cache_container = ispyb.model.container.Container(
+                    container[0]["containerId"], self._db, preload=container[0]
+                )
+        return self._cache_container
 
     def __repr__(self):
         """Returns an object representation, including the DataCollectionGroupID,
