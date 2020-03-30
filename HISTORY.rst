@@ -5,6 +5,12 @@ History
 Unreleased / master
 -------------------
 
+5.6.1 (2020-03-30)
+------------------
+
+* Added method to retrieve container for a given sample ID `#98 <https://github.com/DiamondLightSource/ispyb-api/pull/98>`_
+* Add object model for containers
+
 5.6.0 (2020-02-05)
 ------------------
 
