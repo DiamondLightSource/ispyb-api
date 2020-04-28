@@ -34,7 +34,7 @@ class Container(ispyb.model.DBCache):
         return self._containerid
 
     def __bool__(self):
-        """Container object evaluates to True in a boolean context if grid
+        """Container object evaluates to True in a boolean context if container
         information exists in the database. Otherwise it evaluates to False."""
         self.load()
         return self._data is not None
