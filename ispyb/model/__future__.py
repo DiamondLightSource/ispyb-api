@@ -154,6 +154,13 @@ def enable(configuration_file, section="ispyb"):
         _get_linked_image_quality_indicators_for_data_collection
     )
 
+    import ispyb.model.detector
+
+    ispyb.model.detector.Detector.reload = _get_detector
+    ispyb.model.datacollection.DataCollection.detector = (
+        _get_linked_detector_for_data_collection
+    )
+
 
 def _get_autoprocprogram(self):
     # https://jira.diamond.ac.uk/browse/SCI-7414
@@ -359,6 +366,31 @@ def _get_linked_image_quality_indicators_for_data_collection(self):
         )
 
 
+@property
+def _get_linked_detector_for_data_collection(self):
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT d.detectorId, d.detectorType, "
+            "d.detectorManufacturer, d.detectorModel, "
+            "d.detectorPixelSizeHorizontal, d.detectorPixelSizeVertical, "
+            "d.detectorSerialNumber, d.detectorDistanceMin, d.detectorDistanceMax, "
+            "d.sensorThickness, d.numberOfPixelsX, d.numberOfPixelsy "
+            "FROM Detector d "
+            "INNER JOIN DataCollection dc on dc.detectorId = d.detectorId "
+            "WHERE dc.dataCollectionId = %s;",
+            self._dcid,
+        )
+
+        detector_data = cursor.fetchone()
+        if not detector_data:
+            return None
+        import ispyb.model.detector
+
+        return ispyb.model.detector.Detector(
+            detector_data["detectorId"], self._db, preload=detector_data
+        )
+
+
 def _get_screening(self):
     with _db_cc() as cursor:
         cursor.run(
@@ -452,6 +484,20 @@ def _get_image_quality_indicators_for_dcid(self):
             self._dcid,
         )
         self._data = cursor.fetchall()
+
+
+def _get_detector(self):
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT detectorType, detectorManufacturer, detectorModel, "
+            "detectorPixelSizeHorizontal, detectorPixelSizeVertical, "
+            "detectorSerialNumber, detectorDistanceMin, detectorDistanceMax, "
+            "sensorThickness, numberOfPixelsX, numberOfPixelsy "
+            "FROM Detector "
+            "WHERE detectorId = %s",
+            self._detectorid,
+        )
+        self._data = cursor.fetchone()
 
 
 def test_connection():
