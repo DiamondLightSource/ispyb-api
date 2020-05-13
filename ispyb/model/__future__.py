@@ -374,7 +374,7 @@ def _get_linked_detector_for_data_collection(self):
             "d.detectorManufacturer, d.detectorModel, "
             "d.detectorPixelSizeHorizontal, d.detectorPixelSizeVertical, "
             "d.detectorSerialNumber, d.detectorDistanceMin, d.detectorDistanceMax, "
-            "d.sensorThickness, d.numberOfPixelsX, d.numberOfPixelsy "
+            "d.sensorThickness, d.numberOfPixelsX, d.numberOfPixelsY "
             "FROM Detector d "
             "INNER JOIN DataCollection dc on dc.detectorId = d.detectorId "
             "WHERE dc.dataCollectionId = %s;",
@@ -492,7 +492,7 @@ def _get_detector(self):
             "SELECT detectorType, detectorManufacturer, detectorModel, "
             "detectorPixelSizeHorizontal, detectorPixelSizeVertical, "
             "detectorSerialNumber, detectorDistanceMin, detectorDistanceMax, "
-            "sensorThickness, numberOfPixelsX, numberOfPixelsy "
+            "sensorThickness, numberOfPixelsX, numberOfPixelsY "
             "FROM Detector "
             "WHERE detectorId = %s",
             self._detectorid,

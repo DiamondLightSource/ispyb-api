@@ -69,6 +69,6 @@ ispyb.model.add_properties(
         ("distance_max", "detectorDistanceMax"),
         ("sensor_thickness", "sensorThickness"),
         ("pixels_x", "numberOfPixelsX"),
-        ("pixels_y", "numberOfPixelsy"),
+        ("pixels_y", "numberOfPixelsY"),
     ),
 )
