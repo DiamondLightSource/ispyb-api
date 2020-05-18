@@ -33,6 +33,15 @@ class Detector(ispyb.model.DBCache):
         "Returns the detectorId"
         return self._detectorid
 
+    def __repr__(self):
+        """Returns an object representation, including the DetectorID,
+        the database connection interface object, and the cache status."""
+        return "<Detector #%d (%s), %r>" % (
+            self._detectorid,
+            "cached" if self.cached else "uncached",
+            self._db,
+        )
+
     def __str__(self):
         """Returns a pretty-printed object representation."""
         if not self.cached:
