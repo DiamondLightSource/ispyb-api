@@ -68,16 +68,32 @@ class Detector(ispyb.model.DBCache):
 ispyb.model.add_properties(
     Detector,
     (
-        ("type", "detectorType"),
-        ("manufacturer", "detectorManufacturer"),
-        ("model", "detectorModel"),
-        ("pixel_size_horizontal", "detectorPixelSizeHorizontal"),
-        ("pixel_size_vertical", "detectorPixelSizeVertical"),
-        ("serial_number", "detectorSerialNumber"),
-        ("distance_min", "detectorDistanceMin"),
-        ("distance_max", "detectorDistanceMax"),
-        ("sensor_thickness", "sensorThickness"),
-        ("pixels_x", "numberOfPixelsX"),
-        ("pixels_y", "numberOfPixelsY"),
+        ("type", "detectorType", "The detector type, e.g. 'Photon Counting' or 'CCD'"),
+        ("manufacturer", "detectorManufacturer", "The detector manufacturer"),
+        ("model", "detectorModel", "The detector model"),
+        (
+            "pixel_size_horizontal",
+            "detectorPixelSizeHorizontal",
+            "The pixel size in the horizonal direction (µm)",
+        ),
+        (
+            "pixel_size_vertical",
+            "detectorPixelSizeVertical",
+            "The pixel size in the vertical direction (µm)",
+        ),
+        ("serial_number", "detectorSerialNumber", "The detector serial number"),
+        (
+            "distance_min",
+            "detectorDistanceMin",
+            "The minimum sample-detector distance (mm)",
+        ),
+        (
+            "distance_max",
+            "detectorDistanceMax",
+            "The maximum sample-detector distance (mm)",
+        ),
+        ("sensor_thickness", "sensorThickness", "The detector sensor thickness (µm)"),
+        ("pixels_x", "numberOfPixelsX", "Detector number of pixels in x"),
+        ("pixels_y", "numberOfPixelsY", "Detector number of pixels in y"),
     ),
 )
