@@ -5,6 +5,7 @@ import re
 
 import ispyb.model
 import ispyb.model.container
+import ispyb.model.detector
 import ispyb.model.gridinfo
 
 
@@ -23,6 +24,7 @@ class DataCollection(ispyb.model.DBCache):
         :return: A DataCollection object representing the database entry for
                  the specified DataCollectionID
         """
+        self._cache_detector = None
         self._cache_group = None
         self._db = db_area
         self._dcid = int(dcid)
@@ -64,7 +66,13 @@ class DataCollection(ispyb.model.DBCache):
     @property
     def detector(self):
         """Returns the Detector object associated with this DC."""
-        raise NotImplementedError("TODO: Not implemented yet")
+        if not self.detector_id:
+            return None
+        if self._cache_detector is None:
+            self._cache_detector = ispyb.model.detector.Detector(
+                self.detector_id, self._db.conn
+            )
+        return self._cache_detector
 
     @property
     def file_template_full(self):
@@ -134,6 +142,12 @@ ispyb.model.add_properties(
             "detector_distance",
             "detectorDistance",
             "Distance from the sample to the detector in mm",
+        ),
+        (
+            "detector_id",
+            "detectorId",
+            "A unique identifier for the detector used in this acquisition. You can access the "
+            "detector model object via .detector directly.",
         ),
         (
             "detector_2theta",

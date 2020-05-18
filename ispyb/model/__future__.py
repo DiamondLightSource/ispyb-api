@@ -157,9 +157,6 @@ def enable(configuration_file, section="ispyb"):
     import ispyb.model.detector
 
     ispyb.model.detector.Detector.reload = _get_detector
-    ispyb.model.datacollection.DataCollection.detector = (
-        _get_linked_detector_for_data_collection
-    )
 
 
 def _get_autoprocprogram(self):
@@ -363,31 +360,6 @@ def _get_linked_image_quality_indicators_for_data_collection(self):
         )
         return ispyb.model.image_quality_indicators.ImageQualityIndicatorsList(
             self._dcid, self._db, preload=cursor.fetchall()
-        )
-
-
-@property
-def _get_linked_detector_for_data_collection(self):
-    with _db_cc() as cursor:
-        cursor.run(
-            "SELECT d.detectorId, d.detectorType, "
-            "d.detectorManufacturer, d.detectorModel, "
-            "d.detectorPixelSizeHorizontal, d.detectorPixelSizeVertical, "
-            "d.detectorSerialNumber, d.detectorDistanceMin, d.detectorDistanceMax, "
-            "d.sensorThickness, d.numberOfPixelsX, d.numberOfPixelsY "
-            "FROM Detector d "
-            "INNER JOIN DataCollection dc on dc.detectorId = d.detectorId "
-            "WHERE dc.dataCollectionId = %s;",
-            self._dcid,
-        )
-
-        detector_data = cursor.fetchone()
-        if not detector_data:
-            return None
-        import ispyb.model.detector
-
-        return ispyb.model.detector.Detector(
-            detector_data["detectorId"], self._db, preload=detector_data
         )
 
 
