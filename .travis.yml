@@ -40,7 +40,7 @@ install:
 
 script:
 - coverage run --source=ispyb setup.py test
-- python -m compileall *
+- python -m compileall -q *
 
 after_success: coveralls
 
