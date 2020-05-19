@@ -40,6 +40,8 @@ install:
 
 script:
 - coverage run --source=ispyb setup.py test
+- python -m compileall *
+
 after_success: coveralls
 
 # Assuming you have installed the travis-ci CLI tool, after you
