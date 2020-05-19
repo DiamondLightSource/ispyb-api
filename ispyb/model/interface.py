@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function
 
 import ispyb.model.datacollection
+import ispyb.model.detector
 import ispyb.model.processingprogram
 import ispyb.model.processingjob
 import ispyb.model.screening
@@ -64,3 +65,7 @@ class ObjectModelMixIn:
         return ispyb.model.screening.ScreeningStrategySubWedge(
             screening_strategy_sub_wedge_id, self
         )
+
+    def get_detector(self, detectorid):
+        """Return a Detector object representing a Detector database entry."""
+        return ispyb.model.detector.Detector(detectorid, self)

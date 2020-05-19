@@ -154,6 +154,10 @@ def enable(configuration_file, section="ispyb"):
         _get_linked_image_quality_indicators_for_data_collection
     )
 
+    import ispyb.model.detector
+
+    ispyb.model.detector.Detector.reload = _get_detector
+
 
 def _get_autoprocprogram(self):
     # https://jira.diamond.ac.uk/browse/SCI-7414
@@ -452,6 +456,20 @@ def _get_image_quality_indicators_for_dcid(self):
             self._dcid,
         )
         self._data = cursor.fetchall()
+
+
+def _get_detector(self):
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT detectorType, detectorManufacturer, detectorModel, "
+            "detectorPixelSizeHorizontal, detectorPixelSizeVertical, "
+            "detectorSerialNumber, detectorDistanceMin, detectorDistanceMax, "
+            "sensorThickness, numberOfPixelsX, numberOfPixelsY "
+            "FROM Detector "
+            "WHERE detectorId = %s",
+            self._detectorid,
+        )
+        self._data = cursor.fetchone()
 
 
 def test_connection():

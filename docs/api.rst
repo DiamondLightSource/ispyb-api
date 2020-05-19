@@ -18,10 +18,16 @@ object-like representations of database entries:
 .. autoclass:: ispyb.model.interface.ObjectModelMixIn
     :members:
 
-DataCollection
-==============
+DataCollection and DataCollectionGroup
+======================================
 
 .. automodule:: ispyb.model.datacollection
+    :members:
+
+Detector
+========
+
+.. automodule:: ispyb.model.detector
     :members:
 
 ProcessingJob
