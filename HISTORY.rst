@@ -5,6 +5,11 @@ History
 Unreleased / master
 -------------------
 
+5.6.2 (2020-05-22)
+------------------
+
+* Add ispyb.model.detector.Detector model `#100 <https://github.com/DiamondLightSource/ispyb-api/pull/100>`_
+
 5.6.1 (2020-03-30)
 ------------------
 
