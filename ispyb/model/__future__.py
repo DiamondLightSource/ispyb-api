@@ -480,6 +480,7 @@ def _get_detector(self):
 
 
 def _get_sample_group(self):
+    # https://jira.diamond.ac.uk/browse/SCI-9379
     with _db_cc() as cursor:
         cursor.run(
             "SELECT blSampleGroupId, name "
@@ -510,6 +511,7 @@ def _get_sample_group(self):
 
 @property
 def _get_linked_sample_groups_for_dcid(self):
+    # https://jira.diamond.ac.uk/browse/SCI-9380
     import ispyb.model.samplegroup
 
     with _db_cc() as cursor:
