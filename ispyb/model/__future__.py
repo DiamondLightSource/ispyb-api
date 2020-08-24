@@ -158,6 +158,13 @@ def enable(configuration_file, section="ispyb"):
 
     ispyb.model.detector.Detector.reload = _get_detector
 
+    import ispyb.model.samplegroup
+
+    ispyb.model.samplegroup.SampleGroup.reload = _get_sample_group
+    ispyb.model.datacollection.DataCollection.sample_groups = (
+        _get_linked_sample_groups_for_dcid
+    )
+
 
 def _get_autoprocprogram(self):
     # https://jira.diamond.ac.uk/browse/SCI-7414
@@ -470,6 +477,55 @@ def _get_detector(self):
             self._detectorid,
         )
         self._data = cursor.fetchone()
+
+
+def _get_sample_group(self):
+    # https://jira.diamond.ac.uk/browse/SCI-9379
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT blSampleGroupId, name "
+            "FROM BLSampleGroup "
+            "WHERE blSampleGroupId = %s",
+            self.id,
+        )
+        self._data = cursor.fetchone()
+
+        # Get the samples belonging to this sample group
+        cursor.run(
+            "SELECT blSampleId FROM BLSampleGroup_has_BLSample "
+            "WHERE blSampleGroupId = %s "
+            "ORDER BY blSampleId",
+            self._data["blSampleGroupId"],
+        )
+        self._data["sample_ids"] = [row["blSampleId"] for row in cursor.fetchall()]
+
+        # Get the dcids associated with this sample group
+        cursor.run(
+            "SELECT dataCollectionId "
+            "FROM DataCollection "
+            "WHERE BLSAMPLEID in (%s) ",
+            ",".join(str(i) for i in self._data["sample_ids"]),
+        )
+        self._data["dcids"] = [row["dataCollectionId"] for row in cursor.fetchall()]
+
+
+@property
+def _get_linked_sample_groups_for_dcid(self):
+    # https://jira.diamond.ac.uk/browse/SCI-9380
+    import ispyb.model.samplegroup
+
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT b.blSampleGroupId as blSampleGroupId "
+            "FROM BLSampleGroup_has_BLSample b "
+            "INNER JOIN DataCollection d ON b.blSampleId = d.BLSAMPLEID "
+            "WHERE dataCollectionId = %s",
+            self._dcid,
+        )
+        return [
+            ispyb.model.samplegroup.SampleGroup(row["blSampleGroupId"], self._db)
+            for row in cursor.fetchall()
+        ]
 
 
 def test_connection():
