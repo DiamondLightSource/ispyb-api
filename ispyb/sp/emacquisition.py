@@ -103,10 +103,6 @@ class EMAcquisition(Acquisition):
         return copy.deepcopy(cls._motion_correction_params)
 
     @classmethod
-    def get_ctf_params(cls):
-        return copy.deepcopy(cls._ctf_params)
-
-    @classmethod
     def get_motion_correction_drift_params(cls):
         return copy.deepcopy(cls._motion_correction_drift_params)
 
@@ -120,9 +116,51 @@ class EMAcquisition(Acquisition):
             procname="upsert_motion_correction", args=values
         )
 
-    def insert_ctf(self, values):
-        """Store new ctf params."""
-        return self.get_connection().call_sp_write(procname="upsert_ctf", args=values)
+    def insert_ctf(
+        self,
+        ctf_id=None,
+        motion_correction_id=None,
+        auto_proc_program_id=None,
+        boxSizeX=None,
+        boxSizeY=None,
+        minResolution=None,
+        maxResolution=None,
+        minDefocus=None,
+        maxDefocus=None,
+        defocusStepSize=None,
+        astigmatism=None,
+        astigmatismAngle=None,
+        estimatedResolution=None,
+        estimatedDefocus=None,
+        amplitudeContrast=None,
+        ccValue=None,
+        fftTheoreticalFullPath=None,
+        comments=None,
+    ):
+        """Store new contrast transfer function parameters."""
+        return self.get_connection().call_sp_write(
+            procname="upsert_ctf",
+            args=[
+                ctf_id,
+                motion_correction_id,
+                auto_proc_program_id,
+                boxSizeX,
+                boxSizeY,
+                minResolution,
+                maxResolution,
+                minDefocus,
+                maxDefocus,
+                defocusStepSize,
+                astigmatism,
+                astigmatismAngle,
+                estimatedResolution,
+                estimatedDefocus,
+                amplitudeContrast,
+                ccValue,
+                fftTheoreticalFullPath,
+                comments,
+            ],
+        )
 
     def insert_motion_correction_drift(self, values):
         """Store new motion correction drift params."""
