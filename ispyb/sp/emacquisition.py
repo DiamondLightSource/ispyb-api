@@ -61,29 +61,6 @@ class EMAcquisition(Acquisition):
         ]
     )
 
-    _ctf_params = StrictOrderedDict(
-        [
-            ("ctfId", None),
-            ("motionCorrectionId", None),
-            ("autoProcProgramId", None),
-            ("boxSizeX", None),
-            ("boxSizeY", None),
-            ("minResolution", None),
-            ("maxResolution", None),
-            ("minDefocus", None),
-            ("maxDefocus", None),
-            ("defocusStepSize", None),
-            ("astigmatism", None),
-            ("astigmatismAngle", None),
-            ("estimatedResolution", None),
-            ("estimatedDefocus", None),
-            ("amplitudeContrast", None),
-            ("ccValue", None),
-            ("fftTheoreticalFullPath", None),
-            ("comments", None),
-        ]
-    )
-
     _motion_correction_drift_params = StrictOrderedDict(
         [
             ("motionCorrectionDriftId", None),
@@ -121,45 +98,45 @@ class EMAcquisition(Acquisition):
         ctf_id=None,
         motion_correction_id=None,
         auto_proc_program_id=None,
-        boxSizeX=None,
-        boxSizeY=None,
-        minResolution=None,
-        maxResolution=None,
-        minDefocus=None,
-        maxDefocus=None,
-        defocusStepSize=None,
+        box_size_x=None,
+        box_size_y=None,
+        min_resolution=None,
+        max_resolution=None,
+        min_defocus=None,
+        max_defocus=None,
+        defocus_step_size=None,
         astigmatism=None,
-        astigmatismAngle=None,
-        estimatedResolution=None,
-        estimatedDefocus=None,
-        amplitudeContrast=None,
-        ccValue=None,
-        fftTheoreticalFullPath=None,
+        astigmatism_angle=None,
+        estimated_resolution=None,
+        estimated_defocus=None,
+        amplitude_contrast=None,
+        cc_value=None,
+        fft_theoretical_full_path=None,
         comments=None,
     ):
         """Store new contrast transfer function parameters."""
         return self.get_connection().call_sp_write(
             procname="upsert_ctf",
-            args=[
+            args=(
                 ctf_id,
                 motion_correction_id,
                 auto_proc_program_id,
-                boxSizeX,
-                boxSizeY,
-                minResolution,
-                maxResolution,
-                minDefocus,
-                maxDefocus,
-                defocusStepSize,
+                box_size_x,
+                box_size_y,
+                min_resolution,
+                max_resolution,
+                min_defocus,
+                max_defocus,
+                defocus_step_size,
                 astigmatism,
-                astigmatismAngle,
-                estimatedResolution,
-                estimatedDefocus,
-                amplitudeContrast,
-                ccValue,
-                fftTheoreticalFullPath,
+                astigmatism_angle,
+                estimated_resolution,
+                estimated_defocus,
+                amplitude_contrast,
+                cc_value,
+                fft_theoretical_full_path,
                 comments,
-            ],
+            ),
         )
 
     def insert_motion_correction_drift(self, values):
