@@ -115,7 +115,7 @@ formatter = logging.Formatter(
 )
 hdlr = logging.StreamHandler(sys.stdout)
 hdlr.setFormatter(formatter)
-logging.getLogger().addHandler(hdlr)
+logger.addHandler(hdlr)
 
 log_file = None
 
@@ -126,9 +126,9 @@ try:
             filename=log_file, maxBytes=1000000, backupCount=10
         )  # 'a', 4194304, 10)
         hdlr2.setFormatter(formatter)
-        logging.getLogger().addHandler(hdlr2)
+        logger.addHandler(hdlr2)
 except Exception:
-    logging.getLogger().exception(
+    logger.exception(
         "dimple2ispyb.py: problem setting the file logging using file %s :-(" % log_file
     )
 
@@ -137,14 +137,13 @@ if len(sys.argv) != 4:
     sys.exit(1)
 
 with ispyb.open(sys.argv[1]) as conn:
-
     scaling_id = get_scaling_id(sys.argv[3])
 
     if scaling_id is not None:
         try:
             store_result(conn, sys.argv[2], scaling_id)
         except Exception:
-            logging.getLogger().exception(
+            logger.exception(
                 "dimple2ispyb.py: Problem extracting / storing the dimple result."
             )
             store_failure(conn, sys.argv[2], scaling_id)
