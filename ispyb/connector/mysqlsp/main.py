@@ -174,7 +174,7 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
             if len(rs) > 0:
                 try:
                     result = int(rs[0])
-                except:
+                except ValueError:
                     result = rs[0]
             cursor.close()
         return result

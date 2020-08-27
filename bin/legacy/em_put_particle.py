@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     def exit(code, message=None):
         dbconnection.disconnect()
-        if not message is None:
+        if message is not None:
             print(message)
         sys.exit(code)
 

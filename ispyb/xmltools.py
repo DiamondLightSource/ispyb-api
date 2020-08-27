@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function
 # XML-to-dict code from here:
 # http://code.activestate.com/recipes/410469-xml-as-dictionary/
 
+from collections import OrderedDict
 from xml.etree import ElementTree
 
 
@@ -69,7 +70,7 @@ class XmlDictConfig(dict):
                         currentValue = self[element.tag]
                         currentValue.append(aDict)
                         self.update({element.tag: currentValue})
-                    except:  # the first of its kind, an empty list must be created
+                    except Exception:  # the first of its kind, an empty list must be created
                         self.update(
                             {element.tag: [aDict]}
                         )  # aDict is written in [], i.e. it will be a list
@@ -151,7 +152,7 @@ def mx_data_reduction_to_ispyb(xmldict, dc_id=None, mxprocessing=None):
         job_id=job_id, name=programs, command=command
     )
 
-    if attachments != None:
+    if attachments is not None:
         params = mxprocessing.get_program_attachment_params()
         for attachment in attachments:
             params["parentid"] = app_id

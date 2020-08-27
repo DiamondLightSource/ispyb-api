@@ -43,7 +43,7 @@ def test_multi_threads_upsert(testdb):
 
 def test_retrieve_failure(testdb):
     with pytest.raises(ispyb.NoResult):
-        rs = testdb.mx_acquisition.retrieve_data_collection_main(0)
+        testdb.mx_acquisition.retrieve_data_collection_main(0)
 
 
 def test_database_reconnects_on_connection_failure(testconfig, testdb):

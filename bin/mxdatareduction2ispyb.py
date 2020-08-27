@@ -8,7 +8,7 @@
 # Script to store e.g. xia2 and fast_dp results using the ispyb_api.
 #
 
-from __future__ import print_function
+from __future__ import division, print_function
 import os
 import sys
 
@@ -32,7 +32,7 @@ with ispyb.open(conf_file) as conn:
     try:
         dc_id = int(open(os.path.join(xml_dir, ".dc_id"), "r").read())
         print("Got DC ID %d from file system" % dc_id)
-    except:
+    except Exception:
         dc_id = None
 
     mx_data_reduction_dict = xml_file_to_dict(xml_file)

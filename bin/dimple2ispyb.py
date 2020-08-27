@@ -91,7 +91,7 @@ def store_result(conn, dir, scaling_id):
             blobparam["view1"] = "blob{0}v1.png".format(n)
             blobparam["view2"] = "blob{0}v2.png".format(n)
             blobparam["view3"] = "blob{0}v3.png".format(n)
-            mrblob_id = mx_processing.upsert_run_blob(list(blobparam.values()))
+            mx_processing.upsert_run_blob(list(blobparam.values()))
 
 
 def store_failure(conn, run_dir, scaling_id):
@@ -104,7 +104,7 @@ def store_failure(conn, run_dir, scaling_id):
     params["success"] = 0
     params["message"] = "Unknown error"
     params["run_dir"] = run_dir
-    mr_id = mx_processing.upsert_run(list(params.values()))
+    mx_processing.upsert_run(list(params.values()))
 
 
 # Configure logging
@@ -125,9 +125,9 @@ try:
         hdlr2 = RotatingFileHandler(
             filename=log_file, maxBytes=1000000, backupCount=10
         )  # 'a', 4194304, 10)
-        hdlr2.setFormatter(_formatter)
+        hdlr2.setFormatter(formatter)
         logging.getLogger().addHandler(hdlr2)
-except:
+except Exception:
     logging.getLogger().exception(
         "dimple2ispyb.py: problem setting the file logging using file %s :-(" % log_file
     )
@@ -143,7 +143,7 @@ with ispyb.open(sys.argv[1]) as conn:
     if scaling_id is not None:
         try:
             store_result(conn, sys.argv[2], scaling_id)
-        except:
+        except Exception:
             logging.getLogger().exception(
                 "dimple2ispyb.py: Problem extracting / storing the dimple result."
             )
