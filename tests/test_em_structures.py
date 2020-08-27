@@ -65,10 +65,8 @@ def test_insert_ctf(testdb):
     params["dosePerFrame"] = 20
     motion_cor_id = emacquisition.insert_motion_correction(list(params.values()))
 
-    params = emacquisition.get_ctf_params()
-    params["motionCorrectionId"] = motion_cor_id
-    ctf_id = emacquisition.insert_ctf(list(params.values()))
-    assert ctf_id is not None
+    ctf_id = emacquisition.insert_ctf(motion_correction_id=motion_cor_id)
+    assert ctf_id
 
 
 def test_insert_drift(testdb):
