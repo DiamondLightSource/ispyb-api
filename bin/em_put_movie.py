@@ -12,9 +12,9 @@
 
 #
 
-from __future__ import print_function
-import datetime
+from __future__ import division, print_function
 import logging
+import optparse
 import sys
 from datetime import datetime
 
@@ -26,13 +26,11 @@ if __name__ == "__main__":
 
     def exit(code, message=None):
         conn.disconnect()
-        if not message is None:
+        if message:
             print(message)
         sys.exit(code)
 
     logging.info("test")
-
-    import optparse
 
     parser = optparse.OptionParser()
     parser.add_option(
@@ -188,7 +186,7 @@ if __name__ == "__main__":
         params["sampleid"] = opts.sampleid
         params["detectorid"] = opts.microscopeid
 
-        if not opts.filename is None:
+        if opts.filename is not None:
             imgdir = opts.filename[: opts.filename.rfind("/")]
 
             params["imgdir"] = imgdir
@@ -206,11 +204,11 @@ if __name__ == "__main__":
 
         start_time = None
         end_time = None
-        if not opts.stime is None:
+        if opts.stime is not None:
             params["starttime"] = datetime.datetime.strptime(
                 opts.stime, "%Y-%m-%d %H:%M:%S"
             )
-        if not opts.etime is None:
+        if opts.etime is not None:
             params["endtime"] = datetime.datetime.strptime(
                 opts.etime, "%Y-%m-%d %H:%M:%S"
             )

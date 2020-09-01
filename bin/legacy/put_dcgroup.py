@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
     def exit(code, message=None):
         dbconnection.disconnect()
-        if not message is None:
+        if message is not None:
             print(message)
         sys.exit(code)
 
@@ -88,16 +88,16 @@ if __name__ == "__main__":
 
     # Create a new data collection entry:
     params = mxacquisition.get_data_collection_group_params()
-    if not opts.id is None:
+    if opts.id is not None:
         params["id"] = int(opts.id)
     params["parentid"] = int(visitid)
-    if not opts.sampleid is None:
+    if opts.sampleid is not None:
         params["sampleid"] = int(opts.sampleid)
     # experimenttype must be one of the allowed values: None, 'SAD', 'SAD - Inverse Beam', 'OSC', 'Collect - Multiwedge', 'MAD', 'Helical', 'Multi-positional', 'Mesh',  'Burn', 'MAD - Inverse Beam', 'Screening', 'EM'
     params["experimenttype"] = opts.exp_type
-    if not opts.stime is None:
+    if opts.stime is not None:
         params["starttime"] = datetime.strptime(opts.stime, "%Y-%m-%d %H:%M:%S")
-    if not opts.etime is None:
+    if opts.etime is not None:
         params["endtime"] = datetime.strptime(opts.etime, "%Y-%m-%d %H:%M:%S")
     params["crystal_class"] = opts.crystal_class
     params["detector_mode"] = opts.detector_mode

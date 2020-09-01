@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     def exit(code, message=None):
         dbconnection.disconnect()
-        if not message is None:
+        if message is not None:
             print(message)
         sys.exit(code)
 
@@ -59,7 +59,7 @@ if __name__ == "__main__":
         exit(1, "ERROR: Invalid database")
 
     params = core.get_sample_params()
-    if not opts.sampleid is None:
+    if opts.sampleid is not None:
         params["id"] = int(opts.sampleid)
     params["name"] = opts.longname
     params["code"] = opts.shortname

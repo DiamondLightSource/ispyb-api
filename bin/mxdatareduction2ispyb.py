@@ -8,7 +8,7 @@
 # Script to store e.g. xia2 and fast_dp results using the ispyb_api.
 #
 
-from __future__ import print_function
+from __future__ import division, print_function
 import os
 import sys
 
@@ -30,9 +30,10 @@ with ispyb.open(conf_file) as conn:
     xml_dir = os.path.split(xml_file)[0]
     # Find the datacollection associated with this data reduction run
     try:
-        dc_id = int(open(os.path.join(xml_dir, ".dc_id"), "r").read())
+        with open(os.path.join(xml_dir, ".dc_id"), "r") as fh:
+            dc_id = int(fh.read())
         print("Got DC ID %d from file system" % dc_id)
-    except:
+    except Exception:
         dc_id = None
 
     mx_data_reduction_dict = xml_file_to_dict(xml_file)
@@ -50,6 +51,5 @@ with ispyb.open(conf_file) as conn:
             "<autoProcIntegrationId>%d</autoProcIntegrationId>"
             "<code>ok</code></dbstatus>" % (app_id, ap_id, scaling_id, integration_id)
         )
-        f = open(sys.argv[3], "w")
-        f.write(xml)
-        f.close()
+        with open(sys.argv[3], "w") as f:
+            f.write(xml)

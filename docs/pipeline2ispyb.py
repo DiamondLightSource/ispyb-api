@@ -87,7 +87,7 @@ with ispyb.open(sys.argv[1]) as conn:
 
     # Store results from XIA2 / MX data reduction pipelines
     app_id = mxprocessing.upsert_program_ex(
-        job_id=job_id,
+        job_id=1,
         name="xia2",
         command="xia2 -3dii ........",
         time_start=datetime.strptime("2014-09-24 14:30:01", "%Y-%m-%d %H:%M:%S"),

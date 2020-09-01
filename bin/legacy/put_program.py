@@ -7,8 +7,9 @@
 # Usage example:
 # python put_program.py --....
 
-from __future__ import print_function
+from __future__ import division, print_function
 import logging
+import optparse
 import sys
 
 # AutoProcProgram.processingStatus:
@@ -26,13 +27,11 @@ if __name__ == "__main__":
 
     def exit(code, message=None):
         dbconnection.disconnect()
-        if not message is None:
+        if message is not None:
             print(message)
         sys.exit(code)
 
     logging.info("test")
-
-    import optparse
 
     parser = optparse.OptionParser()
     parser.add_option("--id", dest="id", help="Id for program run", metavar="INTEGER")
@@ -81,15 +80,15 @@ if __name__ == "__main__":
 
     # Create / update a program entry:
     params = mxdatareduction.get_program_params()
-    if not opts.id is None:
+    if opts.id is not None:
         params["id"] = int(opts.id)
     params["cmd_line"] = opts.cmd_line
     params["programs"] = opts.programs
     params["status"] = opts.status
     params["message"] = opts.message
-    if not opts.stime is None:
+    if opts.stime is not None:
         params["starttime"] = datetime.strptime(opts.stime, "%Y-%m-%d %H:%M:%S")
-    if not opts.etime is None:
+    if opts.etime is not None:
         params["endtime"] = datetime.strptime(opts.etime, "%Y-%m-%d %H:%M:%S")
     params["environment"] = opts.envir
     #    params['filename1'] = ''
