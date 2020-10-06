@@ -5,6 +5,12 @@ History
 Unreleased / master
 -------------------
 
+5.7.0 (2020-10-06)
+------------------
+
+* Add ispyb.model.samplegroup `#104 <https://github.com/DiamondLightSource/ispyb-api/pull/104>`_
+* Rewrite EM insert_ctf() to accept parameters `#105 <https://github.com/DiamondLightSource/ispyb-api/pull/105>`_
+
 5.6.2 (2020-05-22)
 ------------------
 
