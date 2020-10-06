@@ -1,6 +1,6 @@
 ## How to prepare a release
 
-To prepare an ISPyB API release you need to install the package bump2version
+To prepare an ISPyB API release you need to install the package [bump2version](https://pypi.org/project/bump2version/):
 
 ```bash
 pip install bump2version
@@ -16,9 +16,12 @@ bumpversion major  # release version 2.0.0
 ```
 
 This automatically creates a release commit and a release tag.
-You then need to push those to the Github repository
+You then need to push both to the Github repository:
 ```bash
-git push; git push --tags
+git push  # pushes the release commit
+git push origin v2.0.0  # pushes the release tag for version 2.0.0
 ```
 
-The release is then created by Travis and uploaded directly onto pypi.
+Assuming the tests pass the release is then created by Travis and uploaded directly onto [pypi](https://pypi.org/project/ispyb/).
+
+The ISPyB API is also released on [conda-forge](https://github.com/conda-forge/ispyb-feedstock), the release process there will be triggered automatically within a few hours.
