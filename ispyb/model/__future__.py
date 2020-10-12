@@ -512,7 +512,8 @@ def _get_linked_sample_for_dcid(self):
 
     with _db_cc() as cursor:
         cursor.run(
-            f"SELECT blSampleId FROM DataCollection WHERE dataCollectionId = {self._dcid}"
+            "SELECT blSampleId FROM DataCollection WHERE dataCollectionId = %s"
+            % self._dcid
         )
         data = cursor.fetchone()
         if data["blSampleId"]:
