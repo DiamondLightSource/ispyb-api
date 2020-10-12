@@ -51,3 +51,9 @@ SampleGroup #6
   DCIDs      : 1066786\
 """
     )
+
+
+def test_get_sample_group(testdb, testconfig):
+    sample_group = testdb.get_sample_group(5)
+    assert isinstance(sample_group, ispyb.model.samplegroup.SampleGroup)
+    assert sample_group.id == 5

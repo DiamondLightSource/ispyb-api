@@ -51,3 +51,9 @@ Sample #398810
   DCIDs        : 1066786\
 """
     )
+
+
+def test_get_sample(testdb, testconfig):
+    sample = testdb.get_sample(398810)
+    assert isinstance(sample, ispyb.model.sample.Sample)
+    assert sample.id == 398810
