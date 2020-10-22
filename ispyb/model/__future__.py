@@ -500,7 +500,7 @@ def _get_sample(self):
         cursor.run(
             "SELECT dataCollectionId "
             "FROM DataCollection "
-            "WHERE BLSAMPLEID = %s " % self._data["blSampleId"]
+            "WHERE BLSAMPLEID = %s ", self._data["blSampleId"]
         )
         self._data["dcids"] = [row["dataCollectionId"] for row in cursor.fetchall()]
 
