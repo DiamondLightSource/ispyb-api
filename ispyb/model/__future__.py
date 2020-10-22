@@ -485,7 +485,7 @@ def _get_detector(self):
 
 
 def _get_sample(self):
-    # https://jira.diamond.ac.uk/browse/SCI-XXXX
+    # https://jira.diamond.ac.uk/browse/SCI-9502
     with _db_cc() as cursor:
         cursor.run(
             "SELECT blSampleId, name, "
@@ -498,22 +498,21 @@ def _get_sample(self):
 
         # Get the dcids associated with this sample group
         cursor.run(
-            "SELECT dataCollectionId "
-            "FROM DataCollection "
-            "WHERE BLSAMPLEID = %s ", self._data["blSampleId"]
+            "SELECT dataCollectionId FROM DataCollection WHERE BLSAMPLEID = %s ",
+            self._data["blSampleId"],
         )
         self._data["dcids"] = [row["dataCollectionId"] for row in cursor.fetchall()]
 
 
 @property
 def _get_linked_sample_for_dcid(self):
-    # https://jira.diamond.ac.uk/browse/SCI-XXXX
+    # https://jira.diamond.ac.uk/browse/SCI-9503
     import ispyb.model.sample
 
     with _db_cc() as cursor:
         cursor.run(
             "SELECT blSampleId FROM DataCollection WHERE dataCollectionId = %s",
-            self._dcid
+            self._dcid,
         )
         data = cursor.fetchone()
         if data["blSampleId"]:
