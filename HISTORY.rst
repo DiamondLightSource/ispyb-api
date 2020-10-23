@@ -5,6 +5,11 @@ History
 Unreleased / master
 -------------------
 
+5.7.1 (2020-10-23)
+------------------
+
+* Add ispyb.model.sample `#110 <https://github.com/DiamondLightSource/ispyb-api/pull/110>`_
+
 5.7.0 (2020-10-06)
 ------------------
 
