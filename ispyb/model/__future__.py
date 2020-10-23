@@ -158,6 +158,11 @@ def enable(configuration_file, section="ispyb"):
 
     ispyb.model.detector.Detector.reload = _get_detector
 
+    import ispyb.model.sample
+
+    ispyb.model.sample.Sample.reload = _get_sample
+    ispyb.model.datacollection.DataCollection.sample = _get_linked_sample_for_dcid
+
     import ispyb.model.samplegroup
 
     ispyb.model.samplegroup.SampleGroup.reload = _get_sample_group
@@ -477,6 +482,41 @@ def _get_detector(self):
             self._detectorid,
         )
         self._data = cursor.fetchone()
+
+
+def _get_sample(self):
+    # https://jira.diamond.ac.uk/browse/SCI-9502
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT blSampleId, name, "
+            "crystalId, containerId "
+            "FROM BLSample "
+            "WHERE blSampleId = %s",
+            self.id,
+        )
+        self._data = cursor.fetchone()
+
+        # Get the dcids associated with this sample group
+        cursor.run(
+            "SELECT dataCollectionId FROM DataCollection WHERE BLSAMPLEID = %s ",
+            self._data["blSampleId"],
+        )
+        self._data["dcids"] = [row["dataCollectionId"] for row in cursor.fetchall()]
+
+
+@property
+def _get_linked_sample_for_dcid(self):
+    # https://jira.diamond.ac.uk/browse/SCI-9503
+    import ispyb.model.sample
+
+    with _db_cc() as cursor:
+        cursor.run(
+            "SELECT blSampleId FROM DataCollection WHERE dataCollectionId = %s",
+            self._dcid,
+        )
+        data = cursor.fetchone()
+        if data["blSampleId"]:
+            return ispyb.model.sample.Sample(data["blSampleId"], self._db)
 
 
 def _get_sample_group(self):

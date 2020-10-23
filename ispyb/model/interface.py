@@ -4,6 +4,8 @@ import ispyb.model.datacollection
 import ispyb.model.detector
 import ispyb.model.processingprogram
 import ispyb.model.processingjob
+import ispyb.model.sample
+import ispyb.model.samplegroup
 import ispyb.model.screening
 
 
@@ -69,3 +71,11 @@ class ObjectModelMixIn:
     def get_detector(self, detectorid):
         """Return a Detector object representing a Detector database entry."""
         return ispyb.model.detector.Detector(detectorid, self)
+
+    def get_sample(self, sample_id):
+        """Return a Sample object representing a BLSample database entry."""
+        return ispyb.model.sample.Sample(sample_id, self)
+
+    def get_sample_group(self, sample_group_id):
+        """Return a Sample object representing a BLSample database entry."""
+        return ispyb.model.samplegroup.SampleGroup(sample_group_id, self)

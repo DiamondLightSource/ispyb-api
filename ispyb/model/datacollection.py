@@ -64,6 +64,11 @@ class DataCollection(ispyb.model.DBCache):
         raise NotImplementedError("TODO: Not implemented yet")
 
     @property
+    def sample(self):
+        """Returns the Sample associated with this DC."""
+        raise NotImplementedError("TODO: Not implemented yet")
+
+    @property
     def sample_groups(self):
         """Returns the list of SampleGroups associated with this DC."""
         raise NotImplementedError("TODO: Not implemented yet")
