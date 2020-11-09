@@ -143,8 +143,10 @@ def test_processing2(testdb):
     assert rs is not None
     assert len(rs) > 0
 
-    pa = mxprocessing.retrieve_program_attachments_for_data_collection_group_and_program(
-        996311, "xia2 dials"
+    pa = (
+        mxprocessing.retrieve_program_attachments_for_data_collection_group_and_program(
+            996311, "xia2 dials"
+        )
     )
     assert len(pa) > 0
 
@@ -301,3 +303,83 @@ def test_sample_image_scoring(testdb):
     mxprocessing.upsert_sample_image_auto_score(
         "/dls/i03/data/2016/cm1234-5/something.jpg", "MARCO", "crystal", 0.65
     )
+
+
+def test_insert_phasing_analysis_results(testdb):
+    phasing_results_d = {
+        "PhasingContainer": {
+            "PhasingAnalysis": {"recordTimeStamp": "2020-10-28 17:09:01"},
+            "PhasingProgramRun": {
+                "phasingCommandLine": "/dls_sw/apps/fast_ep/20200414/fast_ep/src/fast_ep.py machines=40 cpu=12 json=fast_ep.json xml=fast_ep.xml sge_project=i04 data=/path/to/fast_dp/fast_dp.mtz",
+                "phasingPrograms": "fast_ep",
+                "phasingStatus": "1",
+            },
+            "PhasingProgramAttachment": [
+                {
+                    "fileType": "Logfile",
+                    "fileName": "fastep_report.html",
+                    "filePath": "/path/to/fast_ep",
+                    "recordTimeStamp": "2020-10-28 17:09:01",
+                },
+                {
+                    "fileType": "Map",
+                    "fileName": "sad.mtz",
+                    "filePath": "/path/to/fast_ep",
+                    "recordTimeStamp": "2020-10-28 17:09:01",
+                },
+                {
+                    "fileType": "PDB",
+                    "fileName": "sad.pdb",
+                    "filePath": "/path/to/fast_ep",
+                    "recordTimeStamp": "2020-10-28 17:09:01",
+                },
+            ],
+            "Phasing": {
+                "spaceGroupId": "199",
+                "method": "shelxe",
+                "solventContent": "0.350000",
+                "enantiomorph": "0",
+                "lowRes": "27.455541",
+                "highRes": "2.203506",
+            },
+            "PreparePhasingData": {
+                "spaceGroupId": "197",
+                "lowRes": "27.455541",
+                "highRes": "2.203506",
+            },
+            "SubstructureDetermination": {
+                "spaceGroupId": "199",
+                "method": "SAD",
+                "lowRes": "27.455541",
+                "highRes": "2.203506",
+            },
+            "Phasing_has_ScalingContainer": {
+                "Phasing_has_Scaling": "None",
+                "PhasingStatistics": [
+                    {
+                        "numberOfBins": "10",
+                        "binNumber": "1",
+                        "lowRes": "27.455541",
+                        "highRes": "4.820000",
+                        "metric": "FOM",
+                        "statisticsValue": "0.702000",
+                        "nReflections": "408",
+                    },
+                    {
+                        "numberOfBins": "10",
+                        "binNumber": "2",
+                        "lowRes": "4.820000",
+                        "highRes": "3.820000",
+                        "metric": "FOM",
+                        "statisticsValue": "0.680000",
+                        "nReflections": "406",
+                    },
+                ],
+            },
+        }
+    }
+
+    phasing_id = testdb.mx_processing.insert_phasing_analysis_results(
+        phasing_results_d, 596133
+    )
+    assert phasing_id and phasing_id > 0
