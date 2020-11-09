@@ -398,8 +398,8 @@ class MXProcessing(ispyb.interface.processing.IF):
             args=[image_full_path, schema_name, score_class, probability],
         )
 
-    def insert_phasing_analysis_results(self, phasing_results, autoProcId):
+    def insert_phasing_analysis_results(self, phasing_results, scaling_id):
         return self.get_connection().call_sp_write(
             "insert_phasing_analysis_results",
-            args=[None, json.dumps(phasing_results), autoProcId],
+            args=[None, json.dumps(phasing_results), scaling_id],
         )
