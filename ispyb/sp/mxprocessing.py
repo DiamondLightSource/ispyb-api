@@ -8,6 +8,7 @@
 #
 
 import copy
+import json
 
 import ispyb.interface.processing
 from ispyb.strictordereddict import StrictOrderedDict
@@ -395,4 +396,10 @@ class MXProcessing(ispyb.interface.processing.IF):
         self.get_connection().call_sp_write(
             procname="upsert_sample_image_auto_score",
             args=[image_full_path, schema_name, score_class, probability],
+        )
+
+    def insert_phasing_analysis_results(self, phasing_results, scaling_id):
+        return self.get_connection().call_sp_write(
+            "insert_phasing_analysis_results",
+            args=[None, json.dumps(phasing_results), scaling_id],
         )
