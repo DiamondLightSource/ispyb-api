@@ -5,6 +5,11 @@ History
 Unreleased / master
 -------------------
 
+5.8.0 (2020-11-10)
+------------------
+
+* New method insert_phasing_analysis_results `#111 <https://github.com/DiamondLightSource/ispyb-api/pull/111>`_ (requires ispyb-database 1.15.0)
+
 5.7.1 (2020-10-23)
 ------------------
 
