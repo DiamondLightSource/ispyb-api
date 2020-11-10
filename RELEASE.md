@@ -1,5 +1,7 @@
 ## How to prepare a release
 
+First, ensure that you have updated `HISTORY.rst` with the changes for the new release and committed the changes.
+
 To prepare an ISPyB API release you need to install the package [bump2version](https://pypi.org/project/bump2version/):
 
 ```bash
