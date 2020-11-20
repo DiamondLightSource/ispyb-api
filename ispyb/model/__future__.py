@@ -543,8 +543,8 @@ def _get_sample_group(self):
         cursor.run(
             "SELECT dataCollectionId "
             "FROM DataCollection "
-            "WHERE BLSAMPLEID in (%s) ",
-            ",".join(str(i) for i in self._data["sample_ids"]),
+            "WHERE BLSAMPLEID in (%s) "
+            % ",".join(str(i) for i in self._data["sample_ids"]),
         )
         self._data["dcids"] = [row["dataCollectionId"] for row in cursor.fetchall()]
 
