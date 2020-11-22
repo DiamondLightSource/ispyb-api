@@ -5,6 +5,11 @@ History
 Unreleased / master
 -------------------
 
+5.8.1 (2020-11-22)
+------------------
+
+* ispyb.model.sample_group bug fix obtaining linked dcids
+
 5.8.0 (2020-11-10)
 ------------------
 
