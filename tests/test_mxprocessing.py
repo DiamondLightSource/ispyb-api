@@ -149,7 +149,8 @@ def test_processing2(testdb):
         )
     )
     assert len(pa) > 0
-    assert pa[0]["importanceRank"] is None
+    for attachment in pa[0]["processingAttachments"]:
+        assert attachment["importanceRank"] is None
 
     # Find program using the processing job ID and verify stored values
     programs = testdb.get_processing_job(5).programs

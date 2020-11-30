@@ -352,10 +352,13 @@ class MXProcessing(ispyb.interface.processing.IF):
         self, id, program, auth_login=None
     ):
         """Retrieve the processing program attachments associated with the given data collection group and processing program"""
-        return self.get_connection().call_sp_retrieve(
+        result = self.get_connection().call_sp_retrieve(
             procname="retrieve_processing_program_attachments_for_dc_group_program_v2",
             args=(id, program, auth_login),
         )
+        for r in result:
+            r["processingAttachments"] = json.loads(r["processingAttachments"])
+        return result
 
     def retrieve_program_attachments_for_program_id(self, id, auth_login=None):
         """Retrieve the processing program attachments associated with the given processing program ID"""
