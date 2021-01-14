@@ -4,6 +4,10 @@ History
 
 Unreleased / master
 -------------------
+5.9.0 (2021-01-14)
+------------------
+
+* New method insert_subsample_for_image_full_path `#114 <https://github.com/DiamondLightSource/ispyb-api/pull/114>`_ (requires ispyb-database 1.17.2)
 
 5.8.1 (2020-11-22)
 ------------------
