@@ -49,6 +49,38 @@ class XtalImaging(DataArea):
             args=[image_full_path, schema_name, score_class, probability],
         )
 
+    def insert_subsample_for_image_full_path(
+        self,
+        image_full_path,
+        source,
+        position1x,
+        position1y,
+        position2x=None,
+        position2y=None,
+    ):
+        """Store new subsample for a given sample image.
+
+        :param image_full_path: The full path to the sample image
+        :param source: manual or auto
+        :param position1x:
+        :param position1y:
+        :param position2x:
+        :param position2y:
+        """
+        id = None
+        return self.get_connection().call_sp_write(
+            procname="insert_subsample_for_image_full_path",
+            args=[
+                id,
+                image_full_path,
+                source,
+                position1x,
+                position1y,
+                position2x,
+                position2y,
+            ],
+        )
+
     def retrieve_container_for_barcode(self, barcode):
         """Retrieve info about the container indetified by the give barcode."""
         return self.get_connection().call_sp_retrieve(

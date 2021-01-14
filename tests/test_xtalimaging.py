@@ -37,3 +37,21 @@ def test_xtal_imaging(testdb):
 
     assert cid2 is not None
     assert cid2 == 34874
+
+    ssid = xtalimaging.insert_subsample_for_image_full_path(
+        image_full_path=si_full_path,
+        source="auto",
+        position1x=3.04,
+        position1y=6.13,
+    )
+    assert ssid is not None
+
+    ssid2 = xtalimaging.insert_subsample_for_image_full_path(
+        image_full_path=si_full_path,
+        source="auto",
+        position1x=3.04,
+        position1y=6.13,
+        position2x=4.5,
+        position2y=7.8,
+    )
+    assert ssid2 is not None
