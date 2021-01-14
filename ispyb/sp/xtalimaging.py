@@ -62,10 +62,10 @@ class XtalImaging(DataArea):
 
         :param image_full_path: The full path to the sample image
         :param source: manual or auto
-        :param position1x:
-        :param position1y:
-        :param position2x:
-        :param position2y:
+        :param position1x: x component of position, or if position2x,y given, then x component of top left corner of ROI box
+        :param position1y: y component of position, or if position2x,y given, then y component of top left corner of ROI box
+        :param position2x: x component of lower right corner of ROI box
+        :param position2y: y component of lower right corner of ROI box
         """
         id = None
         return self.get_connection().call_sp_write(
