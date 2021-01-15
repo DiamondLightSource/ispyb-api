@@ -41,17 +41,17 @@ def test_xtal_imaging(testdb):
     ssid = xtalimaging.insert_subsample_for_image_full_path(
         image_full_path=si_full_path,
         source="auto",
-        position1x=3.04,
-        position1y=6.13,
+        position1x=304,
+        position1y=621,
     )
     assert ssid is not None
 
     ssid2 = xtalimaging.insert_subsample_for_image_full_path(
         image_full_path=si_full_path,
         source="auto",
-        position1x=3.04,
-        position1y=6.13,
-        position2x=4.5,
-        position2y=7.8,
+        position1x=391,
+        position1y=687,
+        position2x=473,
+        position2y=744,
     )
     assert ssid2 is not None
