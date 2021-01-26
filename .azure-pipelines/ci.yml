@@ -5,6 +5,11 @@ steps:
   displayName: 'Use Python $(PYTHON_VERSION)'
 
 - script: |
+    wget -t 3 -w 60 --random-wait https://github.com/DiamondLightSource/ispyb-database/releases/download/v1.17.2/ispyb-database-1.17.2.tar.gz
+    tar xvfz ispyb-database-1.17.2.tar.gz
+  displayName: Get test database schema
+
+- script: |
     printf 'Waiting for MySQL database to accept connections'
     until mysql --host=127.0.0.1 --user=root --password=superSecret123 --execute "SHOW DATABASES"; do
       printf '.'
@@ -13,33 +18,32 @@ steps:
   displayName: Wait for database to initialise
 
 - script: |
+    mysql --host=127.0.0.1 --user=root --password=superSecret123 -u root -e "CREATE DATABASE ispybtest; SET GLOBAL log_bin_trust_function_creators=ON;"
+    mysql --host=127.0.0.1 --user=root --password=superSecret123 -u root -D ispybtest < schemas/ispyb/tables.sql
+    mysql --host=127.0.0.1 --user=root --password=superSecret123 -u root -D ispybtest < schemas/ispyb/lookups.sql
+    mysql --host=127.0.0.1 --user=root --password=superSecret123 -u root -D ispybtest < schemas/ispyb/data.sql
+    mysql --host=127.0.0.1 --user=root --password=superSecret123 -u root -D ispybtest < schemas/ispyb/routines.sql
+    mysql --host=127.0.0.1 --user=root --password=superSecret123 -u root -D ispybtest < grants/ispyb_processing.sql
+    mysql --host=127.0.0.1 --user=root --password=superSecret123 -u root -D ispybtest < grants/ispyb_import.sql
+    mysql --host=127.0.0.1 --user=root --password=superSecret123 -u root -e "CREATE USER ispyb_api@'%' IDENTIFIED BY 'password_1234'; GRANT ispyb_processing to ispyb_api@'%'; GRANT ispyb_import to ispyb_api@'%'; SET DEFAULT ROLE ispyb_processing FOR ispyb_api@'%';"
+    mysql --host=127.0.0.1 --user=root --password=superSecret123 -u root -e "CREATE USER ispyb_api_future@'%' IDENTIFIED BY 'password_4321'; GRANT SELECT ON ispybtest.* to ispyb_api_future@'%';"
     mysql --host=127.0.0.1 --user=root --password=superSecret123 --execute "SHOW DATABASES;"
-#    mysql -u root -e "CREATE DATABASE ispybtest; SET GLOBAL log_bin_trust_function_creators=ON;"
-  displayName: Show databases
+  displayName: Set up test database
 
-#- script: |
-#    wget -t 3 -w 60 --random-wait https://github.com/DiamondLightSource/ispyb-database/releases/download/v1.17.2/ispyb-database-1.17.2.tar.gz
-#    tar xvfz ispyb-database-1.17.2.tar.gz
-#    mysql_upgrade -u root
-#    mysql -u root -e "CREATE DATABASE ispybtest; SET GLOBAL log_bin_trust_function_creators=ON;"
-#    mysql -u root -D ispybtest < schemas/ispyb/tables.sql
-#    mysql -u root -D ispybtest < schemas/ispyb/lookups.sql
-#    mysql -u root -D ispybtest < schemas/ispyb/data.sql
-#    mysql -u root -D ispybtest < schemas/ispyb/routines.sql
-#    mysql -u root -D ispybtest < grants/ispyb_processing.sql
-#    mysql -u root -D ispybtest < grants/ispyb_import.sql
-#    mysql -u root -e "CREATE USER ispyb_api@'localhost' IDENTIFIED BY 'password_1234'; GRANT ispyb_processing to ispyb_api@'localhost'; GRANT ispyb_import to ispyb_api@'localhost'; SET DEFAULT ROLE ispyb_processing FOR ispyb_api@'localhost';"
-#    mysql -u root -e "CREATE USER ispyb_api_future@'localhost' IDENTIFIED BY 'password_4321'; GRANT SELECT ON ispybtest.* to ispyb_api_future@'localhost';"
-#
-#- script: |
-#    python -m pip install --upgrade pip
-#    pip install tox
-#  displayName: "Set up tox"
-#
-#- script: |
-#    tox -e azure
-#  displayName: "Run tests"
-#
+- script: |
+    cp conf/config.example.cfg conf/config.cfg
+    cp conf/ws_config.example.cfg conf/ws_config.cfg
+  displayName: Set up test configuration
+
+- script: |
+    pip install .
+    pip install coveralls
+  displayName: Install package
+
+- script: |
+    coverage run --source=ispyb setup.py test
+  displayName: Run tests
+
 #- task: PublishTestResults@2
 #  condition: succeededOrFailed()
 #  inputs:
