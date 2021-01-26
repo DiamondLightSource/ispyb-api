@@ -67,8 +67,8 @@ steps:
     coverage run --source=ispyb setup.py test
   displayName: Run tests
 
-#- task: PublishTestResults@2
-#  condition: succeededOrFailed()
-#  inputs:
-#    testResultsFiles: '**/test-*.xml'
-#    testRunTitle: 'Publish test results for Python $(PYTHON_VERSION)'
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testResultsFiles: '$(Pipeline.Workspace)/src/**/test-*.xml'
+    testRunTitle: 'Publish test results for Python $(PYTHON_VERSION)'

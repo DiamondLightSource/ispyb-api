@@ -17,30 +17,30 @@ resources:
     - 3306:3306
 
 stages:
-#- stage: static
-#  displayName: Static Analysis
-#  jobs:
-#  - job: checks
-#    displayName: static code analysis
-#    pool:
-#      vmImage: ubuntu-20.04
-#    steps:
-#      # Use Python >=3.7 for syntax validation
-#      - task: UsePythonVersion@0
-#        displayName: Set up python
-#        inputs:
-#          versionSpec: 3.7
-#
-#      # Run syntax validation on a shallow clone
-#      - bash: |
-#          python .azure-pipelines/syntax-validation.py
-#        displayName: Syntax validation
-#
-#      # Run flake8 validation on a shallow clone
-#      - bash: |
-#          pip install flake8
-#          python .azure-pipelines/flake8-validation.py
-#        displayName: Flake8 validation
+- stage: static
+  displayName: Static Analysis
+  jobs:
+  - job: checks
+    displayName: static code analysis
+    pool:
+      vmImage: ubuntu-20.04
+    steps:
+      # Use Python >=3.7 for syntax validation
+      - task: UsePythonVersion@0
+        displayName: Set up python
+        inputs:
+          versionSpec: 3.7
+
+      # Run syntax validation on a shallow clone
+      - bash: |
+          python .azure-pipelines/syntax-validation.py
+        displayName: Syntax validation
+
+      # Run flake8 validation on a shallow clone
+      - bash: |
+          pip install flake8
+          python .azure-pipelines/flake8-validation.py
+        displayName: Flake8 validation
 
 - stage: build
   displayName: Build
@@ -83,6 +83,7 @@ stages:
 - stage: tests
   displayName: Run unit tests
   dependsOn:
+  - static
   - build
   jobs:
   - job: linux
@@ -92,8 +93,8 @@ stages:
       matrix:
         python36:
           PYTHON_VERSION: 3.6
-#        python37:
-#          PYTHON_VERSION: 3.7
+        python37:
+          PYTHON_VERSION: 3.7
 #        python38:
 #          PYTHON_VERSION: 3.8
 #        python39:
