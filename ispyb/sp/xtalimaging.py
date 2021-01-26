@@ -59,7 +59,7 @@ class XtalImaging(DataArea):
         position2y=None,
     ):
         """Store new subsample for a given sample image.
-        
+
         Either specify a point (by providing position1x and position1y)
         or a ROI box (by additionally providing position2x and position2y).
         Position coordinates are given in pixels from the top-left corner

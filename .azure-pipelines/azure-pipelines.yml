@@ -26,12 +26,12 @@ stages:
           python .azure-pipelines/syntax-validation.py
         displayName: Syntax validation
 
-#      # Run flake8 validation on a shallow clone
-#      - bash: |
-#          pip install flake8
-#          python .azure-pipelines/flake8-validation.py
-#        displayName: Flake8 validation
-#
+      # Run flake8 validation on a shallow clone
+      - bash: |
+          pip install flake8
+          python .azure-pipelines/flake8-validation.py
+        displayName: Flake8 validation
+
 #- stage: tests
 #  displayName: Run unit tests
 #  jobs:
