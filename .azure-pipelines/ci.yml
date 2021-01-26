@@ -1,46 +1,69 @@
 steps:
+- checkout: none
+
 - task: UsePythonVersion@0
   inputs:
     versionSpec: '$(PYTHON_VERSION)'
   displayName: 'Use Python $(PYTHON_VERSION)'
 
-- script: |
-    wget -t 3 -w 60 --random-wait https://github.com/DiamondLightSource/ispyb-database/releases/download/v1.17.2/ispyb-database-1.17.2.tar.gz
-    tar xvfz ispyb-database-1.17.2.tar.gz
-  displayName: Get test database schema
+- task: DownloadBuildArtifacts@0
+  displayName: Get pre-built package
+  inputs:
+    buildType: 'current'
+    downloadType: 'single'
+    artifactName: 'package'
+    downloadPath: '$(System.ArtifactsDirectory)'
+
+- task: ExtractFiles@1
+  displayName: Checkout sources
+  inputs:
+    archiveFilePatterns: "$(System.ArtifactsDirectory)/package/repo-source.tar.gz"
+    destinationFolder: "$(Pipeline.Workspace)/src"
 
 - script: |
-    printf 'Waiting for MySQL database to accept connections'
-    until mysql --host=127.0.0.1 --user=root --password=superSecret123 --execute "SHOW DATABASES"; do
-      printf '.'
-      sleep 1;
-    done;
-  displayName: Wait for database to initialise
-
-- script: |
-    mysql --host=127.0.0.1 --user=root --password=superSecret123 -u root -e "CREATE DATABASE ispybtest; SET GLOBAL log_bin_trust_function_creators=ON;"
-    mysql --host=127.0.0.1 --user=root --password=superSecret123 -u root -D ispybtest < schemas/ispyb/tables.sql
-    mysql --host=127.0.0.1 --user=root --password=superSecret123 -u root -D ispybtest < schemas/ispyb/lookups.sql
-    mysql --host=127.0.0.1 --user=root --password=superSecret123 -u root -D ispybtest < schemas/ispyb/data.sql
-    mysql --host=127.0.0.1 --user=root --password=superSecret123 -u root -D ispybtest < schemas/ispyb/routines.sql
-    mysql --host=127.0.0.1 --user=root --password=superSecret123 -u root -D ispybtest < grants/ispyb_processing.sql
-    mysql --host=127.0.0.1 --user=root --password=superSecret123 -u root -D ispybtest < grants/ispyb_import.sql
-    mysql --host=127.0.0.1 --user=root --password=superSecret123 -u root -e "CREATE USER ispyb_api@'%' IDENTIFIED BY 'password_1234'; GRANT ispyb_processing to ispyb_api@'%'; GRANT ispyb_import to ispyb_api@'%'; SET DEFAULT ROLE ispyb_processing FOR ispyb_api@'%';"
-    mysql --host=127.0.0.1 --user=root --password=superSecret123 -u root -e "CREATE USER ispyb_api_future@'%' IDENTIFIED BY 'password_4321'; GRANT SELECT ON ispybtest.* to ispyb_api_future@'%';"
-    mysql --host=127.0.0.1 --user=root --password=superSecret123 --execute "SHOW DATABASES;"
-  displayName: Set up test database
-
-- script: |
-    cp conf/config.example.cfg conf/config.cfg
-    cp conf/ws_config.example.cfg conf/ws_config.cfg
-  displayName: Set up test configuration
-
-- script: |
-    pip install .
+    pip install "$(Pipeline.Workspace)/src"
     pip install coveralls
   displayName: Install package
 
 - script: |
+    set -eu
+    cat >~/.my.cnf <<EOF
+    [client]
+    user=root
+    host=127.0.0.1
+    password=mysql_root_pwd
+    database=ispybtest
+    EOF
+
+    cp "$(Pipeline.Workspace)/src/conf/config.example.cfg" "$(Pipeline.Workspace)/src/conf/config.cfg"
+    cp "$(Pipeline.Workspace)/src/conf/ws_config.example.cfg" "$(Pipeline.Workspace)/src/conf/ws_config.cfg"
+
+    mkdir schema
+    cd schema
+    tar xfz "$(System.ArtifactsDirectory)/package/ispyb-database.tar.gz"
+
+    printf 'Waiting for MySQL database to accept connections'
+    until mysql -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 0.5; done
+    printf '\n'
+
+    mysql -e "SET GLOBAL log_bin_trust_function_creators = 1;"
+    for f in schemas/ispyb/tables.sql \
+             schemas/ispyb/lookups.sql \
+             schemas/ispyb/data.sql \
+             schemas/ispyb/routines.sql \
+             grants/ispyb_processing.sql \
+             grants/ispyb_import.sql; do
+        echo Importing ${f}...
+        mysql < $f
+    done
+    mysql -e "CREATE USER ispyb_api@'%' IDENTIFIED BY 'password_1234'; GRANT ispyb_processing to ispyb_api@'%'; GRANT ispyb_import to ispyb_api@'%'; SET DEFAULT ROLE ispyb_processing FOR ispyb_api@'%';"
+    mysql -e "CREATE USER ispyb_api_future@'%' IDENTIFIED BY 'password_4321'; GRANT SELECT ON ispybtest.* to ispyb_api_future@'%';"
+    rm ~/.my.cnf
+  displayName: Set up test database
+
+- script: |
+    cd "$(Pipeline.Workspace)/src"
+    export PYTHONDEVMODE=1
     coverage run --source=ispyb setup.py test
   displayName: Run tests
 

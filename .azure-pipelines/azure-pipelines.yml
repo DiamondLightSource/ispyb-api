@@ -9,10 +9,10 @@ trigger:
 resources:
   containers:
   - container: mariadb
-    image: mariadb:10.3
+    image: mariadb:10.5
     env:
-      MYSQL_DATABASE: my_app_test
-      MYSQL_ROOT_PASSWORD: superSecret123
+      MYSQL_DATABASE: ispybtest
+      MYSQL_ROOT_PASSWORD: mysql_root_pwd
     ports:
     - 3306:3306
 
@@ -41,7 +41,6 @@ stages:
 #          pip install flake8
 #          python .azure-pipelines/flake8-validation.py
 #        displayName: Flake8 validation
-#
 
 - stage: build
   displayName: Build
@@ -67,6 +66,10 @@ stages:
           git archive HEAD | gzip > dist/repo-source.tar.gz
           ls -la dist
         displayName: Build python package
+
+      - bash: |
+          wget -t 3 --waitretry=20 https://github.com/DiamondLightSource/ispyb-database/releases/download/v1.17.2/ispyb-database-1.17.2.tar.gz -O dist/ispyb-database.tar.gz
+        displayName: Download ISPyB DB schema for tests
 
       - task: PublishBuildArtifacts@1
         displayName: Store artifact
