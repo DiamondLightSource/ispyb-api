@@ -57,14 +57,18 @@ stages:
           versionSpec: 3.9
 
       - bash: |
+          pip install -U pip
           pip install collective.checkdocs wheel
         displayName: Install dependencies
 
       - bash: |
-          set -e
+          set -ex
           python setup.py sdist bdist_wheel
+          mkdir -p dist/pypi
+          shopt -s extglob
+          mv -v dist/!(pypi) dist/pypi
           git archive HEAD | gzip > dist/repo-source.tar.gz
-          ls -la dist
+          ls -laR dist
         displayName: Build python package
 
       - bash: |
@@ -108,42 +112,43 @@ stages:
     steps:
     - template: ci.yml
 
-#- stage: deploy
-#  displayName: Publish release
-#  dependsOn:
-#  - tests
-#  - static
-#  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
-#  jobs:
-#  - job: pypi
-#    displayName: Publish pypi release
-#    pool:
-#      vmImage: ubuntu-latest
-#    steps:
-#      - task: UsePythonVersion@0
-#        displayName: Set up python
-#        inputs:
-#          versionSpec: 3.8
-#
-#      - bash: |
-#          python -m pip install -r requirements_dev.txt
-#        displayName: Install dependencies
-#
-#      - bash: |
-#          python setup.py sdist bdist_wheel
-#          ls -la dist
-#        displayName: Build python package
-#
-#      - task: PublishBuildArtifacts@1
-#        inputs:
-#          pathToPublish: dist/
-#          artifactName: python-release
-#
-#      - task: TwineAuthenticate@1
-#        displayName: Set up credentials
-#        inputs:
-#          pythonUploadServiceConnection: pypi-ispyb
-#
-#      - bash: |
-#          python -m twine upload -r pypi-ispyb --config-file $(PYPIRC_PATH) dist/*.tar.gz dist/*.whl
-#        displayName: Publish package
+- stage: deploy
+  displayName: Publish release
+  dependsOn:
+  - tests
+  - static
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+  jobs:
+  - job: pypi
+    displayName: Publish pypi release
+    pool:
+      vmImage: ubuntu-20.04
+    steps:
+      - checkout: none
+
+      - task: UsePythonVersion@0
+        displayName: Set up python
+        inputs:
+          versionSpec: 3.8
+
+      - task: DownloadBuildArtifacts@0
+        displayName: Get pre-built package
+        inputs:
+          buildType: 'current'
+          downloadType: 'single'
+          artifactName: 'package'
+          downloadPath: '$(System.ArtifactsDirectory)'
+
+      - script: |
+          pip install -U pip
+          pip install twine
+        displayName: Install twine
+
+      - task: TwineAuthenticate@1
+        displayName: Set up credentials
+        inputs:
+          pythonUploadServiceConnection: pypi-ispyb
+
+      - bash: |
+          python -m twine upload -r pypi-ispyb --config-file $(PYPIRC_PATH) $(System.ArtifactsDirectory)/package/dist/*.tar.gz $(System.ArtifactsDirectory)/package/dist/*.whl
+        displayName: Publish package
