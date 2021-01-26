@@ -21,8 +21,9 @@ steps:
     destinationFolder: "$(Pipeline.Workspace)/src"
 
 - script: |
+    pip install -U pip
+    pip install -r "$(Pipeline.Workspace)/src/requirements_dev.txt"
     pip install "$(Pipeline.Workspace)/src"
-    pip install coveralls
   displayName: Install package
 
 - script: |
@@ -62,13 +63,12 @@ steps:
   displayName: Set up test database
 
 - script: |
-    cd "$(Pipeline.Workspace)/src"
-    export PYTHONDEVMODE=1
-    coverage run --source=ispyb setup.py test
+    PYTHONDEVMODE=1 pytest -ra --cov=ispyb --cov-report=xml --cov-branch
   displayName: Run tests
+  workingDirectory: $(Pipeline.Workspace)/src
 
-- task: PublishTestResults@2
-  condition: succeededOrFailed()
-  inputs:
-    testResultsFiles: '$(Pipeline.Workspace)/src/**/test-*.xml'
-    testRunTitle: 'Publish test results for Python $(PYTHON_VERSION)'
+- bash: bash <(curl -s https://codecov.io/bash) -n "Python $(PYTHON_VERSION) $(Agent.OS)"
+  displayName: 'Publish coverage stats'
+  continueOnError: True
+  workingDirectory: $(Pipeline.Workspace)/src
+  timeoutInMinutes: 2
