@@ -4,6 +4,11 @@ History
 
 Unreleased / master
 -------------------
+5.9.1 (2021-01-25)
+------------------
+
+* Fix compatibility issue with newer versions of mysql-connector
+
 5.9.0 (2021-01-14)
 ------------------
 
