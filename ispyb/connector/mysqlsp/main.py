@@ -123,7 +123,10 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
             for recordset in cursor.stored_results():
                 if isinstance(cursor, mysql.connector.cursor.MySQLCursorDict):
                     for row in recordset:
-                        result.append(dict(list(zip(recordset.column_names, row))))
+                        if isinstance(row, dict):
+                            result.append(row)
+                        else:
+                            result.append(dict(list(zip(recordset.column_names, row))))
                 else:
                     result = recordset.fetchall()
 
