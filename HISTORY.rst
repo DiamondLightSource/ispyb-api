@@ -4,10 +4,10 @@ History
 
 Unreleased / master
 -------------------
-5.9.1 (2021-01-25)
+5.9.1 (2021-01-28)
 ------------------
 
-* Fix compatibility issue with newer versions of mysql-connector
+* Fix compatibility issue with newer versions of mysql-connector `#116 <https://github.com/DiamondLightSource/ispyb-api/pull/116>`_
 
 5.9.0 (2021-01-14)
 ------------------

@@ -66,4 +66,4 @@ with ispyb.open("config.cfg") as conn:
 See [```docs/pipeline2ispyb.py```](https://github.com/DiamondLightSource/ispyb-api/blob/master/docs/pipeline2ispyb.py) for a more detailed example of how to use the package.
 
 ### Tests
-Unit tests (pytests) are run automatically by Travis against a real MariaDB ISPyB database schema. You can also run the tests in your Development environment if you have an ISPyB database.
+Unit tests (pytests) are run automatically by Azure against a real MariaDB ISPyB database schema. You can also run the tests in your Development environment if you have an ISPyB database.
