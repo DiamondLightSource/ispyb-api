@@ -3,7 +3,7 @@
 [![Development status](https://img.shields.io/pypi/status/ispyb.svg)](https://pypi.python.org/pypi/ispyb)
 [![Python versions](https://img.shields.io/pypi/pyversions/ispyb.svg)](https://pypi.python.org/pypi/ispyb)
 
-[![Build Status](https://travis-ci.org/DiamondLightSource/ispyb-api.svg?branch=master)](https://travis-ci.org/DiamondLightSource/ispyb-api)
+[![Build Status](https://dev.azure.com/DLS-tooling/ispyb/_apis/build/status/DiamondLightSource.ispyb-api?branchName=master)](https://dev.azure.com/DLS-tooling/ispyb/\_build/latest?definitionId=2)
 [![Coverage Status](https://coveralls.io/repos/github/DiamondLightSource/ispyb-api/badge.svg?branch=master)](https://coveralls.io/github/DiamondLightSource/ispyb-api?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/ispyb/badge/?version=latest)](https://ispyb.readthedocs.io/en/latest/?badge=latest)
 ![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)
