@@ -150,5 +150,5 @@ stages:
           pythonUploadServiceConnection: pypi-ispyb
 
       - bash: |
-          python -m twine upload -r pypi-ispyb --config-file $(PYPIRC_PATH) $(System.ArtifactsDirectory)/package/dist/*.tar.gz $(System.ArtifactsDirectory)/package/dist/*.whl
+          python -m twine upload -r pypi-ispyb --config-file $(PYPIRC_PATH) $(System.ArtifactsDirectory)/package/pypi/*.tar.gz $(System.ArtifactsDirectory)/package/pypi/*.whl
         displayName: Publish package
