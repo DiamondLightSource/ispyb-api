@@ -117,6 +117,38 @@ def test_mxacquisition_methods(testdb):
     gridinfo = mxacquisition.retrieve_dcg_grid(dcgid, "boaty")
     assert len(gridinfo) == 1
 
+    params = mxacquisition.get_dc_grid_params()
+    params["parentid"] = dc.dcid
+    params["dx_in_mm"] = 1.2
+    params["dy_in_mm"] = 1.3
+    params["steps_x"] = 20
+    params["steps_y"] = 31
+    params["mesh_angle"] = 45.5
+    params["pixelsPerMicronX"] = 11
+    params["pixelsPerMicronY"] = 11
+    params["snapshotOffsetXPixel"] = 2
+    params["snapshotOffsetYPixel"] = 3
+    params["orientation"] = "horizontal"
+    params["snaked"] = False
+    dc_grid_id = mxacquisition.upsert_dc_grid(list(params.values()))
+    assert dc_grid_id and dc_grid_id > 0
+
+    gridinfo = mxacquisition.retrieve_dc_grid(dc.dcid)
+    assert len(gridinfo) == 1
+    gridinfo = gridinfo[0]
+    assert gridinfo["gridInfoId"] == dc_grid_id
+    assert gridinfo["dx_mm"] == params["dx_in_mm"]
+    assert gridinfo["dy_mm"] == params["dy_in_mm"]
+    assert gridinfo["meshAngle"] == params["mesh_angle"]
+    assert gridinfo["orientation"] == params["orientation"]
+    assert gridinfo["pixelsPerMicronX"] == params["pixelsPerMicronX"]
+    assert gridinfo["pixelsPerMicronY"] == params["pixelsPerMicronY"]
+    assert gridinfo["snaked"] == 0
+    assert gridinfo["snapshot_offsetXPixel"] == params["snapshotOffsetXPixel"]
+    assert gridinfo["snapshot_offsetYPixel"] == params["snapshotOffsetYPixel"]
+    assert gridinfo["steps_x"] == params["steps_x"]
+    assert gridinfo["steps_y"] == params["steps_y"]
+
     xray_cr_id = mxacquisition.upsert_xray_centring_result(
         grid_info_id=dcg_grid_id, method="diffraction", status="pending"
     )
