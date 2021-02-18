@@ -1,12 +1,8 @@
 from __future__ import absolute_import, division, print_function
 
 from setuptools import find_packages, setup
-import sys
 
 INSTALL_REQUIRES = ["mysql-connector-python", "tabulate"]
-
-if sys.version_info.major == 2:
-    INSTALL_REQUIRES.append("enum34")
 
 setup(
     name="ispyb",
@@ -27,16 +23,14 @@ setup(
     classifiers=[
         "Development Status :: 4 - Beta",
         "License :: OSI Approved :: Apache Software License",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Operating System :: OS Independent",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
+    python_requires=">=3.6",
     entry_points={"libtbx.precommit": ["ispyb = ispyb"]},
     project_urls={"Documentation": "https://ispyb.readthedocs.io"},
 )
