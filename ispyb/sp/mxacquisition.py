@@ -136,25 +136,31 @@ class MXAcquisition(Acquisition):
     _fluo_mapping_params = StrictOrderedDict(
         [
             ("id", None),
-            ("roi_id", None),
-            ("roi_start_energy", None),
-            ("roi_end_energy", None),
-            ("dc_id", None),
-            ("img_number", None),
-            ("counts", None),
+            ("roiId", None),
+            ("gridInfoId", None),
+            ("dataFormat", None),
+            ("data", None),
+            ("points", None),
+            ("opacity", 1),
+            ("colourMap", None),
+            ("min", None),
+            ("max", None),
+            ("autoProcProgramId", None),
         ]
     )
 
     _fluo_mapping_roi_params = StrictOrderedDict(
         [
             ("id", None),
-            ("start_energy", None),
-            ("end_energy", None),
+            ("startEnergy", None),
+            ("endEnergy", None),
             ("element", None),
             ("edge", None),
             ("r", None),
             ("g", None),
             ("b", None),
+            ("blSampleId", None),
+            ("scalar", None),
         ]
     )
 
