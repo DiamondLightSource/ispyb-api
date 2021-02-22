@@ -186,11 +186,9 @@ def test_fluo_mapping(testdb):
 
     params = mxacquisition.get_fluo_mapping_params()
     params["roi_id"] = fmrid
-    params["roi_start_energy"] = 7.014
-    params["roi_end_energy"] = 13.617
-    params["dc_id"] = _known_DCID
-    params["img_number"] = 1
-    params["counts"] = 14
+    params["grid_info_id"] = dcg_grid_id
+    params["data_format"] = "gzip+json"
+    params["points"] = 20 * 31
     fmid = mxacquisition.upsert_fluo_mapping(list(params.values()))
     assert fmid is not None
     assert fmid > 0
