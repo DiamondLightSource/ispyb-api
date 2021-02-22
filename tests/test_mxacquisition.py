@@ -2,6 +2,20 @@ from datetime import datetime
 
 import ispyb
 import pytest
+import json
+import io
+import gzip
+import binascii
+
+
+def gzip_json(obj):
+    json_str = json.dumps(obj)
+
+    out = io.BytesIO()
+    with gzip.GzipFile(fileobj=out, mode="w") as fo:
+        fo.write(json_str.encode())
+
+    return out.getvalue()
 
 _known_DCID = 993677  # from ISPyB schema sample data
 
@@ -189,6 +203,7 @@ def test_fluo_mapping(testdb):
     params["grid_info_id"] = dcg_grid_id
     params["data_format"] = "gzip+json"
     params["points"] = 20 * 31
+    params["data"] = binascii.hexlify(gzip_json(list(range(20*31))))
     fmid = mxacquisition.upsert_fluo_mapping(list(params.values()))
     assert fmid is not None
     assert fmid > 0
