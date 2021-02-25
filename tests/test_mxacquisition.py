@@ -6,6 +6,7 @@ import ispyb
 import pytest
 
 
+@pytest.mark.xfail(reason="Requires ispyb-api#122")
 def test_mxacquisition_methods(testdb):
     mxacquisition = testdb.mx_acquisition
     sessionid = 55168
