@@ -72,7 +72,7 @@ stages:
         displayName: Build python package
 
       - bash: |
-          wget -t 3 --waitretry=20 https://github.com/DiamondLightSource/ispyb-database/releases/download/v1.17.2/ispyb-database-1.17.2.tar.gz -O dist/ispyb-database.tar.gz
+          wget -t 3 --waitretry=20 https://github.com/DiamondLightSource/ispyb-database/releases/download/v1.18.1/ispyb-database-1.18.1.tar.gz -O dist/ispyb-database.tar.gz
         displayName: Download ISPyB DB schema for tests
 
       - task: PublishBuildArtifacts@1
