@@ -23,17 +23,21 @@ def test_data_collection(testsqlalchemy):
 
 
 def test_data_collection_group(testsqlalchemy):
-    query = testsqlalchemy.query(DataCollectionGroup)
-    print(query.all())
-    assert query.count() == 5
-    dcg = query.first()
+    query = testsqlalchemy.query(DataCollectionGroup).filter(
+        DataCollectionGroup.dataCollectionGroupId == 988855
+    )
+    dcg = query.one()
     assert dcg.dataCollectionGroupId == 988855
+    assert dcg.BLSample.blSampleId == 374695
+    assert dcg.BLSample.name == "tlys_jan_4"
+    assert dcg.BLSession.beamLineName == "i03"
 
 
 def test_auto_proc_scaling(testsqlalchemy):
-    query = testsqlalchemy.query(AutoProcScaling)
-    assert query.count() == 11
-    aps = query.first()
+    query = testsqlalchemy.query(AutoProcScaling).filter(
+        AutoProcScaling.autoProcScalingId == 596133
+    )
+    aps = query.one()
     assert aps.autoProcScalingId == 596133
     assert aps.recordTimeStamp == datetime.datetime(2016, 1, 14, 12, 46, 22)
 
@@ -51,9 +55,10 @@ def test_auto_proc_scaling(testsqlalchemy):
 
 
 def test_auto_proc_program(testsqlalchemy):
-    query = testsqlalchemy.query(AutoProcProgram)
-    assert query.count() == 11
-    app = query.first()
+    query = testsqlalchemy.query(AutoProcProgram).filter(
+        AutoProcProgram.autoProcProgramId == 56425592
+    )
+    app = query.one()
     assert app.autoProcProgramId == 56425592
     assert app.processingPrograms == "fast_dp"
     assert app.ProcessingJob is None
