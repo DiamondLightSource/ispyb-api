@@ -31,12 +31,12 @@ index b88d08b..9c978ad 100644
 ```
 Run the `ispyb-database` `build.sh` script to generate the database:
 ```
-ispyb-database % sh build.sh 
+ispyb-database % sh build.sh
 ```
 Generate the models with [sqlacodegen](https://pypi.org/project/sqlacodegen/)
 in `ispyb-api/ispyb/sqlalchemy/`:
 ```
-sqlacodegen mysql+pymysql://user:password@host:port/ispyb_build --noinflect --outfile _auto_db_schema.py
+sqlacodegen mysql+mysqlconnector://user:password@host:port/ispyb_build --noinflect --outfile _auto_db_schema.py
 ```
 **The resulting `_auto_db_schema.py` should not be edited** (other than automatic
 formatting with `black` or sorting of imports with `isort`). All models are imported

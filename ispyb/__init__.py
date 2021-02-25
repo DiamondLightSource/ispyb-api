@@ -56,7 +56,7 @@ def sqlalchemy_session(configuration_file):
         raise AttributeError("No configuration found at %s" % configuration_file)
     credentials = dict(config.items("ispyb"))
     engine = sqlalchemy.create_engine(
-        "mysql+pymysql://{username}:{password}@{host}:{port}/{database}".format(
+        "mysql+mysqlconnector://{username}:{password}@{host}:{port}/{database}".format(
             **credentials
         )
     )
