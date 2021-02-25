@@ -39,3 +39,8 @@ def testconfig_ws():
             "No configuration file for websocket tests found. Skipping websocket tests"
         )
     return config_file
+
+
+@pytest.fixture
+def testsqlalchemy(testconfig):
+    return ispyb.sqlalchemy_session(testconfig)
