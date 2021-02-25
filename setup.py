@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 from setuptools import find_packages, setup
 
-INSTALL_REQUIRES = ["mysql-connector-python", "tabulate"]
+INSTALL_REQUIRES = ["mysql-connector-python", "sqlalchemy", "tabulate"]
 
 setup(
     name="ispyb",

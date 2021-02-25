@@ -2,4 +2,5 @@ mock
 mysql-connector-python
 pytest
 pytest-cov
+sqlalchemy
 tabulate
