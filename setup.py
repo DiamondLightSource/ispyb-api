@@ -31,6 +31,11 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     python_requires=">=3.6",
-    entry_points={"libtbx.precommit": ["ispyb = ispyb"]},
+    entry_points={
+        "libtbx.precommit": ["ispyb = ispyb"],
+        "console_scripts": [
+            "ispyb.last_data_collections_on=ispyb.cli.last_data_collections_on:main",
+        ],
+    },
     project_urls={"Documentation": "https://ispyb.readthedocs.io"},
 )
