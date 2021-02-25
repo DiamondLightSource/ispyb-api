@@ -7,6 +7,8 @@ from ispyb.sqlalchemy import (
     DataCollection,
     DataCollectionGroup,
     ProcessingJob,
+    ProcessingJobParameter,
+    ProcessingJobImageSweep,
 )
 
 
@@ -71,47 +73,31 @@ def test_auto_proc_program(testsqlalchemy):
 
 
 @pytest.fixture
-def processing_jobs(testdb):
+def insert_processing_job(testsqlalchemy):
     # Add some ProcessingJob* entries
-    mxprocessing = testdb.mx_processing
-
-    params = mxprocessing.get_job_params()
-    params.update(
-        dict(
-            datacollectionid=993677,
-            display_name="test_job",
-            comments="1 2 3 testing",
-            automatic=True,
-            recipe="xia2-dials",
-        )
+    pj = ProcessingJob(
+        dataCollectionId=993677,
+        displayName="test_job",
+        comments="1 2 3 testing",
+        automatic=True,
+        recipe="xia2-dials",
     )
-    job_id = mxprocessing.upsert_job(list(params.values()))
-    assert job_id is not None
-    assert job_id > 0
-
-    params = mxprocessing.get_job_parameter_params()
-    params.update(dict(job_id=job_id, parameter_key="pi", parameter_value="3.14"))
-    jp_id = mxprocessing.upsert_job_parameter(list(params.values()))
-    assert jp_id is not None
-    assert jp_id > 0
-
-    params = mxprocessing.get_job_image_sweep_params()
-    params.update(
-        dict(
-            job_id=job_id,
-            datacollectionid=993677,
-            start_image=1,
-            end_image=180,
-        )
+    pjp = ProcessingJobParameter(
+        ProcessingJob=pj, parameterKey="pi", parameterValue="3.14"
     )
-    jis_id = mxprocessing.upsert_job_image_sweep(list(params.values()))
-    assert jis_id is not None
-    assert jis_id > 0
-    return job_id
+    pjis = ProcessingJobImageSweep(
+        ProcessingJob=pj,
+        dataCollectionId=993677,
+        startImage=1,
+        endImage=180,
+    )
+    testsqlalchemy.add_all([pj, pjp, pjis])
+    testsqlalchemy.commit()
+    return pj.processingJobId
 
 
-def test_processing_job(testsqlalchemy, processing_jobs):
-    pj_id = processing_jobs
+def test_processing_job(testsqlalchemy, insert_processing_job):
+    pj_id = insert_processing_job
 
     query = testsqlalchemy.query(ProcessingJob).filter(
         ProcessingJob.processingJobId == pj_id
