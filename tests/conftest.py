@@ -42,5 +42,5 @@ def testconfig_ws():
 
 
 @pytest.fixture
-def testsqlalchemy(testconfig):
+def alchemy(testconfig):
     return ispyb.sqlalchemy_session(testconfig)
