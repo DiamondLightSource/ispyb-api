@@ -8,7 +8,7 @@ Unreleased / master
 6.0.0 (XXXX-XX-XX)
 ------------------
 * New ``ispyb.sqlalchemy`` module containing `SQLAlchemy <https://www.sqlalchemy.org>`_ ORM models to interface with ISPyB
-* New ``ispyb.last_data_collections_on`` command-line interface
+* New ``ispyb.last_data_collections_on`` command-line interface to list the most recent data collections on the given beamlines
 
 5.9.1 (2021-01-28)
 ------------------
