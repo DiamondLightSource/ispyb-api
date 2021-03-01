@@ -2,14 +2,14 @@ This provides a set of [SQLAlchemy](https://www.sqlalchemy.org/) ORM models for 
 [ISPyB database](https://github.com/DiamondLightSource/ispyb-database/).
 
 Checkout the specific tag for a given `ispyb-database` version:
+```bash
+$ git clone -b v1.18.1 https://github.com/DiamondLightSource/ispyb-database.git
+$ # or, if you have an existing copy of the repository:
+$ git checkout v1.18.1
 ```
-ispyb-database $ git checkout v1.18.1
-```
-Apply the following diff to avoid circular foreign key references:
-```
-ispyb-database % git diff
-diff --git a/schemas/ispyb/tables.sql b/schemas/ispyb/tables.sql
-index b88d08b..9c978ad 100644
+
+Apply the following patch to avoid circular foreign key references:
+```patch
 --- a/schemas/ispyb/tables.sql
 +++ b/schemas/ispyb/tables.sql
 @@ -589,7 +589,6 @@ CREATE TABLE `BLSample` (
@@ -29,15 +29,18 @@ index b88d08b..9c978ad 100644
    CONSTRAINT `DataCollection_ibfk_3` FOREIGN KEY (`dataCollectionGroupId`) REFERENCES `DataCollectionGroup` (`dataCollectionGroupId`),
    CONSTRAINT `DataCollection_ibfk_6` FOREIGN KEY (`startPositionId`) REFERENCES `MotorPosition` (`motorPositionId`),
 ```
+
 Run the `ispyb-database` `build.sh` script to generate the database:
+```bash
+$ sh build.sh
 ```
-ispyb-database % sh build.sh
-```
+
 Generate the models with [sqlacodegen](https://pypi.org/project/sqlacodegen/)
 in `ispyb-api/ispyb/sqlalchemy/`:
-```
+```bash
 sqlacodegen mysql+mysqlconnector://user:password@host:port/ispyb_build --noinflect --outfile _auto_db_schema.py
 ```
+
 **The resulting `_auto_db_schema.py` should not be edited** (other than automatic
 formatting with `black` or sorting of imports with `isort`). All models are imported
 into and accessed via the `__init__.py`. Any modifications, e.g. injecting additional
