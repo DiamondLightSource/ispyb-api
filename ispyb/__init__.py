@@ -47,24 +47,6 @@ def open(configuration_file):
     return conn
 
 
-def sqlalchemy_session(configuration_file):
-    import sqlalchemy.orm
-
-    if not configuration_file:
-        raise AttributeError("No configuration file specified")
-
-    config = configparser.RawConfigParser(allow_no_value=True)
-    if not config.read(configuration_file):
-        raise AttributeError(f"No configuration found at {configuration_file}")
-    credentials = dict(config.items("ispyb_sqlalchemy"))
-    engine = sqlalchemy.create_engine(
-        "mysql+mysqlconnector://{username}:{password}@{host}:{port}/{database}".format(
-            **credentials
-        )
-    )
-    return sqlalchemy.orm.sessionmaker(bind=engine)()
-
-
 class ISPyBException(Exception):
     """Base class for all exceptions"""
 

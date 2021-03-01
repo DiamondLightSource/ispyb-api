@@ -3,7 +3,7 @@
 from __future__ import absolute_import, division, print_function
 
 import os
-import ispyb
+import ispyb.sqlalchemy
 import pytest
 
 
@@ -43,4 +43,4 @@ def testconfig_ws():
 
 @pytest.fixture
 def alchemy(testconfig):
-    return ispyb.sqlalchemy_session(testconfig)
+    return ispyb.sqlalchemy.session(testconfig)

@@ -1,5 +1,4 @@
 import argparse
-import os
 import pathlib
 import sys
 import time
@@ -118,10 +117,7 @@ def main(args=None):
         sys.exit(0)
     t0 = time.time()
 
-    credentials = args.credentials
-    if not credentials:
-        credentials = os.getenv("ISPYB_CREDENTIALS")
-    db_session = ispyb.sqlalchemy_session(credentials)
+    db_session = ispyb.sqlalchemy.session(args.credentials)
 
     latest_dcid = None
     print("------Date------ Beamline --DCID-- ---Visit---")
