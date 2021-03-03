@@ -1,5 +1,14 @@
 from __future__ import absolute_import, division, print_function
 
+import warnings
+
+warnings.warn(
+    "ispyb.model has been deprecated and will be removed in a future version. "
+    "You can use the SQLAlchemy models in ispyb.sqlalchemy instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
 
 class DBCache(object):
     """A helper class with useful functions to manage caching of database
