@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
 # XML-to-dict code from here:
 # http://code.activestate.com/recipes/410469-xml-as-dictionary/
 

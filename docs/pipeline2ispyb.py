@@ -10,7 +10,6 @@
 # data acquisition and processing pipeline.
 #
 
-from __future__ import absolute_import, division, print_function
 
 import sys
 from datetime import datetime

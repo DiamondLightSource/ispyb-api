@@ -1,6 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
-
 def test_insert_movie(testdb):
     emacquisition = testdb.em_acquisition
     group_params = emacquisition.get_data_collection_group_params()

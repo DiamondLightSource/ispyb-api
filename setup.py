@@ -19,7 +19,7 @@ setup(
     license="Apache License, Version 2.0",
     install_requires=INSTALL_REQUIRES,
     setup_requires=["pytest-runner"],
-    tests_require=["mock", "pytest"],
+    tests_require=["pytest"],
     classifiers=[
         "Development Status :: 4 - Beta",
         "License :: OSI Approved :: Apache Software License",

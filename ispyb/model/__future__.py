@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
 # Enables direct database functions in places where stored procedures are not
 # yet available. To use, run:
 #
@@ -70,7 +68,7 @@ def enable(configuration_file, section="ispyb"):
     _db_config = configuration_file
     _db.autocommit = True
 
-    class DictionaryCursorContextManager(object):
+    class DictionaryCursorContextManager:
         """This class creates dictionary cursors for mysql.connector connections.
         By using a context manager it is ensured that cursors are closed
         immediately after use.

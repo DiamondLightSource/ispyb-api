@@ -17,14 +17,10 @@ class EMAcquisition(Acquisition):
     """EMAcquisition provides methods to store data in the MotionCorrection and CTF tables."""
 
     def __init__(self):
-        self.insert_data_collection_group = super(
-            EMAcquisition, self
-        ).upsert_data_collection_group
-        self.insert_data_collection = super(EMAcquisition, self).upsert_data_collection
-        self.update_data_collection_group = super(
-            EMAcquisition, self
-        ).upsert_data_collection_group
-        self.update_data_collection = super(EMAcquisition, self).upsert_data_collection
+        self.insert_data_collection_group = super().upsert_data_collection_group
+        self.insert_data_collection = super().upsert_data_collection
+        self.update_data_collection_group = super().upsert_data_collection_group
+        self.update_data_collection = super().upsert_data_collection
 
     _movie_params = StrictOrderedDict(
         [

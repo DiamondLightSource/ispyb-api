@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
 import ispyb.model
 from ispyb.model.integration import UnitCell
 
@@ -38,7 +36,7 @@ class Screening(ispyb.model.DBCache):
     @property
     def outputs(self):
         """Returns the list of ScreeningOutput objects associated with this
-           database entry."""
+        database entry."""
         raise NotImplementedError()
 
     def __str__(self):
@@ -101,13 +99,13 @@ class ScreeningOutput(ispyb.model.DBCache):
     @property
     def lattices(self):
         """Returns the list of ScreeningOutputLattice objects associated with
-           this database entry."""
+        this database entry."""
         raise NotImplementedError()
 
     @property
     def strategies(self):
         """Returns the list of ScreeningStrategy objects associated with this
-           database entry."""
+        database entry."""
         raise NotImplementedError()
 
     def __str__(self):
@@ -238,7 +236,7 @@ class ScreeningStrategy(ispyb.model.DBCache):
     @property
     def wedges(self):
         """Returns the list of ScreeningStrategyWedge objects associated with
-           this database entry."""
+        this database entry."""
         raise NotImplementedError()
 
     def __str__(self):
@@ -306,7 +304,7 @@ class ScreeningStrategyWedge(ispyb.model.DBCache):
     @property
     def sub_wedges(self):
         """Returns the list of ScreeningStrategySubWedge objects associated with
-           this database entry."""
+        this database entry."""
         raise NotImplementedError()
 
     def __str__(self):

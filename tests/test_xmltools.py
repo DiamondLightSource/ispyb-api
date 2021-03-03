@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
 import os
 
 from ispyb.xmltools import mx_data_reduction_to_ispyb, xml_file_to_dict
@@ -16,7 +14,7 @@ def test_mx_data_reduction_xml_to_ispyb(testdb):
     # Find the datacollection associated with this data reduction run
     xml_dir = os.path.split(xml_file)[0]
     try:
-        dc_id = int(open(os.path.join(xml_dir, ".dc_id"), "r").read())
+        dc_id = int(open(os.path.join(xml_dir, ".dc_id")).read())
         print("Got DC ID %d from file system" % dc_id)
     except Exception:
         dc_id = None

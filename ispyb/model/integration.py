@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
 import ispyb.model
 import ispyb.model.processingprogram
 
@@ -116,7 +114,7 @@ ispyb.model.add_properties(
 )
 
 
-class UnitCell(object):
+class UnitCell:
     """A read-only object representing the parameters of the unit cell,
     ie. edges and angles.
     """

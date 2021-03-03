@@ -1,7 +1,4 @@
-from __future__ import absolute_import, division, print_function
-
-
-class DBCache(object):
+class DBCache:
     """A helper class with useful functions to manage caching of database
     requests.
     Subclasses must implement reload() which should store data to be cached
@@ -34,7 +31,7 @@ class DBCache(object):
         return hasattr(self, "_data_cache")
 
 
-class EncapsulatedValue(object):
+class EncapsulatedValue:
     """A helper class encapsulating another object and mostly behaving as that
     object. The property .value allows access to the original object.
     A list of magic methods is implemented to allow meaningful comparisons.

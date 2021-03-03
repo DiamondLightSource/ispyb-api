@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
 import threading
 import traceback
 
@@ -97,12 +95,10 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
             try:
                 result_args = cursor.callproc(procname=procname, args=args)
             except DataError as e:
-                raise ReadWriteError(
-                    "DataError({0}): {1}".format(e.errno, traceback.format_exc())
-                )
+                raise ReadWriteError(f"DataError({e.errno}): {traceback.format_exc()}")
             except IntegrityError as e:
                 raise ReadWriteError(
-                    "IntegrityError({0}): {1}".format(e.errno, traceback.format_exc())
+                    f"IntegrityError({e.errno}): {traceback.format_exc()}"
                 )
             finally:
                 cursor.close()
@@ -115,9 +111,7 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
             try:
                 cursor.callproc(procname=procname, args=args)
             except DataError as e:
-                raise ReadWriteError(
-                    "DataError({0}): {1}".format(e.errno, traceback.format_exc())
-                )
+                raise ReadWriteError(f"DataError({e.errno}): {traceback.format_exc()}")
 
             result = []
             for recordset in cursor.stored_results():
@@ -144,9 +138,7 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
                     args,
                 )
             except DataError as e:
-                raise ReadWriteError(
-                    "DataError({0}): {1}".format(e.errno, traceback.format_exc())
-                )
+                raise ReadWriteError(f"DataError({e.errno}): {traceback.format_exc()}")
             result = None
             rs = cursor.fetchone()
             if len(rs) > 0:
@@ -165,12 +157,10 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
                     args,
                 )
             except DataError as e:
-                raise ReadWriteError(
-                    "DataError({0}): {1}".format(e.errno, traceback.format_exc())
-                )
+                raise ReadWriteError(f"DataError({e.errno}): {traceback.format_exc()}")
             except IntegrityError as e:
                 raise ReadWriteError(
-                    "IntegrityError({0}): {1}".format(e.errno, traceback.format_exc())
+                    f"IntegrityError({e.errno}): {traceback.format_exc()}"
                 )
             result = None
             rs = cursor.fetchone()
@@ -187,6 +177,4 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
         try:
             cursor.execute("SET ROLE %s" % role)
         except DatabaseError as e:
-            raise ISPyBException(
-                "DatabaseError({0}): {1}".format(e.errno, traceback.format_exc())
-            )
+            raise ISPyBException(f"DatabaseError({e.errno}): {traceback.format_exc()}")
