@@ -8,6 +8,7 @@ Unreleased / master
 ------------------
 
 * Fix compatibility issue with newer versions of mysql-connector `#116 <https://github.com/DiamondLightSource/ispyb-api/pull/116>`_
+* Final version to support Python 2.7 and 3.5 `#118 <https://github.com/DiamondLightSource/ispyb-api/pull/118>`_
 
 5.9.0 (2021-01-14)
 ------------------
