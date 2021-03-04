@@ -59,6 +59,7 @@ steps:
     done
     mysql -e "CREATE USER ispyb_api@'%' IDENTIFIED BY 'password_1234'; GRANT ispyb_processing to ispyb_api@'%'; GRANT ispyb_import to ispyb_api@'%'; SET DEFAULT ROLE ispyb_processing FOR ispyb_api@'%';"
     mysql -e "CREATE USER ispyb_api_future@'%' IDENTIFIED BY 'password_4321'; GRANT SELECT ON ispybtest.* to ispyb_api_future@'%';"
+    mysql -e "CREATE USER ispyb_api_sqlalchemy@'%' IDENTIFIED BY 'password_5678'; GRANT SELECT ON ispybtest.* to ispyb_api_sqlalchemy@'%'; GRANT INSERT ON ispybtest.* to ispyb_api_sqlalchemy@'%'; GRANT UPDATE ON ispybtest.* to ispyb_api_sqlalchemy@'%';"
     rm ~/.my.cnf
   displayName: Set up test database
 
