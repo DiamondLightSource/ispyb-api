@@ -14,7 +14,8 @@ def test_mx_data_reduction_xml_to_ispyb(testdb):
     # Find the datacollection associated with this data reduction run
     xml_dir = os.path.split(xml_file)[0]
     try:
-        dc_id = int(open(os.path.join(xml_dir, ".dc_id")).read())
+        with open(os.path.join(xml_dir, ".dc_id")) as fh:
+            dc_id = int(fh.read())
         print("Got DC ID %d from file system" % dc_id)
     except Exception:
         dc_id = None

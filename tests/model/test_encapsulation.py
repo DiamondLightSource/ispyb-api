@@ -2,7 +2,7 @@ import ispyb.model
 import pytest
 
 
-@pytest.mark.parametrize("thing", ["string", "", ""])
+@pytest.mark.parametrize("thing", ["string", ""])
 def test_encapsulated_string_behaves_as_string(thing):
     e = ispyb.model.EncapsulatedValue(thing)
     assert e is not thing
