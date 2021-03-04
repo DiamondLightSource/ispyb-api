@@ -2,16 +2,35 @@ import configparser
 import os
 
 import sqlalchemy.orm
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from sqlalchemy.orm import relationship
 
 from ._auto_db_schema import *  # noqa F403; lgtm
-from ._auto_db_schema import AutoProcProgram, AutoProcScaling, ProcessingJob
+from ._auto_db_schema import AutoProcProgram, AutoProcScaling, Base, ProcessingJob
 
 
 AutoProcProgram.AutoProcProgramAttachments = relationship("AutoProcProgramAttachment")
 AutoProcScaling.AutoProcScalingStatistics = relationship("AutoProcScalingStatistics")
 ProcessingJob.ProcessingJobParameters = relationship("ProcessingJobParameter")
 ProcessingJob.ProcessingJobImageSweeps = relationship("ProcessingJobImageSweep")
+
+
+def setup_schema(Base, session):
+    # https://marshmallow-sqlalchemy.readthedocs.io/en/latest/recipes.html#automatically-generating-schemas-for-sqlalchemy-models
+    for class_ in Base._decl_class_registry.values():
+        if hasattr(class_, "__tablename__"):
+
+            class Meta(object):
+                model = class_
+                sqla_session = session
+                load_instance = True
+                include_fk = True
+
+            schema_class_name = "%sSchema" % class_.__name__
+            schema_class = type(
+                schema_class_name, (SQLAlchemyAutoSchema,), {"Meta": Meta}
+            )
+            setattr(class_, "__marshmallow__", schema_class)
 
 
 def session(credentials=None):
@@ -63,4 +82,6 @@ def session(credentials=None):
             **credentials
         )
     )
-    return sqlalchemy.orm.sessionmaker(bind=engine)()
+    session = sqlalchemy.orm.sessionmaker(bind=engine)()
+    setup_schema(Base, session)
+    return session
