@@ -4,10 +4,7 @@
 # import ispyb.model.__future__
 # ispyb.model.__future__.enable('/path/to/.../database.cfg')
 
-try:
-    import configparser
-except ImportError:
-    import ConfigParser as configparser
+import configparser
 import logging
 import mysql.connector
 
