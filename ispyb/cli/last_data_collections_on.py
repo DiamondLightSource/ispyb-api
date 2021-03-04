@@ -9,7 +9,7 @@ import ispyb
 from ispyb.sqlalchemy import BLSession, DataCollection, GridInfo, Proposal
 
 
-def print_data_collections(rows, link=False):
+def print_data_collections(rows, synchweb_url=None):
     for row in reversed(rows):
         visit = f"{row.Proposal.proposalCode}{row.Proposal.proposalNumber}-{row.BLSession.visit_number}"
         bl_name = row.BLSession.beamLineName
@@ -29,8 +29,8 @@ def print_data_collections(rows, link=False):
         print(
             f"{start_time} {bl_name:8} {dcid:8} {visit:<11} {n_images:4} images{grid}   {template}"
         )
-        if link:
-            print(" " * 52 + f"https://ispyb.diamond.ac.uk/dc/visit/{visit}/id/{dcid}")
+        if synchweb_url:
+            print(" " * 52 + f"{synchweb_url}/dc/visit/{visit}/id/{dcid}")
 
 
 def get_last_data_collections_on(beamlines, db_session, limit=10, latest_dcid=None):
@@ -110,6 +110,13 @@ def main(args=None):
         help="show the last N collections for each beamline",
     )
     parser.add_argument("--credentials", action="store", type=pathlib.Path)
+    parser.add_argument(
+        "--synchweb-url",
+        dest="synchweb_url",
+        default="https://ispyb.diamond.ac.uk",
+        type=str,
+        help="Base URL for SynchWeb links",
+    )
     args = parser.parse_args(args)
 
     if not args:
@@ -129,7 +136,9 @@ def main(args=None):
         if rows:
             # Record the last observed dcid per beamline
             latest_dcid = rows[0].DataCollection.dataCollectionId
-            print_data_collections(rows, link=args.link)
+            print_data_collections(
+                rows, synchweb_url=args.synchweb_url if args.link else None
+            )
         if not args.follow:
             break
         time.sleep(args.sleep)
