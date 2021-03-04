@@ -1,3 +1,6 @@
+variables:
+  DATABASE_SCHEMA: 1.18.1
+
 trigger:
   branches:
     include:
@@ -72,8 +75,8 @@ stages:
         displayName: Build python package
 
       - bash: |
-          wget -t 3 --waitretry=20 https://github.com/DiamondLightSource/ispyb-database/releases/download/v1.17.2/ispyb-database-1.17.2.tar.gz -O dist/ispyb-database.tar.gz
-        displayName: Download ISPyB DB schema for tests
+          wget -t 3 --waitretry=20 https://github.com/DiamondLightSource/ispyb-database/releases/download/v$(DATABASE_SCHEMA)/ispyb-database-$(DATABASE_SCHEMA).tar.gz -O dist/ispyb-database.tar.gz
+        displayName: Download ISPyB DB schema v$(DATABASE_SCHEMA) for tests
 
       - task: PublishBuildArtifacts@1
         displayName: Store artifact

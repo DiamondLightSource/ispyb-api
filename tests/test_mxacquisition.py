@@ -5,6 +5,8 @@ from datetime import datetime
 import ispyb
 import pytest
 
+_known_DCID = 993677  # from ISPyB schema sample data
+
 
 def test_mxacquisition_methods(testdb):
     mxacquisition = testdb.mx_acquisition
@@ -168,6 +170,10 @@ def test_mxacquisition_methods(testdb):
     assert fsid is not None
     assert fsid > 0
 
+
+@pytest.mark.xfail(reason="Requires ispyb-api#122", strict=True)
+def test_fluo_mapping(testdb):
+    mxacquisition = testdb.mx_acquisition
     params = mxacquisition.get_fluo_mapping_roi_params()
     params["edge"] = "K1"
     params["element"] = "Mn"
@@ -184,13 +190,16 @@ def test_mxacquisition_methods(testdb):
     params["roi_id"] = fmrid
     params["roi_start_energy"] = 7.014
     params["roi_end_energy"] = 13.617
-    params["dc_id"] = id1
+    params["dc_id"] = _known_DCID
     params["img_number"] = 1
     params["counts"] = 14
     fmid = mxacquisition.upsert_fluo_mapping(list(params.values()))
     assert fmid is not None
     assert fmid > 0
 
+
+def test_robot_action(testdb):
+    mxacquisition = testdb.mx_acquisition
     params = mxacquisition.get_robot_action_params()
     params["session_id"] = 55168
     params["action_type"] = "LOAD"
