@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from __future__ import print_function
 import ConfigParser
 import logging
 import os
@@ -85,12 +84,12 @@ def store_result(conn, dir, scaling_id):
     mr_id = mx_processing.upsert_run(list(params.values()))
 
     for n in (1, 2):
-        if os.path.exists(dir + "/blob{0}v1.png".format(n)):
+        if os.path.exists(dir + f"/blob{n}v1.png"):
             blobparam = mx_processing.get_run_blob_params()
             blobparam["parentid"] = mr_id
-            blobparam["view1"] = "blob{0}v1.png".format(n)
-            blobparam["view2"] = "blob{0}v2.png".format(n)
-            blobparam["view3"] = "blob{0}v3.png".format(n)
+            blobparam["view1"] = f"blob{n}v1.png"
+            blobparam["view2"] = f"blob{n}v2.png"
+            blobparam["view3"] = f"blob{n}v3.png"
             mx_processing.upsert_run_blob(list(blobparam.values()))
 
 

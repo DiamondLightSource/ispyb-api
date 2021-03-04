@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function
 import ispyb.model.datacollection
 import ispyb.model.samplegroup
 import ispyb.model.__future__

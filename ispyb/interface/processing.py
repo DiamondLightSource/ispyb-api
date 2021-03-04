@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
 import abc
 
 from ispyb.interface.dataarea import DataArea

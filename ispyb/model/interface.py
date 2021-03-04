@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
 import ispyb.model.datacollection
 import ispyb.model.detector
 import ispyb.model.processingprogram

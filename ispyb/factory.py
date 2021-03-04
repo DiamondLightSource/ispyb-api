@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
 import importlib
 import ispyb
 from enum import Enum
@@ -41,7 +39,7 @@ def create_data_area(data_area_type, conn):
     ):
         raise AttributeError("DataArea type %s does not exist" % data_area_type)
     da_mod = importlib.import_module(
-        "%s.%s" % (conn.get_data_area_package(), data_area_type.module)
+        f"{conn.get_data_area_package()}.{data_area_type.module}"
     )
     DAClass = getattr(da_mod, data_area_type.classname)
     da = DAClass()

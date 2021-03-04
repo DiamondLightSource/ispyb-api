@@ -1,6 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
-
 def test_update_container(testdb):
     rs = testdb.shipping.update_container_assign("i02-2", "VMXiSim-001", 10)
     assert len(rs) > 0

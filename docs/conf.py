@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 # ispyb documentation build configuration file.
 #
@@ -47,9 +46,9 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = u"ISPyB API"
-copyright = u"2018, Markus Gerstel"
-author = u"Markus Gerstel"
+project = "ISPyB API"
+copyright = "2021, Diamond Light Source"
+author = "Diamond Light Source"
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -128,8 +127,8 @@ latex_documents = [
     (
         master_doc,
         "ispyb.tex",
-        u"ISPyB API Documentation",
-        u"Karl Levik, Markus Gerstel",
+        "ISPyB API Documentation",
+        "Diamond Light Source",
         "manual",
     )
 ]
@@ -139,7 +138,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "ispyb", u"ISPyB API Documentation", [author], 1)]
+man_pages = [(master_doc, "ispyb", "ISPyB API Documentation", [author], 1)]
 
 
 # -- Options for Texinfo output ----------------------------------------
@@ -151,7 +150,7 @@ texinfo_documents = [
     (
         master_doc,
         "ispyb",
-        u"ISPyB API Documentation",
+        "ISPyB API Documentation",
         author,
         "ispyb",
         "One line description of project.",

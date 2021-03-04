@@ -3,7 +3,7 @@ from collections import OrderedDict
 
 class StrictOrderedDict(OrderedDict):
     def __init__(self, *args, **kwargs):
-        super(StrictOrderedDict, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.update(*args, **kwargs)
         self.initialized = True
 

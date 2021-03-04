@@ -1,6 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
-
 def test_xtal_imaging(testdb):
     testdb.set_role("ispyb_import")
     xtalimaging = testdb.xtal_imaging

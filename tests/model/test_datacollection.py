@@ -1,7 +1,5 @@
-from __future__ import absolute_import, division, print_function
-
 import ispyb.model.datacollection
-import mock
+from unittest import mock
 import pytest
 
 

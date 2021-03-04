@@ -1,16 +1,12 @@
-from __future__ import absolute_import, division, print_function
-
 import importlib
 
 
-class FactoryMixIn(object):
+class FactoryMixIn:
     def _get_data_area(self, module, classname):
         """Helper function to instantiate a data area or return a cached instance."""
         if hasattr(self, "_cache_" + module):
             return getattr(self, "_cache_" + module)
-        da_mod = importlib.import_module(
-            "%s.%s" % (self.get_data_area_package(), module)
-        )
+        da_mod = importlib.import_module(f"{self.get_data_area_package()}.{module}")
         DAClass = getattr(da_mod, classname)
         da = DAClass()
         da.set_connection(self)
