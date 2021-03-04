@@ -8,11 +8,11 @@ import ispyb.model.datacollection
 
 class IF(DataArea):
     @abc.abstractmethod
-    def get_data_collection_group_params(cls):
+    def get_data_collection_group_params(self):
         pass
 
     @abc.abstractmethod
-    def get_data_collection_params(cls):
+    def get_data_collection_params(self):
         pass
 
     @abc.abstractmethod
