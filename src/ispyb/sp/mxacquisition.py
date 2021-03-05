@@ -63,6 +63,24 @@ class MXAcquisition(Acquisition):
         ]
     )
 
+    _dc_grid_params = StrictOrderedDict(
+        [
+            ("id", None),
+            ("parentid", None),
+            ("dxInMm", None),
+            ("dyInMm", None),
+            ("stepsX", None),
+            ("stepsY", None),
+            ("meshAngle", None),
+            ("pixelsPerMicronX", None),
+            ("pixelsPerMicronY", None),
+            ("snapshotOffsetXPixel", None),
+            ("snapshotOffsetYPixel", None),
+            ("orientation", None),
+            ("snaked", None),
+        ]
+    )
+
     _dc_position_params = StrictOrderedDict(
         [
             ("id", None),
@@ -199,6 +217,24 @@ class MXAcquisition(Acquisition):
         """
         return self.get_connection().call_sp_retrieve(
             procname="retrieve_grid_info_for_dcg_v2", args=(dcgid, auth_login)
+        )
+
+    @classmethod
+    def get_dc_grid_params(cls):
+        return copy.deepcopy(cls._dc_grid_params)
+
+    def upsert_dc_grid(self, values):
+        """Insert or update the grid info associated with a data collection"""
+        return self.get_connection().call_sp_write("upsert_dc_grid", values)
+
+    def retrieve_dc_grid(self, dcid, auth_login=None):
+        """Retrieve a list of dictionaries containing the grid information for
+        one data collection id. Raises ISPyBNoResultException if there
+        is no grid information available for the given DCID.
+        Generally the list will only contain a single dictionary.
+        """
+        return self.get_connection().call_sp_retrieve(
+            procname="retrieve_grid_info_for_dc", args=(dcid, auth_login)
         )
 
     @classmethod
