@@ -60,7 +60,8 @@ def session(credentials=None):
 
     engine = sqlalchemy.create_engine(
         "mysql+mysqlconnector://{username}:{password}@{host}:{port}/{database}".format(
-            **credentials
-        )
+            **credentials,
+        ),
+        connect_args={"use_pure": True},
     )
     return sqlalchemy.orm.sessionmaker(bind=engine)()
