@@ -17,6 +17,7 @@ def gzip_json(obj):
 
     return out.getvalue()
 
+
 _known_DCID = 993677  # from ISPyB schema sample data
 _known_GIID = 1281212
 
@@ -216,7 +217,6 @@ def test_mxacquisition_methods(testdb):
     assert fsid > 0
 
 
-@pytest.mark.xfail(reason="Requires ispyb-api#122", strict=True)
 def test_fluo_mapping(testdb):
     mxacquisition = testdb.mx_acquisition
     params = mxacquisition.get_fluo_mapping_roi_params()
