@@ -2,36 +2,27 @@ import pytest
 
 from ispyb.cli import last_data_collections_on
 
+_header = "------Date------ Beamline --DCID-- ---Visit---\n"
+
 
 def test_basic(capsys, testconfig):
     last_data_collections_on.main(["i03", f"--credentials={testconfig}"])
     captured = capsys.readouterr()
     assert not captured.err
+    assert captured.out.startswith(_header)
     assert (
-        captured.out
-        == """\
-------Date------ Beamline --DCID-- ---Visit---
-2016-01-14 12:40 i03        993677 cm14451-1   3600 images   /dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/tlys_jan_4_1_####.cbf
-2016-01-22 11:25 i03       1002287 cm14451-1   7200 images   /dls/i03/data/2016/cm14451-1/20160122/gw/ins2/001/ins2_2_####.cbf
-2016-04-13 12:18 i03       1052494 cm14451-2      2 images   /dls/i03/data/2016/cm14451-2/20160413/test_xtal/xtal1_1_####.cbf
-2016-04-13 12:21 i03       1052503 cm14451-2      3 images   /dls/i03/data/2016/cm14451-2/20160413/test_xtal/xtal1_3_####.cbf
-2016-04-18 11:04 i03       1066786 cm14451-2      3 images   /dls/i03/data/2016/cm14451-2/gw/20160418/thau/edna_test/thau_2_####.cbf
-"""
+        "2016-01-14 12:40 i03        993677 cm14451-1   3600 images   /dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/tlys_jan_4_1_####.cbf"
+        in captured.out
     )
+    assert len(captured.out.split("\n")) >= 5
 
 
 def test_limit(capsys, testconfig):
     last_data_collections_on.main(["i03", "-n", "2", f"--credentials={testconfig}"])
     captured = capsys.readouterr()
     assert not captured.err
-    assert (
-        captured.out
-        == """\
-------Date------ Beamline --DCID-- ---Visit---
-2016-04-13 12:21 i03       1052503 cm14451-2      3 images   /dls/i03/data/2016/cm14451-2/20160413/test_xtal/xtal1_3_####.cbf
-2016-04-18 11:04 i03       1066786 cm14451-2      3 images   /dls/i03/data/2016/cm14451-2/gw/20160418/thau/edna_test/thau_2_####.cbf
-"""
-    )
+    assert captured.out.startswith(_header)
+    assert len(captured.out.strip().split("\n")) == 3
 
 
 @pytest.mark.parametrize(
@@ -43,34 +34,18 @@ def test_link(synchweb_url, capsys, testconfig):
     )
     captured = capsys.readouterr()
     assert not captured.err
-    assert (
-        captured.out
-        == f"""\
-------Date------ Beamline --DCID-- ---Visit---
-2016-01-14 12:40 i03        993677 cm14451-1   3600 images   /dls/i03/data/2016/cm14451-1/20160114/tlys_jan_4/tlys_jan_4_1_####.cbf
-                                                    {synchweb_url}/dc/visit/cm14451-1/id/993677
-2016-01-22 11:25 i03       1002287 cm14451-1   7200 images   /dls/i03/data/2016/cm14451-1/20160122/gw/ins2/001/ins2_2_####.cbf
-                                                    {synchweb_url}/dc/visit/cm14451-1/id/1002287
-2016-04-13 12:18 i03       1052494 cm14451-2      2 images   /dls/i03/data/2016/cm14451-2/20160413/test_xtal/xtal1_1_####.cbf
-                                                    {synchweb_url}/dc/visit/cm14451-2/id/1052494
-2016-04-13 12:21 i03       1052503 cm14451-2      3 images   /dls/i03/data/2016/cm14451-2/20160413/test_xtal/xtal1_3_####.cbf
-                                                    {synchweb_url}/dc/visit/cm14451-2/id/1052503
-2016-04-18 11:04 i03       1066786 cm14451-2      3 images   /dls/i03/data/2016/cm14451-2/gw/20160418/thau/edna_test/thau_2_####.cbf
-                                                    {synchweb_url}/dc/visit/cm14451-2/id/1066786
-"""
-    )
+    assert captured.out.startswith(_header)
+    lines = captured.out[len(_header) :].strip().split("\n")
+    n_lines = len(lines)
+    n_urls = sum(1 for line in lines if f"{synchweb_url}/dc/visit" in line)
+    assert n_urls == n_lines / 2
 
 
 def test_no_results(capsys, testconfig):
     last_data_collections_on.main(["i04", f"--credentials={testconfig}"])
     captured = capsys.readouterr()
     assert not captured.err
-    assert (
-        captured.out
-        == """\
-------Date------ Beamline --DCID-- ---Visit---
-"""
-    )
+    assert captured.out == _header
 
 
 def test_help(capsys):

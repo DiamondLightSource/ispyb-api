@@ -59,14 +59,14 @@ def test_sample_group_linked_dcids(testdb, testconfig):
     sample_group.reload()
     assert sample_group.sample_ids == [374695, 398810]
     assert sample_group.name == "bar"
-    assert sample_group.dcids == [993677, 1066786]
+    assert sample_group.dcids == [993677, 6017405, 1066786]
     assert (
         str(sample_group)
         == """\
 SampleGroup #7
   Name       : bar
   Sample ids : 374695,398810
-  DCIDs      : 993677,1066786\
+  DCIDs      : 993677,6017405,1066786\
 """
     )
 
