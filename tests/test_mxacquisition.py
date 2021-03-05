@@ -18,6 +18,7 @@ def gzip_json(obj):
     return out.getvalue()
 
 _known_DCID = 993677  # from ISPyB schema sample data
+_known_GIID = 1281212
 
 
 def test_mxacquisition_methods(testdb):
@@ -198,12 +199,15 @@ def test_fluo_mapping(testdb):
     assert fmrid is not None
     assert fmrid > 0
 
+    width = 30
+    height = 16
+
     params = mxacquisition.get_fluo_mapping_params()
     params["roi_id"] = fmrid
-    params["grid_info_id"] = dcg_grid_id
+    params["grid_info_id"] = _known_GIID
     params["data_format"] = "gzip+json"
-    params["points"] = 20 * 31
-    params["data"] = binascii.hexlify(gzip_json(list(range(20*31))))
+    params["points"] = width * height
+    params["data"] = binascii.hexlify(gzip_json(list(range(width * height))))
     fmid = mxacquisition.upsert_fluo_mapping(list(params.values()))
     assert fmid is not None
     assert fmid > 0
