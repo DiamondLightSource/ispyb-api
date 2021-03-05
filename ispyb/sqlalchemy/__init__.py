@@ -2,16 +2,37 @@ import configparser
 import os
 
 import sqlalchemy.orm
-from sqlalchemy.orm import relationship
+from sqlalchemy import BINARY, Column
+from sqlalchemy.orm import deferred, relationship
 
 from ._auto_db_schema import *  # noqa F403; lgtm
-from ._auto_db_schema import AutoProcProgram, AutoProcScaling, ProcessingJob
+from ._auto_db_schema import (
+    AutoProcProgram,
+    AutoProcScaling,
+    BLSession,
+    Person,
+    Proposal,
+    ProcessingJob,
+    Protein,
+)
 
 
 AutoProcProgram.AutoProcProgramAttachments = relationship("AutoProcProgramAttachment")
 AutoProcScaling.AutoProcScalingStatistics = relationship("AutoProcScalingStatistics")
 ProcessingJob.ProcessingJobParameters = relationship("ProcessingJobParameter")
 ProcessingJob.ProcessingJobImageSweeps = relationship("ProcessingJobImageSweep")
+
+# These columns result in a UnicodeDecode error when querying the DLS tables with a
+# mysql+mysqlconnector connection. Using mysql+pymysql there is no such error.
+# Setting the columns to deferred at least means that the tables can be queried
+# without error, and I think it is unlikely that these columns will be widely used
+# via the ipsyb-api.
+# See also:
+# https://stackoverflow.com/questions/54182365/i-get-an-error-when-get-my-binary-data-from-mysql-db-using-sqlalchemy
+BLSession.externalId = deferred(Column(BINARY(16)))
+Person.externalId = deferred(Column(BINARY(16)))
+Proposal.externalId = deferred(Column(BINARY(16)))
+Protein.externalId = deferred(Column(BINARY(16)))
 
 
 def session(credentials=None):
