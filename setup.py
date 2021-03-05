@@ -1,4 +1,4 @@
 import setuptools
 
 if __name__ == "__main__":
-    setuptools.setup(version="5.9.1")
+    setuptools.setup(version="6.0.0")
