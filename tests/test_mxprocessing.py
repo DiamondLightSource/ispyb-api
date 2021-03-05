@@ -147,6 +147,8 @@ def test_processing2(testdb):
         )
     )
     assert len(pa) > 0
+    for attachment in pa[0]["processingAttachments"]:
+        assert attachment["importanceRank"] is None
 
     # Find program using the processing job ID and verify stored values
     programs = testdb.get_processing_job(5).programs
@@ -171,6 +173,7 @@ def test_processing2(testdb):
     params["file_name"] = "file.log"
     params["file_path"] = "/tmp"
     params["file_type"] = "Log"  # should be one of Log, Result, Graph
+    params["importance_rank"] = 1
     id = mxprocessing.upsert_program_attachment(list(params.values()))
     assert id is not None
     assert id > 0
@@ -180,6 +183,7 @@ def test_processing2(testdb):
     assert pa2[0]["fileName"] == params["file_name"]
     assert pa2[0]["filePath"] == params["file_path"]
     assert pa2[0]["fileType"] == params["file_type"]
+    assert pa2[0]["importanceRank"] == params["importance_rank"]
 
     pmid = mxprocessing.upsert_program_message(
         id=None,
