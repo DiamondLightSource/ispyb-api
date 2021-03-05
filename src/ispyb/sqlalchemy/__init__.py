@@ -2,16 +2,26 @@ import configparser
 import os
 
 import sqlalchemy.orm
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, ForeignKey
+from sqlalchemy.orm import deferred, relationship
 
 from ._auto_db_schema import *  # noqa F403; lgtm
-from ._auto_db_schema import AutoProcProgram, AutoProcScaling, ProcessingJob
+from ._auto_db_schema import (
+    AdminVar,
+    AutoProcProgram,
+    AutoProcScaling,
+    Container,
+    ProcessingJob,
+)
 
 
 AutoProcProgram.AutoProcProgramAttachments = relationship("AutoProcProgramAttachment")
 AutoProcScaling.AutoProcScalingStatistics = relationship("AutoProcScalingStatistics")
 ProcessingJob.ProcessingJobParameters = relationship("ProcessingJobParameter")
 ProcessingJob.ProcessingJobImageSweeps = relationship("ProcessingJobImageSweep")
+
+
+ispyb_schema_version = None
 
 
 def session(credentials=None):
@@ -64,4 +74,14 @@ def session(credentials=None):
         ),
         connect_args={"use_pure": True},
     )
-    return sqlalchemy.orm.sessionmaker(bind=engine)()
+    session = sqlalchemy.orm.sessionmaker(bind=engine)()
+    version = (
+        session.query(AdminVar.value).filter(AdminVar.name == "schemaVersion").one()
+    )
+    global ispyb_schema_version
+    ispyb_schema_version = version.value
+    if ispyb_schema_version <= "1.19.0":
+        Container.containerTypeId = deferred(
+            Column(ForeignKey("ContainerType.containerTypeId"), index=True)
+        )
+    return session

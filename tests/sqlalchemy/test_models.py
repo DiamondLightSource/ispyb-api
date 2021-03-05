@@ -1,9 +1,11 @@
 import datetime
 import pytest
 
+import ispyb.sqlalchemy
 from ispyb.sqlalchemy import (
     AutoProcProgram,
     AutoProcScaling,
+    Container,
     DataCollection,
     DataCollectionGroup,
     ProcessingJob,
@@ -122,3 +124,10 @@ def test_processing_job(alchemy, insert_processing_job):
     assert pjis.DataCollection is pj.DataCollection
     assert pjis.startImage == 1
     assert pjis.endImage == 180
+
+
+def test_container(alchemy):
+    container = alchemy.query(Container).first()
+    if ispyb.sqlalchemy.ispyb_schema_version >= "1.19.0":
+        assert container.containerTypeId is None
+        assert container.ContainerType is None
