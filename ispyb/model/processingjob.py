@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
 import collections
 
 import ispyb.model
@@ -224,7 +222,7 @@ class ProcessingJobParameters(ispyb.model.DBCache):
         )
 
 
-class ProcessingJobImageSweep(object):
+class ProcessingJobImageSweep:
     """An object representing an image sweep for a processing job. Each image
     sweep has a data collection id, a start and an end image, and an image
     sweep id.

@@ -1,10 +1,8 @@
-from __future__ import absolute_import, division, print_function
-
 import ispyb.model
 import pytest
 
 
-@pytest.mark.parametrize("thing", ["string", u"unicode", "", u""])
+@pytest.mark.parametrize("thing", ["string", ""])
 def test_encapsulated_string_behaves_as_string(thing):
     e = ispyb.model.EncapsulatedValue(thing)
     assert e is not thing
@@ -26,9 +24,6 @@ def test_encapsulated_string_behaves_as_string(thing):
         "strinf",
         "string",
         "strinh",
-        u"unicodd",
-        u"unicode",
-        u"unicodf",
     ):
         assert (e == comparison) is (thing == comparison)
         assert (e <= comparison) is (thing <= comparison)

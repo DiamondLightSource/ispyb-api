@@ -1,7 +1,4 @@
-from __future__ import absolute_import, division, print_function
-
-
-class PDB(object):
+class PDB:
     """An object representing immutable values of a PDB database entry.
     In Python 3.7 this would probably be a much simpler @dataclass.
     """
@@ -42,7 +39,7 @@ class PDB(object):
     def __repr__(self):
         """Returns an object representation, including the DataCollectionGroupID,
         the database connection interface object, and the cache status."""
-        return "<PDB %s>" % (self._name,)
+        return f"<PDB {self._name}>"
 
     def __str__(self):
         """Returns a pretty-printed object representation."""

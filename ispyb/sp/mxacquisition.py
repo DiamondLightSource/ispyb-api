@@ -22,14 +22,10 @@ class MXAcquisition(Acquisition):
     """MXAcquisition provides methods to store data in the MX acquisition tables."""
 
     def __init__(self):
-        self.insert_data_collection_group = super(
-            MXAcquisition, self
-        ).upsert_data_collection_group
-        self.insert_data_collection = super(MXAcquisition, self).upsert_data_collection
-        self.update_data_collection_group = super(
-            MXAcquisition, self
-        ).upsert_data_collection_group
-        self.update_data_collection = super(MXAcquisition, self).upsert_data_collection
+        self.insert_data_collection_group = super().upsert_data_collection_group
+        self.insert_data_collection = super().upsert_data_collection
+        self.update_data_collection_group = super().upsert_data_collection_group
+        self.update_data_collection = super().upsert_data_collection
 
     _image_params = StrictOrderedDict(
         [

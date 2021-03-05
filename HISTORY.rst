@@ -5,6 +5,25 @@ History
 Unreleased / master
 -------------------
 
+6.0.0 (XXXX-XX-XX)
+------------------
+
+* New ``ispyb.sqlalchemy`` module containing `SQLAlchemy <https://www.sqlalchemy.org>`_ ORM models to interface with ISPyB
+* New ``ispyb.last_data_collections_on`` command-line interface to list the most recent data collections on the given beamlines
+* With the introduction of the SQLAlchemy models the existing ``ispyb.model`` has been deprecated and will not be developed further.
+* Added support for Python 3.9
+
+5.9.1 (2021-01-28)
+------------------
+
+* Fix compatibility issue with newer versions of mysql-connector `#116 <https://github.com/DiamondLightSource/ispyb-api/pull/116>`_
+* Final version to support Python 2.7 and 3.5 `#118 <https://github.com/DiamondLightSource/ispyb-api/pull/118>`_
+
+5.9.0 (2021-01-14)
+------------------
+
+* New method insert_subsample_for_image_full_path `#114 <https://github.com/DiamondLightSource/ispyb-api/pull/114>`_ (requires ispyb-database 1.17.2)
+
 5.8.1 (2020-11-22)
 ------------------
 

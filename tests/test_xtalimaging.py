@@ -1,6 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
-
 def test_xtal_imaging(testdb):
     testdb.set_role("ispyb_import")
     xtalimaging = testdb.xtal_imaging
@@ -37,3 +34,21 @@ def test_xtal_imaging(testdb):
 
     assert cid2 is not None
     assert cid2 == 34874
+
+    ssid = xtalimaging.insert_subsample_for_image_full_path(
+        image_full_path=si_full_path,
+        source="auto",
+        position1x=304,
+        position1y=621,
+    )
+    assert ssid is not None
+
+    ssid2 = xtalimaging.insert_subsample_for_image_full_path(
+        image_full_path=si_full_path,
+        source="auto",
+        position1x=391,
+        position1y=687,
+        position2x=473,
+        position2y=744,
+    )
+    assert ssid2 is not None

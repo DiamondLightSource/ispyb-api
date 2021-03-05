@@ -1,12 +1,7 @@
-from __future__ import absolute_import, division, print_function
-
-try:
-    import configparser
-except ImportError:
-    import ConfigParser as configparser
+import configparser
 import logging
 
-__version__ = "5.8.1"
+__version__ = "5.9.1"
 
 _log = logging.getLogger("ispyb")
 

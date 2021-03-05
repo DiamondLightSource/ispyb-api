@@ -24,6 +24,6 @@ git push  # pushes the release commit
 git push origin v2.0.0  # pushes the release tag for version 2.0.0
 ```
 
-Assuming the tests pass the release is then created by Travis and uploaded directly onto [pypi](https://pypi.org/project/ispyb/).
+Assuming the tests pass the release is then created by Azure and uploaded directly onto [pypi](https://pypi.org/project/ispyb/).
 
 The ISPyB API is also released on [conda-forge](https://github.com/conda-forge/ispyb-feedstock), the release process there will be triggered automatically within a few hours.

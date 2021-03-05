@@ -7,7 +7,6 @@
 # Usage example:
 # python put_dcgroup.py --movieid=1 --x=123.4 --y=50.02
 
-from __future__ import print_function
 import logging
 import sys
 

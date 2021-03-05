@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
 import abc
 
 from ispyb.interface.dataarea import DataArea
@@ -8,11 +6,11 @@ import ispyb.model.datacollection
 
 class IF(DataArea):
     @abc.abstractmethod
-    def get_data_collection_group_params(cls):
+    def get_data_collection_group_params(self):
         pass
 
     @abc.abstractmethod
-    def get_data_collection_params(cls):
+    def get_data_collection_params(self):
         pass
 
     @abc.abstractmethod

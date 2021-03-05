@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function
-
 from ispyb.interface.dataarea import DataArea
 
 
@@ -47,6 +45,52 @@ class XtalImaging(DataArea):
         self.get_connection().call_sp_write(
             procname="upsert_sample_image_auto_score",
             args=[image_full_path, schema_name, score_class, probability],
+        )
+
+    def insert_subsample_for_image_full_path(
+        self,
+        image_full_path,
+        source,
+        position1x,
+        position1y,
+        position2x=None,
+        position2y=None,
+    ):
+        """Store new subsample for a given sample image.
+
+        Either specify a point (by providing position1x and position1y)
+        or a ROI box (by additionally providing position2x and position2y).
+        Position coordinates are given in pixels from the top-left corner
+        of the image.
+
+        :param image_full_path: The full path to the sample image
+        :type image_full_path: str
+        :param source: manual or auto
+        :type source: str
+        :param position1x: x component of position1
+        :type position1x: int
+        :param position1y: y component of position1
+        :type position1y: int
+        :param position2x: x component of position2 which is the lower right
+        corner of a ROI box
+        :type position2x: int
+        :param position2y: y component of position2 which is the lower right
+        corner of a ROI box
+        :type position2y: int
+        :return: The subsample_id.
+        """
+        id = None
+        return self.get_connection().call_sp_write(
+            procname="insert_subsample_for_image_full_path",
+            args=[
+                id,
+                image_full_path,
+                source,
+                position1x,
+                position1y,
+                position2x,
+                position2y,
+            ],
         )
 
     def retrieve_container_for_barcode(self, barcode):
