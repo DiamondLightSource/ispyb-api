@@ -2,8 +2,24 @@ from datetime import datetime
 
 import ispyb
 import pytest
+import json
+import io
+import gzip
+import binascii
+
+
+def gzip_json(obj):
+    json_str = json.dumps(obj)
+
+    out = io.BytesIO()
+    with gzip.GzipFile(fileobj=out, mode="w") as fo:
+        fo.write(json_str.encode())
+
+    return out.getvalue()
+
 
 _known_DCID = 993677  # from ISPyB schema sample data
+_known_GIID = 1281212
 
 
 def test_mxacquisition_methods(testdb):
@@ -201,7 +217,6 @@ def test_mxacquisition_methods(testdb):
     assert fsid > 0
 
 
-@pytest.mark.xfail(reason="Requires ispyb-api#122", strict=True)
 def test_fluo_mapping(testdb):
     mxacquisition = testdb.mx_acquisition
     params = mxacquisition.get_fluo_mapping_roi_params()
@@ -216,13 +231,15 @@ def test_fluo_mapping(testdb):
     assert fmrid is not None
     assert fmrid > 0
 
+    width = 30
+    height = 16
+
     params = mxacquisition.get_fluo_mapping_params()
     params["roi_id"] = fmrid
-    params["roi_start_energy"] = 7.014
-    params["roi_end_energy"] = 13.617
-    params["dc_id"] = _known_DCID
-    params["img_number"] = 1
-    params["counts"] = 14
+    params["grid_info_id"] = _known_GIID
+    params["data_format"] = "gzip+json"
+    params["points"] = width * height
+    params["data"] = binascii.hexlify(gzip_json(list(range(width * height))))
     fmid = mxacquisition.upsert_fluo_mapping(list(params.values()))
     assert fmid is not None
     assert fmid > 0

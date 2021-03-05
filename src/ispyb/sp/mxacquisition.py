@@ -155,11 +155,15 @@ class MXAcquisition(Acquisition):
         [
             ("id", None),
             ("roi_id", None),
-            ("roi_start_energy", None),
-            ("roi_end_energy", None),
-            ("dc_id", None),
-            ("img_number", None),
-            ("counts", None),
+            ("grid_info_id", None),
+            ("data_format", None),
+            ("data", None),
+            ("points", None),
+            ("opacity", 1),
+            ("colour_map", None),
+            ("min", None),
+            ("max", None),
+            ("program_id", None),
         ]
     )
 
@@ -173,6 +177,8 @@ class MXAcquisition(Acquisition):
             ("r", None),
             ("g", None),
             ("b", None),
+            ("sample_id", None),
+            ("scalar", None),
         ]
     )
 
