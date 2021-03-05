@@ -9,31 +9,31 @@ class GridInfo(ispyb.model.DBCache):
     """
 
     def __init__(self, dcgid, db_conn, preload=None):
-        """Create a GridInfo object for a defined DCID. Requires
+        """Create a GridInfo object for a defined DCGID. Requires
         a database connection object exposing further data access methods.
 
-        :param dcid: DataCollectionID
+        :param dcgid: DataCollectionGroupID
         :param db_conn: ISPyB database connection object
         :return: A GridInfo object representing the database entry for
-                 the specified DataCollectionID
+                 the specified DataCollectionGroupID
         """
         self._db = db_conn
-        self._dcid = int(dcid)
+        self._dcgid = int(dcgid)
         if preload:
             self._data = preload
 
     def reload(self):
         """Load/update information from the database."""
         try:
-            self._data = self._db.mx_acquisition.retrieve_dc_grid(self._dcid)[0]
+            self._data = self._db.mx_acquisition.retrieve_dcg_grid(self._dcgid)[0]
         except ispyb.NoResult:
             self._data = None
 
     @property
-    def dcid(self):
-        """Returns the Data Collection ID associated with this grid
+    def dcgid(self):
+        """Returns the Data Collection Group ID associated with this grid
         information."""
-        return self._dcid
+        return self._dcgid
 
     def __bool__(self):
         """GridInfo object evaluates to True in a boolean context if grid
@@ -44,10 +44,10 @@ class GridInfo(ispyb.model.DBCache):
     __nonzero__ = __bool__  # Python 2 compatibility
 
     def __repr__(self):
-        """Returns an object representation, including the DataCollectionID,
+        """Returns an object representation, including the DataCollectionGroupID,
         the database connection interface object, and the cache status."""
         return "<GridInfo #%d (%s), %r>" % (
-            self._dcid,
+            self._dcgid,
             "cached" if self.cached else "uncached",
             self._db,
         )
@@ -55,8 +55,8 @@ class GridInfo(ispyb.model.DBCache):
     def __str__(self):
         """Returns a pretty-printed object representation."""
         if not self.cached:
-            return "GridInfo #%d (not yet loaded from database)" % self._dcid
-        return ("\n".join(("GridInfo #{0.dcid}",))).format(self)
+            return "GridInfo #%d (not yet loaded from database)" % self._dcgid
+        return ("\n".join(("GridInfo #{0.dcgid}",))).format(self)
 
 
 ispyb.model.add_properties(
