@@ -11,6 +11,7 @@ Unreleased / master
 * New ``ispyb.sqlalchemy`` module containing `SQLAlchemy <https://www.sqlalchemy.org>`_ ORM models to interface with ISPyB
 * New ``ispyb.last_data_collections_on`` command-line interface to list the most recent data collections on the given beamlines
 * With the introduction of the SQLAlchemy models the existing ``ispyb.model`` has been deprecated and will not be developed further.
+* Refactored XRF mapping to work at scale `#122 <https://github.com/DiamondLightSource/ispyb-api/pull/122>`_
 * Functions marked for deprecation in v5.0 have been removed
 * Added support for Python 3.9
 
