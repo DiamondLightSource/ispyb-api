@@ -103,6 +103,14 @@ class AutoProc(Base):
     recordTimeStamp = Column(DateTime, comment="Creation or last update date/time")
 
 
+class BFAutomationError(Base):
+    __tablename__ = "BF_automationError"
+
+    automationErrorId = Column(INTEGER(10), primary_key=True)
+    errorType = Column(String(40), nullable=False)
+    solution = Column(Text)
+
+
 class BFSystem(Base):
     __tablename__ = "BF_system"
 
@@ -229,6 +237,41 @@ class ContainerRegistry(Base):
     barcode = Column(String(20))
     comments = Column(String(255))
     recordTimestamp = Column(DateTime, server_default=text("current_timestamp()"))
+
+
+class ContainerType(Base):
+    __tablename__ = "ContainerType"
+    __table_args__ = {"comment": "A lookup table for different types of containers"}
+
+    containerTypeId = Column(INTEGER(10), primary_key=True)
+    name = Column(String(100))
+    proposalType = Column(String(10))
+    active = Column(
+        TINYINT(1), server_default=text("1"), comment="1=active, 0=inactive"
+    )
+    capacity = Column(INTEGER(11))
+    wellPerRow = Column(SMALLINT(6))
+    dropPerWellX = Column(SMALLINT(6))
+    dropPerWellY = Column(SMALLINT(6))
+    dropHeight = Column(Float)
+    dropWidth = Column(Float)
+    dropOffsetX = Column(Float)
+    dropOffsetY = Column(Float)
+    wellDrop = Column(SMALLINT(6))
+
+
+class CryoemInitialModel(Base):
+    __tablename__ = "CryoemInitialModel"
+    __table_args__ = {"comment": "Initial cryo-EM model generation results"}
+
+    cryoemInitialModelId = Column(INTEGER(10), primary_key=True)
+    resolution = Column(Float, comment="Unit: Angstroms")
+    numberOfParticles = Column(INTEGER(10))
+
+    ParticleClassification = relationship(
+        "ParticleClassification",
+        secondary="ParticleClassification_has_CryoemInitialModel",
+    )
 
 
 class DataAcquisition(Base):
@@ -3529,7 +3572,7 @@ class Container(Base):
     )
     comments = Column(String(255))
     experimentType = Column(String(20))
-    storageTemperature = Column(Float)
+    storageTemperature = Column(Float, comment="NULL=ambient")
     containerRegistryId = Column(
         ForeignKey("ContainerRegistry.containerRegistryId"), index=True
     )
@@ -3538,8 +3581,10 @@ class Container(Base):
         ForeignKey("ProcessingPipeline.processingPipelineId"), index=True
     )
     experimentTypeId = Column(ForeignKey("ExperimentType.experimentTypeId"), index=True)
+    containerTypeId = Column(ForeignKey("ContainerType.containerTypeId"), index=True)
 
     ContainerRegistry = relationship("ContainerRegistry")
+    ContainerType = relationship("ContainerType")
     Dewar = relationship("Dewar")
     ExperimentType = relationship("ExperimentType")
     Imager = relationship("Imager", primaryjoin="Container.imagerId == Imager.imagerId")
@@ -3565,6 +3610,25 @@ class DewarTransportHistory(Base):
     arrivalDate = Column(DateTime, nullable=False)
 
     Dewar = relationship("Dewar")
+
+
+class BFAutomationFault(Base):
+    __tablename__ = "BF_automationFault"
+
+    automationFaultId = Column(INTEGER(10), primary_key=True)
+    automationErrorId = Column(
+        ForeignKey("BF_automationError.automationErrorId"), index=True
+    )
+    containerId = Column(ForeignKey("Container.containerId"), index=True)
+    severity = Column(Enum("1", "2", "3"))
+    stacktrace = Column(Text)
+    resolved = Column(TINYINT(1))
+    faultTimeStamp = Column(
+        TIMESTAMP, nullable=False, server_default=text("current_timestamp()")
+    )
+
+    BF_automationError = relationship("BFAutomationError")
+    Container = relationship("Container")
 
 
 class BLSample(Base):
@@ -5238,6 +5302,37 @@ class PDBEntryHasAutoProcProgram(Base):
     PDBEntry = relationship("PDBEntry")
 
 
+class ParticlePicker(Base):
+    __tablename__ = "ParticlePicker"
+    __table_args__ = {
+        "comment": "An instance of a particle picker program that was run"
+    }
+
+    particlePickerId = Column(INTEGER(10), primary_key=True)
+    particlePickerProgramId = Column(
+        ForeignKey("AutoProcProgram.autoProcProgramId"), index=True
+    )
+    particleClassificationProgramId = Column(
+        ForeignKey("AutoProcProgram.autoProcProgramId"), index=True
+    )
+    firstMotionCorrectionId = Column(
+        ForeignKey("MotionCorrection.motionCorrectionId"), index=True
+    )
+    particlePickingTemplate = Column(String(255), comment="Cryolo model")
+    particleDiameter = Column(Float, comment="Unit: nm")
+    numberOfParticles = Column(INTEGER(10))
+
+    MotionCorrection = relationship("MotionCorrection")
+    AutoProcProgram = relationship(
+        "AutoProcProgram",
+        primaryjoin="ParticlePicker.particleClassificationProgramId == AutoProcProgram.autoProcProgramId",
+    )
+    AutoProcProgram1 = relationship(
+        "AutoProcProgram",
+        primaryjoin="ParticlePicker.particlePickerProgramId == AutoProcProgram.autoProcProgramId",
+    )
+
+
 class ScreeningStrategyWedge(Base):
     __tablename__ = "ScreeningStrategyWedge"
 
@@ -5340,6 +5435,42 @@ class XrayCentringResult(Base):
     GridInfo = relationship("GridInfo")
 
 
+class ParticleClassification(Base):
+    __tablename__ = "ParticleClassification"
+    __table_args__ = {"comment": "Results of 2D or 2D classification"}
+
+    particleClassificationId = Column(INTEGER(10), primary_key=True)
+    particlePickerId = Column(
+        ForeignKey(
+            "ParticlePicker.particlePickerId", ondelete="CASCADE", onupdate="CASCADE"
+        ),
+        index=True,
+    )
+    type = Column(
+        Enum("2D", "3D"), comment="Indicates the type of particle classification"
+    )
+    batchNumber = Column(INTEGER(10), comment="Corresponding to batch number")
+    classNumber = Column(
+        INTEGER(10), comment="Identified of the class. A unique ID given by Relion"
+    )
+    classImageFullPath = Column(String(255), comment="The PNG of the class")
+    numberOfParticlesPerBatch = Column(
+        INTEGER(10), comment="total number of particles per batch (a large integer)"
+    )
+    numberOfClassesPerBatch = Column(INTEGER(10))
+    particlesPerClass = Column(
+        INTEGER(10),
+        comment="Number of particles within the selected class, can then be used together with the total number above to calculate the percentage",
+    )
+    rotationAccuracy = Column(INTEGER(10), comment="???")
+    translationAccuracy = Column(Float, comment="Unit: Angstroms")
+    estimatedResolution = Column(Float, comment="???, Unit: Angstroms")
+    overallFourierCompleteness = Column(Float)
+    symmetry = Column(String(20))
+
+    ParticlePicker = relationship("ParticlePicker")
+
+
 class ScreeningStrategySubWedge(Base):
     __tablename__ = "ScreeningStrategySubWedge"
 
@@ -5424,3 +5555,30 @@ class XFEFluorescenceComposite(Base):
         "XRFFluorescenceMapping",
         primaryjoin="XFEFluorescenceComposite.r == XRFFluorescenceMapping.xrfFluorescenceMappingId",
     )
+
+
+t_ParticleClassification_has_CryoemInitialModel = Table(
+    "ParticleClassification_has_CryoemInitialModel",
+    metadata,
+    Column(
+        "particleClassificationId",
+        ForeignKey(
+            "ParticleClassification.particleClassificationId",
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+        ),
+        primary_key=True,
+        nullable=False,
+    ),
+    Column(
+        "cryoemInitialModelId",
+        ForeignKey(
+            "CryoemInitialModel.cryoemInitialModelId",
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+        ),
+        primary_key=True,
+        nullable=False,
+        index=True,
+    ),
+)
