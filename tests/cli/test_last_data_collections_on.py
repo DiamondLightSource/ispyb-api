@@ -16,6 +16,7 @@ def test_basic(capsys, testconfig):
 2016-04-13 12:18 i03       1052494 cm14451-2      2 images   /dls/i03/data/2016/cm14451-2/20160413/test_xtal/xtal1_1_####.cbf
 2016-04-13 12:21 i03       1052503 cm14451-2      3 images   /dls/i03/data/2016/cm14451-2/20160413/test_xtal/xtal1_3_####.cbf
 2016-04-18 11:04 i03       1066786 cm14451-2      3 images   /dls/i03/data/2016/cm14451-2/gw/20160418/thau/edna_test/thau_2_####.cbf
+2021-02-25 10:15 i03       6017405 cm14451-1    480 images, 30x16 grid   /dls/i03/data/2021/cm28170-1/xraycentring/screening/TestLysozyme/Lys_6/Lys_6_1_master.h5
 """
     )
 
@@ -28,8 +29,8 @@ def test_limit(capsys, testconfig):
         captured.out
         == """\
 ------Date------ Beamline --DCID-- ---Visit---
-2016-04-13 12:21 i03       1052503 cm14451-2      3 images   /dls/i03/data/2016/cm14451-2/20160413/test_xtal/xtal1_3_####.cbf
 2016-04-18 11:04 i03       1066786 cm14451-2      3 images   /dls/i03/data/2016/cm14451-2/gw/20160418/thau/edna_test/thau_2_####.cbf
+2021-02-25 10:15 i03       6017405 cm14451-1    480 images, 30x16 grid   /dls/i03/data/2021/cm28170-1/xraycentring/screening/TestLysozyme/Lys_6/Lys_6_1_master.h5
 """
     )
 
@@ -57,6 +58,8 @@ def test_link(synchweb_url, capsys, testconfig):
                                                     {synchweb_url}/dc/visit/cm14451-2/id/1052503
 2016-04-18 11:04 i03       1066786 cm14451-2      3 images   /dls/i03/data/2016/cm14451-2/gw/20160418/thau/edna_test/thau_2_####.cbf
                                                     {synchweb_url}/dc/visit/cm14451-2/id/1066786
+2021-02-25 10:15 i03       6017405 cm14451-1    480 images, 30x16 grid   /dls/i03/data/2021/cm28170-1/xraycentring/screening/TestLysozyme/Lys_6/Lys_6_1_master.h5
+                                                    {synchweb_url}/dc/visit/cm14451-1/id/6017405
 """
     )
 
