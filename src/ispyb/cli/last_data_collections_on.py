@@ -38,7 +38,13 @@ def get_last_data_collections_on(beamlines, db_session, limit=10, latest_dcid=No
     query = (
         db_session.query(BLSession, DataCollection, GridInfo, Proposal)
         .options(
-            Load(DataCollection).load_only("dataCollectionId", "numberOfImages"),
+            Load(DataCollection).load_only(
+                "dataCollectionId",
+                "fileTemplate",
+                "imageDirectory",
+                "numberOfImages",
+                "startTime",
+            ),
             Load(Proposal).load_only("proposalCode", "proposalNumber"),
             Load(BLSession).load_only("beamLineName", "visit_number"),
             Load(GridInfo).load_only("steps_x", "steps_y"),
