@@ -99,7 +99,7 @@ def enable_debug_logging():
             cause = f"\n{indent}originating from {frame.f_code.co_filename}:{line}"
             break
         if parameters:
-            parameters = f"\n{indent}with {parameters=}"
+            parameters = f"\n{indent}with parameters={parameters}"
         else:
             parameters = ""
 
