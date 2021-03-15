@@ -5,7 +5,9 @@ History
 Unreleased / master
 -------------------
 
-6.0.0 (XXXX-XX-XX)
+* ``ispyb.sqlalchemy.enable_debug_logging()`` will log every SQL call before execution through the Python logging framework
+
+6.0.0 (2021-03-05)
 ------------------
 
 * New ``ispyb.sqlalchemy`` module containing `SQLAlchemy <https://www.sqlalchemy.org>`_ ORM models to interface with ISPyB
