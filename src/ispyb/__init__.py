@@ -1,7 +1,7 @@
 import configparser
 import logging
 
-__version__ = "6.0.0"
+__version__ = "6.0.1"
 
 _log = logging.getLogger("ispyb")
 
