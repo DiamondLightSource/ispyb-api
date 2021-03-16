@@ -8,12 +8,26 @@ _log = logging.getLogger("ispyb")
 
 
 def open(credentials=None):
-    """Create an ISPyB connection using settings from a configuration file.
-    This can be used either as a function call or as a context manager.
+    """Create an ISPyB connection.
 
-    :param configuration_file: Full path to a file containing database
-                               credentials
-    :return: ISPyB connection object
+    Args:
+        credentials: a config file containing database credentials.
+            If `credentials=None` then look for a credentials file in the
+            "ISPYB_CREDENTIALS" environment variable.
+
+            Example credentials file::
+
+                [ispyb_mariadb_sp]
+                user = ispyb_api
+                pw = password_1234
+                host = localhost
+                port = 3306
+                db = ispybtest
+                reconn_attempts = 6
+                reconn_delay = 1
+
+    Returns:
+        The ISPyB connection object.
     """
     if not credentials:
         credentials = os.getenv("ISPYB_CREDENTIALS")
