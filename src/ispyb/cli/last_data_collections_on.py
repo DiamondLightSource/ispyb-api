@@ -1,4 +1,5 @@
 import argparse
+import logging
 import pathlib
 import sys
 import time
@@ -37,7 +38,13 @@ def get_last_data_collections_on(beamlines, db_session, limit=10, latest_dcid=No
     query = (
         db_session.query(BLSession, DataCollection, GridInfo, Proposal)
         .options(
-            Load(DataCollection).load_only("dataCollectionId", "numberOfImages"),
+            Load(DataCollection).load_only(
+                "dataCollectionId",
+                "fileTemplate",
+                "imageDirectory",
+                "numberOfImages",
+                "startTime",
+            ),
             Load(Proposal).load_only("proposalCode", "proposalNumber"),
             Load(BLSession).load_only("beamLineName", "visit_number"),
             Load(GridInfo).load_only("steps_x", "steps_y"),
@@ -109,6 +116,14 @@ def main(args=None):
         metavar="N",
         help="show the last N collections for each beamline",
     )
+    parser.add_argument(
+        "-d",
+        "--debug",
+        action="store_true",
+        dest="debug",
+        default=False,
+        help=argparse.SUPPRESS,
+    )
     parser.add_argument("--credentials", action="store", type=pathlib.Path)
     parser.add_argument(
         "--synchweb-url",
@@ -123,6 +138,13 @@ def main(args=None):
         parser.print_help()
         sys.exit(0)
     t0 = time.time()
+
+    if args.debug:
+        console = logging.StreamHandler(sys.stdout)
+        console.setLevel(logging.DEBUG)
+        logging.getLogger("ispyb").addHandler(console)
+        logging.getLogger("ispyb").setLevel(logging.DEBUG)
+        ispyb.sqlalchemy.enable_debug_logging()
 
     db_session = ispyb.sqlalchemy.session(args.credentials)
 

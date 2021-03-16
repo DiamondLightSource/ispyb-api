@@ -1,12 +1,15 @@
 import configparser
 import os
+import logging
 
+import sqlalchemy.engine
 import sqlalchemy.orm
 from sqlalchemy.orm import relationship
 
 from ._auto_db_schema import *  # noqa F403; lgtm
 from ._auto_db_schema import AutoProcProgram, AutoProcScaling, ProcessingJob
 
+logger = logging.getLogger("ispyb.sqlalchemy")
 
 AutoProcProgram.AutoProcProgramAttachments = relationship("AutoProcProgramAttachment")
 AutoProcScaling.AutoProcScalingStatistics = relationship("AutoProcScalingStatistics")
@@ -65,3 +68,45 @@ def session(credentials=None):
         connect_args={"use_pure": True},
     )
     return sqlalchemy.orm.sessionmaker(bind=engine)()
+
+
+def enable_debug_logging():
+    """Write debug level logging output for every executed SQL query.
+
+    This setting will persist throughout the Python process lifetime and affect
+    all existing and future sqlalchemy sessions. This should not be used in
+    production as it can be expensive, can leak sensitive information, and,
+    once enabled, cannot be disabled.
+    """
+    if hasattr(enable_debug_logging, "enabled"):
+        return
+    enable_debug_logging.enabled = True
+
+    _sqlalchemy_root = os.path.dirname(sqlalchemy.__file__)
+
+    import traceback
+
+    @sqlalchemy.event.listens_for(sqlalchemy.engine.Engine, "before_cursor_execute")
+    def log_sql_call(conn, cursor, statement, parameters, context, executemany):
+        count = getattr(log_sql_call, "_count", 0) + 1
+        setattr(log_sql_call, "_count", count)
+
+        indent = "    "
+        cause = ""
+        for frame, line in traceback.walk_stack(None):
+            if frame.f_code.co_filename.startswith(_sqlalchemy_root):
+                continue
+            cause = f"\n{indent}originating from {frame.f_code.co_filename}:{line}"
+            break
+        if parameters:
+            parameters = f"\n{indent}with parameters={parameters}"
+        else:
+            parameters = ""
+
+        logger.debug(
+            f"SQL query #{count}:\n"
+            + indent
+            + str(statement).replace("\n", "\n" + indent)
+            + parameters
+            + cause
+        )
