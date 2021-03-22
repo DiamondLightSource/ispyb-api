@@ -5,6 +5,8 @@ History
 Unreleased / master
 -------------------
 
+* New ``ispyb.sqlalchemy.create_engine()`` to create an SQLAlchemy Engine using the given database credentials
+
 6.0.1 (2021-03-16)
 ------------------
 

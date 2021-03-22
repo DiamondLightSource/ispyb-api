@@ -5,6 +5,11 @@ import sqlalchemy.orm
 import ispyb.sqlalchemy
 
 
+def test_create_engine(testconfig):
+    engine = ispyb.sqlalchemy.create_engine(testconfig)
+    assert isinstance(engine, sqlalchemy.engine.Engine)
+
+
 def test_session_from_dict(testconfig):
     config = configparser.RawConfigParser(allow_no_value=True)
     config.read(testconfig)
