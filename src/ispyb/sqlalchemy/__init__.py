@@ -76,31 +76,9 @@ def create_engine(
 def session(credentials=None):
     """Create an SQLAlchemy session.
 
-    return sqlalchemy.orm.sessionmaker(bind=engine)()
-
     Args:
         credentials: a config file or a Python dictionary containing database
-            credentials. If `credentials=None` then look for a credentials file in the
-            "ISPYB_CREDENTIALS" environment variable.
-
-            Example credentials file::
-
-                [ispyb_sqlalchemy]
-                username = user
-                password = password
-                host = localhost
-                port = 3306
-                database = ispyb_build
-
-           Example credentials dictionary::
-
-               {
-                   "username": "user",
-                   "password": "password",
-                   "host": localhost",
-                   "port": 3306,
-                   "database": "ispyb",
-               }
+            credentials, see function `create_engine()` for details.
 
     Returns:
         The SQLAlchemy session.
