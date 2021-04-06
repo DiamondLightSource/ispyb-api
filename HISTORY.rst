@@ -5,6 +5,9 @@ History
 Unreleased / master
 -------------------
 
+6.0.2 (2021-04-06)
+------------------
+
 * ``ispyb.sqlalchemy.url()`` is a function that generates the SQLAlchemy connection URL from the ISPyB configuration
 
 6.0.1 (2021-03-16)
