@@ -9,11 +9,6 @@
 
 import copy
 
-# from datetime import datetime
-# import os
-# import sys
-# import time
-
 from ispyb.sp.acquisition import Acquisition
 from ispyb.strictordereddict import StrictOrderedDict
 

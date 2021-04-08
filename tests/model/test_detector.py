@@ -1,5 +1,5 @@
-import ispyb.model.detector
 import ispyb.model.__future__
+import ispyb.model.detector
 
 
 def test_detector(testdb, testconfig):

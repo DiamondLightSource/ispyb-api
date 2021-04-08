@@ -1,7 +1,7 @@
 import ispyb.model.datacollection
 import ispyb.model.detector
-import ispyb.model.processingprogram
 import ispyb.model.processingjob
+import ispyb.model.processingprogram
 import ispyb.model.sample
 import ispyb.model.samplegroup
 import ispyb.model.screening

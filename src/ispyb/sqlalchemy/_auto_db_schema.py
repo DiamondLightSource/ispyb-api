@@ -1,9 +1,10 @@
 # coding: utf-8
 from sqlalchemy import (
     BINARY,
+    DECIMAL,
+    TIMESTAMP,
     Column,
     Computed,
-    DECIMAL,
     Date,
     DateTime,
     Enum,
@@ -12,7 +13,6 @@ from sqlalchemy import (
     Index,
     LargeBinary,
     String,
-    TIMESTAMP,
     Table,
     Text,
     Time,
@@ -30,8 +30,8 @@ from sqlalchemy.dialects.mysql import (
     TINYTEXT,
     VARCHAR,
 )
-from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 metadata = Base.metadata

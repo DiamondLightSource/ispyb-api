@@ -1,6 +1,6 @@
-from ispyb.strictordereddict import StrictOrderedDict
-
 import pytest
+
+from ispyb.strictordereddict import StrictOrderedDict
 
 
 def test_keyerror():

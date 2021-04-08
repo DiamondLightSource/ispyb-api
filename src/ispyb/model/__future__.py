@@ -6,6 +6,7 @@
 
 import configparser
 import logging
+
 import mysql.connector
 
 _db_config = None

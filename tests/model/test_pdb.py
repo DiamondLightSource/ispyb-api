@@ -1,6 +1,8 @@
-import ispyb.model.pdb
 from unittest import mock
+
 import pytest
+
+import ispyb.model.pdb
 
 
 def test_pdb_values_are_immutable():

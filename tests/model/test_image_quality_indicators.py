@@ -1,6 +1,6 @@
+import ispyb.model.__future__
 import ispyb.model.datacollection
 import ispyb.model.image_quality_indicators
-import ispyb.model.__future__
 
 
 def test_image_quality_indicators(testdb, testconfig):

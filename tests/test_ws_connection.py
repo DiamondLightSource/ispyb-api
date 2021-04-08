@@ -1,5 +1,6 @@
-import ispyb
 import pytest
+
+import ispyb
 
 
 def test_ws_connection(testconfig_ws):

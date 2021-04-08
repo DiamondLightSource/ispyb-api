@@ -1,11 +1,12 @@
+import binascii
+import gzip
+import io
+import json
 from datetime import datetime
 
-import ispyb
 import pytest
-import json
-import io
-import gzip
-import binascii
+
+import ispyb
 
 
 def gzip_json(obj):

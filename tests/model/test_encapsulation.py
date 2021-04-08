@@ -1,5 +1,6 @@
-import ispyb.model
 import pytest
+
+import ispyb.model
 
 
 @pytest.mark.parametrize("thing", ["string", ""])

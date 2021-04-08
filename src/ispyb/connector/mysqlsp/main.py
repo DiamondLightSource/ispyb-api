@@ -1,15 +1,16 @@
 import threading
 import traceback
 
-import ispyb.interface.connection
 import mysql.connector
-from ispyb import ISPyBException, ConnectionError, NoResult, ReadWriteError
 from mysql.connector.errors import (
     DatabaseError,
     DataError,
     IntegrityError,
     InterfaceError,
 )
+
+import ispyb.interface.connection
+from ispyb import ConnectionError, ISPyBException, NoResult, ReadWriteError
 
 
 class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):

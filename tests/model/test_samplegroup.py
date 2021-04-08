@@ -1,6 +1,6 @@
+import ispyb.model.__future__
 import ispyb.model.datacollection
 import ispyb.model.samplegroup
-import ispyb.model.__future__
 
 
 def test_dc_no_sample_groups(testdb, testconfig):
