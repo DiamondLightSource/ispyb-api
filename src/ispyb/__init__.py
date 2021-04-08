@@ -1,13 +1,14 @@
 import configparser
 import logging
 import os
+import warnings
 
 __version__ = "6.0.1"
 
 _log = logging.getLogger("ispyb")
 
 
-def open(credentials=None):
+def open(credentials=None, configuration_file=None):
     """Create an ISPyB connection.
 
     Args:
@@ -29,8 +30,15 @@ def open(credentials=None):
     Returns:
         The ISPyB connection object.
     """
-    if not credentials:
-        credentials = os.getenv("ISPYB_CREDENTIALS")
+    if configuration_file:
+        warnings.warn(
+            "The parameter 'configuration_file' is deprecated and will be removed in a future version. "
+            "Use positional arguments or 'credentials' instead",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
+    credentials = credentials or configuration_file or os.getenv("ISPYB_CREDENTIALS")
 
     if not credentials:
         raise AttributeError("No credentials file specified")
@@ -38,6 +46,7 @@ def open(credentials=None):
     config = configparser.RawConfigParser(allow_no_value=True)
     if not config.read(credentials):
         raise AttributeError(f"No configuration found at {credentials}")
+
     if config.has_section("ispyb_mariadb_sp"):
         from ispyb.connector.mysqlsp.main import ISPyBMySQLSPConnector as Connector
 
