@@ -12,9 +12,9 @@ from ispyb.sqlalchemy import (
 )
 
 
-def test_data_collection(alchemy):
+def test_data_collection(db_session):
     query = (
-        alchemy.query(DataCollection)
+        db_session.query(DataCollection)
         .order_by(DataCollection.dataCollectionId)
         .filter_by(SESSIONID=55168)
     )
@@ -24,8 +24,8 @@ def test_data_collection(alchemy):
     assert dc.dataCollectionId == 1052494
 
 
-def test_data_collection_group(alchemy):
-    query = alchemy.query(DataCollectionGroup).filter(
+def test_data_collection_group(db_session):
+    query = db_session.query(DataCollectionGroup).filter(
         DataCollectionGroup.dataCollectionGroupId == 988855
     )
     dcg = query.one()
@@ -35,8 +35,8 @@ def test_data_collection_group(alchemy):
     assert dcg.BLSession.beamLineName == "i03"
 
 
-def test_auto_proc_scaling(alchemy):
-    query = alchemy.query(AutoProcScaling).filter(
+def test_auto_proc_scaling(db_session):
+    query = db_session.query(AutoProcScaling).filter(
         AutoProcScaling.autoProcScalingId == 596133
     )
     aps = query.one()
@@ -56,8 +56,8 @@ def test_auto_proc_scaling(alchemy):
     assert ap.refinedCell_a == 92.5546
 
 
-def test_auto_proc_program(alchemy):
-    query = alchemy.query(AutoProcProgram).filter(
+def test_auto_proc_program(db_session):
+    query = db_session.query(AutoProcProgram).filter(
         AutoProcProgram.autoProcProgramId == 56425592
     )
     app = query.one()
@@ -73,7 +73,7 @@ def test_auto_proc_program(alchemy):
 
 
 @pytest.fixture
-def insert_processing_job(alchemy):
+def insert_processing_job(db_session):
     # Add some ProcessingJob* entries
     pj = ProcessingJob(
         dataCollectionId=993677,
@@ -91,15 +91,17 @@ def insert_processing_job(alchemy):
         startImage=1,
         endImage=180,
     )
-    alchemy.add_all([pj, pjp, pjis])
-    alchemy.commit()
+    db_session.add_all([pj, pjp, pjis])
+    db_session.commit()
     return pj.processingJobId
 
 
-def test_processing_job(alchemy, insert_processing_job):
+def test_processing_job(db_session, insert_processing_job):
     pj_id = insert_processing_job
 
-    query = alchemy.query(ProcessingJob).filter(ProcessingJob.processingJobId == pj_id)
+    query = db_session.query(ProcessingJob).filter(
+        ProcessingJob.processingJobId == pj_id
+    )
     assert query.count() == 1
     pj = query.first()
     assert pj.processingJobId == pj_id

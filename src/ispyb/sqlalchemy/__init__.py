@@ -1,6 +1,7 @@
 import configparser
 import os
 import logging
+import warnings
 
 import sqlalchemy.engine
 import sqlalchemy.orm
@@ -17,8 +18,8 @@ ProcessingJob.ProcessingJobParameters = relationship("ProcessingJobParameter")
 ProcessingJob.ProcessingJobImageSweeps = relationship("ProcessingJobImageSweep")
 
 
-def session(credentials=None):
-    """Create an SQLAlchemy session.
+def url(credentials=None) -> str:
+    """Return an SQLAlchemy connection URL
 
     Args:
         credentials: a config file or a Python dictionary containing database
@@ -45,7 +46,7 @@ def session(credentials=None):
                }
 
     Returns:
-        The SQLAlchemy session.
+        A string containing the SQLAlchemy connection URL.
     """
     if not credentials:
         credentials = os.getenv("ISPYB_CREDENTIALS")
@@ -61,10 +62,32 @@ def session(credentials=None):
 
     assert isinstance(credentials, dict)
 
-    engine = sqlalchemy.create_engine(
+    return (
         "mysql+mysqlconnector://{username}:{password}@{host}:{port}/{database}".format(
             **credentials,
-        ),
+        )
+    )
+
+
+def session(credentials=None):
+    """Create an SQLAlchemy session. This function is deprecated.
+
+    Args:
+        credentials: a config file or a Python dictionary containing database
+            credentials. See function 'url()' for details.
+
+    Returns:
+        The SQLAlchemy session.
+    """
+    warnings.warn(
+        "ispyb.sqlalchemy.session() will be deprecated soon. "
+        "Please see the ISPyB SQLAlchemy documentation on how to use the ISPyB SQLAlchemy interface",
+        PendingDeprecationWarning,
+        stacklevel=2,
+    )
+
+    engine = sqlalchemy.create_engine(
+        url(credentials),
         connect_args={"use_pure": True},
     )
     return sqlalchemy.orm.sessionmaker(bind=engine)()

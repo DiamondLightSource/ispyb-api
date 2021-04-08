@@ -4,6 +4,7 @@ import pathlib
 import sys
 import time
 
+import sqlalchemy.orm
 from sqlalchemy.orm import Load
 
 import ispyb
@@ -146,7 +147,9 @@ def main(args=None):
         logging.getLogger("ispyb").setLevel(logging.DEBUG)
         ispyb.sqlalchemy.enable_debug_logging()
 
-    db_session = ispyb.sqlalchemy.session(args.credentials)
+    url = ispyb.sqlalchemy.url(args.credentials)
+    engine = sqlalchemy.create_engine(url, connect_args={"use_pure": True})
+    db_session = sqlalchemy.orm.Session(bind=engine)
 
     latest_dcid = None
     print("------Date------ Beamline --DCID-- ---Visit---")
