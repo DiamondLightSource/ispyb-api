@@ -369,7 +369,7 @@ def run():
     if zocalo and options.triggervariables and not options.trigger:
         sys.exit("--trigger-variable only makes sense with --trigger")
 
-    i = ispyb.open(os.getenv("ISPYB_CREDENTIALS"))
+    i = ispyb.open()
 
     if options.new:
         jobid = create_processing_job(i, options)
