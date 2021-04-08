@@ -19,10 +19,10 @@ import sys
 
 if __name__ == "__main__":
 
+    from datetime import datetime
+
     from ispyb_api.dbconnection import dbconnection
     from ispyb_api.mxdatareduction import mxdatareduction
-
-    from datetime import datetime
 
     def exit(code, message=None):
         dbconnection.disconnect()

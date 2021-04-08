@@ -1,5 +1,6 @@
-import ispyb.model.integration
 import pytest
+
+import ispyb.model.integration
 
 
 def test_unitcell_input_values_equals_output_values():

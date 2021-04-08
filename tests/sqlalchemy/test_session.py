@@ -1,6 +1,6 @@
 import configparser
-import pytest
 
+import pytest
 import sqlalchemy.orm
 
 import ispyb.sqlalchemy

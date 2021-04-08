@@ -1,6 +1,8 @@
 from unittest import mock
-import ispyb.model
+
 import pytest
+
+import ispyb.model
 
 
 def test_empty_dbcache_remains_empty():

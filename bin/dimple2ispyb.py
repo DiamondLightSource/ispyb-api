@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import ConfigParser
 import logging
 import os
 import re
@@ -8,6 +7,8 @@ import sys
 import time
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
+
+import ConfigParser
 
 import ispyb
 

@@ -12,11 +12,11 @@ import sys
 
 if __name__ == "__main__":
 
-    from ispyb_api.dbconnection import dbconnection
-    from ispyb_api.core import core
-    from ispyb_api.mxacquisition import mxacquisition
-
     from datetime import datetime
+
+    from ispyb_api.core import core
+    from ispyb_api.dbconnection import dbconnection
+    from ispyb_api.mxacquisition import mxacquisition
 
     def exit(code, message=None):
         dbconnection.disconnect()

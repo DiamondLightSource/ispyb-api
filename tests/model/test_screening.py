@@ -1,6 +1,6 @@
+import ispyb.model.__future__
 import ispyb.model.datacollection
 import ispyb.model.screening
-import ispyb.model.__future__
 
 
 def test_model_screening(testdb, testconfig):

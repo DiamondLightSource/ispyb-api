@@ -1,6 +1,8 @@
-import ispyb.model.datacollection
 from unittest import mock
+
 import pytest
+
+import ispyb.model.datacollection
 
 
 def test_datacollection_model_retrieves_database_records():

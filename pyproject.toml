@@ -1,0 +1,4 @@
+[tool.isort]
+#sections="FUTURE,STDLIB,THIRDPARTY,CCTBX,FIRSTPARTY,LOCALFOLDER"
+known_firstparty="ispyb"
+profile="black"

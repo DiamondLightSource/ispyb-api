@@ -1,9 +1,10 @@
 import threading
 
-import ispyb
-import ispyb.model.__future__
 import mysql.connector.errors
 import pytest
+
+import ispyb
+import ispyb.model.__future__
 
 
 def test_multi_threads_upsert(testdb):

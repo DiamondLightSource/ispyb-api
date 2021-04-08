@@ -1,6 +1,6 @@
 import configparser
-import os
 import logging
+import os
 import warnings
 
 import sqlalchemy.engine

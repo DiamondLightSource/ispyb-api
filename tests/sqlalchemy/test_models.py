@@ -1,4 +1,5 @@
 import datetime
+
 import pytest
 
 from ispyb.sqlalchemy import (
@@ -7,8 +8,8 @@ from ispyb.sqlalchemy import (
     DataCollection,
     DataCollectionGroup,
     ProcessingJob,
-    ProcessingJobParameter,
     ProcessingJobImageSweep,
+    ProcessingJobParameter,
 )
 
 
