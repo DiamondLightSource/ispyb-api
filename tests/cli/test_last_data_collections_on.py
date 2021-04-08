@@ -51,7 +51,7 @@ def test_no_results(capsys, testconfig):
 def test_help(capsys):
     with pytest.raises(SystemExit) as e:
         last_data_collections_on.main(["-h"])
-        print(e)
+    assert e.value.code == 0
     captured = capsys.readouterr()
     assert not captured.err
     assert "usage: ispyb.last_data_collections_on [beamline]" in captured.out
@@ -60,7 +60,7 @@ def test_help(capsys):
 def test_no_beamline(capsys):
     with pytest.raises(SystemExit) as e:
         last_data_collections_on.main([])
-        print(e)
+    assert e.value.code != 0
     captured = capsys.readouterr()
     assert not captured.out
     assert "error: the following arguments are required: beamline" in captured.err
