@@ -127,7 +127,7 @@ def create_processing_job(i, options):
     return jobid
 
 
-def run():
+def run(cmd_args=sys.argv[1:]):
     parser = OptionParser(
         usage="ispyb.job [options] JOBID",
         description="Command line tool to manipulate ISPyB processing table entries.",
@@ -353,10 +353,10 @@ def run():
         help="date the updated information (default: now)",
     )
     parser.add_option_group(group)
-    (options, args) = parser.parse_args(sys.argv[1:])
+    (options, args) = parser.parse_args(cmd_args)
 
     if not args and not options.new:
-        if sys.argv[1:]:
+        if cmd_args:
             print("No job ID specified\n")
         parser.print_help()
         sys.exit(0)
