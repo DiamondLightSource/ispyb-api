@@ -82,7 +82,6 @@ def create_processing_job(i, options):
             trigger_variables.append(p.split(":", 1))
 
     jp = i.mx_processing.get_job_params()
-    # _job_params = StrictOrderedDict([('id', None), ('datacollectionid', None), ('display_name', None), ('comments', None), ('recipe', None), ('automatic', None)])
     jp["automatic"] = options.source == "automatic"
     jp["comments"] = options.comment
     jp["datacollectionid"] = dcid or sweeps[0][0]
@@ -94,7 +93,6 @@ def create_processing_job(i, options):
     print(f"  JobID={jobid}")
     for key, value in parameters:
         jpp = i.mx_processing.get_job_parameter_params()
-        # _job_parameter_params = StrictOrderedDict([('id', None), ('job_id', None), ('parameter_key', None), ('parameter_value', None)])
         jpp["job_id"] = jobid
         jpp["parameter_key"] = key
         jpp["parameter_value"] = value
@@ -103,7 +101,6 @@ def create_processing_job(i, options):
 
     for sweep in sweeps:
         jisp = i.mx_processing.get_job_image_sweep_params()
-        # _job_image_sweep_params = StrictOrderedDict([('id', None), ('job_id', None), ('datacollectionid', None), ('start_image', None), ('end_image', None)])
         jisp["job_id"] = jobid
         jisp["datacollectionid"] = sweep[0]
         jisp["start_image"] = sweep[1]
