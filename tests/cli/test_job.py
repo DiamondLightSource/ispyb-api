@@ -26,18 +26,23 @@ def test_basic(capsys, testconfig):
     job.run(["5"])
     captured = capsys.readouterr()
     assert not captured.err
-    assert " ID 55:" in captured.out
+    assert " ID 5:" in captured.out
     assert "DC: 1002287" in captured.out
-    assert captured.out == ""
+    assert "Comments: Testing the job submission system" in captured.out
+    print(captured.out)
+    assert False
 
 
 def test_verbose(capsys, testconfig):
     job.run(["5", "-v"])
     captured = capsys.readouterr()
     assert not captured.err
-    assert " ID 55:" in captured.out
+    assert " ID 5:" in captured.out
     assert "DC: 1002287" in captured.out
-    assert captured.out == ""
+    assert "Comments: Testing the job submission system" in captured.out
+    assert "Log: file.log" in captured.out
+    print(captured.out)
+    assert False
 
 
 def test_no_results(capsys, testconfig):
@@ -45,6 +50,5 @@ def test_no_results(capsys, testconfig):
         job.run(["4"])
     assert e.value.code != 0
     captured = capsys.readouterr()
-    assert not captured.out
+    assert "ID 4 not found" in captured.out
     assert not captured.err
-    assert "ID 4 not found" in e.value.code
