@@ -5,6 +5,8 @@ History
 Unreleased / master
 -------------------
 
+* ``ispyb.open()`` now supports reading the credentials file from the ISPYB_CREDENTIALS environment variable. The function's ``configuration_file`` parameter is now deprecated - positional arguments or ``credentials`` should be used instead.
+
 6.0.1 (2021-03-16)
 ------------------
 
