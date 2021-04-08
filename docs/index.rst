@@ -5,7 +5,6 @@ Welcome to the ISPyB API documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   readme
    installation
    usage
    api
@@ -13,6 +12,4 @@ Welcome to the ISPyB API documentation!
    authors
    history
 
-Indices and tables
-==================
-* :ref:`search`
+.. include:: ../README.rst
