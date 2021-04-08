@@ -66,7 +66,7 @@ def create_processing_job(i, options):
             sys.exit("Can not automatically infer data collection sweep for this DCID")
         end = start + number - 1
         sweeps = [(dcid, start, end)]
-        print("Using images %d to %d for data collection sweep" % (start, end))
+        print(f"Using images {start} to {end} for data collection sweep")
 
     parameters = []
     for p in options.parameters:
@@ -404,18 +404,16 @@ def run():
     try:
         rp.load()
     except ispyb.NoResult:
-        print("Processing ID %s not found" % jobid)
+        print(f"Processing ID {jobid} not found")
         sys.exit(1)
     print(
-        """Processing ID {0.jobid}:
+        f"""Processing ID {rp.jobid}:
 
-       Name: {0.name}
-     Recipe: {0.recipe}
-   Comments: {0.comment}
- Primary DC: {0.DCID}
-    Defined: {0.timestamp}""".format(
-            rp
-        )
+       Name: {rp.name}
+     Recipe: {rp.recipe}
+   Comments: {rp.comment}
+ Primary DC: {rp.DCID}
+    Defined: {rp.timestamp}"""
     )
 
     if options.verbose:
@@ -432,12 +430,8 @@ def run():
             print("\n     Sweeps: ", end="")
             print(
                 ("\n" + " " * 13).join(
-                    map(
-                        lambda sweep: "DCID {0.DCID:7}  images{0.start:5} -{0.end:5}".format(
-                            sweep
-                        ),
-                        rp.sweeps,
-                    )
+                    f"DCID {sweep.DCID:7}  images{sweep.start:5} -{sweep.end:5}"
+                    for sweep in rp.sweeps
                 )
             )
 
