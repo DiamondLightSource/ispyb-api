@@ -138,11 +138,12 @@ def run():
         description="Command line tool to manipulate ISPyB processing table entries.",
     )
 
-    available_recipes = filter(
-        lambda r: r.startswith("ispyb-") and r.endswith(".json"),
-        os.listdir("/dls_sw/apps/zocalo/live/recipes"),
-    )
-    available_recipes = sorted(r[6:-5] for r in available_recipes)
+    if os.path.isdir("/dls_sw/apps/zocalo/live/recipes"):
+        available_recipes = filter(
+            lambda r: r.startswith("ispyb-") and r.endswith(".json"),
+            os.listdir("/dls_sw/apps/zocalo/live/recipes"),
+        )
+        available_recipes = sorted(r[6:-5] for r in available_recipes)
 
     parser.add_option("-?", action="help", help=SUPPRESS_HELP)
     parser.add_option(
@@ -191,17 +192,27 @@ def run():
         default=None,
         help="set a comment string for the processing job",
     )
-    group.add_option(
-        "--recipe",
-        dest="recipe",
-        action="store",
-        type="choice",
-        default=None,
-        choices=available_recipes,
-        help="set a recipe for the processing job. Recipe name must correspond to a filename "
-        "(plus ispyb- prefix and .json extension) in /dls_sw/apps/zocalo/live/recipes: %s"
-        % ", ".join(available_recipes),
-    )
+    if available_recipes:
+        group.add_option(
+            "--recipe",
+            dest="recipe",
+            action="store",
+            type="choice",
+            default=None,
+            choices=available_recipes,
+            help="set a recipe for the processing job. Recipe name must correspond to a filename "
+            "(plus ispyb- prefix and .json extension) in /dls_sw/apps/zocalo/live/recipes: %s"
+            % ", ".join(available_recipes),
+        )
+    else:
+        group.add_option(
+            "--recipe",
+            dest="recipe",
+            action="store",
+            type="string",
+            default=None,
+            help="set a recipe for the processing job",
+        )
     group.add_option(
         "--source",
         dest="source",
