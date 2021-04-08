@@ -134,7 +134,7 @@ def create_processing_job(i, options):
 
 def run():
     parser = OptionParser(
-        usage="ispyb.job [options] rpid",
+        usage="ispyb.job [options] JOBID",
         description="Command line tool to manipulate ISPyB processing table entries.",
     )
 
@@ -158,15 +158,14 @@ def run():
     group = OptionGroup(
         parser,
         "Processing job options",
-        "These options can be used to create or modify "
-        "a processing/reprocessing job.",
+        "These options can be used to create or modify a processing job.",
     )
     group.add_option(
         "--new",
         dest="new",
         action="store_true",
         default=False,
-        help="create a new processing job. If --new is specified you must not specify another rpid",
+        help="create a new processing job. If --new is specified you must not specify another JOBID",
     )
     group.add_option(
         "--dcid",
@@ -273,7 +272,7 @@ def run():
         dest="create",
         action="store_true",
         default=False,
-        help="create a new processing program entry for the rpid",
+        help="create a new processing program entry for the JOBID",
     )
     group.add_option(
         "-u",
@@ -376,13 +375,13 @@ def run():
     i = ispyb.open("/dls_sw/apps/zocalo/secrets/credentials-ispyb-sp.cfg")
 
     if options.new:
-        rpid = create_processing_job(i, options)
+        jobid = create_processing_job(i, options)
     else:
-        rpid = args[0]
+        jobid = args[0]
 
     if options.create:
         i.mx_processing.upsert_program_ex(
-            job_id=rpid,
+            job_id=jobid,
             name=options.program,
             command=options.cmdline,
             environment=options.environment,
@@ -401,14 +400,14 @@ def run():
             message=options.status,
         )
 
-    rp = i.get_processing_job(rpid)
+    rp = i.get_processing_job(jobid)
     try:
         rp.load()
     except ispyb.NoResult:
-        print("Reprocessing ID %s not found" % rpid)
+        print("Processing ID %s not found" % jobid)
         sys.exit(1)
     print(
-        """Reprocessing ID {0.jobid}:
+        """Processing ID {0.jobid}:
 
        Name: {0.name}
      Recipe: {0.recipe}
