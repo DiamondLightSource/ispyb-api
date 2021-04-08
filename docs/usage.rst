@@ -28,17 +28,21 @@ A command line tool to view most recent data collections::
 A command line tool to view, create, and update processing jobs.
 
 Create a new processing job::
+
     ispyb.job --new --display "Dataprocessor 2000" --comment "The best program in the universe" \
               --recipe dp2000 --add-param "spacegroup:P 21 21 21" --add-sweep 1234:1:600
 
 Display stored information::
+
     ispyb.job 73
     ispyb.job 73 -v  # show full record
 
 Create new processing program row::
+
     ispyb.job 73 -c -p "program" -s "starting up..."
 
 Update stored information::
+
     ispyb.job 73 -u 1234 -s "running..."
     ispyb.job 73 -u 1234 -s "things are happening" --update-time "2017-08-25"
     ispyb.job 73 -u 1234 -s "completed successfully" -r success
