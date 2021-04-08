@@ -122,12 +122,10 @@ def create_processing_job(i, options):
             if result["exitcode"] or result["stderr"]:
                 sys.exit("Error triggering processing job")
             print("Successfully triggered processing job")
-            print()
-
         else:
             print("To trigger the processing job you now need to run:")
             print(f"  zocalo.go -p {jobid}")
-            print()
+        print()
 
     return jobid
 
