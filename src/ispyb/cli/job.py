@@ -139,11 +139,13 @@ def run():
     )
 
     if os.path.isdir("/dls_sw/apps/zocalo/live/recipes"):
-        available_recipes = filter(
-            lambda r: r.startswith("ispyb-") and r.endswith(".json"),
-            os.listdir("/dls_sw/apps/zocalo/live/recipes"),
+        available_recipes = sorted(
+            r[6:-5]
+            for r in os.listdir("/dls_sw/apps/zocalo/live/recipes")
+            if r.startswith("ispyb-") and r.endswith(".json")
         )
-        available_recipes = sorted(r[6:-5] for r in available_recipes)
+    else:
+        available_recipes = None
 
     parser.add_option("-?", action="help", help=SUPPRESS_HELP)
     parser.add_option(
