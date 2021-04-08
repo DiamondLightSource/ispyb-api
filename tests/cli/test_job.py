@@ -29,8 +29,9 @@ def test_basic(capsys, testconfig):
     assert " ID 5:" in captured.out
     assert "DC: 1002287" in captured.out
     assert "Comments: Testing the job submission system" in captured.out
-    print(captured.out)
-    assert False
+    assert "Program #56986673: xia2 dials, success" in captured.out
+    assert "Parameters:" not in captured.out
+    assert "Sweeps:" not in captured.out
 
 
 def test_verbose(capsys, testconfig):
@@ -40,9 +41,12 @@ def test_verbose(capsys, testconfig):
     assert " ID 5:" in captured.out
     assert "DC: 1002287" in captured.out
     assert "Comments: Testing the job submission system" in captured.out
-    assert "Log: file.log" in captured.out
-    print(captured.out)
-    assert False
+    assert "Parameters:" in captured.out
+    assert "vortex factor" in captured.out
+    assert "Sweeps: DCID 1002287" in captured.out
+    assert "Command: xia2" in captured.out
+    assert "Log: xia2" in captured.out
+    assert "Result: cm" in captured.out
 
 
 def test_no_results(capsys, testconfig):
