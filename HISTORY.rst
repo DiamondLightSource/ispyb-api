@@ -5,8 +5,12 @@ History
 Unreleased / master
 -------------------
 
+6.1.0 (2021-04-12)
+------------------
+
 * ``ispyb.open()`` now supports reading the credentials file from the ISPYB_CREDENTIALS environment variable. The function's ``configuration_file`` parameter is now deprecated - positional arguments or ``credentials`` should be used instead.
 * A new ``ispyb.job`` command line tool allows the creation, viewing, and updating of processing jobs in ISPyB.
+* Silence SQLAlchemy relationship conflict warnings
 
 6.0.2 (2021-04-06)
 ------------------
