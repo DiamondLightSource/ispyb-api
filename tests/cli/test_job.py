@@ -5,7 +5,7 @@ from ispyb.cli import job
 
 def test_help(capsys):
     with pytest.raises(SystemExit) as e:
-        job.run(["--help"])
+        job.main(["--help"])
     assert e.value.code == 0
     captured = capsys.readouterr()
     assert not captured.err
@@ -14,7 +14,7 @@ def test_help(capsys):
 
 def test_creation_failure(capsys):
     with pytest.raises(SystemExit) as e:
-        job.run(["--new"])
+        job.main(["--new"])
     assert e.value.code != 0
     captured = capsys.readouterr()
     assert not captured.out
@@ -23,7 +23,7 @@ def test_creation_failure(capsys):
 
 
 def test_basic(capsys, testconfig):
-    job.run(["5"])
+    job.main(["5"])
     captured = capsys.readouterr()
     assert not captured.err
     assert " ID 5:" in captured.out
@@ -35,7 +35,7 @@ def test_basic(capsys, testconfig):
 
 
 def test_verbose(capsys, testconfig):
-    job.run(["5", "-v"])
+    job.main(["5", "-v"])
     captured = capsys.readouterr()
     assert not captured.err
     assert " ID 5:" in captured.out
@@ -51,7 +51,7 @@ def test_verbose(capsys, testconfig):
 
 def test_no_results(capsys, testconfig):
     with pytest.raises(SystemExit) as e:
-        job.run(["4"])
+        job.main(["4"])
     assert e.value.code != 0
     captured = capsys.readouterr()
     assert "ID 4 not found" in captured.out

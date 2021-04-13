@@ -127,7 +127,7 @@ def create_processing_job(i, options):
     return jobid
 
 
-def run(cmd_args=sys.argv[1:]):
+def main(cmd_args=sys.argv[1:]):
     parser = OptionParser(
         usage="ispyb.job [options] JOBID",
         description="Command line tool to manipulate ISPyB processing table entries.",
