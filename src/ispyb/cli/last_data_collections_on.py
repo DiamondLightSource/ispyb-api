@@ -149,15 +149,16 @@ def main(args=None):
 
     url = ispyb.sqlalchemy.url(args.credentials)
     engine = sqlalchemy.create_engine(url, connect_args={"use_pure": True})
-    db_session = sqlalchemy.orm.Session(bind=engine)
+    Session = sqlalchemy.orm.sessionmaker(bind=engine)
 
     latest_dcid = None
     print("------Date------ Beamline --DCID-- ---Visit---")
     # Terminate after 24 hours
     while time.time() - t0 < 60 * 60 * 24:
-        rows = get_last_data_collections_on(
-            args.beamline, db_session, limit=args.limit, latest_dcid=latest_dcid
-        )
+        with Session() as db_session:
+            rows = get_last_data_collections_on(
+                args.beamline, db_session, limit=args.limit, latest_dcid=latest_dcid
+            )
         if rows:
             # Record the last observed dcid per beamline
             latest_dcid = rows[0].DataCollection.dataCollectionId
