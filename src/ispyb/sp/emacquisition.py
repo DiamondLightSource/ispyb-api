@@ -57,23 +57,25 @@ class EMAcquisition(Acquisition):
         """Store new movie params."""
         return self.get_connection().call_sp_write(procname="upsert_movie", args=values)
 
-    def insert_motion_correction(self, motion_correction_id=None,
-            movie_id=None,
-            auto_proc_program_id=None,
-            image_number=None,
-            first_frame=None,
-            last_frame=None,
-            dose_per_frame=None,
-            total_motion=None,
-            average_motion_per_frame=None,
-            drift_plot_full_path=None,
-            micrograph_full_path=None,
-            micrograph_snapshot_full_path=None,
-            fft_full_path=None,
-            fft_corrected_full_path=None,
-            patches_used_x=None,
-            patches_used_y=None,
-            comments=None,
+    def insert_motion_correction(
+        self,
+        motion_correction_id=None,
+        movie_id=None,
+        auto_proc_program_id=None,
+        image_number=None,
+        first_frame=None,
+        last_frame=None,
+        dose_per_frame=None,
+        total_motion=None,
+        average_motion_per_frame=None,
+        drift_plot_full_path=None,
+        micrograph_full_path=None,
+        micrograph_snapshot_full_path=None,
+        fft_full_path=None,
+        fft_corrected_full_path=None,
+        patches_used_x=None,
+        patches_used_y=None,
+        comments=None,
     ):
         """Store new motion correction parameters."""
         return self.get_connection().call_sp_write(
@@ -98,7 +100,7 @@ class EMAcquisition(Acquisition):
                 comments,
             ),
         )
-    
+
     def insert_ctf(
         self,
         ctf_id=None,
