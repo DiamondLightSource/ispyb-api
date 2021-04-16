@@ -35,28 +35,6 @@ class EMAcquisition(Acquisition):
         ]
     )
 
-    _motion_correction_params = StrictOrderedDict(
-        [
-            ("motionCorrectionId", None),
-            ("movieId", None),
-            ("autoProcProgramId", None),
-            ("imageNumber", None),
-            ("firstFrame", None),
-            ("lastFrame", None),
-            ("dosePerFrame", None),
-            ("totalMotion", None),
-            ("averageMotionPerFrame", None),
-            ("driftPlotFullPath", None),
-            ("micrographFullPath", None),
-            ("micrographSnapshotFullPath", None),
-            ("fftFullPath", None),
-            ("fftCorrectedFullPath", None),
-            ("patchesUsedX", None),
-            ("patchesUsedY", None),
-            ("comments", None),
-        ]
-    )
-
     _motion_correction_drift_params = StrictOrderedDict(
         [
             ("motionCorrectionDriftId", None),
@@ -72,10 +50,6 @@ class EMAcquisition(Acquisition):
         return copy.deepcopy(cls._movie_params)
 
     @classmethod
-    def get_motion_correction_params(cls):
-        return copy.deepcopy(cls._motion_correction_params)
-
-    @classmethod
     def get_motion_correction_drift_params(cls):
         return copy.deepcopy(cls._motion_correction_drift_params)
 
@@ -83,12 +57,48 @@ class EMAcquisition(Acquisition):
         """Store new movie params."""
         return self.get_connection().call_sp_write(procname="upsert_movie", args=values)
 
-    def insert_motion_correction(self, values):
-        """Store new motion correction params."""
+    def insert_motion_correction(self, motion_correction_id=None,
+            movie_id=None,
+            auto_proc_program_id=None,
+            image_number=None,
+            first_frame=None,
+            last_frame=None,
+            dose_per_frame=None,
+            total_motion=None,
+            average_motion_per_frame=None,
+            drift_plot_full_path=None,
+            micrograph_full_path=None,
+            micrograph_snapshot_full_path=None,
+            fft_full_path=None,
+            fft_corrected_full_path=None,
+            patches_used_x=None,
+            patches_used_y=None,
+            comments=None,
+    ):
+        """Store new motion correction parameters."""
         return self.get_connection().call_sp_write(
-            procname="upsert_motion_correction", args=values
+            procname="upsert_motion_correction",
+            args=(
+                motion_correction_id,
+                movie_id,
+                auto_proc_program_id,
+                image_number,
+                first_frame,
+                last_frame,
+                dose_per_frame,
+                total_motion,
+                average_motion_per_frame,
+                drift_plot_full_path,
+                micrograph_full_path,
+                micrograph_snapshot_full_path,
+                fft_full_path,
+                fft_corrected_full_path,
+                patches_used_x,
+                patches_used_y,
+                comments,
+            ),
         )
-
+    
     def insert_ctf(
         self,
         ctf_id=None,
