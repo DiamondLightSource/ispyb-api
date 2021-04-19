@@ -79,9 +79,9 @@ def test_insert_drift(testdb):
     params["positionY"] = 8.01
     movie_id = emacquisition.insert_movie(list(params.values()))
 
-    params["movieId"] = movie_id
-    params["dosePerFrame"] = 20
-    motion_cor_id = emacquisition.insert_motion_correction(movie_id=movie_id)
+    motion_cor_id = emacquisition.insert_motion_correction(
+        movie_id=movie_id, dose_per_frame=20
+    )
 
     drift_params = emacquisition.get_motion_correction_drift_params()
     drift_params["motionCorrectionId"] = motion_cor_id
