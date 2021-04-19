@@ -34,10 +34,9 @@ def test_insert_motion_correction(testdb):
     params["positionY"] = 8.01
     movie_id = emacquisition.insert_movie(list(params.values()))
 
-    params["movieId"] = movie_id
-    params["dosePerFrame"] = 20
-
-    motion_cor_id = emacquisition.insert_motion_correction(movie_id=movie_id)
+    motion_cor_id = emacquisition.insert_motion_correction(
+        movie_id=movie_id, dose_per_frame=20
+    )
     assert motion_cor_id
 
 
@@ -57,9 +56,9 @@ def test_insert_ctf(testdb):
     params["positionY"] = 8.01
     movie_id = emacquisition.insert_movie(list(params.values()))
 
-    params["movieId"] = movie_id
-    params["dosePerFrame"] = 20
-    motion_cor_id = emacquisition.insert_motion_correction(movie_id=movie_id)
+    motion_cor_id = emacquisition.insert_motion_correction(
+        movie_id=movie_id, dose_per_frame=20
+    )
     ctf_id = emacquisition.insert_ctf(motion_correction_id=motion_cor_id)
     assert ctf_id
 
