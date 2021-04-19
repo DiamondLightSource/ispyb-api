@@ -5,7 +5,7 @@ History
 Unreleased / master
 -------------------
 * Fix bug preventing ``ispyb.last_data_collections_on`` from seeing new data collections in ``--follow`` mode
-* Adapt insert_motion_correction() to take parameters #147
+* Adapt insert_motion_correction() to take parameters `#147 <https://github.com/DiamondLightSource/ispyb-api/pull/147>`_
 
 6.1.1 (2021-04-13)
 ------------------
