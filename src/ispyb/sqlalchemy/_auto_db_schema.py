@@ -911,6 +911,18 @@ class WorkflowType(Base):
     recordTimeStamp = Column(TIMESTAMP)
 
 
+t_v_Log4Stat = Table(
+    "v_Log4Stat",
+    metadata,
+    Column("id", INTEGER(11), server_default=text("'0'")),
+    Column("priority", String(15)),
+    Column("timestamp", DateTime),
+    Column("msg", String(255)),
+    Column("detail", String(255)),
+    Column("value", String(255)),
+)
+
+
 t_v_dewar = Table(
     "v_dewar",
     metadata,
@@ -933,16 +945,16 @@ t_v_dewar = Table(
 )
 
 
-t_v_dewarbeamline = Table(
-    "v_dewarbeamline",
+t_v_dewarBeamline = Table(
+    "v_dewarBeamline",
     metadata,
     Column("beamLineName", String(45)),
     Column("COUNT(*)", BIGINT(21), server_default=text("'0'")),
 )
 
 
-t_v_dewarbeamlinebyweek = Table(
-    "v_dewarbeamlinebyweek",
+t_v_dewarBeamlineByWeek = Table(
+    "v_dewarBeamlineByWeek",
     metadata,
     Column("Week", String(23)),
     Column("ID14", BIGINT(21), server_default=text("'0'")),
@@ -952,8 +964,8 @@ t_v_dewarbeamlinebyweek = Table(
 )
 
 
-t_v_dewarbyweek = Table(
-    "v_dewarbyweek",
+t_v_dewarByWeek = Table(
+    "v_dewarByWeek",
     metadata,
     Column("Week", String(23)),
     Column("Dewars Tracked", BIGINT(21), server_default=text("'0'")),
@@ -961,8 +973,8 @@ t_v_dewarbyweek = Table(
 )
 
 
-t_v_dewarbyweektotal = Table(
-    "v_dewarbyweektotal",
+t_v_dewarByWeekTotal = Table(
+    "v_dewarByWeekTotal",
     metadata,
     Column("Week", String(23)),
     Column("Dewars Tracked", BIGINT(21), server_default=text("'0'")),
@@ -971,8 +983,8 @@ t_v_dewarbyweektotal = Table(
 )
 
 
-t_v_dewarlist = Table(
-    "v_dewarlist",
+t_v_dewarList = Table(
+    "v_dewarList",
     metadata,
     Column("proposal", String(90)),
     Column("shippingName", String(45)),
@@ -987,16 +999,16 @@ t_v_dewarlist = Table(
 )
 
 
-t_v_dewarproposalcode = Table(
-    "v_dewarproposalcode",
+t_v_dewarProposalCode = Table(
+    "v_dewarProposalCode",
     metadata,
     Column("proposalCode", String(45)),
     Column("COUNT(*)", BIGINT(21), server_default=text("'0'")),
 )
 
 
-t_v_dewarproposalcodebyweek = Table(
-    "v_dewarproposalcodebyweek",
+t_v_dewarProposalCodeByWeek = Table(
+    "v_dewarProposalCodeByWeek",
     metadata,
     Column("Week", String(23)),
     Column("MX", BIGINT(21), server_default=text("'0'")),
@@ -1011,20 +1023,8 @@ t_v_dewarproposalcodebyweek = Table(
 t_v_hour = Table("v_hour", metadata, Column("num", String(18)))
 
 
-t_v_log4stat = Table(
-    "v_log4stat",
-    metadata,
-    Column("id", INTEGER(11), server_default=text("'0'")),
-    Column("priority", String(15)),
-    Column("timestamp", DateTime),
-    Column("msg", String(255)),
-    Column("detail", String(255)),
-    Column("value", String(255)),
-)
-
-
-t_v_logonbyhour = Table(
-    "v_logonbyhour",
+t_v_logonByHour = Table(
+    "v_logonByHour",
     metadata,
     Column("Hour", String(7)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1032,8 +1032,8 @@ t_v_logonbyhour = Table(
 )
 
 
-t_v_logonbyhour2 = Table(
-    "v_logonbyhour2",
+t_v_logonByHour2 = Table(
+    "v_logonByHour2",
     metadata,
     Column("Hour", String(7)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1041,8 +1041,8 @@ t_v_logonbyhour2 = Table(
 )
 
 
-t_v_logonbymonthday = Table(
-    "v_logonbymonthday",
+t_v_logonByMonthDay = Table(
+    "v_logonByMonthDay",
     metadata,
     Column("Day", String(5)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1050,8 +1050,8 @@ t_v_logonbymonthday = Table(
 )
 
 
-t_v_logonbymonthday2 = Table(
-    "v_logonbymonthday2",
+t_v_logonByMonthDay2 = Table(
+    "v_logonByMonthDay2",
     metadata,
     Column("Day", String(5)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1059,8 +1059,8 @@ t_v_logonbymonthday2 = Table(
 )
 
 
-t_v_logonbyweek = Table(
-    "v_logonbyweek",
+t_v_logonByWeek = Table(
+    "v_logonByWeek",
     metadata,
     Column("Week", String(23)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1068,8 +1068,8 @@ t_v_logonbyweek = Table(
 )
 
 
-t_v_logonbyweek2 = Table(
-    "v_logonbyweek2",
+t_v_logonByWeek2 = Table(
+    "v_logonByWeek2",
     metadata,
     Column("Week", String(23)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1077,8 +1077,8 @@ t_v_logonbyweek2 = Table(
 )
 
 
-t_v_logonbyweekday = Table(
-    "v_logonbyweekday",
+t_v_logonByWeekDay = Table(
+    "v_logonByWeekDay",
     metadata,
     Column("Day", String(64)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1086,8 +1086,8 @@ t_v_logonbyweekday = Table(
 )
 
 
-t_v_logonbyweekday2 = Table(
-    "v_logonbyweekday2",
+t_v_logonByWeekDay2 = Table(
+    "v_logonByWeekDay2",
     metadata,
     Column("Day", String(64)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1095,7 +1095,7 @@ t_v_logonbyweekday2 = Table(
 )
 
 
-t_v_monthday = Table("v_monthday", metadata, Column("num", String(10)))
+t_v_monthDay = Table("v_monthDay", metadata, Column("num", String(10)))
 
 
 class VRun(Base):
@@ -1125,8 +1125,8 @@ t_v_sample = Table(
 )
 
 
-t_v_samplebyweek = Table(
-    "v_samplebyweek",
+t_v_sampleByWeek = Table(
+    "v_sampleByWeek",
     metadata,
     Column("Week", String(23)),
     Column("Samples", BIGINT(21)),
@@ -1136,7 +1136,7 @@ t_v_samplebyweek = Table(
 t_v_week = Table("v_week", metadata, Column("num", String(7)))
 
 
-t_v_weekday = Table("v_weekday", metadata, Column("day", String(10)))
+t_v_weekDay = Table("v_weekDay", metadata, Column("day", String(10)))
 
 
 class AbInitioModel(Base):
@@ -1218,7 +1218,10 @@ class BLSampleImageAutoScoreClass(Base):
 
     blSampleImageAutoScoreClassId = Column(TINYINT(3), primary_key=True)
     blSampleImageAutoScoreSchemaId = Column(
-        ForeignKey("BLSampleImageAutoScoreSchema.blSampleImageAutoScoreSchemaId"),
+        ForeignKey(
+            "BLSampleImageAutoScoreSchema.blSampleImageAutoScoreSchemaId",
+            onupdate="CASCADE",
+        ),
         index=True,
     )
     scoreClass = Column(
@@ -2308,6 +2311,7 @@ class BFSubcomponentBeamline(Base):
 
 class BLSession(Base):
     __tablename__ = "BLSession"
+    __table_args__ = (Index("proposalId", "proposalId", "visit_number", unique=True),)
 
     sessionId = Column(INTEGER(10), primary_key=True)
     beamLineSetupId = Column(
@@ -2319,7 +2323,6 @@ class BLSession(Base):
     proposalId = Column(
         ForeignKey("Proposal.proposalId", ondelete="CASCADE", onupdate="CASCADE"),
         nullable=False,
-        index=True,
         server_default=text("0"),
     )
     beamCalendarId = Column(ForeignKey("BeamCalendar.beamCalendarId"), index=True)
@@ -2682,7 +2685,6 @@ class Protein(Base):
     proposalId = Column(
         ForeignKey("Proposal.proposalId", ondelete="CASCADE", onupdate="CASCADE"),
         nullable=False,
-        index=True,
         server_default=text("0"),
     )
     name = Column(String(255))
@@ -3043,7 +3045,9 @@ class DewarRegistry(Base):
 
     dewarRegistryId = Column(INTEGER(11), primary_key=True)
     facilityCode = Column(String(20), nullable=False, unique=True)
-    proposalId = Column(ForeignKey("Proposal.proposalId"), index=True)
+    proposalId = Column(
+        ForeignKey("Proposal.proposalId", onupdate="CASCADE"), index=True
+    )
     labContactId = Column(
         ForeignKey("LabContact.labContactId", ondelete="SET NULL", onupdate="CASCADE"),
         index=True,
@@ -3205,7 +3209,6 @@ class SessionHasPerson(Base):
         ForeignKey("BLSession.sessionId", ondelete="CASCADE", onupdate="CASCADE"),
         primary_key=True,
         nullable=False,
-        index=True,
         server_default=text("0"),
     )
     personId = Column(
@@ -3415,7 +3418,9 @@ class DewarRegistryHasProposal(Base):
     )
     recordTimestamp = Column(DateTime, server_default=text("current_timestamp()"))
     labContactId = Column(
-        ForeignKey("LabContact.labContactId"), index=True, comment="Owner of the dewar"
+        ForeignKey("LabContact.labContactId", onupdate="CASCADE"),
+        index=True,
+        comment="Owner of the dewar",
     )
 
     DewarRegistry = relationship("DewarRegistry")
@@ -3529,7 +3534,6 @@ t_ShippingHasSession = Table(
         ForeignKey("Shipping.shippingId", ondelete="CASCADE", onupdate="CASCADE"),
         primary_key=True,
         nullable=False,
-        index=True,
     ),
     Column(
         "sessionId",
@@ -3643,8 +3647,7 @@ class BLSample(Base):
         index=True,
     )
     crystalId = Column(
-        ForeignKey("Crystal.crystalId", ondelete="CASCADE", onupdate="CASCADE"),
-        index=True,
+        ForeignKey("Crystal.crystalId", ondelete="CASCADE", onupdate="CASCADE")
     )
     containerId = Column(
         ForeignKey("Container.containerId", ondelete="CASCADE", onupdate="CASCADE"),
@@ -3730,12 +3733,20 @@ class ContainerHistory(Base):
 
 class ContainerInspection(Base):
     __tablename__ = "ContainerInspection"
+    __table_args__ = (
+        Index(
+            "ContainerInspection_idx4",
+            "containerId",
+            "scheduleComponentid",
+            "state",
+            "manual",
+        ),
+    )
 
     containerInspectionId = Column(INTEGER(11), primary_key=True)
     containerId = Column(
         ForeignKey("Container.containerId", ondelete="CASCADE", onupdate="CASCADE"),
         nullable=False,
-        index=True,
     )
     inspectionTypeId = Column(
         ForeignKey("InspectionType.inspectionTypeId"), nullable=False, index=True
@@ -3786,7 +3797,7 @@ class BLSampleGroupHasBLSample(Base):
         ForeignKey("BLSample.blSampleId"), primary_key=True, nullable=False, index=True
     )
     groupOrder = Column(MEDIUMINT(9))
-    type = Column(Enum("background", "container", "sample", "calibrant"))
+    type = Column(Enum("background", "container", "sample", "calibrant", "capillary"))
     blSampleTypeId = Column(ForeignKey("BLSampleType.blSampleTypeId"), index=True)
 
     BLSampleGroup = relationship("BLSampleGroup")
@@ -3803,7 +3814,8 @@ class BLSampleImage(Base):
     micronsPerPixelY = Column(Float)
     imageFullPath = Column(String(255))
     blSampleImageScoreId = Column(
-        ForeignKey("BLSampleImageScore.blSampleImageScoreId"), index=True
+        ForeignKey("BLSampleImageScore.blSampleImageScoreId", onupdate="CASCADE"),
+        index=True,
     )
     comments = Column(String(255))
     blTimeStamp = Column(DateTime)
@@ -5177,7 +5189,6 @@ class AutoProcScalingHasInt(Base):
         ForeignKey(
             "AutoProcScaling.autoProcScalingId", ondelete="CASCADE", onupdate="CASCADE"
         ),
-        index=True,
         comment="AutoProcScaling item",
     )
     autoProcIntegrationId = Column(
@@ -5309,28 +5320,19 @@ class ParticlePicker(Base):
     }
 
     particlePickerId = Column(INTEGER(10), primary_key=True)
-    particlePickerProgramId = Column(
-        ForeignKey("AutoProcProgram.autoProcProgramId"), index=True
-    )
-    particleClassificationProgramId = Column(
-        ForeignKey("AutoProcProgram.autoProcProgramId"), index=True
+    programId = Column(
+        ForeignKey("AutoProcProgram.autoProcProgramId", onupdate="CASCADE"), index=True
     )
     firstMotionCorrectionId = Column(
-        ForeignKey("MotionCorrection.motionCorrectionId"), index=True
+        ForeignKey("MotionCorrection.motionCorrectionId", onupdate="CASCADE"),
+        index=True,
     )
     particlePickingTemplate = Column(String(255), comment="Cryolo model")
     particleDiameter = Column(Float, comment="Unit: nm")
     numberOfParticles = Column(INTEGER(10))
 
     MotionCorrection = relationship("MotionCorrection")
-    AutoProcProgram = relationship(
-        "AutoProcProgram",
-        primaryjoin="ParticlePicker.particleClassificationProgramId == AutoProcProgram.autoProcProgramId",
-    )
-    AutoProcProgram1 = relationship(
-        "AutoProcProgram",
-        primaryjoin="ParticlePicker.particlePickerProgramId == AutoProcProgram.autoProcProgramId",
-    )
+    AutoProcProgram = relationship("AutoProcProgram")
 
 
 class ScreeningStrategyWedge(Base):
@@ -5435,40 +5437,31 @@ class XrayCentringResult(Base):
     GridInfo = relationship("GridInfo")
 
 
-class ParticleClassification(Base):
-    __tablename__ = "ParticleClassification"
-    __table_args__ = {"comment": "Results of 2D or 2D classification"}
+class ParticleClassificationGroup(Base):
+    __tablename__ = "ParticleClassificationGroup"
 
-    particleClassificationId = Column(INTEGER(10), primary_key=True)
+    particleClassificationGroupId = Column(INTEGER(10), primary_key=True)
     particlePickerId = Column(
         ForeignKey(
             "ParticlePicker.particlePickerId", ondelete="CASCADE", onupdate="CASCADE"
         ),
         index=True,
     )
+    programId = Column(
+        ForeignKey("AutoProcProgram.autoProcProgramId", onupdate="CASCADE"), index=True
+    )
     type = Column(
         Enum("2D", "3D"), comment="Indicates the type of particle classification"
     )
     batchNumber = Column(INTEGER(10), comment="Corresponding to batch number")
-    classNumber = Column(
-        INTEGER(10), comment="Identified of the class. A unique ID given by Relion"
-    )
-    classImageFullPath = Column(String(255), comment="The PNG of the class")
     numberOfParticlesPerBatch = Column(
         INTEGER(10), comment="total number of particles per batch (a large integer)"
     )
     numberOfClassesPerBatch = Column(INTEGER(10))
-    particlesPerClass = Column(
-        INTEGER(10),
-        comment="Number of particles within the selected class, can then be used together with the total number above to calculate the percentage",
-    )
-    rotationAccuracy = Column(INTEGER(10), comment="???")
-    translationAccuracy = Column(Float, comment="Unit: Angstroms")
-    estimatedResolution = Column(Float, comment="???, Unit: Angstroms")
-    overallFourierCompleteness = Column(Float)
     symmetry = Column(String(20))
 
     ParticlePicker = relationship("ParticlePicker")
+    AutoProcProgram = relationship("AutoProcProgram")
 
 
 class ScreeningStrategySubWedge(Base):
@@ -5555,6 +5548,35 @@ class XFEFluorescenceComposite(Base):
         "XRFFluorescenceMapping",
         primaryjoin="XFEFluorescenceComposite.r == XRFFluorescenceMapping.xrfFluorescenceMappingId",
     )
+
+
+class ParticleClassification(Base):
+    __tablename__ = "ParticleClassification"
+    __table_args__ = {"comment": "Results of 2D or 2D classification"}
+
+    particleClassificationId = Column(INTEGER(10), primary_key=True)
+    classNumber = Column(
+        INTEGER(10), comment="Identified of the class. A unique ID given by Relion"
+    )
+    classImageFullPath = Column(String(255), comment="The PNG of the class")
+    particlesPerClass = Column(
+        INTEGER(10),
+        comment="Number of particles within the selected class, can then be used together with the total number above to calculate the percentage",
+    )
+    rotationAccuracy = Column(INTEGER(10), comment="???")
+    translationAccuracy = Column(Float, comment="Unit: Angstroms")
+    estimatedResolution = Column(Float, comment="???, Unit: Angstroms")
+    overallFourierCompleteness = Column(Float)
+    particleClassificationGroupId = Column(
+        ForeignKey(
+            "ParticleClassificationGroup.particleClassificationGroupId",
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+        ),
+        index=True,
+    )
+
+    ParticleClassificationGroup = relationship("ParticleClassificationGroup")
 
 
 t_ParticleClassification_has_CryoemInitialModel = Table(
