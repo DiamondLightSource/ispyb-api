@@ -22,7 +22,8 @@ def test_creation_failure(capsys):
     assert "must specify at least" in e.value.code
 
 
-def test_basic(capsys, testconfig):
+def test_basic(capsys, testconfig, monkeypatch):
+    monkeypatch.setenv("ISPYB_CREDENTIALS", testconfig)
     job.main(["5"])
     captured = capsys.readouterr()
     assert not captured.err
@@ -34,7 +35,8 @@ def test_basic(capsys, testconfig):
     assert "Sweeps:" not in captured.out
 
 
-def test_verbose(capsys, testconfig):
+def test_verbose(capsys, testconfig, monkeypatch):
+    monkeypatch.setenv("ISPYB_CREDENTIALS", testconfig)
     job.main(["5", "-v"])
     captured = capsys.readouterr()
     assert not captured.err
