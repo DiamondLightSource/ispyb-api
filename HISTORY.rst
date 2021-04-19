@@ -4,6 +4,9 @@ History
 
 Unreleased / master
 -------------------
+
+6.2.0 (2021-04-19)
+------------------
 * Fix bug preventing ``ispyb.last_data_collections_on`` from seeing new data collections in ``--follow`` mode
 * Update SQLAlchemy ORM models for ispyb-database v1.20.0
 * Adapt insert_motion_correction() to take parameters `#147 <https://github.com/DiamondLightSource/ispyb-api/pull/147>`_
