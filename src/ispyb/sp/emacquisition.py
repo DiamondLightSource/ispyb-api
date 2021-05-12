@@ -152,3 +152,97 @@ class EMAcquisition(Acquisition):
         return self.get_connection().call_sp_write(
             procname="upsert_motion_correction_drift", args=values
         )
+
+    def insert_particle_picker(
+        self,
+        particle_picker_id=None,
+        first_motion_correction_id=None,
+        auto_proc_program_id=None,
+        particle_picking_template=None,
+        particle_diameter=None,
+        number_of_particles=None,
+    ):
+        """Store new particle picker parameters."""
+        return self.get_connection().call_sp_write(
+            procname="upsert_particle_picker",
+            args=(
+                particle_picker_id,
+                first_motion_correction_id,
+                auto_proc_program_id,
+                particle_picking_template,
+                particle_diameter,
+                number_of_particles,
+            ),
+        )
+
+    def insert_particle_classification_group(
+        self,
+        particle_classification_group_id=None,
+        particle_picker_id=None,
+        auto_proc_program_id=None,
+        type=None,
+        batch_number=None,
+        number_of_particles_per_batch=None,
+        number_of_classes_per_batch=None,
+        symmetry=None,
+    ):
+        """Store new particle classification group parameters."""
+        return self.get_connection().call_sp_write(
+            procname="upsert_particle_classification_group",
+            args=(
+                particle_classification_group_id,
+                particle_picker_id,
+                auto_proc_program_id,
+                type,
+                batch_number,
+                number_of_particles_per_batch,
+                number_of_classes_per_batch,
+                symmetry,
+            ),
+        )
+
+    def insert_particle_classification(
+        self,
+        particle_classification_id=None,
+        particle_classification_group_id=None,
+        class_number=None,
+        class_image_full_path=None,
+        particles_per_class=None,
+        rotation_accuracy=None,
+        translation_accuracy=None,
+        estimated_resolution=None,
+        overall_fourier_completeness=None,
+    ):
+        """Store new particle classification parameters."""
+        return self.get_connection().call_sp_write(
+            procname="upsert_particle_classification",
+            args=(
+                particle_classification_id,
+                particle_classification_group_id,
+                class_number,
+                class_image_full_path,
+                particles_per_class,
+                rotation_accuracy,
+                translation_accuracy,
+                estimated_resolution,
+                overall_fourier_completeness,
+            ),
+        )
+
+    def insert_cryoem_initial_model(
+        self,
+        cryoem_initial_model_id=None,
+        particle_classification_id=None,
+        resolution=None,
+        number_of_particles=None,
+    ):
+        """Store new cryo-em initial model parameters."""
+        return self.get_connection().call_sp_write(
+            procname="insert_cryoem_initial_model",
+            args=(
+                cryoem_initial_model_id,
+                particle_classification_id,
+                resolution,
+                number_of_particles,
+            ),
+        )
