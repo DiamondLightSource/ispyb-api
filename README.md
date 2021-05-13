@@ -21,17 +21,18 @@ as webservices.
 Please see https://ispyb.readthedocs.io.
 
 ### Requirements
-* Python 3.6, 3.7, 3.8
+* Python 3.6, 3.7, 3.8, 3.9
 * The MySQL Connector/Python package.
 * MariaDB 10.0+ or MySQL 5.6+, but we recommend MariaDB 10.2 or later.
-* An ISPyB database installed on the above. See the [ispyb-database](https://github.com/DiamondLightSource/ispyb-database) repo for details.
+* An ISPyB database installed on the above. See the [ispyb-database](https://github.com/DiamondLightSource/ispyb-database) repository for details.
 
 ### Installation
 From PyPI:
 ```bash
 pip install --user ispyb
 ```
-The --user option installs the package for your own user only. You can leave it out if you want to install the package system-wide.
+The `--user` option installs the package for your own user only.
+You can leave it out if you want to install the package system-wide.
 
 To install the source code in editable mode for development:
 ```bash
@@ -63,7 +64,7 @@ with ispyb.open("config.cfg") as conn:
     print("dcg_id: %i" % dcg_id)
 ```
 
-See [```docs/pipeline2ispyb.py```](https://github.com/DiamondLightSource/ispyb-api/blob/master/docs/pipeline2ispyb.py) for a more detailed example of how to use the package.
+See [`docs/pipeline2ispyb.py`](https://github.com/DiamondLightSource/ispyb-api/blob/master/docs/pipeline2ispyb.py) for a more detailed example of how to use the package.
 
 ### Tests
 Unit tests (pytests) are run automatically by Azure against a real MariaDB ISPyB database schema. You can also run the tests in your Development environment if you have an ISPyB database.
