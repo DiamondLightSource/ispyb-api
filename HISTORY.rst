@@ -7,6 +7,7 @@ Unreleased / master
 * Add insert methods for new cryo-EM tables. `#150 <https://github.com/DiamondLightSource/ispyb-api/pull/150>`_
 * Change ``ispyb.job`` so that new processing jobs can be created without specifying any sweeps. Useful for EM data collections.
 * ``ispyb.sqlalchemy.enable_debug_logging()`` will now log query times
+* When installed in a cctbx environment, force libtbx to generate dispatchers for ``ispby.*`` commands
 
 6.2.0 (2021-04-19)
 ------------------
