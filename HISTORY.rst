@@ -4,6 +4,8 @@ History
 
 Unreleased / master
 -------------------
+* Add insert methods for new cryo-EM tables. `#150 <https://github.com/DiamondLightSource/ispyb-api/pull/150>`_
+* Change ``ispyb.job`` so that new processing jobs can be created without specifying any sweeps. Useful for EM data collections.
 
 6.2.0 (2021-04-19)
 ------------------

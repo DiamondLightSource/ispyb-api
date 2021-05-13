@@ -63,10 +63,12 @@ def create_processing_job(i, options):
         start = dc_info.image_start_number
         number = dc_info.image_count
         if not start or not number:
-            sys.exit("Can not automatically infer data collection sweep for this DCID")
-        end = start + number - 1
-        sweeps = [(dcid, start, end)]
-        print(f"Using images {start} to {end} for data collection sweep")
+            print("Can not automatically infer data collection sweep for this DCID")
+            sweeps = []
+        else:
+            end = start + number - 1
+            sweeps = [(dcid, start, end)]
+            print(f"Using images {start} to {end} for data collection sweep")
 
     parameters = []
     for p in options.parameters:
@@ -235,8 +237,7 @@ def main(cmd_args=sys.argv[1:]):
         default=[],
         metavar="DCID:START:END",
         help="add an image range from a sweep of any data collection ID to the processing job. "
-        "Each job must have at least one sweep. "
-        "If no sweep is defined all images from the primary data collection ID are used",
+        "If no sweep is defined all images from the primary data collection ID are used if the data collection ID can be inferred",
     )
     if zocalo:
         group.add_option(
