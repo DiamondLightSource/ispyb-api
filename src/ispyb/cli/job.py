@@ -237,7 +237,7 @@ def main(cmd_args=sys.argv[1:]):
         default=[],
         metavar="DCID:START:END",
         help="add an image range from a sweep of any data collection ID to the processing job. "
-        "If no sweep is defined all images from the primary data collection ID are used",
+        "If no sweep is defined all images from the primary data collection ID are used if the data collection ID can be inferred",
     )
     if zocalo:
         group.add_option(
