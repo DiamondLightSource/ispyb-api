@@ -1,6 +1,7 @@
 import configparser
 import logging
 import os
+import time
 import warnings
 
 import sqlalchemy.engine
@@ -117,12 +118,16 @@ def enable_debug_logging():
 
     import traceback
 
-    @sqlalchemy.event.listens_for(sqlalchemy.engine.Engine, "before_cursor_execute")
-    def log_sql_call(conn, cursor, statement, parameters, context, executemany):
-        count = getattr(log_sql_call, "_count", 0) + 1
-        setattr(log_sql_call, "_count", count)
+    indent = "    "
 
-        indent = "    "
+    @sqlalchemy.event.listens_for(sqlalchemy.engine.Engine, "before_cursor_execute")
+    def before_cursor_execute(
+        conn, cursor, statement, parameters, context, executemany
+    ):
+        conn.info.setdefault("query_start_time", []).append(time.perf_counter())
+        conn.info.setdefault("count", 0)
+        conn.info["count"] += 1
+
         cause = ""
         for frame, line in traceback.walk_stack(None):
             if frame.f_code.co_filename.startswith(_sqlalchemy_root):
@@ -135,9 +140,14 @@ def enable_debug_logging():
             parameters = ""
 
         logger.debug(
-            f"SQL query #{count}:\n"
+            f"SQL query #{conn.info['count']}:\n"
             + indent
             + str(statement).replace("\n", "\n" + indent)
             + parameters
             + cause
         )
+
+    @sqlalchemy.event.listens_for(sqlalchemy.engine.Engine, "after_cursor_execute")
+    def after_cursor_execute(conn, cursor, statement, parameters, context, executemany):
+        total = time.perf_counter() - conn.info["query_start_time"].pop(-1)
+        logger.debug(indent + f"SQL query #{conn.info['count']} took: {total} seconds")
