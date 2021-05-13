@@ -4,6 +4,7 @@ History
 
 Unreleased / master
 -------------------
+* Add insert methods for new cryo-EM tables. `#150 <https://github.com/DiamondLightSource/ispyb-api/pull/150>`_
 
 6.2.0 (2021-04-19)
 ------------------
