@@ -12,7 +12,8 @@ def test_help(capsys):
     assert "Usage: ispyb.job" in captured.out
 
 
-def test_creation_failure(capsys):
+def test_creation_failure(capsys, testconfig, monkeypatch):
+    monkeypatch.setenv("ISPYB_CREDENTIALS", testconfig)
     with pytest.raises(SystemExit) as e:
         job.main(["--new"])
     assert e.value.code != 0
@@ -51,7 +52,8 @@ def test_verbose(capsys, testconfig, monkeypatch):
     assert "Result: cm" in captured.out
 
 
-def test_no_results(capsys, testconfig):
+def test_no_results(capsys, testconfig, monkeypatch):
+    monkeypatch.setenv("ISPYB_CREDENTIALS", testconfig)
     with pytest.raises(SystemExit) as e:
         job.main(["4"])
     assert e.value.code != 0
