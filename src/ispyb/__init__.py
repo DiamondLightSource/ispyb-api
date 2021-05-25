@@ -3,7 +3,7 @@ import logging
 import os
 import warnings
 
-__version__ = "6.3.0"
+__version__ = "6.4.0"
 
 _log = logging.getLogger("ispyb")
 
