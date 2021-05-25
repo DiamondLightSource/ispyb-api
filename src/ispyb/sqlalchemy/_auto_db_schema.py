@@ -911,18 +911,6 @@ class WorkflowType(Base):
     recordTimeStamp = Column(TIMESTAMP)
 
 
-t_v_Log4Stat = Table(
-    "v_Log4Stat",
-    metadata,
-    Column("id", INTEGER(11), server_default=text("'0'")),
-    Column("priority", String(15)),
-    Column("timestamp", DateTime),
-    Column("msg", String(255)),
-    Column("detail", String(255)),
-    Column("value", String(255)),
-)
-
-
 t_v_dewar = Table(
     "v_dewar",
     metadata,
@@ -945,16 +933,16 @@ t_v_dewar = Table(
 )
 
 
-t_v_dewarBeamline = Table(
-    "v_dewarBeamline",
+t_v_dewarbeamline = Table(
+    "v_dewarbeamline",
     metadata,
     Column("beamLineName", String(45)),
     Column("COUNT(*)", BIGINT(21), server_default=text("'0'")),
 )
 
 
-t_v_dewarBeamlineByWeek = Table(
-    "v_dewarBeamlineByWeek",
+t_v_dewarbeamlinebyweek = Table(
+    "v_dewarbeamlinebyweek",
     metadata,
     Column("Week", String(23)),
     Column("ID14", BIGINT(21), server_default=text("'0'")),
@@ -964,8 +952,8 @@ t_v_dewarBeamlineByWeek = Table(
 )
 
 
-t_v_dewarByWeek = Table(
-    "v_dewarByWeek",
+t_v_dewarbyweek = Table(
+    "v_dewarbyweek",
     metadata,
     Column("Week", String(23)),
     Column("Dewars Tracked", BIGINT(21), server_default=text("'0'")),
@@ -973,8 +961,8 @@ t_v_dewarByWeek = Table(
 )
 
 
-t_v_dewarByWeekTotal = Table(
-    "v_dewarByWeekTotal",
+t_v_dewarbyweektotal = Table(
+    "v_dewarbyweektotal",
     metadata,
     Column("Week", String(23)),
     Column("Dewars Tracked", BIGINT(21), server_default=text("'0'")),
@@ -983,8 +971,8 @@ t_v_dewarByWeekTotal = Table(
 )
 
 
-t_v_dewarList = Table(
-    "v_dewarList",
+t_v_dewarlist = Table(
+    "v_dewarlist",
     metadata,
     Column("proposal", String(90)),
     Column("shippingName", String(45)),
@@ -999,16 +987,16 @@ t_v_dewarList = Table(
 )
 
 
-t_v_dewarProposalCode = Table(
-    "v_dewarProposalCode",
+t_v_dewarproposalcode = Table(
+    "v_dewarproposalcode",
     metadata,
     Column("proposalCode", String(45)),
     Column("COUNT(*)", BIGINT(21), server_default=text("'0'")),
 )
 
 
-t_v_dewarProposalCodeByWeek = Table(
-    "v_dewarProposalCodeByWeek",
+t_v_dewarproposalcodebyweek = Table(
+    "v_dewarproposalcodebyweek",
     metadata,
     Column("Week", String(23)),
     Column("MX", BIGINT(21), server_default=text("'0'")),
@@ -1023,8 +1011,20 @@ t_v_dewarProposalCodeByWeek = Table(
 t_v_hour = Table("v_hour", metadata, Column("num", String(18)))
 
 
-t_v_logonByHour = Table(
-    "v_logonByHour",
+t_v_log4stat = Table(
+    "v_log4stat",
+    metadata,
+    Column("id", INTEGER(11), server_default=text("'0'")),
+    Column("priority", String(15)),
+    Column("timestamp", DateTime),
+    Column("msg", String(255)),
+    Column("detail", String(255)),
+    Column("value", String(255)),
+)
+
+
+t_v_logonbyhour = Table(
+    "v_logonbyhour",
     metadata,
     Column("Hour", String(7)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1032,8 +1032,8 @@ t_v_logonByHour = Table(
 )
 
 
-t_v_logonByHour2 = Table(
-    "v_logonByHour2",
+t_v_logonbyhour2 = Table(
+    "v_logonbyhour2",
     metadata,
     Column("Hour", String(7)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1041,8 +1041,8 @@ t_v_logonByHour2 = Table(
 )
 
 
-t_v_logonByMonthDay = Table(
-    "v_logonByMonthDay",
+t_v_logonbymonthday = Table(
+    "v_logonbymonthday",
     metadata,
     Column("Day", String(5)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1050,8 +1050,8 @@ t_v_logonByMonthDay = Table(
 )
 
 
-t_v_logonByMonthDay2 = Table(
-    "v_logonByMonthDay2",
+t_v_logonbymonthday2 = Table(
+    "v_logonbymonthday2",
     metadata,
     Column("Day", String(5)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1059,8 +1059,8 @@ t_v_logonByMonthDay2 = Table(
 )
 
 
-t_v_logonByWeek = Table(
-    "v_logonByWeek",
+t_v_logonbyweek = Table(
+    "v_logonbyweek",
     metadata,
     Column("Week", String(23)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1068,8 +1068,8 @@ t_v_logonByWeek = Table(
 )
 
 
-t_v_logonByWeek2 = Table(
-    "v_logonByWeek2",
+t_v_logonbyweek2 = Table(
+    "v_logonbyweek2",
     metadata,
     Column("Week", String(23)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1077,8 +1077,8 @@ t_v_logonByWeek2 = Table(
 )
 
 
-t_v_logonByWeekDay = Table(
-    "v_logonByWeekDay",
+t_v_logonbyweekday = Table(
+    "v_logonbyweekday",
     metadata,
     Column("Day", String(64)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1086,8 +1086,8 @@ t_v_logonByWeekDay = Table(
 )
 
 
-t_v_logonByWeekDay2 = Table(
-    "v_logonByWeekDay2",
+t_v_logonbyweekday2 = Table(
+    "v_logonbyweekday2",
     metadata,
     Column("Day", String(64)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1095,7 +1095,7 @@ t_v_logonByWeekDay2 = Table(
 )
 
 
-t_v_monthDay = Table("v_monthDay", metadata, Column("num", String(10)))
+t_v_monthday = Table("v_monthday", metadata, Column("num", String(10)))
 
 
 class VRun(Base):
@@ -1125,8 +1125,8 @@ t_v_sample = Table(
 )
 
 
-t_v_sampleByWeek = Table(
-    "v_sampleByWeek",
+t_v_samplebyweek = Table(
+    "v_samplebyweek",
     metadata,
     Column("Week", String(23)),
     Column("Samples", BIGINT(21)),
@@ -1136,7 +1136,7 @@ t_v_sampleByWeek = Table(
 t_v_week = Table("v_week", metadata, Column("num", String(7)))
 
 
-t_v_weekDay = Table("v_weekDay", metadata, Column("day", String(10)))
+t_v_weekday = Table("v_weekday", metadata, Column("day", String(10)))
 
 
 class AbInitioModel(Base):
@@ -2516,8 +2516,8 @@ class DiffractionPlan(Base):
 class LabContact(Base):
     __tablename__ = "LabContact"
     __table_args__ = (
-        Index("personAndProposal", "personId", "proposalId", unique=True),
         Index("cardNameAndProposal", "cardName", "proposalId", unique=True),
+        Index("personAndProposal", "personId", "proposalId", unique=True),
     )
 
     labContactId = Column(INTEGER(10), primary_key=True)
@@ -3380,7 +3380,7 @@ class Dewar(Base):
     isStorageDewar = Column(TINYINT(1), server_default=text("0"))
     barCode = Column(String(45), unique=True)
     firstExperimentId = Column(
-        ForeignKey("BLSession.sessionId", ondelete="CASCADE", onupdate="CASCADE"),
+        ForeignKey("BLSession.sessionId", ondelete="SET NULL", onupdate="CASCADE"),
         index=True,
     )
     customsValue = Column(INTEGER(11))
@@ -4190,9 +4190,21 @@ class ContainerQueueSample(Base):
         ForeignKey("BLSubSample.blSubSampleId", ondelete="CASCADE", onupdate="CASCADE"),
         index=True,
     )
+    status = Column(
+        String(20),
+        comment="The status of the queued item, i.e. skipped, reinspect. Completed / failed should be inferred from related DataCollection",
+    )
+    startTime = Column(DateTime, comment="Start time of processing the queue item")
+    endTime = Column(DateTime, comment="End time of processing the queue item")
+    dataCollectionPlanId = Column(
+        ForeignKey("DiffractionPlan.diffractionPlanId"), index=True
+    )
+    blSampleId = Column(ForeignKey("BLSample.blSampleId"), index=True)
 
+    BLSample = relationship("BLSample")
     BLSubSample = relationship("BLSubSample")
     ContainerQueue = relationship("ContainerQueue")
+    DiffractionPlan = relationship("DiffractionPlan")
 
 
 class DataCollection(Base):
@@ -4341,9 +4353,13 @@ class DataCollection(Base):
         comment="Pixel size on image, calculated from magnification, duplicate? Units: um?",
     )
     phasePlate = Column(TINYINT(1), comment="Whether the phase plate was used")
+    dataCollectionPlanId = Column(
+        ForeignKey("DiffractionPlan.diffractionPlanId"), index=True
+    )
 
     BLSubSample = relationship("BLSubSample")
     DataCollectionGroup = relationship("DataCollectionGroup")
+    DiffractionPlan = relationship("DiffractionPlan")
     Detector = relationship("Detector")
     MotorPosition = relationship(
         "MotorPosition",
@@ -5563,7 +5579,7 @@ class ParticleClassification(Base):
         INTEGER(10),
         comment="Number of particles within the selected class, can then be used together with the total number above to calculate the percentage",
     )
-    rotationAccuracy = Column(INTEGER(10), comment="???")
+    rotationAccuracy = Column(Float, comment="???")
     translationAccuracy = Column(Float, comment="Unit: Angstroms")
     estimatedResolution = Column(Float, comment="???, Unit: Angstroms")
     overallFourierCompleteness = Column(Float)
