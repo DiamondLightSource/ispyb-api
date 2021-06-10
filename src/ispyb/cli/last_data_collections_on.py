@@ -31,7 +31,11 @@ def print_data_collections(rows, synchweb_url=None, truncate_length=None):
             if row.DataCollection.imageDirectory
             else ""
         )
-        start_time = f"{row.DataCollection.startTime:%Y-%m-%d %H:%M}"
+        start_time = (
+            f"{row.DataCollection.startTime:%Y-%m-%d %H:%M}"
+            if row.DataCollection.startTime
+            else "????-??-?? ??:??"
+        )
         grid_size = (
             f"{row.GridInfo.steps_x:.0f}x{row.GridInfo.steps_y:.0f}"
             if row.GridInfo
