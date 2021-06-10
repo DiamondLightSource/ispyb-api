@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 import pathlib
 import sys
 import time
@@ -11,15 +12,24 @@ import ispyb
 from ispyb.sqlalchemy import BLSession, DataCollection, GridInfo, Proposal
 
 
-def print_data_collections(rows, synchweb_url=None):
+def _tty_line_length():
+    if not sys.stdout.isatty():
+        return False
+    return os.get_terminal_size().columns
+
+
+def print_data_collections(rows, synchweb_url=None, truncate_length=None):
     for row in reversed(rows):
         visit = f"{row.Proposal.proposalCode}{row.Proposal.proposalNumber}-{row.BLSession.visit_number}"
         bl_name = row.BLSession.beamLineName
         n_images = row.DataCollection.numberOfImages
+        images = f"{n_images:4} images" if n_images else ""
         dcid = row.DataCollection.dataCollectionId
         template = (
             pathlib.Path(row.DataCollection.imageDirectory)
-            / row.DataCollection.fileTemplate
+            / (row.DataCollection.fileTemplate or "")
+            if row.DataCollection.imageDirectory
+            else ""
         )
         start_time = f"{row.DataCollection.startTime:%Y-%m-%d %H:%M}"
         grid_size = (
@@ -28,9 +38,12 @@ def print_data_collections(rows, synchweb_url=None):
             else ""
         )
         grid = f", {grid_size:>5} grid" if grid_size else ""
-        print(
-            f"{start_time} {bl_name:8} {dcid:8} {visit:<11} {n_images:4} images{grid}   {template}"
+        line = (
+            f"{start_time} {bl_name:8} {dcid:8} {visit:<11} {images}{grid}   {template}"
         )
+        if truncate_length and truncate_length < len(line):
+            line = line[: truncate_length - 3] + "..."
+        print(line)
         if synchweb_url:
             print(" " * 52 + f"{synchweb_url}/dc/visit/{visit}/id/{dcid}")
 
@@ -163,7 +176,9 @@ def main(args=None):
             # Record the last observed dcid per beamline
             latest_dcid = rows[0].DataCollection.dataCollectionId
             print_data_collections(
-                rows, synchweb_url=args.synchweb_url if args.link else None
+                rows,
+                synchweb_url=args.synchweb_url if args.link else None,
+                truncate_length=_tty_line_length(),
             )
         if not args.follow:
             break

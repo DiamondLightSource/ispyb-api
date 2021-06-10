@@ -4,6 +4,7 @@ History
 
 Unreleased / master
 -------------------
+* ``ispyb.last_data_collections_on`` is now more tolerant of data collections that do not have all fields populated.
 
 6.4.0 (2021-05-25)
 ------------------
