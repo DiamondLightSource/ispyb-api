@@ -911,6 +911,18 @@ class WorkflowType(Base):
     recordTimeStamp = Column(TIMESTAMP)
 
 
+t_v_Log4Stat = Table(
+    "v_Log4Stat",
+    metadata,
+    Column("id", INTEGER(11), server_default=text("'0'")),
+    Column("priority", String(15)),
+    Column("timestamp", DateTime),
+    Column("msg", String(255)),
+    Column("detail", String(255)),
+    Column("value", String(255)),
+)
+
+
 t_v_dewar = Table(
     "v_dewar",
     metadata,
@@ -933,16 +945,16 @@ t_v_dewar = Table(
 )
 
 
-t_v_dewarbeamline = Table(
-    "v_dewarbeamline",
+t_v_dewarBeamline = Table(
+    "v_dewarBeamline",
     metadata,
     Column("beamLineName", String(45)),
     Column("COUNT(*)", BIGINT(21), server_default=text("'0'")),
 )
 
 
-t_v_dewarbeamlinebyweek = Table(
-    "v_dewarbeamlinebyweek",
+t_v_dewarBeamlineByWeek = Table(
+    "v_dewarBeamlineByWeek",
     metadata,
     Column("Week", String(23)),
     Column("ID14", BIGINT(21), server_default=text("'0'")),
@@ -952,8 +964,8 @@ t_v_dewarbeamlinebyweek = Table(
 )
 
 
-t_v_dewarbyweek = Table(
-    "v_dewarbyweek",
+t_v_dewarByWeek = Table(
+    "v_dewarByWeek",
     metadata,
     Column("Week", String(23)),
     Column("Dewars Tracked", BIGINT(21), server_default=text("'0'")),
@@ -961,8 +973,8 @@ t_v_dewarbyweek = Table(
 )
 
 
-t_v_dewarbyweektotal = Table(
-    "v_dewarbyweektotal",
+t_v_dewarByWeekTotal = Table(
+    "v_dewarByWeekTotal",
     metadata,
     Column("Week", String(23)),
     Column("Dewars Tracked", BIGINT(21), server_default=text("'0'")),
@@ -971,8 +983,8 @@ t_v_dewarbyweektotal = Table(
 )
 
 
-t_v_dewarlist = Table(
-    "v_dewarlist",
+t_v_dewarList = Table(
+    "v_dewarList",
     metadata,
     Column("proposal", String(90)),
     Column("shippingName", String(45)),
@@ -987,16 +999,16 @@ t_v_dewarlist = Table(
 )
 
 
-t_v_dewarproposalcode = Table(
-    "v_dewarproposalcode",
+t_v_dewarProposalCode = Table(
+    "v_dewarProposalCode",
     metadata,
     Column("proposalCode", String(45)),
     Column("COUNT(*)", BIGINT(21), server_default=text("'0'")),
 )
 
 
-t_v_dewarproposalcodebyweek = Table(
-    "v_dewarproposalcodebyweek",
+t_v_dewarProposalCodeByWeek = Table(
+    "v_dewarProposalCodeByWeek",
     metadata,
     Column("Week", String(23)),
     Column("MX", BIGINT(21), server_default=text("'0'")),
@@ -1011,20 +1023,8 @@ t_v_dewarproposalcodebyweek = Table(
 t_v_hour = Table("v_hour", metadata, Column("num", String(18)))
 
 
-t_v_log4stat = Table(
-    "v_log4stat",
-    metadata,
-    Column("id", INTEGER(11), server_default=text("'0'")),
-    Column("priority", String(15)),
-    Column("timestamp", DateTime),
-    Column("msg", String(255)),
-    Column("detail", String(255)),
-    Column("value", String(255)),
-)
-
-
-t_v_logonbyhour = Table(
-    "v_logonbyhour",
+t_v_logonByHour = Table(
+    "v_logonByHour",
     metadata,
     Column("Hour", String(7)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1032,8 +1032,8 @@ t_v_logonbyhour = Table(
 )
 
 
-t_v_logonbyhour2 = Table(
-    "v_logonbyhour2",
+t_v_logonByHour2 = Table(
+    "v_logonByHour2",
     metadata,
     Column("Hour", String(7)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1041,8 +1041,8 @@ t_v_logonbyhour2 = Table(
 )
 
 
-t_v_logonbymonthday = Table(
-    "v_logonbymonthday",
+t_v_logonByMonthDay = Table(
+    "v_logonByMonthDay",
     metadata,
     Column("Day", String(5)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1050,8 +1050,8 @@ t_v_logonbymonthday = Table(
 )
 
 
-t_v_logonbymonthday2 = Table(
-    "v_logonbymonthday2",
+t_v_logonByMonthDay2 = Table(
+    "v_logonByMonthDay2",
     metadata,
     Column("Day", String(5)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1059,8 +1059,8 @@ t_v_logonbymonthday2 = Table(
 )
 
 
-t_v_logonbyweek = Table(
-    "v_logonbyweek",
+t_v_logonByWeek = Table(
+    "v_logonByWeek",
     metadata,
     Column("Week", String(23)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1068,8 +1068,8 @@ t_v_logonbyweek = Table(
 )
 
 
-t_v_logonbyweek2 = Table(
-    "v_logonbyweek2",
+t_v_logonByWeek2 = Table(
+    "v_logonByWeek2",
     metadata,
     Column("Week", String(23)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1077,8 +1077,8 @@ t_v_logonbyweek2 = Table(
 )
 
 
-t_v_logonbyweekday = Table(
-    "v_logonbyweekday",
+t_v_logonByWeekDay = Table(
+    "v_logonByWeekDay",
     metadata,
     Column("Day", String(64)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1086,8 +1086,8 @@ t_v_logonbyweekday = Table(
 )
 
 
-t_v_logonbyweekday2 = Table(
-    "v_logonbyweekday2",
+t_v_logonByWeekDay2 = Table(
+    "v_logonByWeekDay2",
     metadata,
     Column("Day", String(64)),
     Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
@@ -1095,7 +1095,7 @@ t_v_logonbyweekday2 = Table(
 )
 
 
-t_v_monthday = Table("v_monthday", metadata, Column("num", String(10)))
+t_v_monthDay = Table("v_monthDay", metadata, Column("num", String(10)))
 
 
 class VRun(Base):
@@ -1125,8 +1125,8 @@ t_v_sample = Table(
 )
 
 
-t_v_samplebyweek = Table(
-    "v_samplebyweek",
+t_v_sampleByWeek = Table(
+    "v_sampleByWeek",
     metadata,
     Column("Week", String(23)),
     Column("Samples", BIGINT(21)),
@@ -1136,7 +1136,7 @@ t_v_samplebyweek = Table(
 t_v_week = Table("v_week", metadata, Column("num", String(7)))
 
 
-t_v_weekday = Table("v_weekday", metadata, Column("day", String(10)))
+t_v_weekDay = Table("v_weekDay", metadata, Column("day", String(10)))
 
 
 class AbInitioModel(Base):
