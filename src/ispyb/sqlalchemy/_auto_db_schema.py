@@ -119,13 +119,6 @@ class BFSystem(Base):
     description = Column(String(200))
 
 
-class BLSampleGroup(Base):
-    __tablename__ = "BLSampleGroup"
-
-    blSampleGroupId = Column(INTEGER(11), primary_key=True)
-    name = Column(String(100), comment="Human-readable name")
-
-
 class BLSampleImageAutoScoreSchema(Base):
     __tablename__ = "BLSampleImageAutoScoreSchema"
     __table_args__ = {"comment": "Scoring schema name and whether it is enabled"}
@@ -2309,6 +2302,19 @@ class BFSubcomponentBeamline(Base):
     BF_subcomponent = relationship("BFSubcomponent")
 
 
+class BLSampleGroup(Base):
+    __tablename__ = "BLSampleGroup"
+
+    blSampleGroupId = Column(INTEGER(11), primary_key=True)
+    name = Column(String(100), comment="Human-readable name")
+    proposalId = Column(
+        ForeignKey("Proposal.proposalId", ondelete="SET NULL", onupdate="CASCADE"),
+        index=True,
+    )
+
+    Proposal = relationship("Proposal")
+
+
 class BLSession(Base):
     __tablename__ = "BLSession"
     __table_args__ = (Index("proposalId", "proposalId", "visit_number", unique=True),)
@@ -2505,6 +2511,12 @@ class DiffractionPlan(Base):
     priority = Column(
         INTEGER(4),
         comment="The priority of this sample relative to others in the shipment",
+    )
+    qMin = Column(Float, comment="minimum in qRange, unit: nm^-1, needed for SAXS")
+    qMax = Column(Float, comment="maximum in qRange, unit: nm^-1, needed for SAXS")
+    reductionParametersAveraging = Column(
+        Enum("All", "Fastest Dimension", "1D"),
+        comment="Post processing params for SAXS",
     )
 
     Detector = relationship("Detector")
@@ -3911,6 +3923,8 @@ class DataCollectionGroup(Base):
             "Energy scan",
             "XRF spectrum",
             "XRF map xas",
+            "Mesh3D",
+            "Screening",
         ),
         comment="Standard: Routine structure determination experiment. Time Resolved: Investigate the change of a system over time. Custom: Special or non-standard data collection.",
     )
@@ -5188,6 +5202,31 @@ class ScreeningStrategy(Base):
     ScreeningOutput = relationship("ScreeningOutput")
 
 
+class ZcZocaloBuffer(Base):
+    __tablename__ = "zc_ZocaloBuffer"
+
+    AutoProcProgramID = Column(
+        ForeignKey(
+            "AutoProcProgram.autoProcProgramId", ondelete="CASCADE", onupdate="CASCADE"
+        ),
+        primary_key=True,
+        nullable=False,
+        comment="Reference to an existing AutoProcProgram",
+    )
+    UUID = Column(
+        INTEGER(10),
+        primary_key=True,
+        nullable=False,
+        comment="AutoProcProgram-specific unique identifier",
+    )
+    Reference = Column(
+        INTEGER(10),
+        comment="Context-dependent reference to primary key IDs in other ISPyB tables",
+    )
+
+    AutoProcProgram = relationship("AutoProcProgram")
+
+
 class AutoProcScalingHasInt(Base):
     __tablename__ = "AutoProcScaling_has_Int"
     __table_args__ = (
@@ -5346,6 +5385,10 @@ class ParticlePicker(Base):
     particlePickingTemplate = Column(String(255), comment="Cryolo model")
     particleDiameter = Column(Float, comment="Unit: nm")
     numberOfParticles = Column(INTEGER(10))
+    summaryImageFullPath = Column(
+        String(255),
+        comment="Generated summary micrograph image with highlighted particles",
+    )
 
     MotionCorrection = relationship("MotionCorrection")
     AutoProcProgram = relationship("AutoProcProgram")
@@ -5590,6 +5633,10 @@ class ParticleClassification(Base):
             onupdate="CASCADE",
         ),
         index=True,
+    )
+    classDistribution = Column(
+        Float,
+        comment="Provides a figure of merit for the class, higher number is better",
     )
 
     ParticleClassificationGroup = relationship("ParticleClassificationGroup")
