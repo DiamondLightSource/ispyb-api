@@ -4,6 +4,9 @@ History
 
 Unreleased / master
 -------------------
+
+6.5.0 (2021-07-08)
+------------------
 * ``ispyb.last_data_collections_on`` is now more tolerant of data collections that do not have all fields populated.
 * Update SQLAlchemy ORM models for ispyb-database v1.23.1
 
