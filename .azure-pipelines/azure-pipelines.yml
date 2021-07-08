@@ -34,12 +34,10 @@ stages:
         inputs:
           versionSpec: 3.7
 
-      # Run syntax validation on a shallow clone
       - bash: |
           python .azure-pipelines/syntax-validation.py
         displayName: Syntax validation
 
-      # Run flake8 validation on a shallow clone
       - bash: |
           pip install flake8
           python .azure-pipelines/flake8-validation.py
@@ -110,6 +108,20 @@ stages:
       db: mariadb
     steps:
     - template: ci.yml
+
+- stage: update_ORM
+  displayName: Update ORM
+  dependsOn:
+  - build
+  jobs:
+  - job: update_ORM
+    displayName: Update ORM
+    pool:
+      vmImage: ubuntu-20.04
+    services:
+      db: mariadb
+    steps:
+    - template: update-orm.yml
 
 - stage: deploy
   displayName: Publish release

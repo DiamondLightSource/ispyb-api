@@ -1,0 +1,82 @@
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: 3.9
+  displayName: Use Python 3.9
+
+- script: |
+    set -eux
+    pip install -r requirements_orm.txt
+    pip install pre-commit
+  displayName: Install sqlacodegen
+
+- task: DownloadBuildArtifacts@0
+  displayName: Get database schema
+  inputs:
+    buildType: 'current'
+    downloadType: 'single'
+    artifactName: 'package'
+    downloadPath: '$(System.ArtifactsDirectory)'
+
+- script: |
+    set -eu
+    cat >~/.my.cnf <<EOF
+    [client]
+    user=root
+    host=127.0.0.1
+    password=mysql_root_pwd
+    database=ispybtest
+    EOF
+
+    mkdir schema
+    cd schema
+    tar xfz "$(System.ArtifactsDirectory)/package/ispyb-database.tar.gz"
+    patch -p1 < "$(Build.SourcesDirectory)/src/ispyb/sqlalchemy/sqlacodegen.patch"
+    ln ~/.my.cnf .my.cnf -s
+
+    printf 'Waiting for MySQL database to accept connections'
+    until mysql -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 0.5; done
+    printf '\n'
+
+    echo "Installing reference database"
+    ./build.sh
+
+    echo
+    echo "Installed tables:"
+    mysql -D ispyb_build -e "SHOW TABLES"
+  displayName: Set up reference database schema
+  workingDirectory: $(System.ArtifactsDirectory)
+
+- script: |
+    sqlacodegen mysql+mysqlconnector://root:mysql_root_pwd@127.0.0.1/ispyb_build --noinflect --outfile _auto_db_schema.py
+    pre-commit run --files _auto_db_schema.py || echo pre-commit exited with non-zero return code
+  displayName: Generate ORM
+  workingDirectory: $(Build.SourcesDirectory)/src/ispyb/sqlalchemy
+
+- script: |
+    git diff --quiet && {
+      echo "##[section]ORM is up to date"
+      echo "##vso[task.setvariable variable=UpdateRequired;isOutput=true]False"
+    } || {
+      echo "##[warning]ORM needs to be updated. You can download an automatically generated version as Azure artifact."
+      echo "##vso[task.setvariable variable=UpdateRequired;isOutput=true]True"
+    }
+    git diff
+  displayName: Show differences
+  workingDirectory: $(Build.SourcesDirectory)
+  name: ORMCheck
+
+- task: PublishBuildArtifacts@1
+  displayName: Store artifact
+  inputs:
+    pathToPublish: $(Build.SourcesDirectory)/src/ispyb/sqlalchemy/_auto_db_schema.py
+    artifactName: ORM
+
+- script: .azure-pipelines/create-orm-update-pull-request
+  displayName: Create ORM pull request
+  condition: and(succeeded(),
+                 eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+                 eq(variables['ORMCheck.UpdateRequired'], 'True'))
+  workingDirectory: $(Build.SourcesDirectory)
+  env:
+    GITHUB_TOKEN: $(GITHUB_TOKEN)

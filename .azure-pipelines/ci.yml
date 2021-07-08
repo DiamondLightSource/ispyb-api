@@ -21,7 +21,7 @@ steps:
     destinationFolder: "$(Pipeline.Workspace)/src"
 
 - script: |
-    pip install -U pip
+    set -eux
     pip install -r "$(Pipeline.Workspace)/src/requirements_dev.txt"
     pip install "$(Pipeline.Workspace)/src"
   displayName: Install package

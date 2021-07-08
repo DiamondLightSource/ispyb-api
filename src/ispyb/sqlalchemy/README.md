@@ -8,35 +8,18 @@ $ # or, if you have an existing copy of the repository:
 $ git checkout v1.18.1
 ```
 
-Apply the following patch to avoid circular foreign key references:
-```patch
---- a/schemas/ispyb/tables.sql
-+++ b/schemas/ispyb/tables.sql
-@@ -589,7 +589,6 @@ CREATE TABLE `BLSample` (
-   KEY `BLSampleImage_idx1` (`blSubSampleId`),
-   KEY `BLSample_fk5` (`screenComponentGroupId`),
-   CONSTRAINT `BLSample_fk5` FOREIGN KEY (`screenComponentGroupId`) REFERENCES `ScreenComponentGroup` (`screenComponentGroupId`),
--  CONSTRAINT `BLSample_ibfk4` FOREIGN KEY (`blSubSampleId`) REFERENCES `BLSubSample` (`blSubSampleId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-   CONSTRAINT `BLSample_ibfk_1` FOREIGN KEY (`containerId`) REFERENCES `Container` (`containerId`) ON DELETE CASCADE ON UPDATE CASCADE,
-   CONSTRAINT `BLSample_ibfk_2` FOREIGN KEY (`crystalId`) REFERENCES `Crystal` (`crystalId`) ON DELETE CASCADE ON UPDATE CASCADE,
-   CONSTRAINT `BLSample_ibfk_3` FOREIGN KEY (`diffractionPlanId`) REFERENCES `DiffractionPlan` (`diffractionPlanId`) ON DELETE CASCADE ON UPDATE CASCADE
-@@ -1735,7 +1734,6 @@ CREATE TABLE `DataCollection` (
-   KEY `DataCollection_FKIndex0` (`BLSAMPLEID`),
-   KEY `DataCollection_FKIndex00` (`SESSIONID`),
-   KEY `DataCollection_dataCollectionGroupId_startTime` (`dataCollectionGroupId`,`startTime`),
--  CONSTRAINT `DataCollection_ibfk_1` FOREIGN KEY (`strategySubWedgeOrigId`) REFERENCES `ScreeningStrategySubWedge` (`screeningStrategySubWedgeId`),
-   CONSTRAINT `DataCollection_ibfk_2` FOREIGN KEY (`detectorId`) REFERENCES `Detector` (`detectorId`),
-   CONSTRAINT `DataCollection_ibfk_3` FOREIGN KEY (`dataCollectionGroupId`) REFERENCES `DataCollectionGroup` (`dataCollectionGroupId`),
-   CONSTRAINT `DataCollection_ibfk_6` FOREIGN KEY (`startPositionId`) REFERENCES `MotorPosition` (`motorPositionId`),
+Apply the schema patch in `sqlacodegen.patch` to avoid circular foreign key references:
+```bash
+$ patch -p1 < ispyb-api/src/ispyb/sqlalchemy/sqlacodegen.patch
 ```
 
-Run the `ispyb-database` `build.sh` script to generate the database:
+Then run the `ispyb-database` `build.sh` script to generate the database:
 ```bash
 $ sh build.sh
 ```
 
 Generate the models with [sqlacodegen](https://pypi.org/project/sqlacodegen/)
-in `ispyb-api/ispyb/sqlalchemy/`:
+in `ispyb-api/src/ispyb/sqlalchemy/`:
 ```bash
 sqlacodegen mysql+mysqlconnector://user:password@host:port/ispyb_build --noinflect --outfile _auto_db_schema.py
 ```

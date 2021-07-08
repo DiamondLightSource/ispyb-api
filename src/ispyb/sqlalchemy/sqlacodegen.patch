@@ -1,0 +1,18 @@
+--- a/schemas/ispyb/tables.sql
++++ b/schemas/ispyb/tables.sql
+@@ -625,7 +625,6 @@ CREATE TABLE `BLSample` (
+   KEY `BLSampleImage_idx1` (`blSubSampleId`),
+   KEY `BLSample_fk5` (`screenComponentGroupId`),
+   CONSTRAINT `BLSample_fk5` FOREIGN KEY (`screenComponentGroupId`) REFERENCES `ScreenComponentGroup` (`screenComponentGroupId`),
+-  CONSTRAINT `BLSample_ibfk4` FOREIGN KEY (`blSubSampleId`) REFERENCES `BLSubSample` (`blSubSampleId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT `BLSample_ibfk_1` FOREIGN KEY (`containerId`) REFERENCES `Container` (`containerId`) ON DELETE CASCADE ON UPDATE CASCADE,
+   CONSTRAINT `BLSample_ibfk_2` FOREIGN KEY (`crystalId`) REFERENCES `Crystal` (`crystalId`) ON DELETE CASCADE ON UPDATE CASCADE,
+   CONSTRAINT `BLSample_ibfk_3` FOREIGN KEY (`diffractionPlanId`) REFERENCES `DiffractionPlan` (`diffractionPlanId`) ON DELETE CASCADE ON UPDATE CASCADE
+@@ -1826,7 +1825,6 @@ CREATE TABLE `DataCollection` (
+   KEY `DataCollection_dataCollectionGroupId_startTime` (`dataCollectionGroupId`,`startTime`),
+   KEY `DataCollection_dataCollectionPlanId` (`dataCollectionPlanId`),
+   CONSTRAINT `DataCollection_dataCollectionPlanId` FOREIGN KEY (`dataCollectionPlanId`) REFERENCES `DiffractionPlan` (`diffractionPlanId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+-  CONSTRAINT `DataCollection_ibfk_1` FOREIGN KEY (`strategySubWedgeOrigId`) REFERENCES `ScreeningStrategySubWedge` (`screeningStrategySubWedgeId`),
+   CONSTRAINT `DataCollection_ibfk_2` FOREIGN KEY (`detectorId`) REFERENCES `Detector` (`detectorId`),
+   CONSTRAINT `DataCollection_ibfk_3` FOREIGN KEY (`dataCollectionGroupId`) REFERENCES `DataCollectionGroup` (`dataCollectionGroupId`),
+   CONSTRAINT `DataCollection_ibfk_6` FOREIGN KEY (`startPositionId`) REFERENCES `MotorPosition` (`motorPositionId`),
