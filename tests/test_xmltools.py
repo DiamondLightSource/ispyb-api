@@ -1,16 +1,21 @@
 import os
 
+import pytest
+
 from ispyb.xmltools import mx_data_reduction_to_ispyb, xml_file_to_dict
 
 
-def test_mx_data_reduction_xml_to_ispyb(testdb):
+@pytest.mark.parametrize(
+    "filename",
+    [
+        "data/mx_data_reduction_pipeline_results.xml",
+        "data/autoPROC-two-ap_scaling_containers.xml",
+    ],
+)
+def test_mx_data_reduction_xml_to_ispyb(testdb, filename):
     mxprocessing = testdb.mx_processing
 
-    xml_file = os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__), "data/mx_data_reduction_pipeline_results.xml"
-        )
-    )
+    xml_file = os.path.abspath(os.path.join(os.path.dirname(__file__), filename))
     # Find the datacollection associated with this data reduction run
     xml_dir = os.path.split(xml_file)[0]
     try:
