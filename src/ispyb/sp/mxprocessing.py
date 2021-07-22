@@ -57,6 +57,7 @@ class MXProcessing(ispyb.interface.processing.IF):
             ("n_tot_obs", None),
             ("n_tot_unique_obs", None),
             ("mean_i_sig_i", None),
+            ("res_i_sig_i_2", None),
             ("completeness", None),
             ("multiplicity", None),
             ("anom", "0"),
@@ -301,7 +302,7 @@ class MXProcessing(ispyb.interface.processing.IF):
         id = None
         values = [id, parent_id] + values1 + values2 + values3
         return self.get_connection().call_sp_write(
-            procname="insert_processing_scaling", args=values
+            procname="insert_processing_scaling_v2", args=values
         )
 
     def upsert_integration(self, values):
