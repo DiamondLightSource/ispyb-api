@@ -693,6 +693,17 @@ class Position(Base):
     parent = relationship("Position", remote_side=[positionId])
 
 
+class Positioner(Base):
+    __tablename__ = "Positioner"
+    __table_args__ = {
+        "comment": "An arbitrary positioner and its value, could be e.g. a motor. Allows for instance to store some positions with a sample or subsample"
+    }
+
+    positionerId = Column(INTEGER(10), primary_key=True)
+    positioner = Column(String(50), nullable=False)
+    value = Column(Float, nullable=False)
+
+
 class ProcessingPipelineCategory(Base):
     __tablename__ = "ProcessingPipelineCategory"
     __table_args__ = {
@@ -1720,6 +1731,7 @@ class AutoProcScalingStatistics(Base):
     )
     ccHalf = Column(Float, comment="information from XDS")
     ccAnomalous = Column(Float)
+    resIOverSigI2 = Column(Float, comment="Resolution where I/Sigma(I) equals 2")
 
     AutoProcScaling = relationship("AutoProcScaling")
 
@@ -2528,8 +2540,8 @@ class DiffractionPlan(Base):
 class LabContact(Base):
     __tablename__ = "LabContact"
     __table_args__ = (
-        Index("cardNameAndProposal", "cardName", "proposalId", unique=True),
         Index("personAndProposal", "personId", "proposalId", unique=True),
+        Index("cardNameAndProposal", "cardName", "proposalId", unique=True),
     )
 
     labContactId = Column(INTEGER(10), primary_key=True)
@@ -2682,6 +2694,7 @@ class ProposalHasPerson(Base):
             "Principal Investigator",
             "Alternate Contact",
             "ERA Admin",
+            "Associate",
         )
     )
 
@@ -3242,6 +3255,7 @@ class SessionHasPerson(Base):
             "Data Access",
             "Team Member",
             "ERA Admin",
+            "Associate",
         )
     )
     remote = Column(TINYINT(1), server_default=text("0"))
@@ -3871,6 +3885,19 @@ class BLSampleHasDataCollectionPlan(Base):
     DiffractionPlan = relationship("DiffractionPlan")
 
 
+class BLSampleHasPositioner(Base):
+    __tablename__ = "BLSample_has_Positioner"
+
+    blSampleHasPositioner = Column(INTEGER(10), primary_key=True)
+    blSampleId = Column(ForeignKey("BLSample.blSampleId"), nullable=False, index=True)
+    positionerId = Column(
+        ForeignKey("Positioner.positionerId"), nullable=False, index=True
+    )
+
+    BLSample = relationship("BLSample")
+    Positioner = relationship("Positioner")
+
+
 class DataCollectionGroup(Base):
     __tablename__ = "DataCollectionGroup"
     __table_args__ = {
@@ -4188,6 +4215,21 @@ class BLSampleImageMeasurement(Base):
 
     BLSampleImage = relationship("BLSampleImage")
     BLSubSample = relationship("BLSubSample")
+
+
+class BLSubSampleHasPositioner(Base):
+    __tablename__ = "BLSubSample_has_Positioner"
+
+    blSubSampleHasPositioner = Column(INTEGER(10), primary_key=True)
+    blSubSampleId = Column(
+        ForeignKey("BLSubSample.blSubSampleId"), nullable=False, index=True
+    )
+    positionerId = Column(
+        ForeignKey("Positioner.positionerId"), nullable=False, index=True
+    )
+
+    BLSubSample = relationship("BLSubSample")
+    Positioner = relationship("Positioner")
 
 
 class ContainerQueueSample(Base):
@@ -4705,36 +4747,6 @@ t_Project_has_XFEFSpectrum = Table(
 )
 
 
-class Screening(Base):
-    __tablename__ = "Screening"
-
-    screeningId = Column(INTEGER(10), primary_key=True)
-    dataCollectionId = Column(
-        ForeignKey(
-            "DataCollection.dataCollectionId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        index=True,
-    )
-    bltimeStamp = Column(
-        TIMESTAMP,
-        nullable=False,
-        server_default=text("current_timestamp() ON UPDATE current_timestamp()"),
-    )
-    programVersion = Column(String(45))
-    comments = Column(String(255))
-    shortComments = Column(String(20))
-    diffractionPlanId = Column(
-        INTEGER(10), index=True, comment="references DiffractionPlan"
-    )
-    dataCollectionGroupId = Column(
-        ForeignKey("DataCollectionGroup.dataCollectionGroupId"), index=True
-    )
-    xmlSampleInformation = Column(LONGBLOB)
-
-    DataCollectionGroup = relationship("DataCollectionGroup")
-    DataCollection = relationship("DataCollection")
-
-
 class AutoProcProgram(Base):
     __tablename__ = "AutoProcProgram"
 
@@ -4754,9 +4766,7 @@ class AutoProcProgram(Base):
     processingEnvironment = Column(String(255), comment="Cpus, Nodes,...")
     recordTimeStamp = Column(DateTime, comment="Creation or last update date/time")
     processingJobId = Column(ForeignKey("ProcessingJob.processingJobId"), index=True)
-    dataCollectionId = Column(ForeignKey("DataCollection.dataCollectionId"), index=True)
 
-    DataCollection = relationship("DataCollection")
     ProcessingJob = relationship("ProcessingJob")
 
 
@@ -4785,96 +4795,6 @@ class ProcessingJobParameter(Base):
     parameterValue = Column(String(1024))
 
     ProcessingJob = relationship("ProcessingJob")
-
-
-class ScreeningInput(Base):
-    __tablename__ = "ScreeningInput"
-
-    screeningInputId = Column(INTEGER(10), primary_key=True)
-    screeningId = Column(
-        ForeignKey("Screening.screeningId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-        server_default=text("0"),
-    )
-    beamX = Column(Float)
-    beamY = Column(Float)
-    rmsErrorLimits = Column(Float)
-    minimumFractionIndexed = Column(Float)
-    maximumFractionRejected = Column(Float)
-    minimumSignalToNoise = Column(Float)
-    diffractionPlanId = Column(INTEGER(10), comment="references DiffractionPlan table")
-    xmlSampleInformation = Column(LONGBLOB)
-
-    Screening = relationship("Screening")
-
-
-class ScreeningOutput(Base):
-    __tablename__ = "ScreeningOutput"
-
-    screeningOutputId = Column(INTEGER(10), primary_key=True)
-    screeningId = Column(
-        ForeignKey("Screening.screeningId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-        server_default=text("0"),
-    )
-    statusDescription = Column(String(1024))
-    rejectedReflections = Column(INTEGER(10))
-    resolutionObtained = Column(Float)
-    spotDeviationR = Column(Float)
-    spotDeviationTheta = Column(Float)
-    beamShiftX = Column(Float)
-    beamShiftY = Column(Float)
-    numSpotsFound = Column(INTEGER(10))
-    numSpotsUsed = Column(INTEGER(10))
-    numSpotsRejected = Column(INTEGER(10))
-    mosaicity = Column(Float)
-    iOverSigma = Column(Float)
-    diffractionRings = Column(TINYINT(1))
-    SCREENINGSUCCESS = Column(
-        TINYINT(1), server_default=text("0"), comment="Column to be deleted"
-    )
-    mosaicityEstimated = Column(TINYINT(1), nullable=False, server_default=text("0"))
-    rankingResolution = Column(Float(asdecimal=True))
-    program = Column(String(45))
-    doseTotal = Column(Float(asdecimal=True))
-    totalExposureTime = Column(Float(asdecimal=True))
-    totalRotationRange = Column(Float(asdecimal=True))
-    totalNumberOfImages = Column(INTEGER(11))
-    rFriedel = Column(Float(asdecimal=True))
-    indexingSuccess = Column(TINYINT(1), nullable=False, server_default=text("0"))
-    strategySuccess = Column(TINYINT(1), nullable=False, server_default=text("0"))
-    alignmentSuccess = Column(TINYINT(1), nullable=False, server_default=text("0"))
-
-    Screening = relationship("Screening")
-
-
-class ScreeningRank(Base):
-    __tablename__ = "ScreeningRank"
-
-    screeningRankId = Column(INTEGER(10), primary_key=True)
-    screeningRankSetId = Column(
-        ForeignKey(
-            "ScreeningRankSet.screeningRankSetId",
-            ondelete="CASCADE",
-            onupdate="CASCADE",
-        ),
-        nullable=False,
-        index=True,
-        server_default=text("0"),
-    )
-    screeningId = Column(
-        ForeignKey("Screening.screeningId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-        server_default=text("0"),
-    )
-    rankValue = Column(Float)
-    rankInformation = Column(String(1024))
-
-    Screening = relationship("Screening")
-    ScreeningRankSet = relationship("ScreeningRankSet")
 
 
 class WorkflowMesh(Base):
@@ -5133,73 +5053,41 @@ class PDBEntry(Base):
     AutoProcProgram = relationship("AutoProcProgram")
 
 
-class ScreeningOutputLattice(Base):
-    __tablename__ = "ScreeningOutputLattice"
+class Screening(Base):
+    __tablename__ = "Screening"
 
-    screeningOutputLatticeId = Column(INTEGER(10), primary_key=True)
-    screeningOutputId = Column(
+    screeningId = Column(INTEGER(10), primary_key=True)
+    dataCollectionId = Column(
         ForeignKey(
-            "ScreeningOutput.screeningOutputId", ondelete="CASCADE", onupdate="CASCADE"
+            "DataCollection.dataCollectionId", ondelete="CASCADE", onupdate="CASCADE"
         ),
-        nullable=False,
         index=True,
-        server_default=text("0"),
     )
-    spaceGroup = Column(String(45))
-    pointGroup = Column(String(45))
-    bravaisLattice = Column(String(45))
-    rawOrientationMatrix_a_x = Column(Float)
-    rawOrientationMatrix_a_y = Column(Float)
-    rawOrientationMatrix_a_z = Column(Float)
-    rawOrientationMatrix_b_x = Column(Float)
-    rawOrientationMatrix_b_y = Column(Float)
-    rawOrientationMatrix_b_z = Column(Float)
-    rawOrientationMatrix_c_x = Column(Float)
-    rawOrientationMatrix_c_y = Column(Float)
-    rawOrientationMatrix_c_z = Column(Float)
-    unitCell_a = Column(Float)
-    unitCell_b = Column(Float)
-    unitCell_c = Column(Float)
-    unitCell_alpha = Column(Float)
-    unitCell_beta = Column(Float)
-    unitCell_gamma = Column(Float)
     bltimeStamp = Column(
         TIMESTAMP,
         nullable=False,
         server_default=text("current_timestamp() ON UPDATE current_timestamp()"),
     )
-    labelitIndexing = Column(TINYINT(1), server_default=text("0"))
-
-    ScreeningOutput = relationship("ScreeningOutput")
-
-
-class ScreeningStrategy(Base):
-    __tablename__ = "ScreeningStrategy"
-
-    screeningStrategyId = Column(INTEGER(10), primary_key=True)
-    screeningOutputId = Column(
+    programVersion = Column(String(45))
+    comments = Column(String(255))
+    shortComments = Column(String(20))
+    diffractionPlanId = Column(
+        INTEGER(10), index=True, comment="references DiffractionPlan"
+    )
+    dataCollectionGroupId = Column(
+        ForeignKey("DataCollectionGroup.dataCollectionGroupId"), index=True
+    )
+    xmlSampleInformation = Column(LONGBLOB)
+    autoProcProgramId = Column(
         ForeignKey(
-            "ScreeningOutput.screeningOutputId", ondelete="CASCADE", onupdate="CASCADE"
+            "AutoProcProgram.autoProcProgramId", ondelete="SET NULL", onupdate="CASCADE"
         ),
-        nullable=False,
         index=True,
-        server_default=text("0"),
-    )
-    phiStart = Column(Float)
-    phiEnd = Column(Float)
-    rotation = Column(Float)
-    exposureTime = Column(Float)
-    resolution = Column(Float)
-    completeness = Column(Float)
-    multiplicity = Column(Float)
-    anomalous = Column(TINYINT(1), nullable=False, server_default=text("0"))
-    program = Column(String(45))
-    rankingResolution = Column(Float)
-    transmission = Column(
-        Float, comment="Transmission for the strategy as given by the strategy program."
     )
 
-    ScreeningOutput = relationship("ScreeningOutput")
+    AutoProcProgram = relationship("AutoProcProgram")
+    DataCollectionGroup = relationship("DataCollectionGroup")
+    DataCollection = relationship("DataCollection")
 
 
 class ZcZocaloBuffer(Base):
@@ -5394,36 +5282,94 @@ class ParticlePicker(Base):
     AutoProcProgram = relationship("AutoProcProgram")
 
 
-class ScreeningStrategyWedge(Base):
-    __tablename__ = "ScreeningStrategyWedge"
+class ScreeningInput(Base):
+    __tablename__ = "ScreeningInput"
 
-    screeningStrategyWedgeId = Column(
-        INTEGER(10), primary_key=True, comment="Primary key"
+    screeningInputId = Column(INTEGER(10), primary_key=True)
+    screeningId = Column(
+        ForeignKey("Screening.screeningId", ondelete="CASCADE", onupdate="CASCADE"),
+        nullable=False,
+        index=True,
+        server_default=text("0"),
     )
-    screeningStrategyId = Column(
+    beamX = Column(Float)
+    beamY = Column(Float)
+    rmsErrorLimits = Column(Float)
+    minimumFractionIndexed = Column(Float)
+    maximumFractionRejected = Column(Float)
+    minimumSignalToNoise = Column(Float)
+    diffractionPlanId = Column(INTEGER(10), comment="references DiffractionPlan table")
+    xmlSampleInformation = Column(LONGBLOB)
+
+    Screening = relationship("Screening")
+
+
+class ScreeningOutput(Base):
+    __tablename__ = "ScreeningOutput"
+
+    screeningOutputId = Column(INTEGER(10), primary_key=True)
+    screeningId = Column(
+        ForeignKey("Screening.screeningId", ondelete="CASCADE", onupdate="CASCADE"),
+        nullable=False,
+        index=True,
+        server_default=text("0"),
+    )
+    statusDescription = Column(String(1024))
+    rejectedReflections = Column(INTEGER(10))
+    resolutionObtained = Column(Float)
+    spotDeviationR = Column(Float)
+    spotDeviationTheta = Column(Float)
+    beamShiftX = Column(Float)
+    beamShiftY = Column(Float)
+    numSpotsFound = Column(INTEGER(10))
+    numSpotsUsed = Column(INTEGER(10))
+    numSpotsRejected = Column(INTEGER(10))
+    mosaicity = Column(Float)
+    iOverSigma = Column(Float)
+    diffractionRings = Column(TINYINT(1))
+    SCREENINGSUCCESS = Column(
+        TINYINT(1), server_default=text("0"), comment="Column to be deleted"
+    )
+    mosaicityEstimated = Column(TINYINT(1), nullable=False, server_default=text("0"))
+    rankingResolution = Column(Float(asdecimal=True))
+    program = Column(String(45))
+    doseTotal = Column(Float(asdecimal=True))
+    totalExposureTime = Column(Float(asdecimal=True))
+    totalRotationRange = Column(Float(asdecimal=True))
+    totalNumberOfImages = Column(INTEGER(11))
+    rFriedel = Column(Float(asdecimal=True))
+    indexingSuccess = Column(TINYINT(1), nullable=False, server_default=text("0"))
+    strategySuccess = Column(TINYINT(1), nullable=False, server_default=text("0"))
+    alignmentSuccess = Column(TINYINT(1), nullable=False, server_default=text("0"))
+
+    Screening = relationship("Screening")
+
+
+class ScreeningRank(Base):
+    __tablename__ = "ScreeningRank"
+
+    screeningRankId = Column(INTEGER(10), primary_key=True)
+    screeningRankSetId = Column(
         ForeignKey(
-            "ScreeningStrategy.screeningStrategyId",
+            "ScreeningRankSet.screeningRankSetId",
             ondelete="CASCADE",
             onupdate="CASCADE",
         ),
+        nullable=False,
         index=True,
-        comment="Foreign key to parent table",
+        server_default=text("0"),
     )
-    wedgeNumber = Column(
-        INTEGER(10), comment="The number of this wedge within the strategy"
+    screeningId = Column(
+        ForeignKey("Screening.screeningId", ondelete="CASCADE", onupdate="CASCADE"),
+        nullable=False,
+        index=True,
+        server_default=text("0"),
     )
-    resolution = Column(Float)
-    completeness = Column(Float)
-    multiplicity = Column(Float)
-    doseTotal = Column(Float, comment="Total dose for this wedge")
-    numberOfImages = Column(INTEGER(10), comment="Number of images for this wedge")
-    phi = Column(Float)
-    kappa = Column(Float)
-    chi = Column(Float)
-    comments = Column(String(255))
-    wavelength = Column(Float(asdecimal=True))
+    rankValue = Column(Float)
+    rankInformation = Column(String(1024))
 
-    ScreeningStrategy = relationship("ScreeningStrategy")
+    Screening = relationship("Screening")
+    ScreeningRankSet = relationship("ScreeningRankSet")
 
 
 class XRFFluorescenceMapping(Base):
@@ -5523,38 +5469,73 @@ class ParticleClassificationGroup(Base):
     AutoProcProgram = relationship("AutoProcProgram")
 
 
-class ScreeningStrategySubWedge(Base):
-    __tablename__ = "ScreeningStrategySubWedge"
+class ScreeningOutputLattice(Base):
+    __tablename__ = "ScreeningOutputLattice"
 
-    screeningStrategySubWedgeId = Column(
-        INTEGER(10), primary_key=True, comment="Primary key"
-    )
-    screeningStrategyWedgeId = Column(
+    screeningOutputLatticeId = Column(INTEGER(10), primary_key=True)
+    screeningOutputId = Column(
         ForeignKey(
-            "ScreeningStrategyWedge.screeningStrategyWedgeId",
-            ondelete="CASCADE",
-            onupdate="CASCADE",
+            "ScreeningOutput.screeningOutputId", ondelete="CASCADE", onupdate="CASCADE"
         ),
+        nullable=False,
         index=True,
-        comment="Foreign key to parent table",
+        server_default=text("0"),
     )
-    subWedgeNumber = Column(
-        INTEGER(10), comment="The number of this subwedge within the wedge"
+    spaceGroup = Column(String(45))
+    pointGroup = Column(String(45))
+    bravaisLattice = Column(String(45))
+    rawOrientationMatrix_a_x = Column(Float)
+    rawOrientationMatrix_a_y = Column(Float)
+    rawOrientationMatrix_a_z = Column(Float)
+    rawOrientationMatrix_b_x = Column(Float)
+    rawOrientationMatrix_b_y = Column(Float)
+    rawOrientationMatrix_b_z = Column(Float)
+    rawOrientationMatrix_c_x = Column(Float)
+    rawOrientationMatrix_c_y = Column(Float)
+    rawOrientationMatrix_c_z = Column(Float)
+    unitCell_a = Column(Float)
+    unitCell_b = Column(Float)
+    unitCell_c = Column(Float)
+    unitCell_alpha = Column(Float)
+    unitCell_beta = Column(Float)
+    unitCell_gamma = Column(Float)
+    bltimeStamp = Column(
+        TIMESTAMP,
+        nullable=False,
+        server_default=text("current_timestamp() ON UPDATE current_timestamp()"),
     )
-    rotationAxis = Column(String(45), comment="Angle where subwedge starts")
-    axisStart = Column(Float, comment="Angle where subwedge ends")
-    axisEnd = Column(Float, comment="Exposure time for subwedge")
-    exposureTime = Column(Float, comment="Transmission for subwedge")
-    transmission = Column(Float)
-    oscillationRange = Column(Float)
+    labelitIndexing = Column(TINYINT(1), server_default=text("0"))
+
+    ScreeningOutput = relationship("ScreeningOutput")
+
+
+class ScreeningStrategy(Base):
+    __tablename__ = "ScreeningStrategy"
+
+    screeningStrategyId = Column(INTEGER(10), primary_key=True)
+    screeningOutputId = Column(
+        ForeignKey(
+            "ScreeningOutput.screeningOutputId", ondelete="CASCADE", onupdate="CASCADE"
+        ),
+        nullable=False,
+        index=True,
+        server_default=text("0"),
+    )
+    phiStart = Column(Float)
+    phiEnd = Column(Float)
+    rotation = Column(Float)
+    exposureTime = Column(Float)
+    resolution = Column(Float)
     completeness = Column(Float)
     multiplicity = Column(Float)
-    RESOLUTION = Column(Float)
-    doseTotal = Column(Float, comment="Total dose for this subwedge")
-    numberOfImages = Column(INTEGER(10), comment="Number of images for this subwedge")
-    comments = Column(String(255))
+    anomalous = Column(TINYINT(1), nullable=False, server_default=text("0"))
+    program = Column(String(45))
+    rankingResolution = Column(Float)
+    transmission = Column(
+        Float, comment="Transmission for the strategy as given by the strategy program."
+    )
 
-    ScreeningStrategyWedge = relationship("ScreeningStrategyWedge")
+    ScreeningOutput = relationship("ScreeningOutput")
 
 
 class XFEFluorescenceComposite(Base):
@@ -5642,6 +5623,38 @@ class ParticleClassification(Base):
     ParticleClassificationGroup = relationship("ParticleClassificationGroup")
 
 
+class ScreeningStrategyWedge(Base):
+    __tablename__ = "ScreeningStrategyWedge"
+
+    screeningStrategyWedgeId = Column(
+        INTEGER(10), primary_key=True, comment="Primary key"
+    )
+    screeningStrategyId = Column(
+        ForeignKey(
+            "ScreeningStrategy.screeningStrategyId",
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+        ),
+        index=True,
+        comment="Foreign key to parent table",
+    )
+    wedgeNumber = Column(
+        INTEGER(10), comment="The number of this wedge within the strategy"
+    )
+    resolution = Column(Float)
+    completeness = Column(Float)
+    multiplicity = Column(Float)
+    doseTotal = Column(Float, comment="Total dose for this wedge")
+    numberOfImages = Column(INTEGER(10), comment="Number of images for this wedge")
+    phi = Column(Float)
+    kappa = Column(Float)
+    chi = Column(Float)
+    comments = Column(String(255))
+    wavelength = Column(Float(asdecimal=True))
+
+    ScreeningStrategy = relationship("ScreeningStrategy")
+
+
 t_ParticleClassification_has_CryoemInitialModel = Table(
     "ParticleClassification_has_CryoemInitialModel",
     metadata,
@@ -5667,3 +5680,37 @@ t_ParticleClassification_has_CryoemInitialModel = Table(
         index=True,
     ),
 )
+
+
+class ScreeningStrategySubWedge(Base):
+    __tablename__ = "ScreeningStrategySubWedge"
+
+    screeningStrategySubWedgeId = Column(
+        INTEGER(10), primary_key=True, comment="Primary key"
+    )
+    screeningStrategyWedgeId = Column(
+        ForeignKey(
+            "ScreeningStrategyWedge.screeningStrategyWedgeId",
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+        ),
+        index=True,
+        comment="Foreign key to parent table",
+    )
+    subWedgeNumber = Column(
+        INTEGER(10), comment="The number of this subwedge within the wedge"
+    )
+    rotationAxis = Column(String(45), comment="Angle where subwedge starts")
+    axisStart = Column(Float, comment="Angle where subwedge ends")
+    axisEnd = Column(Float, comment="Exposure time for subwedge")
+    exposureTime = Column(Float, comment="Transmission for subwedge")
+    transmission = Column(Float)
+    oscillationRange = Column(Float)
+    completeness = Column(Float)
+    multiplicity = Column(Float)
+    RESOLUTION = Column(Float)
+    doseTotal = Column(Float, comment="Total dose for this subwedge")
+    numberOfImages = Column(INTEGER(10), comment="Number of images for this subwedge")
+    comments = Column(String(255))
+
+    ScreeningStrategyWedge = relationship("ScreeningStrategyWedge")
