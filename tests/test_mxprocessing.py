@@ -257,7 +257,11 @@ def test_processing2(testdb):
     id = mxprocessing.insert_scaling(
         parentid, list(params1.values()), list(params2.values()), list(params3.values())
     )
-
+    assert id is not None
+    params3["res_i_sig_i_2"] = 1.5
+    id = mxprocessing.insert_scaling(
+        parentid, list(params1.values()), list(params2.values()), list(params3.values())
+    )
     assert id is not None
 
     params = mxprocessing.get_quality_indicators_params()

@@ -6,6 +6,8 @@ Unreleased / master
 -------------------
 
 * Update SQLAlchemy ORM models for ispyb-database v1.25.0
+* Support XML file with multiple ``AutoProcScalingContainers`` `#155 <https://github.com/DiamondLightSource/ispyb-api/pull/155>`_
+* Add ability to store values for the new column ``AutoProcScalingStatistics.resIOverSigI2`` `#157 <https://github.com/DiamondLightSource/ispyb-api/pull/157>`_
 
 6.5.0 (2021-07-08)
 ------------------
