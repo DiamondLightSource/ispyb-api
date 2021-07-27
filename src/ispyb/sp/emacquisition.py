@@ -161,10 +161,11 @@ class EMAcquisition(Acquisition):
         particle_picking_template=None,
         particle_diameter=None,
         number_of_particles=None,
+        summary_image_full_path=None,
     ):
         """Store new particle picker parameters."""
         return self.get_connection().call_sp_write(
-            procname="upsert_particle_picker",
+            procname="upsert_particle_picker_v2",
             args=(
                 particle_picker_id,
                 first_motion_correction_id,
@@ -172,6 +173,7 @@ class EMAcquisition(Acquisition):
                 particle_picking_template,
                 particle_diameter,
                 number_of_particles,
+                summary_image_full_path,
             ),
         )
 
@@ -208,6 +210,7 @@ class EMAcquisition(Acquisition):
         class_number=None,
         class_image_full_path=None,
         particles_per_class=None,
+        class_distribution=None,
         rotation_accuracy=None,
         translation_accuracy=None,
         estimated_resolution=None,
@@ -215,13 +218,14 @@ class EMAcquisition(Acquisition):
     ):
         """Store new particle classification parameters."""
         return self.get_connection().call_sp_write(
-            procname="upsert_particle_classification",
+            procname="upsert_particle_classification_v2",
             args=(
                 particle_classification_id,
                 particle_classification_group_id,
                 class_number,
                 class_image_full_path,
                 particles_per_class,
+                class_distribution,
                 rotation_accuracy,
                 translation_accuracy,
                 estimated_resolution,
