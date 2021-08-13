@@ -9,7 +9,7 @@ import sqlalchemy.orm
 from sqlalchemy.orm import relationship
 
 from ._auto_db_schema import *  # noqa F403; lgtm
-from ._auto_db_schema import AutoProcProgram, AutoProcScaling, ProcessingJob
+from ._auto_db_schema import AutoProcProgram, AutoProcScaling, MXMRRun, ProcessingJob
 
 logger = logging.getLogger("ispyb.sqlalchemy")
 
@@ -19,6 +19,7 @@ AutoProcProgram.AutoProcProgramAttachments = relationship(
 AutoProcScaling.AutoProcScalingStatistics = relationship(
     "AutoProcScalingStatistics", back_populates="AutoProcScaling"
 )
+MXMRRun.MXMRRunBlobs = relationship("MXMRRunBlob", back_populates="MXMRRun")
 ProcessingJob.ProcessingJobParameters = relationship(
     "ProcessingJobParameter", back_populates="ProcessingJob"
 )
