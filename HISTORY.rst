@@ -5,9 +5,12 @@ History
 Unreleased / master
 -------------------
 
+6.6.0 (2021-08-13)
+------------------
 * Update SQLAlchemy ORM models for ispyb-database v1.25.0
 * Support XML file with multiple ``AutoProcScalingContainers`` `#155 <https://github.com/DiamondLightSource/ispyb-api/pull/155>`_
 * Add ability to store values for the new column ``AutoProcScalingStatistics.resIOverSigI2`` `#157 <https://github.com/DiamondLightSource/ispyb-api/pull/157>`_
+* Use new versions of stored procedures for ``ParticlePicker`` and ``ParticleClassification`` insert methods
 
 6.5.0 (2021-07-08)
 ------------------
