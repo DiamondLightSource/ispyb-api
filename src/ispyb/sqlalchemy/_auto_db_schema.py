@@ -605,6 +605,7 @@ class PDB(Base):
     name = Column(String(255))
     contents = Column(MEDIUMTEXT)
     code = Column(String(4))
+    source = Column(String(30), comment="Could be e.g. AlphaFold or RoseTTAFold")
 
 
 class PHPSession(Base):
