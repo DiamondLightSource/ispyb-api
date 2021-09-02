@@ -81,4 +81,4 @@ class NoResult(ISPyBException):
 class ReadWriteError(ISPyBException):
     """Record could not be read, inserted, updated or deleted. This could be due to
     illegal values, the wrong number of parameters, a violation of table or
-    index constraints, or a database failure."""
+    index constraints, a permissions error, or a database failure."""
