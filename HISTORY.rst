@@ -4,6 +4,7 @@ History
 
 Unreleased / master
 -------------------
+* Correctly translate database stored procedure permission errors into ``ISPyBException``s `#160 <https://github.com/DiamondLightSource/ispyb-api/pull/160>`_
 
 6.7.0 (2021-09-01)
 ------------------
