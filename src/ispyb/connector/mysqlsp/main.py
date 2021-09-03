@@ -101,6 +101,10 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
                 raise ReadWriteError(
                     f"IntegrityError({e.errno}): {traceback.format_exc()}"
                 )
+            except DatabaseError as e:
+                raise ReadWriteError(
+                    f"DatabaseError({e.errno}): {traceback.format_exc()}"
+                )
             finally:
                 cursor.close()
         if result_args is not None and len(result_args) > 0:
