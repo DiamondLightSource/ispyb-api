@@ -4,7 +4,10 @@ History
 
 Unreleased / master
 -------------------
-* Update database schema to v1.27.0
+
+6.9.0 (2021-09-16)
+------------------
+* Update SQLAlchemy ORM models for ispyb-database v1.27.0
 
 6.8.0 (2021-09-03)
 ------------------
