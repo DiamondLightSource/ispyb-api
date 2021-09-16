@@ -2541,8 +2541,8 @@ class DiffractionPlan(Base):
 class LabContact(Base):
     __tablename__ = "LabContact"
     __table_args__ = (
-        Index("personAndProposal", "personId", "proposalId", unique=True),
         Index("cardNameAndProposal", "cardName", "proposalId", unique=True),
+        Index("personAndProposal", "personId", "proposalId", unique=True),
     )
 
     labContactId = Column(INTEGER(10), primary_key=True)
@@ -5281,6 +5281,27 @@ class ParticlePicker(Base):
 
     MotionCorrection = relationship("MotionCorrection")
     AutoProcProgram = relationship("AutoProcProgram")
+
+
+class RelativeIceThickness(Base):
+    __tablename__ = "RelativeIceThickness"
+
+    relativeIceThicknessId = Column(INTEGER(11), primary_key=True)
+    motionCorrectionId = Column(
+        ForeignKey("MotionCorrection.motionCorrectionId", onupdate="CASCADE"),
+        index=True,
+    )
+    autoProcProgramId = Column(
+        ForeignKey("AutoProcProgram.autoProcProgramId", onupdate="CASCADE"), index=True
+    )
+    minimum = Column(Float, comment="Minimum relative ice thickness, Unitless")
+    q1 = Column(Float, comment="Quartile 1, unitless")
+    median = Column(Float, comment="Median relative ice thickness, Unitless")
+    q3 = Column(Float, comment="Quartile 3, unitless")
+    maximum = Column(Float, comment="Minimum relative ice thickness, Unitless")
+
+    AutoProcProgram = relationship("AutoProcProgram")
+    MotionCorrection = relationship("MotionCorrection")
 
 
 class ScreeningInput(Base):
