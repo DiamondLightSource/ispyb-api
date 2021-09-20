@@ -1,0 +1,69 @@
+# Whether to link or copy data
+copy_method: copy
+
+# Map each beamline to a session
+sessions:
+  bl: blc00001-1
+
+# Where to copy raw data from
+raw_data: /data/ispyb-test
+
+# Where to write simulated data to, can use {beamline} placeholders
+data_dir: /data/tests/{beamline}/simulation
+
+ispyb_url: https://ispyb.diamond.ac.uk
+
+# Proteins
+components:
+  Component1:
+    acronym: Component1
+    sequence: SiSP
+
+  Component2:
+    acronym: Component2
+
+# Samples
+samples:
+  Sample1:
+    name: Sample1
+    component: Component1
+
+  Sample2:
+    name: Sample2
+    component: Component2
+
+# Experiments
+experiments:
+  Energy scan:
+    - data: energy_scan/energyscan1.h5
+      sample: Sample2
+      xtalsnapshotfullpath1: energy_scan/snapshot.png
+      numberofimages: 4001
+      exposuretime: 1
+      #energy: 8.8143
+      wavelength: 1.4065
+      imagecontainersubpath: 1.1/measurement
+
+  XRF map:
+    - data: xrf_map/xrfmap1.h5
+      #energy: 2.4817
+      wavelength: 4.9959
+      sample: Sample1
+      xtalsnapshotfullpath1: xrf_map/snapshot.png
+      exposuretime: 0.03
+      numberofimages: 1600
+      grid:
+        steps_x: 40
+        steps_y: 40
+        dx_mm: 0.001
+        dy_mm: 0.001
+        pixelspermicronx: -0.44994
+        pixelspermicrony: -0.46537
+        snapshot_offsetxpixel: 682.16
+        snapshot_offsetypixel: 554
+      subsample:
+        x: 9038007
+        y: 24467003
+        x2: 9078007
+        y2: 24507003
+        type: roi
