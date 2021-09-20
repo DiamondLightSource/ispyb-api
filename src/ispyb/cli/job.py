@@ -30,6 +30,7 @@ import ispyb
 try:
     import procrunner
     import zocalo
+    import zocalo.configuration
 except ModuleNotFoundError:
     zocalo = None
 
@@ -136,8 +137,6 @@ def main(cmd_args=sys.argv[1:]):
     )
 
     if zocalo:
-        import zocalo.configuration
-
         zc = zocalo.configuration.from_file()
         zc.activate()
 
