@@ -135,10 +135,15 @@ def main(cmd_args=sys.argv[1:]):
         description="Command line tool to manipulate ISPyB processing table entries.",
     )
 
-    if os.path.isdir("/dls_sw/apps/zocalo/live/recipes"):
+    if zocalo:
+        import zocalo.configuration
+
+        zc = zocalo.configuration.from_file()
+        zc.activate()
+
         available_recipes = sorted(
             r[6:-5]
-            for r in os.listdir("/dls_sw/apps/zocalo/live/recipes")
+            for r in os.listdir(zc.storage["recipe_path"])
             if r.startswith("ispyb-") and r.endswith(".json")
         )
     else:
@@ -199,8 +204,8 @@ def main(cmd_args=sys.argv[1:]):
             default=None,
             choices=available_recipes,
             help="set a recipe for the processing job. Recipe name must correspond to a filename "
-            "(plus ispyb- prefix and .json extension) in /dls_sw/apps/zocalo/live/recipes: %s"
-            % ", ".join(available_recipes),
+            "(plus ispyb- prefix and .json extension) in %s: %s"
+            % (zc.storage["recipe_path"], ", ".join(available_recipes)),
         )
     else:
         group.add_option(
