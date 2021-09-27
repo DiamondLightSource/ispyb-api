@@ -20,8 +20,8 @@ Update stored information:
   ispyb.job 73 -u 1234 -s "everything is broken" -r failure
 """
 
-import re
 import os
+import re
 import sys
 from optparse import SUPPRESS_HELP, OptionGroup, OptionParser
 
@@ -29,7 +29,6 @@ import ispyb
 
 try:
     import procrunner
-    import zocalo
     import zocalo.configuration
 except ModuleNotFoundError:
     zocalo = None
@@ -136,13 +135,17 @@ def main(cmd_args=sys.argv[1:]):
         description="Command line tool to manipulate ISPyB processing table entries.",
     )
 
+    recipe_dir = None
     if zocalo:
         zc = zocalo.configuration.from_file()
         zc.activate()
+        if hasattr(zc, "storage"):
+            recipe_dir = zc.storage.get("zocalo.recipe_directory")
 
+    if recipe_dir and os.path.isdir(recipe_dir):
         available_recipes = sorted(
             r[6:-5]
-            for r in os.listdir(zc.storage["recipe_path"])
+            for r in os.listdir(recipe_dir)
             if r.startswith("ispyb-") and r.endswith(".json")
         )
     else:
@@ -203,8 +206,7 @@ def main(cmd_args=sys.argv[1:]):
             default=None,
             choices=available_recipes,
             help="set a recipe for the processing job. Recipe name must correspond to a filename "
-            "(plus ispyb- prefix and .json extension) in %s: %s"
-            % (zc.storage["recipe_path"], ", ".join(available_recipes)),
+            f"(plus ispyb- prefix and .json extension) in {recipe_dir}: {', '.join(available_recipes)}",
         )
     else:
         group.add_option(
