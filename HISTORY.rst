@@ -4,6 +4,7 @@ History
 
 Unreleased / master
 -------------------
+* Read recipes from zocalo configuration rather than hard coded path
 
 6.9.0 (2021-09-16)
 ------------------
