@@ -7,7 +7,7 @@ isypb.simulate <beamline> <experiment_type>
 isypb.simulate bm23 'Energy scan'
 ```
 
-This will link some real raw data into a new location in the session along with snapshots if available, create a datacollection in the ispyb database and trigger a mimas start event to determine the processing execution plan.
+This will link some real raw data into a new location in the session along with snapshots if available, create a datacollection in the ispyb database. It can trigger events before and after the data is copied using the `ispyb.simulator.before_datacollection` and `ispyb.simulator.after_datacollection` entry points. These are passing just the `DataCollection.dataCollectionId`.
 
 The simulator will create hierarchically a component (`Protein`), related `BLSample` (with intermediate `Crystal`), and potentially a `SubSample`, contained within a `Container`, `Dewar`, and `Shipment` belonging to the specified `Proposal` if they do not already exist with the defined name. Then the simulator creates a `DataCollection` and `DataCollectionGroup`, linked to the relevant `BLSample` and `BLSession`. If grid info information is specified it will also create an entry in `GridInfo`
 

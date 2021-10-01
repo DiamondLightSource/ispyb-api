@@ -4,6 +4,7 @@ History
 
 Unreleased / master
 -------------------
+* Add a basic data collection simulator
 
 6.9.0 (2021-09-16)
 ------------------
