@@ -283,8 +283,8 @@ class SimulateDataCollection(Simulation):
                 f"{self.config['ispyb_url']}/visit/{blses}/id/{dc.dataCollectionId}"
             )
 
-            logger.info("Triggering mimas start")
-            self.send_start(dc.dataCollectionId)
+            logger.info("Triggering before start plugins")
+            self.before_start(dc.dataCollectionId)
 
             # Create the dataset dir
             data_dir = os.path.join(
@@ -361,5 +361,5 @@ class SimulateDataCollection(Simulation):
             if delay:
                 time.sleep(delay)
 
-            logger.info("Triggering mimas end")
-            self.send_end(dc.dataCollectionId)
+            logger.info("Triggering after end plugins")
+            self.after_end(dc.dataCollectionId)

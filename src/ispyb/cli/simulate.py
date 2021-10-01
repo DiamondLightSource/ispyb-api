@@ -20,7 +20,7 @@ def run():
         print(f"Simluation Error: {str(e)}")
         exit()
 
-    parser = argparse.ArgumentParser(description="ISPyB/Zocalo simulation service")
+    parser = argparse.ArgumentParser(description="ISPyB simulation service")
     parser.add_argument(
         "beamline",
         help=f"Beamline to run simulation against. Available beamlines: {sdc.beamlines}",

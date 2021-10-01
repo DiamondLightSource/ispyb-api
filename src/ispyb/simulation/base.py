@@ -2,19 +2,13 @@ import configparser
 import os
 from abc import ABC, abstractmethod
 import logging
+import pkg_resources
 
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 import ispyb.sqlalchemy as isa
 import yaml
 
-from workflows.transport.stomp_transport import StompTransport
-
-try:
-    import zocalo
-    import zocalo.configuration
-except ModuleNotFoundError:
-    zocalo = None
 
 logger = logging.getLogger(__name__)
 
@@ -41,11 +35,6 @@ class Simulation(ABC):
     def __init__(self):
         self._config = load_config()
 
-        if zocalo:
-            zc = zocalo.configuration.from_file()
-            zc.activate()
-            self.stomp = StompTransport()
-
     @property
     def config(self):
         return self._config
@@ -67,30 +56,21 @@ class Simulation(ABC):
     def experiment_types(self):
         return ", ".join(self.config["experiments"].keys())
 
-    def send_message(self, message, headers={}):
-        if zocalo:
-            try:
-                self.stomp.connect()
-                self.stomp.send("processing_recipe", message, headers=headers)
-            except Exception:
-                logger.warning("Cant connect to workflow transport")
+    def before_start(self, dcid):
+        for entry in pkg_resources.iter_entry_points(
+            "ispyb.simulator.before_datacollection"
+        ):
+            fn = entry.load()
+            logger.info(f"Executing before start plugin `{entry.name}`")
+            fn(dcid)
 
-        else:
-            logger.warning("Zocalo not available, not sending message")
-
-    def send_start(self, dcid, recipe="mimas"):
-        message = {
-            "recipes": [recipe],
-            "parameters": {"ispyb_dcid": dcid, "event": "start"},
-        }
-        self.send_message(message)
-
-    def send_end(self, dcid, recipe="mimas"):
-        message = {
-            "recipes": [recipe],
-            "parameters": {"ispyb_dcid": dcid, "event": "end"},
-        }
-        self.send_message(message)
+    def after_end(self, dcid):
+        for entry in pkg_resources.iter_entry_points(
+            "ispyb.simulator.after_datacollection"
+        ):
+            fn = entry.load()
+            logger.info(f"Executing after end plugin `{entry.name}`")
+            fn(dcid)
 
     def do_run(self, *args, **kwargs):
         self.run(*args, **kwargs)
