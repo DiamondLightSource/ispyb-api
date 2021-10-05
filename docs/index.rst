@@ -7,6 +7,7 @@ Welcome to the ISPyB API documentation!
 
    installation
    usage
+   simulate
    api
    contributing
    authors
