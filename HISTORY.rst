@@ -4,7 +4,7 @@ History
 
 Unreleased / master
 -------------------
-* Read recipes from zocalo configuration rather than hard coded path
+* ``ispyb.job`` is now less facility-specific and can handle recipe paths via a Zocalo configuration file (`#162 <https://github.com/DiamondLightSource/ispyb-api/pull/162>`_)
 
 6.9.0 (2021-09-16)
 ------------------
