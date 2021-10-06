@@ -16,7 +16,7 @@ The simulator will create hierarchically a component (`Protein`), related `BLSam
 Configuration
 ***************
 
-An example configuration is available in `conf/simulate.yml`
+The configuration file location is defined via the `ISPYB_SIMULATE_CONFIG` environment variable. An example configuration is available in `conf/simulate.yml`
 
 Each entry in `experiments` relates to a `DataCollectionGroup.experimentType` entry so must match one of the available types in the database. See https://github.com/DiamondLightSource/ispyb-database/blob/master/schemas/ispyb/tables.sql#L1930 for a full list. This is a list and so allows multiple entries of the same type to be specified and executed separately using the `--number` flag.
 
