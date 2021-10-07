@@ -322,17 +322,17 @@ class SimulateDataCollection(Simulation):
                 if os.path.exists(snapshot_path):
                     snapshot = os.path.join(data_dir, os.path.basename(snapshot_path))
                     if link:
-                        logger.debug("Linking snapshot")
+                        logger.debug("Linking snapshot from '%s' to '%s'", snapshot_path, snapshot)
                         os.link(snapshot_path, snapshot)
                     else:
-                        logger.debug("Copying snapshot")
+                        logger.debug("Copying snapshot from '%s' to '%s'", snapshot_path, snapshot)
                         shutil.copy(snapshot_path, snapshot)
 
                     snap, snap_extension = os.path.splitext(snapshot_path)
                     thumb = f"{snap}t{snap_extension}"
                     if os.path.exists(thumb):
                         if link:
-                            logger.debug("Linking thumbnail")
+                            logger.debug("Linking thumbnail from '%s'", thumb)
                             os.link(
                                 thumb,
                                 os.path.join(
@@ -341,7 +341,7 @@ class SimulateDataCollection(Simulation):
                                 ),
                             )
                         else:
-                            logger.debug("Copying thumbnail")
+                            logger.debug("Copying thumbnail from '%s'", thumb)
                             shutil.copy(
                                 thumb,
                                 os.path.join(
@@ -353,6 +353,7 @@ class SimulateDataCollection(Simulation):
                         logger.warning(f"Snapshot thumbnail does not exist {thumb}")
 
                     dc.xtalSnapshotFullPath1 = snapshot
+                    ses.commit()
                 else:
                     logger.warning(f"Snapshot file does not exist {snapshot_path}")
 
