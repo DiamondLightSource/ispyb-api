@@ -4,7 +4,8 @@ History
 
 Unreleased / master
 -------------------
-* Add a basic data collection simulator
+* ``ispyb.job`` is now less facility-specific and can handle recipe paths via a Zocalo configuration file (`#162 <https://github.com/DiamondLightSource/ispyb-api/pull/162>`_)
+* Add a basic data collection simulator ``ispyb.simulate``
 
 6.9.0 (2021-09-16)
 ------------------
