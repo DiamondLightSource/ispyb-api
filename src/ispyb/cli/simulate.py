@@ -17,27 +17,21 @@ def run():
     try:
         sdc = SimulateDataCollection()
     except AttributeError as e:
-        print(f"Simluation Error: {str(e)}")
-        exit()
+        exit(f"Simulation Error: {e}")
 
-    parser = argparse.ArgumentParser(description="ISPyB simulation service")
+    parser = argparse.ArgumentParser(description="ISPyB simulation tool")
     parser.add_argument(
         "beamline",
-        help=f"Beamline to run simulation against. Available beamlines: {sdc.beamlines}",
+        help=f"Beamline to run simulation against",
+        choices=sdc.beamlines
     )
 
     parser.add_argument(
         "experiment",
-        help=f"Experiment type to simluate, Available types: {sdc.experiment_types}",
+        help=f"Experiment type to simluate",
+        choices=sdc.experiments
     )
 
-    parser.add_argument(
-        "--number",
-        default=0,
-        type=int,
-        dest="experiment_number",
-        help="Experiment simulation number to run",
-    )
     parser.add_argument(
         "--delay",
         default=5,
@@ -63,11 +57,11 @@ def run():
 
     try:
         sdc.do_run(
-            args.beamline, args.experiment, args.experiment_number, delay=args.delay
+            args.beamline, args.experiment, delay=args.delay
         )
     except Exception as e:
         if args.debug:
-            logger.exception("Simluation Error")
+            logger.exception("Simulation Error")
             print(e)
         else:
-            print(f"Simluation Error: {str(e)}")
+            print(f"Simulation Error: {str(e)}")

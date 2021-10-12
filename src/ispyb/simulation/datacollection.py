@@ -14,6 +14,10 @@ logger = logging.getLogger(__name__)
 
 
 class SimulateDataCollection(Simulation):
+    @property
+    def experiments(self):
+        return list(self.config["experiments"].keys())
+
     def _get_container_position(self, ses, blsession, proposalid, beamline):
         shipment_name = "Simulation_Shipment"
         shipment = (
@@ -97,27 +101,23 @@ class SimulateDataCollection(Simulation):
 
         return container.containerId, max_loc + 1
 
-    def run(self, beamline, experiment_type, experiment_no=0, delay=0):
+    def run(self, beamline, experiment, delay=0):
         blses = self.config["sessions"][beamline]
 
-        if experiment_type not in self.config["experiments"]:
-            raise KeyError(f"No such experiment type {experiment_type}")
+        if experiment not in self.config["experiments"]:
+            raise KeyError(f"No such experiment type {experiment}")
 
-        if experiment_no > len(self.config["experiments"][experiment_type]):
-            raise KeyError(
-                f"Invalid experiment number {experiment_no}, {len(self.config['experiments'][experiment_type])} exps available"
-            )
-
-        exp = self.config["experiments"][experiment_type][experiment_no]
+        exp = self.config["experiments"][experiment]
         data = os.path.join(self.config["raw_data"], exp["data"])
 
         if not os.path.exists(data):
             raise AttributeError(f"Raw data file: {data} does not exist")
 
+        if not exp.get("experimentType"):
+            raise AttributeError(f"No experiment type defined for experiment {experiment}")
+
         if not exp.get("sample"):
-            raise KeyError(
-                f"No sample specified for experiment {experiment_type}:{experiment_no}"
-            )
+            raise KeyError(f"No sample specified for experiment {experiment}")
 
         if exp["sample"] not in self.config["samples"]:
             raise KeyError(
@@ -236,8 +236,10 @@ class SimulateDataCollection(Simulation):
             logger.debug("Creating datacollection group")
             dcg = isa.DataCollectionGroup(
                 sessionId=blsession.sessionId,
-                experimentType=experiment_type,
+                experimentType=exp["experimentType"],
                 blSampleId=blsample.blSampleId,
+                startTime=datetime.now(),
+                endTime=datetime.now() + timedelta(minutes=5),
             )
             ses.add(dcg)
             ses.commit()
@@ -249,7 +251,6 @@ class SimulateDataCollection(Simulation):
                 blSubSampleId=subsampleid,
                 dataCollectionGroupId=dcg.dataCollectionGroupId,
                 fileTemplate=os.path.basename(exp["data"]),
-                imageDirectory=os.path.dirname(exp["data"]),
                 imageContainerSubPath=exp.get(
                     "imageContainerSubPath", "1.1/measurement"
                 ),
@@ -309,33 +310,35 @@ class SimulateDataCollection(Simulation):
                 )
 
             # Link data files / snapshots
-            link = self.config.get("copy_method", "copy") == "link"
-            if link:
-                logger.debug("Linking data")
-                os.link(data, os.path.join(data_dir, os.path.basename(data)))
+            if self.config.get("copy_method", "copy") == "link":
+                action, link_or_copy = "Linking", os.link
             else:
-                logger.debug("Copying data")
-                shutil.copy(data, os.path.join(data_dir, os.path.basename(data)))
+                action, link_or_copy = "Coyping", shutil.copy
 
-            snapshot_path = os.path.join(
-                self.config["raw_data"], exp.get("xtalSnapshotFullPath1")
-            )
-            if snapshot_path:
-                if os.path.exists(snapshot_path):
-                    snapshot = os.path.join(data_dir, os.path.basename(snapshot_path))
-                    if link:
-                        logger.debug("Linking snapshot from '%s' to '%s'", snapshot_path, snapshot)
-                        os.link(snapshot_path, snapshot)
-                    else:
-                        logger.debug("Copying snapshot from '%s' to '%s'", snapshot_path, snapshot)
-                        shutil.copy(snapshot_path, snapshot)
+            logger.debug(f"{action} data")
+            link_or_copy(data, os.path.join(data_dir, os.path.basename(data)))
 
-                    snap, snap_extension = os.path.splitext(snapshot_path)
-                    thumb = f"{snap}t{snap_extension}"
-                    if os.path.exists(thumb):
-                        if link:
-                            logger.debug("Linking thumbnail from '%s'", thumb)
-                            os.link(
+            for snapshot in [f"xtalSnapshotFullPath{i}" for i in range(4)]:
+                if exp.get(snapshot):
+                    snapshot_path = os.path.join(
+                        self.config["raw_data"], exp.get(snapshot)
+                    )
+                    if os.path.exists(snapshot_path):
+                        new_snapshot = os.path.join(
+                            data_dir, os.path.basename(snapshot_path)
+                        )
+                        logger.debug(
+                            f"{action} snapshot from '%s' to '%s'",
+                            snapshot_path,
+                            new_snapshot,
+                        )
+                        link_or_copy(snapshot_path, new_snapshot)
+
+                        snap, snap_extension = os.path.splitext(snapshot_path)
+                        thumb = f"{snap}t{snap_extension}"
+                        if os.path.exists(thumb):
+                            logger.debug(f"{action} thumbnail from '%s'", thumb)
+                            link_or_copy(
                                 thumb,
                                 os.path.join(
                                     data_dir,
@@ -343,21 +346,12 @@ class SimulateDataCollection(Simulation):
                                 ),
                             )
                         else:
-                            logger.debug("Copying thumbnail from '%s'", thumb)
-                            shutil.copy(
-                                thumb,
-                                os.path.join(
-                                    data_dir,
-                                    f"{os.path.basename(snap)}t{snap_extension}",
-                                ),
-                            )
-                    else:
-                        logger.warning(f"Snapshot thumbnail does not exist {thumb}")
+                            logger.warning(f"Snapshot thumbnail does not exist {thumb}")
 
-                    dc.xtalSnapshotFullPath1 = snapshot
-                    ses.commit()
-                else:
-                    logger.warning(f"Snapshot file does not exist {snapshot_path}")
+                        setattr(dc, snapshot, new_snapshot)
+                        ses.commit()
+                    else:
+                        logger.warning(f"Snapshot file does not exist {snapshot_path}")
 
             logger.info(f"Finshed copying data to: {data_dir}")
 

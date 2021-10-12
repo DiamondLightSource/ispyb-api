@@ -24,11 +24,8 @@ def load_config():
     if not os.path.exists(config_yml):
         raise AttributeError(f"Cannot find config file: {config_yml}")
 
-    config = {}
     with open(config_yml, "r") as stream:
-        config = yaml.safe_load(stream)
-
-    return config
+        return yaml.safe_load(stream)
 
 
 class Simulation(ABC):
@@ -50,11 +47,7 @@ class Simulation(ABC):
 
     @property
     def beamlines(self):
-        return ", ".join(self.config["sessions"].keys())
-
-    @property
-    def experiment_types(self):
-        return ", ".join(self.config["experiments"].keys())
+        return list(self.config["sessions"].keys())
 
     def before_start(self, dcid):
         for entry in pkg_resources.iter_entry_points(

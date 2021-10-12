@@ -22,7 +22,7 @@ Configuration
 
 The configuration file location is defined via the `ISPYB_SIMULATE_CONFIG` environment variable. An example configuration is available in `conf/simulate.yml`_. The structure and requirements of this file are documented in the example.
 
-Each entry in `experiments` relates to a `DataCollectionGroup.experimentType` entry so must match one of the available types in the database. See `experimentTypes`_ for a full list. This is a list and so allows multiple entries of the same type to be specified and executed separately using the `--number` flag.
+Each entry in `experiments` represents a different data collection. The `experimentType` column relates to a `DataCollectionGroup.experimentType` entry so must match one of the available types in the database. See `experimentTypes`_ for a full list.
 
 .. _conf/simulate.yml: https://github.com/DiamondLightSource/ispyb-api/blob/master/conf/simulate_example.yml
 .. _experimentTypes: https://github.com/DiamondLightSource/ispyb-database/blob/master/schemas/ispyb/tables.sql#L1930
@@ -64,6 +64,7 @@ DataCollection
 * numberOfImages
 * wavelength
 * exposureTime
+* xtalSnapshotFullPath1-4
 
 GridInfo
 -------------
