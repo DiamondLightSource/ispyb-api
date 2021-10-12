@@ -28,7 +28,7 @@ def run():
 
     parser.add_argument(
         "experiment",
-        help=f"Experiment type to simluate",
+        help=f"Experiment to simluate",
         choices=sdc.experiments
     )
 
