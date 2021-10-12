@@ -9,10 +9,6 @@ Simulate a data collection::
     ispyb.simulate <beamline> <experiment_type>
     ispyb.simulate bm23 'Energy scan'
 
-If multiple experiments of the same type are specified one can be chosen with the `--number` flag::
-
-    ispyb.simulate --number 2 bm23 'Energy scan'
-
 
 The simulator will create hierarchically a component (`Protein`), related `BLSample` (with intermediate `Crystal`), and potentially a `SubSample`, contained within a `Container`, `Dewar`, and `Shipment` belonging to the specified `Proposal` if they do not already exist with the defined name. Then the simulator creates a `DataCollection` and `DataCollectionGroup`, linked to the relevant `BLSample` and `BLSession`. If grid info information is specified it will also create an entry in `GridInfo`
 
