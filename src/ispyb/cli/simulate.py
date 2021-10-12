@@ -37,7 +37,7 @@ def run():
         default=5,
         type=int,
         dest="delay",
-        help="Delay between mimas start and end events",
+        help="Delay between plugin start and end events",
     )
     parser.add_argument(
         "--debug",
