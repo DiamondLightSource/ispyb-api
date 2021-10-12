@@ -15,7 +15,7 @@ ispyb_url: https://ispyb.diamond.ac.uk
 
 # Define Components (Proteins)
 components:
-  # an internal references for the component
+  # an internal reference for the component
   comp1:
     # columns to populate for this component
     acronym: Component1
