@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 import ispyb.sqlalchemy as isa
 
 from ispyb.simulation.base import Simulation
-from ispyb.simulation.sqla_helpers import session, proposal
+from ispyb.simulation.sqlalchemy_helpers import session, proposal
 
 
 logger = logging.getLogger(__name__)
