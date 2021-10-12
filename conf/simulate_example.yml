@@ -8,7 +8,7 @@ sessions:
 # Where to copy raw data from
 raw_data: /data/ispyb-test
 
-# Where to write simulated data to, can use {beamline} placeholders
+# Where to write simulated data to, can use {beamline} placeholder
 data_dir: /data/tests/{beamline}/simulation
 
 ispyb_url: https://ispyb.diamond.ac.uk
@@ -57,9 +57,9 @@ experiments:
     - data: xrf_map/xrfmap1.h5
       sample: samp1
 
-      xtalsnapshotfullpath1: xrf_map/snapshot.png
-      numberofimages: 1600
-      exposuretime: 0.03
+      xtalSnapshotFullPath1: xrf_map/snapshot.png
+      numberOfImages: 1600
+      exposureTime: 0.03
       #energy: 2.4817
       wavelength: 4.9959
 
