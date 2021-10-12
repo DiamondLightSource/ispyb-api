@@ -1,13 +1,13 @@
-from sqlalchemy import func
-import ispyb.sqlalchemy as isa
+import sqlalchemy
+import ispyb.sqlalchemy
 
-session = func.concat(
-    isa.Proposal.proposalCode,
-    isa.Proposal.proposalNumber,
+session = sqlalchemy.func.concat(
+    ispyb.sqlalchemy.Proposal.proposalCode,
+    ispyb.sqlalchemy.Proposal.proposalNumber,
     "-",
-    isa.BLSession.visit_number,
+    ispyb.sqlalchemy.BLSession.visit_number,
 ).label("session")
 
-proposal = func.concat(isa.Proposal.proposalCode, isa.Proposal.proposalNumber).label(
-    "proposal"
-)
+proposal = sqlalchemy.func.concat(
+    ispyb.sqlalchemy.Proposal.proposalCode, ispyb.sqlalchemy.Proposal.proposalNumber
+).label("proposal")
