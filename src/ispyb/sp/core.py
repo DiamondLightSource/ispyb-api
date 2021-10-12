@@ -199,7 +199,7 @@ class Core(ispyb.interface.core.IF):
         )
 
     def retrieve_most_recent_session(self, beamline, proposal_code):
-        """Get a result-set with the most recent session on the given beamline for the given proposal code """
+        """Get a result-set with the most recent session on the given beamline for the given proposal code"""
         return self.get_connection().call_sp_retrieve(
             procname="retrieve_most_recent_session", args=(beamline, proposal_code)
         )

@@ -36,7 +36,7 @@ class IF(DataArea):
 
     @abc.abstractmethod
     def retrieve_most_recent_session(self, beamline, proposal_code):
-        """Get a result-set with the most recent session on the given beamline for the given proposal code """
+        """Get a result-set with the most recent session on the given beamline for the given proposal code"""
         pass
 
     @abc.abstractmethod
