@@ -1,14 +1,18 @@
-========
-Simulate
-========
+==============
+ispyb.simulate
+==============
 
-Simulate data collection and trigger automatic data processing against real data::
+`ispyb.simulate` creates a new DataCollection row in the ISPyB database from a simple yaml definition. It creates a data collection, related sample information, and associated shipping entities. It then copies some raw data and associated snapshots (and thumbnails).
 
-    isypb.simulate <beamline> <experiment_type>
-    isypb.simulate bm23 'Energy scan'
+Simulate a data collection::
 
+    ispyb.simulate <beamline> <experiment_type>
+    ispyb.simulate bm23 'Energy scan'
 
-This will link some real raw data into a new location in the session along with snapshots if available, create a datacollection in the ispyb database. It can trigger events before and after the data is copied using the `ispyb.simulator.before_datacollection` and `ispyb.simulator.after_datacollection` entry points. These are passing just the `DataCollection.dataCollectionId`.
+If multiple experiments of the same type are specified one can be chosen with the `--number` flag::
+
+    ispyb.simulate --number 2 bm23 'Energy scan'
+
 
 The simulator will create hierarchically a component (`Protein`), related `BLSample` (with intermediate `Crystal`), and potentially a `SubSample`, contained within a `Container`, `Dewar`, and `Shipment` belonging to the specified `Proposal` if they do not already exist with the defined name. Then the simulator creates a `DataCollection` and `DataCollectionGroup`, linked to the relevant `BLSample` and `BLSession`. If grid info information is specified it will also create an entry in `GridInfo`
 
@@ -16,17 +20,21 @@ The simulator will create hierarchically a component (`Protein`), related `BLSam
 Configuration
 ***************
 
-The configuration file location is defined via the `ISPYB_SIMULATE_CONFIG` environment variable. An example configuration is available in `conf/simulate.yml`
+The configuration file location is defined via the `ISPYB_SIMULATE_CONFIG` environment variable. An example configuration is available in `conf/simulate.yml`_. The structure and requirements of this file are documented in the example.
 
-Each entry in `experiments` relates to a `DataCollectionGroup.experimentType` entry so must match one of the available types in the database. See https://github.com/DiamondLightSource/ispyb-database/blob/master/schemas/ispyb/tables.sql#L1930 for a full list. This is a list and so allows multiple entries of the same type to be specified and executed separately using the `--number` flag.
+Each entry in `experiments` relates to a `DataCollectionGroup.experimentType` entry so must match one of the available types in the database. See `experimentTypes`_ for a full list. This is a list and so allows multiple entries of the same type to be specified and executed separately using the `--number` flag.
 
+.. _conf/simulate.yml: https://github.com/DiamondLightSource/ispyb-api/blob/master/conf/simulate_example.yml
+.. _experimentTypes: https://github.com/DiamondLightSource/ispyb-database/blob/master/schemas/ispyb/tables.sql#L1930
 
-***************
-Available parameters per table
-***************
+***************************
+Available columns per table
+***************************
 
-Protein
--------------
+The ISPyB tables are large, and as such only a subset of the columns are exposed by this simulator, the most pertinent in order to create usable data collections and associated entries. These are as listed below for each table.
+
+Component (Protein)
+-------------------
 
 * acronym
 * name
@@ -50,7 +58,7 @@ BLSubSample
 * type
 
 DataCollection
--------------
+--------------
 
 * imageContainerSubPath
 * numberOfImages
@@ -70,7 +78,11 @@ GridInfo
 * pixelsPerMicronY
 
 ***************
-Zocalo
+Plugins
 ***************
 
+The simulator can trigger events before and after the data is copied using the `ispyb.simulator.before_datacollection` and `ispyb.simulator.after_datacollection` entry points. These are passed just the new `DataCollection.dataCollectionId`.
+
+Zocalo
+-------------
 If zocalo is installed the simulator will also send a message to zocalo before the data is copied, and send another message after the data copy is finished by default triggering the `mimas` recipe.
