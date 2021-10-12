@@ -13,24 +13,17 @@ import yaml
 logger = logging.getLogger(__name__)
 
 
-def load_config():
-    try:
-        config_yml = os.environ["ISPYB_SIMULATE_CONFIG"]
-    except KeyError:
-        raise AttributeError(
-            "ISPYB_SIMULATE_CONFIG environment variable is not defined"
-        )
-
+def load_config(config_yml):
     if not os.path.exists(config_yml):
-        raise AttributeError(f"Cannot find config file: {config_yml}")
+        raise RuntimeError(f"Cannot find config file: {config_yml}")
 
     with open(config_yml, "r") as stream:
         return yaml.safe_load(stream)
 
 
 class Simulation(ABC):
-    def __init__(self):
-        self._config = load_config()
+    def __init__(self, config_yml):
+        self._config = load_config(config_yml)
 
     @property
     def config(self):
