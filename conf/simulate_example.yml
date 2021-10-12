@@ -13,54 +13,68 @@ data_dir: /data/tests/{beamline}/simulation
 
 ispyb_url: https://ispyb.diamond.ac.uk
 
-# Proteins
+# Define Components (Proteins)
 components:
-  Component1:
+  # an internal references for the component
+  comp1:
+    # columns to populate for this component
     acronym: Component1
     sequence: SiSP
 
-  Component2:
+  comp2:
     acronym: Component2
 
-# Samples
+# Define BLSamples
 samples:
-  Sample1:
+  # an internal reference for this sample 
+  samp1:
+    # columns to populate for this sample
     name: Sample1
-    component: Component1
+    # which component this sample is an instance of (one of the keys in components above)
+    component: comp1
 
-  Sample2:
+  samp2:
     name: Sample2
-    component: Component2
+    component: comp2
 
-# Experiments
+# Define Experiments (DataCollections)
 experiments:
   Energy scan:
+      # data will be split into its respective imageDirectory and fileTemplate columns
     - data: energy_scan/energyscan1.h5
-      sample: Sample2
-      xtalsnapshotfullpath1: energy_scan/snapshot.png
-      numberofimages: 4001
-      exposuretime: 1
+      # which sample to link this data collection to (one of the keys in samples above)
+      sample: samp1
+
+      # columns to populate
+      xtalSnapshotFullPath1: energy_scan/snapshot.png
+      numberOfImages: 4001
+      exposureTime: 1
       #energy: 8.8143
       wavelength: 1.4065
-      imagecontainersubpath: 1.1/measurement
+      imageContainerSubPath: 1.1/measurement
 
   XRF map:
     - data: xrf_map/xrfmap1.h5
+      sample: samp1
+
+      xtalsnapshotfullpath1: xrf_map/snapshot.png
+      numberofimages: 1600
+      exposuretime: 0.03
       #energy: 2.4817
       wavelength: 4.9959
-      sample: Sample1
-      xtalsnapshotfullpath1: xrf_map/snapshot.png
-      exposuretime: 0.03
-      numberofimages: 1600
+
+      # additionally populate GridInfo
       grid:
         steps_x: 40
         steps_y: 40
         dx_mm: 0.001
         dy_mm: 0.001
-        pixelspermicronx: -0.44994
-        pixelspermicrony: -0.46537
-        snapshot_offsetxpixel: 682.16
-        snapshot_offsetypixel: 554
+        pixelsPerMicronX: -0.44994
+        pixelsPerMicrony: -0.46537
+        snapshot_offsetXPixel: 682.16
+        snapshot_offsetYPixel: 554
+
+      # additionally populate BlSubSample
       subsample:
         x: 9038007
         y: 24467003

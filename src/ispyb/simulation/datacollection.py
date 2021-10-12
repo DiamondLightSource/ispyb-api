@@ -171,7 +171,7 @@ class SimulateDataCollection(Simulation):
                         name=comp.get("name", comp.get("acronym")),
                         sequence=comp.get("sequence"),
                         density=comp.get("density"),
-                        molecularMass=comp.get("molecularmass"),
+                        molecularMass=comp.get("molecularMass"),
                         description="Simulated component",
                     )
                     ses.add(component)
@@ -244,16 +244,18 @@ class SimulateDataCollection(Simulation):
 
             logger.debug("Creating datacollection")
             dc = isa.DataCollection(
+                # TODO: Remove - legacy column
                 BLSAMPLEID=blsample.blSampleId,
                 blSubSampleId=subsampleid,
                 dataCollectionGroupId=dcg.dataCollectionGroupId,
                 fileTemplate=os.path.basename(exp["data"]),
+                imageDirectory=os.path.dirname(exp["data"]),
                 imageContainerSubPath=exp.get(
-                    "imagecontainersubpath", "1.1/measurement"
+                    "imageContainerSubPath", "1.1/measurement"
                 ),
-                numberOfImages=exp.get("numberofimages"),
+                numberOfImages=exp.get("numberOfImages"),
                 wavelength=exp.get("wavelength"),
-                exposureTime=exp.get("exposuretime"),
+                exposureTime=exp.get("exposureTime"),
                 runStatus="Successful",
                 comments="Simulated datacollection",
                 startTime=datetime.now(),
@@ -268,12 +270,12 @@ class SimulateDataCollection(Simulation):
                     dataCollectionId=dc.dataCollectionId,
                     steps_x=exp["grid"]["steps_x"],
                     steps_y=exp["grid"]["steps_y"],
-                    snapshot_offsetXPixel=exp["grid"]["snapshot_offsetxpixel"],
-                    snapshot_offsetYPixel=exp["grid"]["snapshot_offsetypixel"],
+                    snapshot_offsetXPixel=exp["grid"]["snapshot_offsetXPixel"],
+                    snapshot_offsetYPixel=exp["grid"]["snapshot_offsetYPixel"],
                     dx_mm=exp["grid"]["dx_mm"],
                     dy_mm=exp["grid"]["dy_mm"],
-                    pixelsPerMicronX=exp["grid"]["pixelspermicronx"],
-                    pixelsPerMicronY=exp["grid"]["pixelspermicrony"],
+                    pixelsPerMicronX=exp["grid"]["pixelsPerMicronX"],
+                    pixelsPerMicronY=exp["grid"]["pixelsPerMicronY"],
                 )
                 ses.add(grid)
                 ses.commit()
@@ -316,7 +318,7 @@ class SimulateDataCollection(Simulation):
                 shutil.copy(data, os.path.join(data_dir, os.path.basename(data)))
 
             snapshot_path = os.path.join(
-                self.config["raw_data"], exp.get("xtalsnapshotfullpath1")
+                self.config["raw_data"], exp.get("xtalSnapshotFullPath1")
             )
             if snapshot_path:
                 if os.path.exists(snapshot_path):
