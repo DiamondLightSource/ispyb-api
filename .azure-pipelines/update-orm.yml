@@ -47,8 +47,13 @@ steps:
   displayName: Set up reference database schema
   workingDirectory: $(System.ArtifactsDirectory)
 
-- script: |
+- bash: |
+    set -eux
     sqlacodegen mysql+mysqlconnector://root:mysql_root_pwd@127.0.0.1/ispyb_build --noinflect --outfile _auto_db_schema.py
+    # # If this code produces too many false positives then can add an identifier to the file,
+    # # and only update/PR the changes when the identifier changes
+    # cat <(echo "# Database schema: V$(DATABASE_SCHEMA)") _auto_db_schema.py.in > _auto_db_schema.py
+    # rm _auto_db_schema.py.in
     pre-commit run --files _auto_db_schema.py || echo pre-commit exited with non-zero return code
   displayName: Generate ORM
   workingDirectory: $(Build.SourcesDirectory)/src/ispyb/sqlalchemy

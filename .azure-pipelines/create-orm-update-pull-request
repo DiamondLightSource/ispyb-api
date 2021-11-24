@@ -37,10 +37,6 @@ git commit --file=commit-message
 git log -2
 echo
 
-# Stop here. It looks like sqlacodegen does not create deterministic output.
-# Need to watch this for a while before we can enable automatic PRs.
-exit
-
 echo "##[section]Creating pull request"
 git push -f --set-upstream origin orm-update
 hub pull-request -f -m "ISPyB ORM schema update v${DATABASE_SCHEMA}
