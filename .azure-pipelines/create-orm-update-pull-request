@@ -47,6 +47,6 @@ or sqlacodegen packages, or a change in the respository pre-commit settings.
 
 Before merging this pull request you may want to
 * [ ] ensure tests pass
-* [ ] update `HISTORY.rst` to reflect the changes in this pull request
+* [ ] update \`HISTORY.rst\` to reflect the changes in this pull request
 "
 echo
