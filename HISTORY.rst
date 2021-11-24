@@ -4,6 +4,7 @@ History
 
 Unreleased / master
 -------------------
+* Update SQLAlchemy ORM models for ispyb-database v1.28.0
 * ``ispyb.job`` is now less facility-specific and can handle recipe paths via a Zocalo configuration file (`#162 <https://github.com/DiamondLightSource/ispyb-api/pull/162>`_)
 
 6.9.0 (2021-09-16)

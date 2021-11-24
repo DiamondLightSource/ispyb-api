@@ -1803,39 +1803,6 @@ class ContainerReport(Base):
     Person = relationship("Person")
 
 
-class MXMRRun(Base):
-    __tablename__ = "MXMRRun"
-
-    mxMRRunId = Column(INTEGER(11), primary_key=True)
-    autoProcScalingId = Column(
-        ForeignKey("AutoProcScaling.autoProcScalingId"), nullable=False, index=True
-    )
-    success = Column(
-        TINYINT(1),
-        server_default=text("0"),
-        comment="Indicates whether the program completed. 1 for success, 0 for failure.",
-    )
-    message = Column(
-        String(255), comment="A short summary of the findings, success or failure."
-    )
-    pipeline = Column(String(50))
-    inputCoordFile = Column(String(255))
-    outputCoordFile = Column(String(255))
-    inputMTZFile = Column(String(255))
-    outputMTZFile = Column(String(255))
-    runDirectory = Column(String(255))
-    logFile = Column(String(255))
-    commandLine = Column(String(255))
-    rValueStart = Column(Float)
-    rValueEnd = Column(Float)
-    rFreeValueStart = Column(Float)
-    rFreeValueEnd = Column(Float)
-    starttime = Column(DateTime)
-    endtime = Column(DateTime)
-
-    AutoProcScaling = relationship("AutoProcScaling")
-
-
 class MacromoleculeRegion(Base):
     __tablename__ = "MacromoleculeRegion"
 
@@ -2572,18 +2539,6 @@ class LabContact(Base):
 
     Person = relationship("Person")
     Proposal = relationship("Proposal")
-
-
-class MXMRRunBlob(Base):
-    __tablename__ = "MXMRRunBlob"
-
-    mxMRRunBlobId = Column(INTEGER(11), primary_key=True)
-    mxMRRunId = Column(ForeignKey("MXMRRun.mxMRRunId"), nullable=False, index=True)
-    view1 = Column(String(255))
-    view2 = Column(String(255))
-    view3 = Column(String(255))
-
-    MXMRRun = relationship("MXMRRun")
 
 
 class PhasingStatistics(Base):
@@ -3839,7 +3794,7 @@ class BLSampleImage(Base):
     blSampleId = Column(ForeignKey("BLSample.blSampleId"), nullable=False, index=True)
     micronsPerPixelX = Column(Float)
     micronsPerPixelY = Column(Float)
-    imageFullPath = Column(String(255))
+    imageFullPath = Column(String(255), unique=True)
     blSampleImageScoreId = Column(
         ForeignKey("BLSampleImageScore.blSampleImageScoreId", onupdate="CASCADE"),
         index=True,
@@ -4900,7 +4855,8 @@ class AutoProcProgramAttachment(Base):
         comment="Related autoProcProgram item",
     )
     fileType = Column(
-        Enum("Log", "Result", "Graph", "Debug"), comment="Type of file Attachment"
+        Enum("Log", "Result", "Graph", "Debug", "Input"),
+        comment="Type of file Attachment",
     )
     fileName = Column(String(255), comment="Attachment filename")
     filePath = Column(String(255), comment="Attachment filepath to disk storage")
@@ -4980,6 +4936,28 @@ class GridInfo(Base):
     DataCollectionGroup = relationship("DataCollectionGroup")
     DataCollection = relationship("DataCollection")
     WorkflowMesh = relationship("WorkflowMesh")
+
+
+class MXMRRun(Base):
+    __tablename__ = "MXMRRun"
+
+    mxMRRunId = Column(INTEGER(11), primary_key=True)
+    autoProcScalingId = Column(
+        ForeignKey("AutoProcScaling.autoProcScalingId"), nullable=False, index=True
+    )
+    rValueStart = Column(Float)
+    rValueEnd = Column(Float)
+    rFreeValueStart = Column(Float)
+    rFreeValueEnd = Column(Float)
+    LLG = Column(Float, comment="Log Likelihood Gain")
+    TFZ = Column(Float, comment="Translation Function Z-score")
+    spaceGroup = Column(String(45), comment="Space group of the MR solution")
+    autoProcProgramId = Column(
+        ForeignKey("AutoProcProgram.autoProcProgramId"), index=True
+    )
+
+    AutoProcProgram = relationship("AutoProcProgram")
+    AutoProcScaling = relationship("AutoProcScaling")
 
 
 class MotionCorrection(Base):
@@ -5219,6 +5197,38 @@ class CTF(Base):
 
     AutoProcProgram = relationship("AutoProcProgram")
     MotionCorrection = relationship("MotionCorrection")
+
+
+class MXMRRunBlob(Base):
+    __tablename__ = "MXMRRunBlob"
+
+    mxMRRunBlobId = Column(INTEGER(11), primary_key=True)
+    mxMRRunId = Column(ForeignKey("MXMRRun.mxMRRunId"), nullable=False, index=True)
+    view1 = Column(String(255))
+    view2 = Column(String(255))
+    view3 = Column(String(255))
+    filePath = Column(
+        String(255),
+        comment="File path corresponding to the filenames in the view* columns",
+    )
+    x = Column(Float, comment="Fractional x coordinate of blob in range [-1, 1]")
+    y = Column(Float, comment="Fractional y coordinate of blob in range [-1, 1]")
+    z = Column(Float, comment="Fractional z coordinate of blob in range [-1, 1]")
+    height = Column(Float, comment="Blob height (sigmas)")
+    occupancy = Column(Float, comment="Site occupancy factor in range [0, 1]")
+    nearestAtomName = Column(String(4), comment="Name of nearest atom")
+    nearestAtomChainId = Column(String(2), comment="Chain identifier of nearest atom")
+    nearestAtomResName = Column(String(4), comment="Residue name of nearest atom")
+    nearestAtomResSeq = Column(
+        MEDIUMINT(8), comment="Residue sequence number of nearest atom"
+    )
+    nearestAtomDistance = Column(Float, comment="Distance in Angstrom to nearest atom")
+    mapType = Column(
+        Enum("anomalous", "difference"),
+        comment="Type of electron density map corresponding to this blob",
+    )
+
+    MXMRRun = relationship("MXMRRun")
 
 
 class MotionCorrectionDrift(Base):
