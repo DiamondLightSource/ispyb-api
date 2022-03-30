@@ -1,3 +1,4 @@
+ipython
 mysql-connector-python
 pytest
 pytest-cov
