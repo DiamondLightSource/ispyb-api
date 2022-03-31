@@ -13,4 +13,4 @@ Welcome to the ISPyB API documentation!
    authors
    history
 
-.. mdinclude:: ../src/ispyb/README.md
+.. mdinclude:: ../README.md

@@ -1,6 +1,8 @@
 ipython
+m2r2
 mysql-connector-python
 pytest
 pytest-cov
+sphinx
 sqlalchemy
 tabulate
