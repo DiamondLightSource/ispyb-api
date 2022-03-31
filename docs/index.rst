@@ -10,7 +10,6 @@ Welcome to the ISPyB API documentation!
    sqlalchemy
    api
    contributing
-   authors
    history
 
 .. mdinclude:: ../README.md
