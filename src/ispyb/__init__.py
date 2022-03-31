@@ -13,7 +13,7 @@ def open(credentials=None, configuration_file=None):
 
     Args:
         credentials: a config file containing database credentials.
-            If `credentials=None` then look for a credentials file in the
+            If ``credentials=None`` then look for a credentials file in the
             "ISPYB_CREDENTIALS" environment variable.
 
             Example credentials file::
