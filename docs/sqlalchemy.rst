@@ -2,6 +2,19 @@
 ispyb.sqlalchemy
 ================
 
+SQLAlchemy_ is a Python SQL toolkit and Object Relational Mapper that is used
+to provide access to the ISPyB database with the full power and flexibility of
+SQL. For a more general introduction to SQLAlchemy, see the official
+`reference documentation <https://docs.sqlalchemy.org/en/14/>`_ and
+`tutorials <https://docs.sqlalchemy.org/en/14/orm/quickstart.html>`_.
+
+ORM models for all database tables have been automatically generated using
+`sqlacodegen <https://github.com/agronholm/sqlacodegen>`_ and are available
+inside the ``ispyb.sqlalchemy`` module.
+
+.. _SQLAlchemy: https://www.sqlalchemy.org/
+
+
 Connecting to the database
 --------------------------
 
