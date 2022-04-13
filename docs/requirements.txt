@@ -1,5 +1,7 @@
+ipython
+m2r2
 mysql-connector-python
-pytest
-pytest-cov
+sphinx
+sphinx_rtd_theme
 sqlalchemy
 tabulate
