@@ -32,8 +32,8 @@ def url(credentials=None) -> str:
 
     Args:
         credentials: a config file or a Python dictionary containing database
-            credentials. If `credentials=None` then look for a credentials file in the
-            "ISPYB_CREDENTIALS" environment variable.
+            credentials. If ``credentials=None`` then look for a credentials
+            file in the ``ISPYB_CREDENTIALS`` environment variable.
 
             Example credentials file::
 
@@ -44,7 +44,7 @@ def url(credentials=None) -> str:
                 port = 3306
                 database = ispyb_build
 
-           Example credentials dictionary::
+            Example credentials dictionary::
 
                {
                    "username": "user",
@@ -79,11 +79,14 @@ def url(credentials=None) -> str:
 
 
 def session(credentials=None):
-    """Create an SQLAlchemy session. This function is deprecated.
+    """Create an SQLAlchemy session.
+
+    .. warning::
+      This function is deprecated.
 
     Args:
         credentials: a config file or a Python dictionary containing database
-            credentials. See function 'url()' for details.
+            credentials. See function ``url()`` for details.
 
     Returns:
         The SQLAlchemy session.

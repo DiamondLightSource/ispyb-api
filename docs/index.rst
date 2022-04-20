@@ -7,9 +7,9 @@ Welcome to the ISPyB API documentation!
 
    installation
    usage
+   sqlalchemy
    api
    contributing
-   authors
    history
 
-.. include:: ../README.rst
+.. mdinclude:: ../README.md

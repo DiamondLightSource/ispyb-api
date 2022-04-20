@@ -1,0 +1,7 @@
+ipython
+m2r2
+mysql-connector-python
+sphinx
+sphinx_rtd_theme
+sqlalchemy
+tabulate
