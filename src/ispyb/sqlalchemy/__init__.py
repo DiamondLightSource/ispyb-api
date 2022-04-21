@@ -9,7 +9,12 @@ import sqlalchemy.orm
 from sqlalchemy.orm import relationship
 
 from ._auto_db_schema import *  # noqa F403; lgtm
-from ._auto_db_schema import AutoProcProgram, AutoProcScaling, ProcessingJob
+from ._auto_db_schema import (
+    AutoProcProgram,
+    AutoProcScaling,
+    ProcessingJob,
+    __schema_version__,
+)
 
 logger = logging.getLogger("ispyb.sqlalchemy")
 
@@ -25,6 +30,7 @@ ProcessingJob.ProcessingJobParameters = relationship(
 ProcessingJob.ProcessingJobImageSweeps = relationship(
     "ProcessingJobImageSweep", back_populates="ProcessingJob"
 )
+assert __schema_version__
 
 
 def url(credentials=None) -> str:
