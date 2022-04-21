@@ -1,4 +1,4 @@
-__schema_version__ = "1.28.0"
+__schema_version__ = "1.29.0"
 # coding: utf-8
 from sqlalchemy import (
     BINARY,
@@ -21,6 +21,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.mysql import (
     BIGINT,
+    ENUM,
     INTEGER,
     LONGBLOB,
     LONGTEXT,
@@ -1967,6 +1968,37 @@ class PhasingHasScaling(Base):
     PhasingAnalysis = relationship("PhasingAnalysis")
 
 
+class Pod(Base):
+    __tablename__ = "Pod"
+    __table_args__ = {"comment": "Status tracker for k8s pods launched from SynchWeb"}
+
+    podId = Column(INTEGER(10), primary_key=True)
+    personId = Column(
+        ForeignKey("Person.personId", ondelete="CASCADE", onupdate="CASCADE"),
+        nullable=False,
+        index=True,
+        comment="Pod owner defined by the logged in SynchWeb user who requested the pod start up",
+    )
+    filePath = Column(
+        String(255, "utf8_unicode_ci"),
+        comment="File or directory path to mount into the Pod if required",
+    )
+    app = Column(ENUM("MAXIV HDF5 Viewer", "H5Web"), nullable=False)
+    podName = Column(String(255, "utf8_unicode_ci"))
+    status = Column(String(25, "utf8_unicode_ci"))
+    ip = Column(String(15, "utf8_unicode_ci"))
+    message = Column(
+        Text(collation="utf8_unicode_ci"),
+        comment="Generic text field intended for storing error messages related to status field",
+    )
+    created = Column(
+        TIMESTAMP, nullable=False, server_default=text("current_timestamp()")
+    )
+    shutdown = Column(TIMESTAMP)
+
+    Person = relationship("Person")
+
+
 class PreparePhasingData(Base):
     __tablename__ = "PreparePhasingData"
 
@@ -3565,14 +3597,25 @@ class Container(Base):
     )
     scLocationUpdated = Column(DateTime)
     priorityPipelineId = Column(
-        ForeignKey("ProcessingPipeline.processingPipelineId"), index=True
+        ForeignKey("ProcessingPipeline.processingPipelineId"),
+        index=True,
+        server_default=text("6"),
+        comment="Processing pipeline to prioritise, defaults to 6 which is xia2/DIALS",
     )
     experimentTypeId = Column(ForeignKey("ExperimentType.experimentTypeId"), index=True)
     containerTypeId = Column(ForeignKey("ContainerType.containerTypeId"), index=True)
+    currentDewarId = Column(
+        ForeignKey("Dewar.dewarId"),
+        index=True,
+        comment="The dewar with which the container is currently associated",
+    )
 
     ContainerRegistry = relationship("ContainerRegistry")
     ContainerType = relationship("ContainerType")
-    Dewar = relationship("Dewar")
+    Dewar = relationship(
+        "Dewar", primaryjoin="Container.currentDewarId == Dewar.dewarId"
+    )
+    Dewar1 = relationship("Dewar", primaryjoin="Container.dewarId == Dewar.dewarId")
     ExperimentType = relationship("ExperimentType")
     Imager = relationship("Imager", primaryjoin="Container.imagerId == Imager.imagerId")
     Person = relationship("Person")
@@ -3710,8 +3753,14 @@ class ContainerHistory(Base):
     )
     status = Column(String(45))
     beamlineName = Column(String(20))
+    currentDewarId = Column(
+        ForeignKey("Dewar.dewarId"),
+        index=True,
+        comment="The dewar with which the container was associated at the creation of this row",
+    )
 
     Container = relationship("Container")
+    Dewar = relationship("Dewar")
 
 
 class ContainerInspection(Base):
