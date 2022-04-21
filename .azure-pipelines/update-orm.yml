@@ -5,10 +5,10 @@ steps:
   displayName: Use Python 3.9
 
 - script: |
-    set -eux
+    set -eu
     CURRENT_VERSION=$(grep __schema_version__ _auto_db_schema.py | cut -d'"' -f2)
     diff -a <(echo ${CURRENT_VERSION}) <(echo $(DATABASE_SCHEMA)) >/dev/null && {
-      echo "##[section]ORM is up to date"
+      echo "##[section]ORM is up to date (${CURRENT_VERSION})"
       echo "##vso[task.setvariable variable=UpdateRequired;isOutput=true]False"
     } || {
       echo "##[warning]ORM needs to be updated (${CURRENT_VERSION} -> $(DATABASE_SCHEMA)). You can download an automatically generated version as Azure artifact."
