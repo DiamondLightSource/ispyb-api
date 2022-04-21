@@ -6,9 +6,25 @@ steps:
 
 - script: |
     set -eux
+    CURRENT_VERSION=$(grep __schema_version__ _auto_db_schema.py | cut -d'"' -f2)
+    diff -a <(echo ${CURRENT_VERSION}) <(echo $(DATABASE_SCHEMA)) >/dev/null && {
+      echo "##[section]ORM is up to date"
+      echo "##vso[task.setvariable variable=UpdateRequired;isOutput=true]False"
+    } || {
+      echo "##[warning]ORM needs to be updated (${CURRENT_VERSION} -> $(DATABASE_SCHEMA)). You can download an automatically generated version as Azure artifact."
+      echo "##vso[task.setvariable variable=UpdateRequired;isOutput=true]True"
+    }
+  displayName: Check if update is required
+  workingDirectory: $(Build.SourcesDirectory)/src/ispyb/sqlalchemy
+  name: ORMCheck
+
+- script: |
+    set -eux
     pip install -r requirements_orm.txt
     pip install pre-commit
   displayName: Install sqlacodegen
+  condition: and(succeeded(),
+                 eq(variables['ORMCheck.UpdateRequired'], 'True'))
 
 - task: DownloadBuildArtifacts@0
   displayName: Get database schema
@@ -17,6 +33,8 @@ steps:
     downloadType: 'single'
     artifactName: 'package'
     downloadPath: '$(System.ArtifactsDirectory)'
+  condition: and(succeeded(),
+                 eq(variables['ORMCheck.UpdateRequired'], 'True'))
 
 - script: |
     set -eu
@@ -46,6 +64,8 @@ steps:
     mysql -D ispyb_build -e "SHOW TABLES"
   displayName: Set up reference database schema
   workingDirectory: $(System.ArtifactsDirectory)
+  condition: and(succeeded(),
+                 eq(variables['ORMCheck.UpdateRequired'], 'True'))
 
 - bash: |
     set -eux
@@ -58,25 +78,23 @@ steps:
     pre-commit run --files _auto_db_schema.py || echo pre-commit exited with non-zero return code
   displayName: Generate ORM
   workingDirectory: $(Build.SourcesDirectory)/src/ispyb/sqlalchemy
+  condition: and(succeeded(),
+                 eq(variables['ORMCheck.UpdateRequired'], 'True'))
 
 - script: |
-    git diff --quiet && {
-      echo "##[section]ORM is up to date"
-      echo "##vso[task.setvariable variable=UpdateRequired;isOutput=true]False"
-    } || {
-      echo "##[warning]ORM needs to be updated. You can download an automatically generated version as Azure artifact."
-      echo "##vso[task.setvariable variable=UpdateRequired;isOutput=true]True"
-    }
     git diff
   displayName: Show differences
   workingDirectory: $(Build.SourcesDirectory)
-  name: ORMCheck
+  condition: and(succeeded(),
+                 eq(variables['ORMCheck.UpdateRequired'], 'True'))
 
 - task: PublishBuildArtifacts@1
   displayName: Store artifact
   inputs:
     pathToPublish: $(Build.SourcesDirectory)/src/ispyb/sqlalchemy/_auto_db_schema.py
     artifactName: ORM
+  condition: and(succeeded(),
+                 eq(variables['ORMCheck.UpdateRequired'], 'True'))
 
 - script: .azure-pipelines/create-orm-update-pull-request
   displayName: Create ORM pull request
