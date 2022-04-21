@@ -1,3 +1,5 @@
+import collections.abc
+
 import tabulate
 
 import ispyb.model
@@ -76,10 +78,8 @@ ispyb.model.add_properties(
     ),
 )
 
-import collections
 
-
-class ImageQualityIndicatorsList(ispyb.model.DBCache, collections.Sequence):
+class ImageQualityIndicatorsList(ispyb.model.DBCache, collections.abc.Sequence):
     """An object representing a list of  ImageQualityIndicators database entries.
     The object lazily accesses the underlying database when necessary and
     exposes record data as python attributes.

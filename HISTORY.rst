@@ -9,6 +9,7 @@ Unreleased / master
 -------------------
 * Update SQLAlchemy ORM models for ispyb-database v1.29.0
 * The ISPyB database ORM model version can now be interrogated via ``ispyb.sqlalchemy.__schema_version__``.
+* Added support for Python 3.10
 
 6.10.0 (2022-01-13)
 -------------------
