@@ -1,3 +1,4 @@
+__schema_version__ = "1.28.0"
 # coding: utf-8
 from sqlalchemy import (
     BINARY,
@@ -2508,8 +2509,8 @@ class DiffractionPlan(Base):
 class LabContact(Base):
     __tablename__ = "LabContact"
     __table_args__ = (
-        Index("cardNameAndProposal", "cardName", "proposalId", unique=True),
         Index("personAndProposal", "personId", "proposalId", unique=True),
+        Index("cardNameAndProposal", "cardName", "proposalId", unique=True),
     )
 
     labContactId = Column(INTEGER(10), primary_key=True)
