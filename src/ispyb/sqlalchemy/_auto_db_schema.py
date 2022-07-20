@@ -1,4 +1,4 @@
-__schema_version__ = "1.29.0"
+__schema_version__ = "1.30.0"
 # coding: utf-8
 from sqlalchemy import (
     BINARY,
@@ -1329,6 +1329,7 @@ class BeamLineSetup(Base):
         String(30),
         comment="Relevant datacentre to use to process data from this beamline",
     )
+    amplitudeContrast = Column(Float, comment="Needed for cryo-ET")
 
     Detector = relationship("Detector")
 
@@ -1983,7 +1984,7 @@ class Pod(Base):
         String(255, "utf8_unicode_ci"),
         comment="File or directory path to mount into the Pod if required",
     )
-    app = Column(ENUM("MAXIV HDF5 Viewer", "H5Web"), nullable=False)
+    app = Column(ENUM("MAXIV HDF5 Viewer", "H5Web", "JNB"), nullable=False)
     podName = Column(String(255, "utf8_unicode_ci"))
     status = Column(String(25, "utf8_unicode_ci"))
     ip = Column(String(15, "utf8_unicode_ci"))
@@ -2344,7 +2345,13 @@ class BLSession(Base):
         nullable=False,
         server_default=text("0"),
     )
-    beamCalendarId = Column(ForeignKey("BeamCalendar.beamCalendarId"), index=True)
+    beamCalendarId = Column(
+        ForeignKey("BeamCalendar.beamCalendarId"),
+        ForeignKey(
+            "BeamCalendar.beamCalendarId", ondelete="SET NULL", onupdate="CASCADE"
+        ),
+        index=True,
+    )
     projectCode = Column(String(45))
     startDate = Column(DateTime, index=True)
     endDate = Column(DateTime, index=True)
@@ -2384,7 +2391,14 @@ class BLSession(Base):
         comment="The data for the session is archived and no longer available on disk",
     )
 
-    BeamCalendar = relationship("BeamCalendar")
+    BeamCalendar = relationship(
+        "BeamCalendar",
+        primaryjoin="BLSession.beamCalendarId == BeamCalendar.beamCalendarId",
+    )
+    BeamCalendar1 = relationship(
+        "BeamCalendar",
+        primaryjoin="BLSession.beamCalendarId == BeamCalendar.beamCalendarId",
+    )
     BeamLineSetup = relationship("BeamLineSetup")
     Proposal = relationship("Proposal")
     Shipping = relationship("Shipping", secondary="ShippingHasSession")
@@ -2768,7 +2782,10 @@ class SWOnceToken(Base):
     proposalId = Column(ForeignKey("Proposal.proposalId"), index=True)
     validity = Column(String(200))
     recordTimeStamp = Column(
-        TIMESTAMP, nullable=False, server_default=text("current_timestamp()")
+        TIMESTAMP,
+        nullable=False,
+        index=True,
+        server_default=text("current_timestamp()"),
     )
 
     Person = relationship("Person")
@@ -4666,6 +4683,15 @@ class Movie(Base):
     positionX = Column(Float)
     positionY = Column(Float)
     nominalDefocus = Column(Float, comment="Nominal defocus, Units: A")
+    angle = Column(Float, comment="unit: degrees relative to perpendicular to beam")
+    fluence = Column(
+        Float,
+        comment="accumulated electron fluence from start to end of acquisition of this movie (commonly, but incorrectly, referred to as ‘dose’)",
+    )
+    numberOfFrames = Column(
+        INTEGER(11),
+        comment="number of frames per movie. This should be equivalent to the number of\xa0MotionCorrectionDrift\xa0entries, but the latter is a property of data analysis, whereas the number of frames is an intrinsic property of acquisition.",
+    )
 
     DataCollection = relationship("DataCollection")
 
@@ -5119,6 +5145,51 @@ class Screening(Base):
     DataCollection = relationship("DataCollection")
 
 
+class Tomogram(Base):
+    __tablename__ = "Tomogram"
+    __table_args__ = {
+        "comment": "For storing per-sample, per-position data analysis results (reconstruction)"
+    }
+
+    tomogramId = Column(INTEGER(11), primary_key=True)
+    dataCollectionId = Column(
+        ForeignKey(
+            "DataCollection.dataCollectionId", ondelete="CASCADE", onupdate="CASCADE"
+        ),
+        index=True,
+        comment="FK to\xa0DataCollection\xa0table",
+    )
+    autoProcProgramId = Column(
+        ForeignKey(
+            "AutoProcProgram.autoProcProgramId", ondelete="SET NULL", onupdate="CASCADE"
+        ),
+        index=True,
+        comment="FK, gives processing times/status and software information",
+    )
+    volumeFile = Column(
+        String(255),
+        comment=".mrc\xa0file representing the reconstructed tomogram volume",
+    )
+    stackFile = Column(
+        String(255),
+        comment=".mrc\xa0file containing the motion corrected images ordered by angle used as input for the reconstruction",
+    )
+    sizeX = Column(INTEGER(11), comment="unit: pixels")
+    sizeY = Column(INTEGER(11), comment="unit: pixels")
+    sizeZ = Column(INTEGER(11), comment="unit: pixels")
+    pixelSpacing = Column(Float, comment="Angstrom/pixel conversion factor")
+    residualErrorMean = Column(Float, comment="Alignment error, unit: nm")
+    residualErrorSD = Column(
+        Float, comment="Standard deviation of the alignment error, unit: nm"
+    )
+    xAxisCorrection = Column(Float, comment="X axis angle (etomo), unit: degrees")
+    tiltAngleOffset = Column(Float, comment="tilt Axis offset (etomo), unit: degrees")
+    zShift = Column(Float, comment="shift to center volumen in Z (etomo)")
+
+    AutoProcProgram = relationship("AutoProcProgram")
+    DataCollection = relationship("DataCollection")
+
+
 class ZcZocaloBuffer(Base):
     __tablename__ = "zc_ZocaloBuffer"
 
@@ -5452,6 +5523,39 @@ class ScreeningRank(Base):
 
     Screening = relationship("Screening")
     ScreeningRankSet = relationship("ScreeningRankSet")
+
+
+class TiltImageAlignment(Base):
+    __tablename__ = "TiltImageAlignment"
+    __table_args__ = {
+        "comment": "For storing per-movie analysis results (reconstruction)"
+    }
+
+    movieId = Column(
+        ForeignKey("Movie.movieId", ondelete="CASCADE", onupdate="CASCADE"),
+        primary_key=True,
+        nullable=False,
+        comment="FK to\xa0Movie\xa0table",
+    )
+    tomogramId = Column(
+        ForeignKey("Tomogram.tomogramId", ondelete="CASCADE", onupdate="CASCADE"),
+        primary_key=True,
+        nullable=False,
+        index=True,
+        comment="FK to\xa0Tomogram\xa0table; tuple (movieID, tomogramID) is unique",
+    )
+    defocusU = Column(Float, comment="unit: Angstroms")
+    defocusV = Column(Float, comment="unit: Angstroms")
+    psdFile = Column(String(255))
+    resolution = Column(Float, comment="unit: Angstroms")
+    fitQuality = Column(Float)
+    refinedMagnification = Column(Float, comment="unitless")
+    refinedTiltAngle = Column(Float, comment="units: degrees")
+    refinedTiltAxis = Column(Float, comment="units: degrees")
+    residualError = Column(Float, comment="Residual error, unit: nm")
+
+    Movie = relationship("Movie")
+    Tomogram = relationship("Tomogram")
 
 
 class XRFFluorescenceMapping(Base):
