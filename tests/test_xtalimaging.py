@@ -1,3 +1,5 @@
+import datetime
+
 def test_xtal_imaging(testdb):
     testdb.set_role("ispyb_import")
     xtalimaging = testdb.xtal_imaging
@@ -16,7 +18,8 @@ def test_xtal_imaging(testdb):
     assert sid is not None
     assert sid > 0
 
-    si_full_path = "/dls/i03/data/2018/cm14451-99/something_new.jpg"
+    secs = int(datetime.datetime.now().timestamp())
+    si_full_path = "/dls/i03/data/2018/cm14451-99/something_new_%d.jpg" % secs
     siid = xtalimaging.upsert_sample_image(
         sample_id=sid,
         microns_per_pixel_x=12.03,
@@ -50,5 +53,6 @@ def test_xtal_imaging(testdb):
         position1y=687,
         position2x=473,
         position2y=744,
+        experiment_type='MAD',
     )
     assert ssid2 is not None
