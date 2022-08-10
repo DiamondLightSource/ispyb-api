@@ -4,7 +4,8 @@ History
 
 Unreleased / master
 -------------------
-* Update SQLAlchemy ORM models for ispyb-database v1.30.0
+* Update SQLAlchemy ORM models for ispyb-database v1.31.0
+* Update ``insert_subsample_for_image_full_path()`` to use stored procedure v2 and add optional parameter ``experiment_type``
 
 6.11.0 (2022-04-21)
 -------------------
