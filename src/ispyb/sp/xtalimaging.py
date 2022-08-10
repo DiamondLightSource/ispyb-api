@@ -55,6 +55,7 @@ class XtalImaging(DataArea):
         position1y,
         position2x=None,
         position2y=None,
+        experiment_type=None,
     ):
         """Store new subsample for a given sample image.
 
@@ -81,7 +82,7 @@ class XtalImaging(DataArea):
         """
         id = None
         return self.get_connection().call_sp_write(
-            procname="insert_subsample_for_image_full_path",
+            procname="insert_subsample_for_image_full_path_v2",
             args=[
                 id,
                 image_full_path,
@@ -90,6 +91,7 @@ class XtalImaging(DataArea):
                 position1y,
                 position2x,
                 position2y,
+                experiment_type,
             ],
         )
 
