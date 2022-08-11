@@ -57,6 +57,8 @@ class ISPyBMySQLSPConnector(ispyb.interface.connection.IF):
             database=db,
             port=int(port),
             use_pure=True,
+            charset="latin1",
+            use_unicode=False,
         )
         if not self.conn:
             raise ConnectionError("Could not connect to database")

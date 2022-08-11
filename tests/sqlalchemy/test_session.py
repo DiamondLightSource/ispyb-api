@@ -29,7 +29,10 @@ def test_url_from_dict(testconfig):
     url = ispyb.sqlalchemy.url(credentials=dict(config.items("ispyb_sqlalchemy")))
     assert url.startswith("mysql+mysqlconnector")
     # check we can create a valid engine with this url
-    sqlalchemy.create_engine(url, connect_args={"use_pure": True})
+    sqlalchemy.create_engine(
+        url,
+        connect_args={"use_pure": True, "charset": "latin1"},
+    )
 
 
 def test_url_from_envar(testconfig, monkeypatch):
@@ -37,4 +40,7 @@ def test_url_from_envar(testconfig, monkeypatch):
     url = ispyb.sqlalchemy.url()
     assert url.startswith("mysql+mysqlconnector")
     # check we can create a valid engine with this url
-    sqlalchemy.create_engine(url, connect_args={"use_pure": True})
+    sqlalchemy.create_engine(
+        url,
+        connect_args={"use_pure": True, "charset": "latin1"},
+    )

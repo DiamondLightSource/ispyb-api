@@ -165,7 +165,9 @@ def main(args=None):
         ispyb.sqlalchemy.enable_debug_logging()
 
     url = ispyb.sqlalchemy.url(args.credentials)
-    engine = sqlalchemy.create_engine(url, connect_args={"use_pure": True})
+    engine = sqlalchemy.create_engine(
+        url, connect_args={"use_pure": True, "charset": "latin1"}
+    )
     Session = sqlalchemy.orm.sessionmaker(bind=engine)
 
     latest_dcid = None

@@ -47,7 +47,8 @@ def testconfig_ws():
 def db_engine(testconfig):
     """Yields a SQLAlchemy engine"""
     engine = create_engine(
-        ispyb.sqlalchemy.url(testconfig), connect_args={"use_pure": True}
+        ispyb.sqlalchemy.url(testconfig),
+        connect_args={"use_pure": True, "charset": "latin1"},
     )
     yield engine
     engine.dispose()

@@ -106,7 +106,7 @@ def session(credentials=None):
 
     engine = sqlalchemy.create_engine(
         url(credentials),
-        connect_args={"use_pure": True},
+        connect_args={"use_pure": True, "charset": "latin1"},
     )
     return sqlalchemy.orm.sessionmaker(bind=engine)()
 
