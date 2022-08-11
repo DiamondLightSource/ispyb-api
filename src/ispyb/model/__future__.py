@@ -63,7 +63,7 @@ def enable(configuration_file, section="ispyb"):
         database=database,
         use_pure=True,
         charset="latin1",
-        use_unicode=False,
+        use_unicode=True,
     )
     _db_config = configuration_file
     _db.autocommit = True
