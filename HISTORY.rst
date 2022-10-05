@@ -5,6 +5,10 @@ History
 Unreleased / master
 -------------------
 
+6.12.1 (2022-10-05)
+-------------------
+* Pin mysql-connector-python version to 8.0.29
+
 6.12.0 (2022-08-11)
 -------------------
 * Update SQLAlchemy ORM models for ispyb-database v1.31.0
