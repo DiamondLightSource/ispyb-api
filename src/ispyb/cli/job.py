@@ -41,7 +41,7 @@ def create_processing_job(i, options):
         if not match:
             sys.exit("Invalid sweep specification: " + s)
         values = tuple(map(int, match.groups()))
-        if not all(value > 0 for value in values) or values[2] < values[1]:
+        if not all(value >= 0 for value in values) or values[2] < values[1]:
             sys.exit("Invalid sweep specification: " + s)
         sweeps.append(values)
 

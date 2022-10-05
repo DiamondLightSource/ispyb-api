@@ -4,6 +4,7 @@ History
 
 Unreleased / master
 -------------------
+* ``ispyb.job``: bug fix - sweeps may start counting at 0
 
 6.12.1 (2022-10-05)
 -------------------
