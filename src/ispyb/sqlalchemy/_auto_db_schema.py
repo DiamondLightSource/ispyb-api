@@ -1,4 +1,4 @@
-__schema_version__ = "1.31.0"
+__schema_version__ = "1.33.0"
 # coding: utf-8
 from sqlalchemy import (
     BINARY,
@@ -2346,7 +2346,6 @@ class BLSession(Base):
         server_default=text("0"),
     )
     beamCalendarId = Column(
-        ForeignKey("BeamCalendar.beamCalendarId"),
         ForeignKey(
             "BeamCalendar.beamCalendarId", ondelete="SET NULL", onupdate="CASCADE"
         ),
@@ -2391,14 +2390,7 @@ class BLSession(Base):
         comment="The data for the session is archived and no longer available on disk",
     )
 
-    BeamCalendar = relationship(
-        "BeamCalendar",
-        primaryjoin="BLSession.beamCalendarId == BeamCalendar.beamCalendarId",
-    )
-    BeamCalendar1 = relationship(
-        "BeamCalendar",
-        primaryjoin="BLSession.beamCalendarId == BeamCalendar.beamCalendarId",
-    )
+    BeamCalendar = relationship("BeamCalendar")
     BeamLineSetup = relationship("BeamLineSetup")
     Proposal = relationship("Proposal")
     Shipping = relationship("Shipping", secondary="ShippingHasSession")
@@ -2544,6 +2536,10 @@ class DiffractionPlan(Base):
     reductionParametersAveraging = Column(
         Enum("All", "Fastest Dimension", "1D"),
         comment="Post processing params for SAXS",
+    )
+    scanParameters = Column(
+        LONGTEXT,
+        comment="JSON serialised scan parameters, useful for parameters without designated columns",
     )
 
     Detector = relationship("Detector")
@@ -3329,6 +3325,10 @@ class Shipping(Base):
         index=True,
         comment="The person who created the AWB (for auditing)",
     )
+    extra = Column(
+        LONGTEXT,
+        comment="JSON column for facility-specific or hard-to-define attributes",
+    )
 
     Person = relationship("Person")
     Proposal = relationship("Proposal")
@@ -3902,7 +3902,7 @@ class BLSampleHasDataCollectionPlan(Base):
         nullable=False,
         index=True,
     )
-    planOrder = Column(TINYINT(3))
+    planOrder = Column(SMALLINT(5))
 
     BLSample = relationship("BLSample")
     DiffractionPlan = relationship("DiffractionPlan")
@@ -4128,6 +4128,27 @@ class BLSampleImageHasAutoScoreClass(Base):
 
     BLSampleImageAutoScoreClass = relationship("BLSampleImageAutoScoreClass")
     BLSampleImage = relationship("BLSampleImage")
+
+
+class BLSampleImageHasPositioner(Base):
+    __tablename__ = "BLSampleImage_has_Positioner"
+    __table_args__ = {
+        "comment": "Allows a BLSampleImage to store motor positions along with the image"
+    }
+
+    blSampleImageHasPositionerId = Column(INTEGER(10), primary_key=True)
+    blSampleImageId = Column(
+        ForeignKey("BLSampleImage.blSampleImageId"), nullable=False, index=True
+    )
+    positionerId = Column(
+        ForeignKey("Positioner.positionerId"), nullable=False, index=True
+    )
+    value = Column(
+        Float, comment="The position of this positioner for this blsampleimage"
+    )
+
+    BLSampleImage = relationship("BLSampleImage")
+    Positioner = relationship("Positioner")
 
 
 class BLSubSample(Base):
@@ -5007,6 +5028,16 @@ class GridInfo(Base):
             "DataCollection.dataCollectionId", ondelete="CASCADE", onupdate="CASCADE"
         ),
         index=True,
+    )
+    patchesX = Column(
+        INTEGER(10),
+        server_default=text("1"),
+        comment="Number of patches the grid is made up of in the X direction",
+    )
+    patchesY = Column(
+        INTEGER(10),
+        server_default=text("1"),
+        comment="Number of patches the grid is made up of in the Y direction",
     )
 
     DataCollectionGroup = relationship("DataCollectionGroup")

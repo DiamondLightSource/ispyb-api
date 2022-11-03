@@ -7,6 +7,7 @@ Unreleased / master
 * ``ispyb.job``: bug fix - sweeps may start counting at 0
 * Added support for Python 3.11
 * Remove support for Python 3.6 (end-of-life on 2021-12-23)
+* Update SQLAlchemy ORM models for ispyb-database v1.33.0
 
 6.12.1 (2022-10-05)
 -------------------
