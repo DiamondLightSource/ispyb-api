@@ -4,6 +4,9 @@ History
 
 Unreleased / master
 -------------------
+
+6.13.0 (2022-11-03)
+-------------------
 * ``ispyb.job``: bug fix - sweeps may start counting at 0
 * Added support for Python 3.11
 * Remove support for Python 3.6 (end-of-life on 2021-12-23)
