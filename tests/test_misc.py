@@ -4,7 +4,6 @@ import mysql.connector.errors
 import pytest
 
 import ispyb
-import ispyb.model.__future__
 
 
 def test_multi_threads_upsert(testdb):
@@ -45,9 +44,7 @@ def test_retrieve_failure(testdb):
         testdb.mx_acquisition.retrieve_data_collection_main(0)
 
 
-def test_database_reconnects_on_connection_failure(testconfig, testdb):
-    ispyb.model.__future__.enable(testconfig)
-
+def test_database_reconnects_on_connection_failure(testdb):
     # Create minimal data collection and data collection group for test
     params = testdb.mx_acquisition.get_data_collection_group_params()
     params["parentid"] = 55168
@@ -61,10 +58,6 @@ def test_database_reconnects_on_connection_failure(testconfig, testdb):
     # Test the database connections
     # This goes from DCID to DCGID to GridInfo using the default connection,
     assert bool(testdb.get_data_collection(dcid).group.gridinfo) is False
-    # Test the model.__future__ connection separately
-    ispyb.model.__future__.test_connection()
-
-    fconn = ispyb.model.__future__._db
     iconn = testdb.conn
 
     # Break both connections from the server side
@@ -73,18 +66,9 @@ def test_database_reconnects_on_connection_failure(testconfig, testdb):
         c.execute("KILL CONNECTION_ID();")
     c.close()
 
-    c = fconn.cursor()
-    with pytest.raises(mysql.connector.errors.DatabaseError):
-        c.execute("KILL CONNECTION_ID();")
-    c.close()
-
     # Confirm both connections are broken
     with pytest.raises(mysql.connector.errors.OperationalError):
         iconn.cursor()
 
-    with pytest.raises(mysql.connector.errors.OperationalError):
-        fconn.cursor()
-
     # Test implicit reconnect
     assert bool(testdb.get_data_collection(dcid).group.gridinfo) is False
-    ispyb.model.__future__.test_connection()
