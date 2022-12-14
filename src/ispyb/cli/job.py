@@ -492,11 +492,13 @@ def main(cmd_args=sys.argv[1:]):
                 if options.verbose:
                     print(
                         "\n".join(
-                            f"\n    Command: {prg.processingCommandLine}",
-                            f"\nEnvironment: {prg.processingEnvironment}",
-                            f"\n    Defined: {prg.recordTimeStamp}",
-                            f"\n    Started: {prg.processingStartTime}",
-                            f"\nLast Update: {prg.processingEndTime}",
+                            (
+                                f"\n    Command: {prg.processingCommandLine}",
+                                f"\nEnvironment: {prg.processingEnvironment}",
+                                f"\n    Defined: {prg.recordTimeStamp}",
+                                f"\n    Started: {prg.processingStartTime}",
+                                f"\nLast Update: {prg.processingEndTime}",
+                            )
                         )
                     )
 
