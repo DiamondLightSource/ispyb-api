@@ -25,13 +25,33 @@ import re
 import sys
 from optparse import SUPPRESS_HELP, OptionGroup, OptionParser
 
+import sqlalchemy.orm
+
 import ispyb
+from ispyb.sqlalchemy import (
+    AutoProcProgram,
+    AutoProcProgramAttachment,
+    ProcessingJob,
+    ProcessingJobImageSweep,
+    ProcessingJobParameter,
+)
 
 try:
     import procrunner
     import zocalo.configuration
 except ModuleNotFoundError:
     zocalo = None
+
+
+def autoprocprogram_status_as_text(app: AutoProcProgram):
+    """Returns a human-readable status."""
+    if app.processingStatus == 1:
+        return "success"
+    if app.processingStatus == 0:
+        return "failure"
+    if app.processingStartTime:
+        return "running"
+    return "queued"
 
 
 def create_processing_job(i, options):
@@ -376,6 +396,10 @@ def main(cmd_args=sys.argv[1:]):
     if zocalo and options.triggervariables and not options.trigger:
         sys.exit("--trigger-variable only makes sense with --trigger")
 
+    url = ispyb.sqlalchemy.url()
+    engine = sqlalchemy.create_engine(url, connect_args={"use_pure": True})
+    Session = sqlalchemy.orm.sessionmaker(bind=engine)
+
     i = ispyb.open()
 
     if options.new:
@@ -404,72 +428,87 @@ def main(cmd_args=sys.argv[1:]):
             message=options.status,
         )
 
-    rp = i.get_processing_job(jobid)
-    try:
-        rp.load()
-    except ispyb.NoResult:
-        print(f"Processing ID {jobid} not found")
-        sys.exit(1)
-    print(
-        f"""Processing ID {rp.jobid}:
+    with Session() as db_session:
+        query = db_session.query(ProcessingJob).filter(
+            ProcessingJob.processingJobId == jobid
+        )
+        pj = query.one_or_none()
+        if pj is None:
+            print(f"Processing ID {jobid} not found")
+            sys.exit(1)
+        print(
+            f"""Processing ID {pj.processingJobId}:
 
-       Name: {rp.name}
-     Recipe: {rp.recipe}
-   Comments: {rp.comment}
- Primary DC: {rp.DCID}
-    Defined: {rp.timestamp}"""
-    )
-
-    if options.verbose:
-        if rp.parameters:
-            maxlen = max(max(map(len, dict(rp.parameters))), 11)
-            print("\n Parameters:")
-            print(
-                "\n".join(
-                    "%%%ds: %%s" % maxlen % (p[0], p[1]) for p in sorted(rp.parameters)
-                )
-            )
-
-        if rp.sweeps:
-            print("\n     Sweeps: ", end="")
-            print(
-                ("\n" + " " * 13).join(
-                    f"DCID {sweep.DCID:7}  images{sweep.start:5} -{sweep.end:5}"
-                    for sweep in rp.sweeps
-                )
-            )
-
-    if rp.programs:
-        print_format = "\nProgram #{0.app_id}: {0.name}, {0.status_text}"
+        Name: {pj.displayName}
+        Recipe: {pj.recipe}
+    Comments: {pj.comments}
+    Primary DC: {pj.dataCollectionId}
+        Defined: {pj.recordTimestamp}"""
+        )
 
         if options.verbose:
-            print_format += "\n    Command: {0.command}"
-            print_format += "\nEnvironment: {0.environment}"
-            print_format += "\n    Defined: {0.time_defined}"
-            print_format += "\n    Started: {0.time_start}"
-            print_format += "\nLast Update: {0.time_update}"
+            query = (
+                db_session.query(ProcessingJobParameter)
+                .join(ProcessingJob)
+                .filter(ProcessingJob.processingJobId == jobid)
+            )
+            pj_params = query.all()
+            if pj_params:
+                maxlen = max(len(pj_params), 11)
+                print("\n Parameters:")
+                print(
+                    "\n".join(
+                        "%%%ds: %%s" % maxlen % (p.parameterKey, p.parameterValue)
+                        for p in pj_params
+                    )
+                )
 
-        print_format += "\n  Last Info: {0.message}"
+            query = (
+                db_session.query(ProcessingJobImageSweep)
+                .join(ProcessingJob)
+                .filter(ProcessingJob.processingJobId == jobid)
+            )
+            pj_sweeps = query.all()
+            if pj_sweeps:
+                print("\n     Sweeps: ", end="")
+                print(
+                    ("\n" + " " * 13).join(
+                        f"DCID {sweep.dataCollectionId:7}  images{sweep.startImage:5} -{sweep.endImage:5}"
+                        for sweep in pj_sweeps
+                    )
+                )
 
-        for program in rp.programs:
-            print(print_format.format(program))
+        query = db_session.query(AutoProcProgram).filter(
+            AutoProcProgram.processingJobId == jobid
+        )
+        apps = query.all()
 
-            if options.verbose:
-                try:
-                    attachments = (
-                        i.mx_processing.retrieve_program_attachments_for_program_id(
-                            program.app_id
+        if apps:
+            for prg in apps:
+                status_text = autoprocprogram_status_as_text(prg)
+                print(
+                    f"\nProgram #{prg.autoProcProgramId}: {prg.processingPrograms}, {status_text}"
+                )
+                if options.verbose:
+                    print(
+                        "\n".join(
+                            f"\n    Command: {prg.processingCommandLine}",
+                            f"\nEnvironment: {prg.processingEnvironment}",
+                            f"\n    Defined: {prg.recordTimeStamp}",
+                            f"\n    Started: {prg.processingStartTime}",
+                            f"\nLast Update: {prg.processingEndTime}",
                         )
                     )
-                    for filetype in sorted({a["fileType"] for a in attachments}):
+
+                if options.verbose:
+                    query = db_session.query(AutoProcProgramAttachment).filter(
+                        AutoProcProgramAttachment.autoProcProgramId
+                        == prg.autoProcProgramId
+                    )
+                    attachments = query.all()
+                    for filetype in sorted({a.fileType for a in attachments}):
                         for attachment in sorted(
-                            (a for a in attachments if a["fileType"] == filetype),
-                            key=lambda a: a["fileName"],
+                            (a for a in attachments if a.fileType == filetype),
+                            key=lambda a: a.fileName,
                         ):
-                            print(
-                                " {att[fileType]:>10s}: {att[fileName]}".format(
-                                    att=attachment
-                                )
-                            )
-                except ispyb.NoResult:
-                    pass
+                            print(f" {attachment.fileType:>10s}: {attachment.fileName}")
