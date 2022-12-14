@@ -56,11 +56,10 @@ def test_database_reconnects_on_connection_failure(testdb):
     assert dcid, "Could not create dummy data collection"
 
     # Test the database connections
-    # This goes from DCID to DCGID to GridInfo using the default connection,
-    assert bool(testdb.get_data_collection(dcid).group.gridinfo) is False
-    iconn = testdb.conn
+    assert testdb.mx_acquisition.retrieve_data_collection(dcid)[0]["groupId"] == dcgid
 
-    # Break both connections from the server side
+    # Break connection from the server side
+    iconn = testdb.conn
     c = iconn.cursor()
     with pytest.raises(mysql.connector.errors.DatabaseError):
         c.execute("KILL CONNECTION_ID();")
@@ -71,4 +70,5 @@ def test_database_reconnects_on_connection_failure(testdb):
         iconn.cursor()
 
     # Test implicit reconnect
-    assert bool(testdb.get_data_collection(dcid).group.gridinfo) is False
+    assert testdb.mx_acquisition.retrieve_data_collection(dcid)[0]["groupId"] == dcgid
+    iconn.cursor()
