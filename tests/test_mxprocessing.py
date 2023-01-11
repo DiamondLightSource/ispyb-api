@@ -43,27 +43,6 @@ def test_processing_jobs(testdb):
     assert job_image_sweep[0]["startImage"] == 1
     assert job_image_sweep[0]["endImage"] == 180
 
-    # Retrieve same information via object model
-
-    job = testdb.get_processing_job(job_id)
-    assert job.name == "test_job"
-    assert job.DCID == 993677
-    assert job.comment == "Test job by the unit test system ..."
-    assert job.automatic is False
-    assert job.recipe == "xia2 recipe 14"
-    assert job.timestamp
-
-    assert list(job.parameters) == [("fudge factor", "3.14")]
-    assert dict(job.parameters) == {"fudge factor": "3.14"}
-    assert job.parameters["fudge factor"] == "3.14"
-    assert job.parameters["fudge factor"].parameter_id == job_parameter_id
-
-    assert len(job.sweeps) == 1
-    assert job.sweeps[0].start == 1
-    assert job.sweeps[0].end == 180
-    assert job.sweeps[0].DCID == 993677
-    assert job.sweeps[0].sweep_id == id
-
 
 def test_processing1(testdb):
     mxprocessing = testdb.mx_processing
@@ -78,24 +57,22 @@ def test_processing1(testdb):
         message="preparing",
     )
 
-    rs = mxprocessing.retrieve_programs_for_job_id(5)
-    assert rs and len(rs) >= 1
+    programs = mxprocessing.retrieve_programs_for_job_id(5)
+    assert programs and len(programs) >= 1
 
-    # Find programs using the processing job ID and verify stored values
-    programs = testdb.get_processing_job(5).programs
-    program = list(filter(lambda p: p.app_id == program_id, programs))
+    # verify stored values
+    program = list(filter(lambda p: p["id"] == program_id, programs))
     assert program and len(program) == 1
     program = program[0]
-    assert program.job_id == 5
-    assert program.name == "new program"
-    assert program.command == "program.sh --help"
-    assert program.environment == "environ=True"
-    assert program.message == "preparing"
-    assert program.status is None
-    assert program.status_text == "queued"
-    assert program.time_defined == program_start.replace(microsecond=0)
-    assert program.time_start is None
-    assert program.time_update is None
+    assert program["jobId"] == 5
+    assert program["programs"] == "new program"
+    assert program["commandLine"] == "program.sh --help"
+    assert program["environment"] == "environ=True"
+    assert program["message"] == "preparing"
+    assert program["status"] is None
+    assert program["recordTimeStamp"] == program_start.replace(microsecond=0)
+    assert program["startTime"] is None
+    assert program["endTime"] is None
 
     # Update the program status and verify values
     program_id = mxprocessing.upsert_program_ex(
@@ -104,27 +81,25 @@ def test_processing1(testdb):
         time_start=program_start,
         time_update=program_start,
     )
-    programs = testdb.get_processing_job(5).programs
-    program = list(filter(lambda p: p.app_id == program_id, programs))
+    programs = mxprocessing.retrieve_programs_for_job_id(5)
+    program = list(filter(lambda p: p["id"] == program_id, programs))
     assert program and len(program) == 1
     program = program[0]
-    assert program.message == "starting..."
-    assert program.status is None
-    assert program.status_text == "running"
-    assert program.time_start == program_start.replace(microsecond=0)
-    assert program.time_update == program_start.replace(microsecond=0)
+    assert program["message"] == "starting..."
+    assert program["status"] is None
+    assert program["startTime"] == program_start.replace(microsecond=0)
+    assert program["endTime"] == program_start.replace(microsecond=0)
 
     # Mark program run as success
     program_id = mxprocessing.upsert_program_ex(
         program_id=program_id, status=1, message="done"
     )
-    programs = testdb.get_processing_job(5).programs
-    program = list(filter(lambda p: p.app_id == program_id, programs))
+    programs = mxprocessing.retrieve_programs_for_job_id(5)
+    program = list(filter(lambda p: p["id"] == program_id, programs))
     assert program and len(program) == 1
     program = program[0]
-    assert program.message == "done"
-    assert program.status == 1
-    assert program.status_text == "success"
+    assert program["message"] == "done"
+    assert program["status"] == 1
 
 
 def test_processing2(testdb):
@@ -151,15 +126,15 @@ def test_processing2(testdb):
         assert attachment["importanceRank"] is None
 
     # Find program using the processing job ID and verify stored values
-    programs = testdb.get_processing_job(5).programs
+    programs = mxprocessing.retrieve_programs_for_job_id(5)
     assert programs
     assert len(programs) >= 1
-    programs = list(filter(lambda p: p.app_id == id, programs))
+    programs = list(filter(lambda p: p["id"] == id, programs))
     assert programs
     program = programs[0]
-    assert program.job_id == 5
-    assert program.command == command
-    assert program.message == message
+    assert program["jobId"] == 5
+    assert program["commandLine"] == command
+    assert program["message"] == message
 
     message = "Finished"
     programid = mxprocessing.upsert_program_ex(

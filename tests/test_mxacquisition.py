@@ -80,11 +80,6 @@ def test_mxacquisition_methods(testdb):
     assert rs[0]["noImages"] == params["n_images"]
     assert rs[0]["imgContainerSubPath"] == params["img_container_sub_path"]
 
-    dc = testdb.get_data_collection(id1)
-    assert dc.image_count == 360
-    assert dc.dcgid == dcgid
-    assert dc.group.dcgid == dcgid
-
     params = mxacquisition.get_image_params()
     params["parentid"] = id1
     params["img_number"] = 1
@@ -135,7 +130,7 @@ def test_mxacquisition_methods(testdb):
     assert len(gridinfo) == 1
 
     params = mxacquisition.get_dc_grid_params()
-    params["parentid"] = dc.dcid
+    params["parentid"] = id1
     params["dx_in_mm"] = 1.2
     params["dy_in_mm"] = 1.3
     params["steps_x"] = 20
@@ -150,7 +145,7 @@ def test_mxacquisition_methods(testdb):
     dc_grid_id = mxacquisition.upsert_dc_grid(list(params.values()))
     assert dc_grid_id and dc_grid_id > 0
 
-    gridinfo = mxacquisition.retrieve_dc_grid(dc.dcid)
+    gridinfo = mxacquisition.retrieve_dc_grid(id1)
     assert len(gridinfo) == 1
     gridinfo = gridinfo[0]
     assert gridinfo["gridInfoId"] == dc_grid_id
