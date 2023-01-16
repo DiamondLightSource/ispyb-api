@@ -4,7 +4,9 @@ History
 
 Unreleased / master
 -------------------
-* ``ispyb.job``: bug fix - sweeps may start counting at 0
+
+7.0.0 (2023-01-16)
+-------------------
 * Remove deprecated ``ispyb.model``
 
 6.13.0 (2022-11-03)
