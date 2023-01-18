@@ -1,4 +1,4 @@
-__schema_version__ = "1.33.0"
+__schema_version__ = "1.34.0"
 # coding: utf-8
 from sqlalchemy import (
     BINARY,
@@ -21,7 +21,6 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.mysql import (
     BIGINT,
-    ENUM,
     INTEGER,
     LONGBLOB,
     LONGTEXT,
@@ -1981,15 +1980,14 @@ class Pod(Base):
         comment="Pod owner defined by the logged in SynchWeb user who requested the pod start up",
     )
     filePath = Column(
-        String(255, "utf8_unicode_ci"),
-        comment="File or directory path to mount into the Pod if required",
+        String(255), comment="File or directory path to mount into the Pod if required"
     )
-    app = Column(ENUM("MAXIV HDF5 Viewer", "H5Web", "JNB"), nullable=False)
-    podName = Column(String(255, "utf8_unicode_ci"))
-    status = Column(String(25, "utf8_unicode_ci"))
-    ip = Column(String(15, "utf8_unicode_ci"))
+    app = Column(Enum("MAXIV HDF5 Viewer", "H5Web", "JNB"), nullable=False)
+    podName = Column(String(255))
+    status = Column(String(25))
+    ip = Column(String(15))
     message = Column(
-        Text(collation="utf8_unicode_ci"),
+        Text,
         comment="Generic text field intended for storing error messages related to status field",
     )
     created = Column(
@@ -2551,8 +2549,8 @@ class DiffractionPlan(Base):
 class LabContact(Base):
     __tablename__ = "LabContact"
     __table_args__ = (
-        Index("cardNameAndProposal", "cardName", "proposalId", unique=True),
         Index("personAndProposal", "personId", "proposalId", unique=True),
+        Index("cardNameAndProposal", "cardName", "proposalId", unique=True),
     )
 
     labContactId = Column(INTEGER(10), primary_key=True)
@@ -5216,9 +5214,26 @@ class Tomogram(Base):
     xAxisCorrection = Column(Float, comment="X axis angle (etomo), unit: degrees")
     tiltAngleOffset = Column(Float, comment="tilt Axis offset (etomo), unit: degrees")
     zShift = Column(Float, comment="shift to center volumen in Z (etomo)")
+    fileDirectory = Column(
+        String(255), comment="Directory path for files referenced by this table"
+    )
+    centralSliceImage = Column(String(255), comment="Tomogram central slice file")
+    tomogramMovie = Column(
+        String(255), comment="Movie traversing the tomogram across an axis"
+    )
+    xyShiftPlot = Column(String(255), comment="XY shift plot file")
+    projXY = Column(String(255), comment="XY projection file")
+    projXZ = Column(String(255), comment="XZ projection file")
+    processingJobId = Column(ForeignKey("ProcessingJob.processingJobId"), index=True)
+    recordTimeStamp = Column(
+        DateTime,
+        server_default=text("current_timestamp()"),
+        comment="Creation or last update date/time",
+    )
 
     AutoProcProgram = relationship("AutoProcProgram")
     DataCollection = relationship("DataCollection")
+    ProcessingJob = relationship("ProcessingJob")
 
 
 class ZcZocaloBuffer(Base):
