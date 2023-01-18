@@ -2,7 +2,7 @@
 History
 =======
 
-Unreleased / master
+Unreleased / main
 -------------------
 
 7.0.0 (2023-01-16)

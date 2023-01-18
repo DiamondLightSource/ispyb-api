@@ -16,7 +16,7 @@ hub --version
 echo
 
 echo "##[section]Check for existing pull request"
-hub pr list -b master -f '%H%n' | grep "^orm-update$" && {
+hub pr list -b main -f '%H%n' | grep "^orm-update$" && {
   echo Pull request already exists. Stopping here.
   exit
 } || {

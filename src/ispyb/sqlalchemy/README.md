@@ -7,7 +7,7 @@ The DB schema file is constantly updated against the referenced database schema
 and most recent sqlacodegen version. To update the database schema reference you
 need to change the version number at the top of the file
 `.azure-pipelines/azure-pipelines.yml` in this repository, and commit the change
-to the `master` branch. A pull request with an updated generated schema file will
+to the `main` branch. A pull request with an updated generated schema file will
 open shortly.
 
 ### Manually generate the DB schema
