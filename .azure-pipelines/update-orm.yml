@@ -99,7 +99,7 @@ steps:
 - script: .azure-pipelines/create-orm-update-pull-request
   displayName: Create ORM pull request
   condition: and(succeeded(),
-                 eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+                 eq(variables['Build.SourceBranch'], 'refs/heads/main'),
                  eq(variables['ORMCheck.UpdateRequired'], 'True'))
   workingDirectory: $(Build.SourcesDirectory)
   env:
