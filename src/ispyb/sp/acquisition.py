@@ -165,6 +165,19 @@ class Acquisition(ispyb.interface.acquisition.IF):
         """Insert or update data collection."""
         return self.get_connection().call_sp_write("upsert_dc", values)
 
+    def update_data_collection_append_comments(self, dc_id, comments, separator):
+        """Store new or update existing automatic score for a sample image.
+
+        :param dc_id: The dataCollectionId
+        :param comments: The comments to be appended
+        :param separator: A string (max 5 chars) used to separate appended from existing comment, if any.
+        :return: Nothing.
+        """
+        self.get_connection().call_sp_write(
+            procname="update_dc_append_comments",
+            args=[dc_id, comments, separator],
+        )
+
     def upsert_data_collection_file_attachment(self, values):
         """Insert or update a data collection file attachment."""
         return self.get_connection().call_sp_write("upsert_dc_file_attachment", values)

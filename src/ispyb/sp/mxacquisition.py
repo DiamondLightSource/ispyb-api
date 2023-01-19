@@ -21,6 +21,9 @@ class MXAcquisition(Acquisition):
         self.insert_data_collection = super().upsert_data_collection
         self.update_data_collection_group = super().upsert_data_collection_group
         self.update_data_collection = super().upsert_data_collection
+        self.update_data_collection_append_comments = (
+            super().update_data_collection_append_comments
+        )
 
     _image_params = StrictOrderedDict(
         [

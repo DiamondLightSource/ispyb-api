@@ -62,6 +62,9 @@ def test_mxacquisition_methods(testdb):
     assert id2 > 0
     assert id1 == id2
 
+    mxacquisition.update_data_collection_append_comments(id2, "hello", " ")
+    mxacquisition.update_data_collection_append_comments(id2, "hello", " ")
+
     rs = mxacquisition.retrieve_data_collection_main(id1)
     assert rs[0]["groupId"] == dcgid
 
@@ -79,6 +82,7 @@ def test_mxacquisition_methods(testdb):
     assert rs[0]["status"] == params["run_status"]
     assert rs[0]["noImages"] == params["n_images"]
     assert rs[0]["imgContainerSubPath"] == params["img_container_sub_path"]
+    assert rs[0]["comments"] == "hello hello"
 
     params = mxacquisition.get_image_params()
     params["parentid"] = id1
