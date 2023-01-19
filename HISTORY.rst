@@ -5,6 +5,9 @@ History
 Unreleased / main
 -------------------
 
+7.1.0 (2023-01-18)
+-------------------
+
 * New method ``update_dc_append_comments`` available in the ``Acquisition`` and ``MXAcquisition`` classes
 * Update SQLAlchemy ORM models for ispyb-database v1.34.0
 
