@@ -1,4 +1,4 @@
-__schema_version__ = "1.34.0"
+__schema_version__ = "1.34.1"
 # coding: utf-8
 from sqlalchemy import (
     BINARY,
