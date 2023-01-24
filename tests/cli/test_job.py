@@ -23,6 +23,15 @@ def test_creation_failure(capsys, testconfig, monkeypatch):
     assert "must specify at least" in e.value.code
 
 
+def test_create_processing_job(capsys, testconfig, monkeypatch):
+    monkeypatch.setenv("ISPYB_CREDENTIALS", testconfig)
+    job.main(["--dcid", "1002287", "--new"])
+    captured = capsys.readouterr()
+    assert not captured.err
+    assert "Using images 1 to 7200 for data collection sweep" in captured.out
+    assert "Primary DC: 1002287" in captured.out
+
+
 def test_basic(capsys, testconfig, monkeypatch):
     monkeypatch.setenv("ISPYB_CREDENTIALS", testconfig)
     job.main(["5"])

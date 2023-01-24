@@ -31,6 +31,7 @@ import ispyb
 from ispyb.sqlalchemy import (
     AutoProcProgram,
     AutoProcProgramAttachment,
+    DataCollection,
     ProcessingJob,
     ProcessingJobImageSweep,
     ProcessingJobParameter,
@@ -54,7 +55,7 @@ def autoprocprogram_status_as_text(app: AutoProcProgram):
     return "queued"
 
 
-def create_processing_job(i, options):
+def create_processing_job(i, db_session, options):
     sweeps = []
     for s in options.sweeps:
         match = re.match(r"^([0-9]+):([0-9]+):([0-9]+)$", s)
@@ -73,15 +74,21 @@ def create_processing_job(i, options):
     else:
         dcid = None
 
+    print(f"{sweeps=}")
     if not sweeps:
         if not dcid:
             sys.exit(
                 "When creating a processing job you must specify at least one data collection sweep or a DCID"
             )
 
-        dc_info = i.get_data_collection(dcid)
-        start = dc_info.image_start_number
-        number = dc_info.image_count
+        query = db_session.query(DataCollection).filter(
+            DataCollection.dataCollectionId == dcid
+        )
+        dc = query.one_or_none()
+        if not dc:
+            sys.exit(f"DCID {dcid} not found")
+        start = dc.startImageNumber
+        number = dc.numberOfImages
         if not start or not number:
             print("Can not automatically infer data collection sweep for this DCID")
             sweeps = []
@@ -403,7 +410,8 @@ def main(cmd_args=sys.argv[1:]):
     i = ispyb.open()
 
     if options.new:
-        jobid = create_processing_job(i, options)
+        with Session() as db_session:
+            jobid = create_processing_job(i, db_session, options)
     else:
         jobid = args[0]
 
