@@ -4,6 +4,9 @@ History
 
 Unreleased / main
 -------------------
+
+7.1.1 (2023-01-24)
+-------------------
 * ``ispyb.job``: bug fix for ``--new`` option, broken by removal of ``ispyb.model``
 
 7.1.0 (2023-01-18)
