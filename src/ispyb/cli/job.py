@@ -74,6 +74,7 @@ def create_processing_job(i, db_session, options):
     else:
         dcid = None
 
+    print(f"{sweeps=}")
     if not sweeps:
         if not dcid:
             sys.exit(
