@@ -21,6 +21,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.mysql import (
     BIGINT,
+    ENUM,
     INTEGER,
     LONGBLOB,
     LONGTEXT,
@@ -1990,14 +1991,15 @@ class Pod(Base):
         comment="Pod owner defined by the logged in SynchWeb user who requested the pod start up",
     )
     filePath = Column(
-        String(255), comment="File or directory path to mount into the Pod if required"
+        String(255, "utf8_unicode_ci"),
+        comment="File or directory path to mount into the Pod if required",
     )
-    app = Column(Enum("MAXIV HDF5 Viewer", "H5Web", "JNB"), nullable=False)
-    podName = Column(String(255))
-    status = Column(String(25))
-    ip = Column(String(15))
+    app = Column(ENUM("MAXIV HDF5 Viewer", "H5Web", "JNB"), nullable=False)
+    podName = Column(String(255, "utf8_unicode_ci"))
+    status = Column(String(25, "utf8_unicode_ci"))
+    ip = Column(String(15, "utf8_unicode_ci"))
     message = Column(
-        Text,
+        Text(collation="utf8_unicode_ci"),
         comment="Generic text field intended for storing error messages related to status field",
     )
     created = Column(
@@ -4555,32 +4557,6 @@ class DataCollection(Base):
     )
 
 
-class SSXDataCollection(DataCollection):
-    __tablename__ = "SSXDataCollection"
-    __table_args__ = {"comment": "Extends DataCollection with SSX-specific fields."}
-
-    dataCollectionId = Column(
-        ForeignKey(
-            "DataCollection.dataCollectionId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        primary_key=True,
-        comment="Primary key is same as dataCollection (1 to 1).",
-    )
-    repetitionRate = Column(Float)
-    energyBandwidth = Column(Float)
-    monoStripe = Column(String(255))
-    jetSpeed = Column(Float, comment="For jet experiments.")
-    jetSize = Column(Float, comment="For jet experiments.")
-    chipPattern = Column(String(255), comment="For chip experiments.")
-    chipModel = Column(String(255), comment="For chip experiments.")
-    reactionDuration = Column(
-        Float,
-        comment="When images are taken at constant time relative to reaction start.",
-    )
-    laserEnergy = Column(Float)
-    experimentName = Column(String(255))
-
-
 class EnergyScan(Base):
     __tablename__ = "EnergyScan"
 
@@ -4925,6 +4901,34 @@ t_Project_has_XFEFSpectrum = Table(
         index=True,
     ),
 )
+
+
+class SSXDataCollection(Base):
+    __tablename__ = "SSXDataCollection"
+    __table_args__ = {"comment": "Extends DataCollection with SSX-specific fields."}
+
+    dataCollectionId = Column(
+        ForeignKey(
+            "DataCollection.dataCollectionId", ondelete="CASCADE", onupdate="CASCADE"
+        ),
+        primary_key=True,
+        comment="Primary key is same as dataCollection (1 to 1).",
+    )
+    repetitionRate = Column(Float)
+    energyBandwidth = Column(Float)
+    monoStripe = Column(String(255))
+    jetSpeed = Column(Float, comment="For jet experiments.")
+    jetSize = Column(Float, comment="For jet experiments.")
+    chipPattern = Column(String(255), comment="For chip experiments.")
+    chipModel = Column(String(255), comment="For chip experiments.")
+    reactionDuration = Column(
+        Float,
+        comment="When images are taken at constant time relative to reaction start.",
+    )
+    laserEnergy = Column(Float)
+    experimentName = Column(String(255))
+
+    DataCollection = relationship("DataCollection", uselist=False)
 
 
 class AutoProcProgram(Base):
