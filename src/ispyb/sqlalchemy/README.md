@@ -32,7 +32,7 @@ $ sh build.sh
 Generate the models with [sqlacodegen](https://pypi.org/project/sqlacodegen/)
 in `ispyb-api/src/ispyb/sqlalchemy/`:
 ```bash
-sqlacodegen mysql+mysqlconnector://user:password@host:port/ispyb_build --noinflect --outfile _auto_db_schema.py
+sqlacodegen mysql+mysqlconnector://user:password@host:port/ispyb_build --noinflect --nojoined --outfile _auto_db_schema.py
 ```
 
 ### Do not edit the output file yourself

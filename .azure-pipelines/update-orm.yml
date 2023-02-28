@@ -69,7 +69,7 @@ steps:
 
 - bash: |
     set -eux
-    sqlacodegen mysql+mysqlconnector://root:mysql_root_pwd@127.0.0.1/ispyb_build --noinflect --outfile _auto_db_schema.py.in
+    sqlacodegen mysql+mysqlconnector://root:mysql_root_pwd@127.0.0.1/ispyb_build --noinflect --nojoined --outfile _auto_db_schema.py.in
     # This code produces false positives due to non-deterministic ordering.
     # Add an identifier to the file, and only update/PR the changes when the
     # identifier indicates the file is out of date.
