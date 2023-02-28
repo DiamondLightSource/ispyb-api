@@ -1,4 +1,4 @@
-__schema_version__ = "1.34.0"
+__schema_version__ = "1.35.0"
 # coding: utf-8
 from sqlalchemy import (
     BINARY,
@@ -209,7 +209,7 @@ class ComponentType(Base):
     __tablename__ = "ComponentType"
 
     componentTypeId = Column(INTEGER(11), primary_key=True)
-    name = Column(String(31), nullable=False)
+    name = Column(String(31), nullable=False, unique=True)
 
 
 class ConcentrationType(Base):
@@ -370,6 +370,16 @@ class EMMicroscope(Base):
     C2aperture = Column(Float)
     ObjAperture = Column(Float)
     C2lens = Column(Float)
+
+
+class EventType(Base):
+    __tablename__ = "EventType"
+    __table_args__ = {
+        "comment": "Defines the list of event types which can occur during a data collection."
+    }
+
+    eventTypeId = Column(INTEGER(11), primary_key=True)
+    name = Column(String(30), nullable=False, unique=True)
 
 
 class Experiment(Base):
@@ -2394,6 +2404,27 @@ class BLSession(Base):
     Shipping = relationship("Shipping", secondary="ShippingHasSession")
 
 
+class Component(Base):
+    __tablename__ = "Component"
+    __table_args__ = {
+        "comment": "Description of a component that can be used inside a crystal or a sample."
+    }
+
+    componentId = Column(INTEGER(11), primary_key=True)
+    componentTypeId = Column(
+        ForeignKey("ComponentType.componentTypeId"), nullable=False, index=True
+    )
+    proposalId = Column(
+        ForeignKey("Proposal.proposalId", ondelete="CASCADE", onupdate="CASCADE"),
+        index=True,
+    )
+    name = Column(String(255), nullable=False)
+    composition = Column(String(255))
+
+    ComponentType = relationship("ComponentType")
+    Proposal = relationship("Proposal")
+
+
 class ContainerRegistryHasProposal(Base):
     __tablename__ = "ContainerRegistry_has_Proposal"
     __table_args__ = (
@@ -3379,6 +3410,32 @@ class CourierTermsAccepted(Base):
     Shipping = relationship("Shipping")
 
 
+class CrystalComposition(Base):
+    __tablename__ = "CrystalComposition"
+    __table_args__ = {
+        "comment": "Links a crystal to its components with a specified abundance or ratio."
+    }
+
+    crystalCompositionId = Column(INTEGER(11), primary_key=True)
+    componentId = Column(
+        ForeignKey("Component.componentId"), nullable=False, index=True
+    )
+    crystalId = Column(ForeignKey("Crystal.crystalId"), nullable=False, index=True)
+    concentrationTypeId = Column(
+        ForeignKey("ConcentrationType.concentrationTypeId"), index=True
+    )
+    abundance = Column(
+        Float,
+        comment="Abundance or concentration in the unit defined by concentrationTypeId.",
+    )
+    ratio = Column(Float)
+    pH = Column(Float)
+
+    Component = relationship("Component")
+    ConcentrationType = relationship("ConcentrationType")
+    Crystal = relationship("Crystal")
+
+
 class CrystalHasUUID(Base):
     __tablename__ = "Crystal_has_UUID"
 
@@ -3973,6 +4030,9 @@ class DataCollectionGroup(Base):
             "XRF map xas",
             "Mesh3D",
             "Screening",
+            "Still",
+            "SSX-Chip",
+            "SSX-Jet",
         ),
         comment="Standard: Routine structure determination experiment. Time Resolved: Investigate the change of a system over time. Custom: Special or non-standard data collection.",
     )
@@ -4052,6 +4112,32 @@ class RobotAction(Base):
 
     BLSample = relationship("BLSample")
     BLSession = relationship("BLSession")
+
+
+class SampleComposition(Base):
+    __tablename__ = "SampleComposition"
+    __table_args__ = {
+        "comment": "Links a sample to its components with a specified abundance or ratio."
+    }
+
+    sampleCompositionId = Column(INTEGER(11), primary_key=True)
+    componentId = Column(
+        ForeignKey("Component.componentId"), nullable=False, index=True
+    )
+    blSampleId = Column(ForeignKey("BLSample.blSampleId"), nullable=False, index=True)
+    concentrationTypeId = Column(
+        ForeignKey("ConcentrationType.concentrationTypeId"), index=True
+    )
+    abundance = Column(
+        Float,
+        comment="Abundance or concentration in the unit defined by concentrationTypeId.",
+    )
+    ratio = Column(Float)
+    pH = Column(Float)
+
+    BLSample = relationship("BLSample")
+    Component = relationship("Component")
+    ConcentrationType = relationship("ConcentrationType")
 
 
 class XRFFluorescenceMappingROI(Base):
@@ -4469,6 +4555,32 @@ class DataCollection(Base):
     )
 
 
+class SSXDataCollection(DataCollection):
+    __tablename__ = "SSXDataCollection"
+    __table_args__ = {"comment": "Extends DataCollection with SSX-specific fields."}
+
+    dataCollectionId = Column(
+        ForeignKey(
+            "DataCollection.dataCollectionId", ondelete="CASCADE", onupdate="CASCADE"
+        ),
+        primary_key=True,
+        comment="Primary key is same as dataCollection (1 to 1).",
+    )
+    repetitionRate = Column(Float)
+    energyBandwidth = Column(Float)
+    monoStripe = Column(String(255))
+    jetSpeed = Column(Float, comment="For jet experiments.")
+    jetSize = Column(Float, comment="For jet experiments.")
+    chipPattern = Column(String(255), comment="For chip experiments.")
+    chipModel = Column(String(255), comment="For chip experiments.")
+    reactionDuration = Column(
+        Float,
+        comment="When images are taken at constant time relative to reaction start.",
+    )
+    laserEnergy = Column(Float)
+    experimentName = Column(String(255))
+
+
 class EnergyScan(Base):
     __tablename__ = "EnergyScan"
 
@@ -4624,6 +4736,23 @@ class DataCollectionFileAttachment(Base):
     createTime = Column(
         TIMESTAMP, nullable=False, server_default=text("current_timestamp()")
     )
+
+    DataCollection = relationship("DataCollection")
+
+
+class EventChain(Base):
+    __tablename__ = "EventChain"
+    __table_args__ = {"comment": "Groups events together in a data collection."}
+
+    eventChainId = Column(INTEGER(11), primary_key=True)
+    dataCollectionId = Column(
+        ForeignKey(
+            "DataCollection.dataCollectionId", ondelete="CASCADE", onupdate="CASCADE"
+        ),
+        nullable=False,
+        index=True,
+    )
+    name = Column(String(255))
 
     DataCollection = relationship("DataCollection")
 
@@ -4819,6 +4948,37 @@ class AutoProcProgram(Base):
     processingJobId = Column(ForeignKey("ProcessingJob.processingJobId"), index=True)
 
     ProcessingJob = relationship("ProcessingJob")
+
+
+class Event(Base):
+    __tablename__ = "Event"
+    __table_args__ = {
+        "comment": "Describes an event that occurred during a data collection and should be taken into account for data analysis. Can optionally be repeated at a specified frequency."
+    }
+
+    eventId = Column(INTEGER(11), primary_key=True)
+    eventChainId = Column(
+        ForeignKey("EventChain.eventChainId", ondelete="CASCADE", onupdate="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    componentId = Column(ForeignKey("Component.componentId"), index=True)
+    eventTypeId = Column(
+        ForeignKey("EventType.eventTypeId"), nullable=False, index=True
+    )
+    name = Column(String(255))
+    offset = Column(
+        Float,
+        nullable=False,
+        comment="Start of the event relative to data collection start time in seconds.",
+    )
+    duration = Column(Float, comment="Duration of the event if applicable.")
+    period = Column(Float, comment="Repetition period if applicable in seconds.")
+    repetition = Column(Float, comment="Number of repetitions if applicable.")
+
+    Component = relationship("Component")
+    EventChain = relationship("EventChain")
+    EventType = relationship("EventType")
 
 
 class ProcessingJobImageSweep(Base):
@@ -5224,7 +5384,6 @@ class Tomogram(Base):
     xyShiftPlot = Column(String(255), comment="XY shift plot file")
     projXY = Column(String(255), comment="XY projection file")
     projXZ = Column(String(255), comment="XZ projection file")
-    processingJobId = Column(ForeignKey("ProcessingJob.processingJobId"), index=True)
     recordTimeStamp = Column(
         DateTime,
         server_default=text("current_timestamp()"),
@@ -5233,7 +5392,6 @@ class Tomogram(Base):
 
     AutoProcProgram = relationship("AutoProcProgram")
     DataCollection = relationship("DataCollection")
-    ProcessingJob = relationship("ProcessingJob")
 
 
 class ZcZocaloBuffer(Base):
