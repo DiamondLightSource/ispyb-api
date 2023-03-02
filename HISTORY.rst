@@ -4,6 +4,9 @@ History
 
 Unreleased / main
 -------------------
+
+7.2.0 (2023-03-02)
+-------------------
 * Update SQLAlchemy ORM models for ispyb-database v1.35.0
 
 7.1.2 (2023-01-26)
