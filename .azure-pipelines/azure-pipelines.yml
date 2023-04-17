@@ -1,5 +1,5 @@
 variables:
-  DATABASE_SCHEMA: 1.35.0
+  DATABASE_SCHEMA: 1.36.1
 
 trigger:
   branches:
