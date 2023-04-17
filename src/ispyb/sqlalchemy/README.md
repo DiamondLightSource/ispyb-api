@@ -6,9 +6,10 @@ This provides a set of [SQLAlchemy](https://www.sqlalchemy.org/) ORM models for 
 The DB schema file is constantly updated against the referenced database schema
 and most recent sqlacodegen version. To update the database schema reference you
 need to change the version number at the top of the file
-`.azure-pipelines/azure-pipelines.yml` in this repository, and commit the change
-to the `main` branch. A pull request with an updated generated schema file will
-open shortly.
+`.azure-pipelines/azure-pipelines.yml` in this repository (ideally via a PR as
+occasionally upstream database changes will require changes to `ispyb-api` to
+ensure tests pass). Once merged to `main`, a pull request with an updated
+generated schema file will open shortly.
 
 ### Manually generate the DB schema
 
