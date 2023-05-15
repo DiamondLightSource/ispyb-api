@@ -1,4 +1,4 @@
-__schema_version__ = "1.35.0"
+__schema_version__ = "2.0.0"
 # coding: utf-8
 from sqlalchemy import (
     BINARY,
@@ -28,7 +28,6 @@ from sqlalchemy.dialects.mysql import (
     MEDIUMTEXT,
     SMALLINT,
     TINYINT,
-    TINYTEXT,
     VARCHAR,
 )
 from sqlalchemy.ext.declarative import declarative_base
@@ -330,6 +329,12 @@ class Detector(Base):
     detectorRollMin = Column(Float(asdecimal=True), comment="unit: degrees")
     detectorRollMax = Column(Float(asdecimal=True), comment="unit: degrees")
     localName = Column(String(40), comment="Colloquial name for the detector")
+    numberOfROIPixelsX = Column(
+        MEDIUMINT(9), comment="Detector number of pixels in x in ROI mode"
+    )
+    numberOfROIPixelsY = Column(
+        MEDIUMINT(9), comment="Detector number of pixels in y in ROI mode"
+    )
 
 
 class DewarLocation(Base):
@@ -516,6 +521,31 @@ class IspybReference(Base):
     beamline = Column(
         Enum("All", "ID14-4", "ID23-1", "ID23-2", "ID29", "XRF", "AllXRF", "Mesh"),
         comment="beamline involved",
+    )
+
+
+class LDAPSearchParameters(Base):
+    __tablename__ = "LDAPSearchParameters"
+    __table_args__ = {
+        "comment": "All necessary parameters to run an LDAP search, except the search base"
+    }
+
+    ldapSearchParametersId = Column(INTEGER(11), primary_key=True)
+    accountType = Column(
+        Enum("group_member", "staff_account", "functional_account"),
+        nullable=False,
+        comment="The entity type returned by the search",
+    )
+    accountTypeGroupName = Column(
+        String(100), comment="all accounts of this type must be members of this group"
+    )
+    oneOrMany = Column(
+        Enum("one", "many"), nullable=False, comment="Expected number of search results"
+    )
+    hostURL = Column(String(200), nullable=False, comment="URL for the LDAP host")
+    filter = Column(String(200), comment="A filter string for the search")
+    attributes = Column(
+        String(255), nullable=False, comment="Comma-separated list of search attributes"
     )
 
 
@@ -1421,6 +1451,31 @@ class Instruction(Base):
     InstructionSet = relationship("InstructionSet")
 
 
+class LDAPSearchBase(Base):
+    __tablename__ = "LDAPSearchBase"
+    __table_args__ = {
+        "comment": "LDAP search base and the sequence number in which it should be attempted"
+    }
+
+    ldapSearchBaseId = Column(INTEGER(11), primary_key=True)
+    ldapSearchParametersId = Column(
+        ForeignKey("LDAPSearchParameters.ldapSearchParametersId"),
+        nullable=False,
+        index=True,
+        comment="The other LDAP search parameters to be used with this search base",
+    )
+    searchBase = Column(
+        String(200), nullable=False, comment="Name of the object we search for"
+    )
+    sequenceNumber = Column(
+        TINYINT(3),
+        nullable=False,
+        comment="The number in the sequence of searches where this search base should be attempted",
+    )
+
+    LDAPSearchParameters = relationship("LDAPSearchParameters")
+
+
 class Macromolecule(Base):
     __tablename__ = "Macromolecule"
 
@@ -1637,6 +1692,32 @@ class SpaceGroup(Base):
     )
 
     GeometryClassname = relationship("GeometryClassname")
+
+
+class UserGroupHasLDAPSearchParameters(Base):
+    __tablename__ = "UserGroup_has_LDAPSearchParameters"
+    __table_args__ = {
+        "comment": "Gives the LDAP search parameters needed to find a set of usergroup members"
+    }
+
+    userGroupId = Column(
+        ForeignKey("UserGroup.userGroupId"), primary_key=True, nullable=False
+    )
+    ldapSearchParametersId = Column(
+        ForeignKey("LDAPSearchParameters.ldapSearchParametersId"),
+        primary_key=True,
+        nullable=False,
+        index=True,
+    )
+    name = Column(
+        String(200),
+        primary_key=True,
+        nullable=False,
+        comment="Name of the object we search for",
+    )
+
+    LDAPSearchParameters = relationship("LDAPSearchParameters")
+    UserGroup = relationship("UserGroup")
 
 
 t_UserGroup_has_Permission = Table(
@@ -2580,8 +2661,8 @@ class DiffractionPlan(Base):
 class LabContact(Base):
     __tablename__ = "LabContact"
     __table_args__ = (
-        Index("personAndProposal", "personId", "proposalId", unique=True),
         Index("cardNameAndProposal", "cardName", "proposalId", unique=True),
+        Index("personAndProposal", "personId", "proposalId", unique=True),
     )
 
     labContactId = Column(INTEGER(10), primary_key=True)
@@ -3460,7 +3541,7 @@ class Dewar(Base):
         index=True,
     )
     code = Column(String(45), index=True)
-    comments = Column(TINYTEXT)
+    comments = Column(String(1024))
     storageLocation = Column(String(45))
     dewarStatus = Column(String(45), index=True)
     bltimeStamp = Column(DateTime)
@@ -3483,6 +3564,10 @@ class Dewar(Base):
     weight = Column(Float, comment="dewar weight in kg")
     deliveryAgent_barcode = Column(
         String(30), comment="Courier piece barcode (not the airway bill)"
+    )
+    extra = Column(
+        LONGTEXT,
+        comment="JSON column for facility-specific or hard-to-define attributes, e.g. LN2 top-ups and contents checks",
     )
 
     BLSession = relationship("BLSession")
@@ -4322,6 +4407,29 @@ t_Project_has_DCGroup = Table(
 )
 
 
+class XrayCentring(Base):
+    __tablename__ = "XrayCentring"
+    __table_args__ = {
+        "comment": "Xray Centring analysis associated with one or more grid scans."
+    }
+
+    xrayCentringId = Column(INTEGER(11), primary_key=True)
+    dataCollectionGroupId = Column(
+        ForeignKey(
+            "DataCollectionGroup.dataCollectionGroupId",
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+        ),
+        nullable=False,
+        index=True,
+        comment="references DataCollectionGroup table",
+    )
+    status = Column(Enum("success", "failed", "pending"))
+    xrayCentringType = Column(Enum("2d", "3d"))
+
+    DataCollectionGroup = relationship("DataCollectionGroup")
+
+
 class BLSampleImageMeasurement(Base):
     __tablename__ = "BLSampleImageMeasurement"
     __table_args__ = {"comment": "For measuring crystal growth over time"}
@@ -4643,6 +4751,80 @@ class XFEFluorescenceSpectrum(Base):
     BLSample = relationship("BLSample")
     BLSubSample = relationship("BLSubSample")
     BLSession = relationship("BLSession")
+
+
+class XrayCentringResult(Base):
+    __tablename__ = "XrayCentringResult"
+    __table_args__ = {"comment": "Xray Centring result."}
+
+    xrayCentringResultId = Column(INTEGER(11), primary_key=True)
+    xrayCentringId = Column(
+        ForeignKey(
+            "XrayCentring.xrayCentringId", ondelete="CASCADE", onupdate="CASCADE"
+        ),
+        nullable=False,
+        index=True,
+        comment="references XrayCentring table",
+    )
+    centreOfMassX = Column(
+        Float,
+        comment="x-coordinate corresponding to the centre of mass of the crystal (in voxels)",
+    )
+    centreOfMassY = Column(
+        Float,
+        comment="y-coordinate corresponding to the centre of mass of the crystal (in voxels)",
+    )
+    centreOfMassZ = Column(
+        Float,
+        comment="z-coordinate corresponding to the centre of mass of the crystal (in voxels)",
+    )
+    maxVoxelX = Column(
+        INTEGER(11),
+        comment="x-coordinate of the voxel with the maximum value within this crystal volume",
+    )
+    maxVoxelY = Column(
+        INTEGER(11),
+        comment="y-coordinate of the voxel with the maximum value within this crystal volume",
+    )
+    maxVoxelZ = Column(
+        INTEGER(11),
+        comment="z-coordinate of the voxel with the maximum value within this crystal volume",
+    )
+    numberOfVoxels = Column(
+        INTEGER(11), comment="Number of voxels within the specified bounding box"
+    )
+    totalCount = Column(
+        Float,
+        comment="The sum of the values of all the voxels within the specified bounding box",
+    )
+    boundingBoxMinX = Column(
+        Float,
+        comment="Minimum x-coordinate of the bounding box containing the crystal (in voxels)",
+    )
+    boundingBoxMaxX = Column(
+        Float,
+        comment="Maximum x-coordinate of the bounding box containing the crystal (in voxels)",
+    )
+    boundingBoxMinY = Column(
+        Float,
+        comment="Minimum y-coordinate of the bounding box containing the crystal (in voxels)",
+    )
+    boundingBoxMaxY = Column(
+        Float,
+        comment="Maximum y-coordinate of the bounding box containing the crystal (in voxels)",
+    )
+    boundingBoxMinZ = Column(
+        Float,
+        comment="Minimum z-coordinate of the bounding box containing the crystal (in voxels)",
+    )
+    boundingBoxMaxZ = Column(
+        Float,
+        comment="Maximum z-coordinate of the bounding box containing the crystal (in voxels)",
+    )
+    status = Column(Enum("success", "failure", "pending"), comment="to be removed")
+    gridInfoId = Column(INTEGER(11), comment="to be removed")
+
+    XrayCentring = relationship("XrayCentring")
 
 
 class BLSampleHasEnergyScan(Base):
@@ -5199,6 +5381,8 @@ class GridInfo(Base):
         server_default=text("1"),
         comment="Number of patches the grid is made up of in the Y direction",
     )
+    micronsPerPixelX = Column(Float)
+    micronsPerPixelY = Column(Float)
 
     DataCollectionGroup = relationship("DataCollectionGroup")
     DataCollection = relationship("DataCollection")
@@ -5807,33 +5991,6 @@ class XRFFluorescenceMapping(Base):
     XRFFluorescenceMappingROI = relationship("XRFFluorescenceMappingROI")
 
 
-class XrayCentringResult(Base):
-    __tablename__ = "XrayCentringResult"
-
-    xrayCentringResultId = Column(INTEGER(11), primary_key=True)
-    gridInfoId = Column(
-        ForeignKey("GridInfo.gridInfoId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-    )
-    method = Column(String(15), comment="Type of X-ray centering calculation")
-    status = Column(
-        Enum("success", "failure", "pending"),
-        nullable=False,
-        server_default=text("'pending'"),
-    )
-    x = Column(
-        Float,
-        comment="position in number of boxes in direction of the fast scan within GridInfo grid",
-    )
-    y = Column(
-        Float,
-        comment="position in number of boxes in direction of the slow scan within GridInfo grid",
-    )
-
-    GridInfo = relationship("GridInfo")
-
-
 class ParticleClassificationGroup(Base):
     __tablename__ = "ParticleClassificationGroup"
 
@@ -6010,6 +6167,11 @@ class ParticleClassification(Base):
     classDistribution = Column(
         Float,
         comment="Provides a figure of merit for the class, higher number is better",
+    )
+    selected = Column(
+        TINYINT(1),
+        server_default=text("0"),
+        comment="Indicates whether the class is selected for further processing or not",
     )
 
     ParticleClassificationGroup = relationship("ParticleClassificationGroup")
