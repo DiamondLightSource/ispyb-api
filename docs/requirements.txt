@@ -1,7 +1,7 @@
 ipython
 m2r2
 mysql-connector-python
-sphinx
+sphinx<7
 sphinx_rtd_theme
 sqlalchemy
 tabulate
