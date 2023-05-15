@@ -5,6 +5,11 @@ History
 Unreleased / main
 -------------------
 
+8.0.0 (2023-05-15)
+-------------------
+* Update SQLAlchemy ORM models for ispyb-database v2.0.0
+* Remove ``mxacquisition.upsert_xray_centring_result`` (stored procedure removed in ispyb-database v2.0.0)
+
 7.2.0 (2023-03-02)
 -------------------
 * Update SQLAlchemy ORM models for ispyb-database v1.35.0
