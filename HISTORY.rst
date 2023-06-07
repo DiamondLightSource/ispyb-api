@@ -4,6 +4,7 @@ History
 
 Unreleased / main
 -------------------
+* Require ``mysql-connector-python>=8.0.32``
 
 8.0.0 (2023-05-15)
 -------------------
