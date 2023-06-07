@@ -4,10 +4,7 @@ History
 
 Unreleased / main
 -------------------
-
-8.0.1 (2023-06-07)
--------------------
-* Require ``mysql-connector-python>=8.0.32`` (`#203 <https://github.com/DiamondLightSource/ispyb-api/pull/203>`_)
+* Require ``mysql-connector-python>=8.0.32``
 
 8.0.0 (2023-05-15)
 -------------------
