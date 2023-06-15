@@ -4,6 +4,7 @@ History
 
 Unreleased / main
 -------------------
+* Replace use of ``procrunner`` with ``subprocess``
 
 8.0.1 (2023-06-07)
 -------------------
