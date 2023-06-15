@@ -22,6 +22,8 @@ Update stored information:
 
 import os
 import re
+import shutil
+import subprocess
 import sys
 from optparse import SUPPRESS_HELP, OptionGroup, OptionParser
 
@@ -38,7 +40,6 @@ from ispyb.sqlalchemy import (
 )
 
 try:
-    import procrunner
     import zocalo.configuration
 except ModuleNotFoundError:
     zocalo = None
@@ -140,11 +141,11 @@ def create_processing_job(i, db_session, options):
     print()
     if zocalo:
         if options.trigger:
-            go_call = ["zocalo.go", "-p", str(jobid)]
+            go_call = [shutil.which("zocalo.go"), "-p", str(jobid)]
             for kv in trigger_variables:
                 go_call.append("--set=%s=%s" % (kv[0], kv[1]))
-            result = procrunner.run(go_call)
-            if result["exitcode"] or result["stderr"]:
+            result = subprocess.run(go_call, capture_output=True)
+            if result.returncode or result.stderr:
                 sys.exit("Error triggering processing job")
             print("Successfully triggered processing job")
         else:
