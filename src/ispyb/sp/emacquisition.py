@@ -35,23 +35,9 @@ class EMAcquisition(Acquisition):
         ]
     )
 
-    _motion_correction_drift_params = StrictOrderedDict(
-        [
-            ("motionCorrectionDriftId", None),
-            ("motionCorrectionId", None),
-            ("frameNumber", None),
-            ("deltaX", None),
-            ("deltaY", None),
-        ]
-    )
-
     @classmethod
     def get_movie_params(cls):
         return copy.deepcopy(cls._movie_params)
-
-    @classmethod
-    def get_motion_correction_drift_params(cls):
-        return copy.deepcopy(cls._motion_correction_drift_params)
 
     def insert_movie(self, values):
         """Store new movie params."""
@@ -145,12 +131,6 @@ class EMAcquisition(Acquisition):
                 fft_theoretical_full_path,
                 comments,
             ),
-        )
-
-    def insert_motion_correction_drift(self, values):
-        """Store new motion correction drift params."""
-        return self.get_connection().call_sp_write(
-            procname="upsert_motion_correction_drift", args=values
         )
 
     def insert_particle_picker(

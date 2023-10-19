@@ -5,6 +5,7 @@ History
 Unreleased / main
 -------------------
 * Replace use of ``procrunner`` with ``subprocess``
+* Remove method ``insert_motion_correction_drift`` and related dictionary in the ``EMAcquisition`` class, as well as corresponding test
 
 8.0.1 (2023-06-07)
 -------------------
