@@ -1,5 +1,5 @@
 variables:
-  DATABASE_SCHEMA: 2.0.0
+  DATABASE_SCHEMA: 3.0.0
 
 trigger:
   branches:
@@ -12,7 +12,7 @@ trigger:
 resources:
   containers:
   - container: mariadb
-    image: mariadb:10.5
+    image: mariadb:10.6
     env:
       MYSQL_DATABASE: ispybtest
       MYSQL_ROOT_PASSWORD: mysql_root_pwd
