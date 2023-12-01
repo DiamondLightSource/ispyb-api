@@ -52,8 +52,8 @@ class MXAcquisition(Acquisition):
             ("stepsX", None),
             ("stepsY", None),
             ("meshAngle", None),
-            ("pixelsPerMicronX", None),
-            ("pixelsPerMicronY", None),
+            ("micronsPerPixelX", None),
+            ("micronsPerPixelY", None),
             ("snapshotOffsetXPixel", None),
             ("snapshotOffsetYPixel", None),
             ("orientation", None),
@@ -70,8 +70,8 @@ class MXAcquisition(Acquisition):
             ("stepsX", None),
             ("stepsY", None),
             ("meshAngle", None),
-            ("pixelsPerMicronX", None),
-            ("pixelsPerMicronY", None),
+            ("micronsPerPixelX", None),
+            ("micronsPerPixelY", None),
             ("snapshotOffsetXPixel", None),
             ("snapshotOffsetYPixel", None),
             ("orientation", None),
@@ -202,9 +202,11 @@ class MXAcquisition(Acquisition):
         is no grid information available for the given DCGID.
         Generally the list will only contain a single dictionary.
         """
-        return self.get_connection().call_sp_retrieve(
+        result = self.get_connection().call_sp_retrieve(
             procname="retrieve_grid_info_for_dcg_v2", args=(dcgid, auth_login)
         )
+        self._fixup_pixels_per_micron(result)
+        return result
 
     @classmethod
     def get_dc_grid_params(cls):
@@ -220,9 +222,19 @@ class MXAcquisition(Acquisition):
         is no grid information available for the given DCID.
         Generally the list will only contain a single dictionary.
         """
-        return self.get_connection().call_sp_retrieve(
+        result = self.get_connection().call_sp_retrieve(
             procname="retrieve_grid_info_for_dc", args=(dcid, auth_login)
         )
+        self._fixup_pixels_per_micron(result)
+        return result
+
+    def _fixup_pixels_per_micron(self, result):
+        """The stored procedures for dcg_grid and dc_grid currently return only the old (incorrect) pixelsPerMicron.
+        The value is actually the inverse, this populates the micronsPerPixel with the correct value.
+        See https://jira.diamond.ac.uk/browse/LIMS-564"""
+        for r in result:
+            r["micronsPerPixelX"] = r["pixelsPerMicronX"]
+            r["micronsPerPixelY"] = r["pixelsPerMicronY"]
 
     @classmethod
     def get_energy_scan_params(cls):

@@ -105,8 +105,8 @@ def test_mxacquisition_methods(testdb):
     params["steps_x"] = 20
     params["steps_y"] = 31
     params["mesh_angle"] = 45.5
-    params["pixelsPerMicronX"] = 11
-    params["pixelsPerMicronY"] = 11
+    params["micronsPerPixelX"] = 11
+    params["micronsPerPixelY"] = 11
     params["snapshotOffsetXPixel"] = 2
     params["snapshotOffsetYPixel"] = 3
     params["orientation"] = "horizontal"
@@ -122,8 +122,8 @@ def test_mxacquisition_methods(testdb):
     assert gridinfo["dy_mm"] == params["dy_in_mm"]
     assert gridinfo["meshAngle"] == params["mesh_angle"]
     assert gridinfo["orientation"] == params["orientation"]
-    assert gridinfo["pixelsPerMicronX"] == params["pixelsPerMicronX"]
-    assert gridinfo["pixelsPerMicronY"] == params["pixelsPerMicronY"]
+    assert gridinfo["micronsPerPixelX"] == params["micronsPerPixelX"]
+    assert gridinfo["micronsPerPixelY"] == params["micronsPerPixelY"]
     assert gridinfo["snaked"] == 0
     assert gridinfo["snapshot_offsetXPixel"] == params["snapshotOffsetXPixel"]
     assert gridinfo["snapshot_offsetYPixel"] == params["snapshotOffsetYPixel"]
@@ -140,8 +140,8 @@ def test_mxacquisition_methods(testdb):
     params["steps_x"] = 20
     params["steps_y"] = 31
     params["mesh_angle"] = 45.5
-    params["pixelsPerMicronX"] = 11
-    params["pixelsPerMicronY"] = 11
+    params["micronsPerPixelX"] = 11
+    params["micronsPerPixelY"] = 11
     params["snapshotOffsetXPixel"] = 2
     params["snapshotOffsetYPixel"] = 3
     params["orientation"] = "horizontal"
@@ -157,8 +157,8 @@ def test_mxacquisition_methods(testdb):
     assert gridinfo["dy_mm"] == params["dy_in_mm"]
     assert gridinfo["meshAngle"] == params["mesh_angle"]
     assert gridinfo["orientation"] == params["orientation"]
-    assert gridinfo["pixelsPerMicronX"] == params["pixelsPerMicronX"]
-    assert gridinfo["pixelsPerMicronY"] == params["pixelsPerMicronY"]
+    assert gridinfo["micronsPerPixelX"] == params["micronsPerPixelX"]
+    assert gridinfo["micronsPerPixelY"] == params["micronsPerPixelY"]
     assert gridinfo["snaked"] == 0
     assert gridinfo["snapshot_offsetXPixel"] == params["snapshotOffsetXPixel"]
     assert gridinfo["snapshot_offsetYPixel"] == params["snapshotOffsetYPixel"]
