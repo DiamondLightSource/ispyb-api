@@ -1,4 +1,4 @@
-__schema_version__ = "2.0.0"
+__schema_version__ = "3.0.0"
 # coding: utf-8
 from sqlalchemy import (
     BINARY,
@@ -227,7 +227,7 @@ class ContainerRegistry(Base):
     __tablename__ = "ContainerRegistry"
 
     containerRegistryId = Column(INTEGER(11), primary_key=True)
-    barcode = Column(String(20))
+    barcode = Column(String(20), nullable=False, unique=True)
     comments = Column(String(255))
     recordTimestamp = Column(DateTime, server_default=text("current_timestamp()"))
 
@@ -568,6 +568,10 @@ class Laboratory(Base):
     )
     laboratoryPk = Column(INTEGER(10))
     postcode = Column(String(15))
+    EORINumber = Column(
+        String(17),
+        comment="An EORI number consists of an ISO Country code from an EU Member State  (2 characters) + a maximum of 15 characters",
+    )
 
 
 class Log4Stat(Base):
@@ -2447,7 +2451,7 @@ class BLSession(Base):
     scheduled = Column(TINYINT(1))
     nbShifts = Column(INTEGER(10))
     comments = Column(String(2000))
-    beamLineOperator = Column(String(45))
+    beamLineOperator = Column(String(255))
     bltimeStamp = Column(
         TIMESTAMP, nullable=False, server_default=text("current_timestamp()")
     )
@@ -2477,6 +2481,10 @@ class BLSession(Base):
         TINYINT(1),
         server_default=text("0"),
         comment="The data for the session is archived and no longer available on disk",
+    )
+    riskRating = Column(
+        Enum("Low", "Medium", "High", "Not Permitted"),
+        comment="ERA in user admin system",
     )
 
     BeamCalendar = relationship("BeamCalendar")
@@ -2661,8 +2669,8 @@ class DiffractionPlan(Base):
 class LabContact(Base):
     __tablename__ = "LabContact"
     __table_args__ = (
-        Index("cardNameAndProposal", "cardName", "proposalId", unique=True),
         Index("personAndProposal", "personId", "proposalId", unique=True),
+        Index("cardNameAndProposal", "cardName", "proposalId", unique=True),
     )
 
     labContactId = Column(INTEGER(10), primary_key=True)
@@ -2905,7 +2913,11 @@ class Screen(Base):
     name = Column(String(45))
     proposalId = Column(ForeignKey("Proposal.proposalId"), index=True)
     _global = Column("global", TINYINT(1))
+    containerTypeId = Column(
+        ForeignKey("ContainerType.containerTypeId", onupdate="CASCADE"), index=True
+    )
 
+    ContainerType = relationship("ContainerType")
     Proposal = relationship("Proposal")
 
 
@@ -3192,6 +3204,10 @@ class DewarRegistry(Base):
     purchaseDate = Column(DateTime)
     bltimestamp = Column(
         DateTime, nullable=False, server_default=text("current_timestamp()")
+    )
+    manufacturerSerialNumber = Column(
+        String(15),
+        comment="Dewar serial number as given by manufacturer. Used to be typically 5 or 6 digits, more likely to be 11 alphanumeric chars in future",
     )
 
     LabContact = relationship("LabContact")
@@ -3538,6 +3554,7 @@ class Dewar(Base):
     dewarId = Column(INTEGER(10), primary_key=True)
     shippingId = Column(
         ForeignKey("Shipping.shippingId", ondelete="CASCADE", onupdate="CASCADE"),
+        nullable=False,
         index=True,
     )
     code = Column(String(45), index=True)
@@ -3766,6 +3783,7 @@ class Container(Base):
         index=True,
         comment="The dewar with which the container is currently associated",
     )
+    parentContainerId = Column(ForeignKey("Container.containerId"), index=True)
 
     ContainerRegistry = relationship("ContainerRegistry")
     ContainerType = relationship("ContainerType")
@@ -3776,6 +3794,7 @@ class Container(Base):
     ExperimentType = relationship("ExperimentType")
     Imager = relationship("Imager", primaryjoin="Container.imagerId == Imager.imagerId")
     Person = relationship("Person")
+    parent = relationship("Container", remote_side=[containerId])
     ProcessingPipeline = relationship("ProcessingPipeline")
     Imager1 = relationship(
         "Imager", primaryjoin="Container.requestedImagerId == Imager.imagerId"
@@ -5575,6 +5594,10 @@ class Tomogram(Base):
         server_default=text("current_timestamp()"),
         comment="Creation or last update date/time",
     )
+    globalAlignmentQuality = Column(
+        Float,
+        comment="Quality of fit metric for the alignment of the tilt series corresponding to this tomogram",
+    )
 
     AutoProcProgram = relationship("AutoProcProgram")
     DataCollection = relationship("DataCollection")
@@ -5740,22 +5763,6 @@ class MXMRRunBlob(Base):
     )
 
     MXMRRun = relationship("MXMRRun")
-
-
-class MotionCorrectionDrift(Base):
-    __tablename__ = "MotionCorrectionDrift"
-
-    motionCorrectionDriftId = Column(INTEGER(11), primary_key=True)
-    motionCorrectionId = Column(
-        ForeignKey("MotionCorrection.motionCorrectionId"), index=True
-    )
-    frameNumber = Column(
-        SMALLINT(5), comment="Frame number of the movie these drift values relate to"
-    )
-    deltaX = Column(Float, comment="Drift in x, Units: A")
-    deltaY = Column(Float, comment="Drift in y, Units: A")
-
-    MotionCorrection = relationship("MotionCorrection")
 
 
 class PDBEntryHasAutoProcProgram(Base):
@@ -6173,6 +6180,18 @@ class ParticleClassification(Base):
         server_default=text("0"),
         comment="Indicates whether the class is selected for further processing or not",
     )
+    bFactorFitIntercept = Column(
+        Float,
+        comment="Intercept of quadratic fit to refinement resolution against the logarithm of the number of particles",
+    )
+    bFactorFitLinear = Column(
+        Float,
+        comment="Linear coefficient of quadratic fit to refinement resolution against the logarithm of the number of particles, equal to half of the B factor",
+    )
+    bFactorFitQuadratic = Column(
+        Float,
+        comment="Quadratic coefficient of quadratic fit to refinement resolution against the logarithm of the number of particles",
+    )
 
     ParticleClassificationGroup = relationship("ParticleClassificationGroup")
 
@@ -6207,6 +6226,32 @@ class ScreeningStrategyWedge(Base):
     wavelength = Column(Float(asdecimal=True))
 
     ScreeningStrategy = relationship("ScreeningStrategy")
+
+
+class BFactorFit(Base):
+    __tablename__ = "BFactorFit"
+    __table_args__ = {
+        "comment": "CryoEM reconstruction resolution as a function of the number of particles for the creation of a Rosenthal-Henderson plot and the calculation of B-factors"
+    }
+
+    bFactorFitId = Column(INTEGER(11), primary_key=True)
+    particleClassificationId = Column(
+        ForeignKey("ParticleClassification.particleClassificationId"),
+        nullable=False,
+        index=True,
+    )
+    resolution = Column(
+        Float, comment="Resolution of a refined map using a given number of particles"
+    )
+    numberOfParticles = Column(
+        INTEGER(10), comment="Number of particles used in refinement"
+    )
+    particleBatchSize = Column(
+        INTEGER(10),
+        comment="Number of particles in the batch that the B-factor analysis was performed on",
+    )
+
+    ParticleClassification = relationship("ParticleClassification")
 
 
 t_ParticleClassification_has_CryoemInitialModel = Table(
