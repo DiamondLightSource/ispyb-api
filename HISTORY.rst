@@ -4,8 +4,14 @@ History
 
 Unreleased / main
 -------------------
+
+
+9.0.0 (2023-12-06)
+-------------------
 * Replace use of ``procrunner`` with ``subprocess``
-* Remove method ``insert_motion_correction_drift`` and related dictionary in the ``EMAcquisition`` class, as well as corresponding test
+* Remove method ``insert_motion_correction_drift`` and related dictionary in the ``EMAcquisition`` class
+* Update SQLAlchemy ORM models for ``ispyb-database`` v3.0.0
+* Rename ``pixelsPerMicron`` to ``micronsPerPixel`` in dicts and ``retrieve_dc_grid`` result-set
 
 8.0.1 (2023-06-07)
 -------------------
