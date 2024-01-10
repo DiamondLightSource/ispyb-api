@@ -5,6 +5,11 @@ History
 Unreleased / main
 -------------------
 
+10.0.0 (2024-01-10)
+-------------------
+* Update SQLAlchemy ORM models for ispyb-database v4.0.1. This drops some
+  previously mapped tables and columns, so is a breaking change.
+* Update ``MXAcquisition`` class to use the stored procedure ``retrieve_grid_info_for_dc_v2``.
 
 9.0.0 (2023-12-06)
 -------------------
