@@ -1,8 +1,7 @@
-__schema_version__ = "3.0.0"
+__schema_version__ = "4.0.1"
 # coding: utf-8
 from sqlalchemy import (
     BINARY,
-    DECIMAL,
     TIMESTAMP,
     Column,
     Computed,
@@ -20,7 +19,6 @@ from sqlalchemy import (
     text,
 )
 from sqlalchemy.dialects.mysql import (
-    BIGINT,
     INTEGER,
     LONGBLOB,
     LONGTEXT,
@@ -35,15 +33,6 @@ from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 metadata = Base.metadata
-
-
-class Additive(Base):
-    __tablename__ = "Additive"
-
-    additiveId = Column(INTEGER(11), primary_key=True)
-    name = Column(String(45))
-    additiveType = Column(String(45))
-    comments = Column(String(512))
 
 
 class AdminActivity(Base):
@@ -278,16 +267,6 @@ class DataAcquisition(Base):
     detectorDistance = Column(String(45))
 
 
-class DataReductionStatus(Base):
-    __tablename__ = "DataReductionStatus"
-
-    dataReductionStatusId = Column(INTEGER(11), primary_key=True)
-    dataCollectionId = Column(INTEGER(11), nullable=False)
-    status = Column(String(15))
-    filename = Column(String(255))
-    message = Column(String(255))
-
-
 class Detector(Base):
     __tablename__ = "Detector"
     __table_args__ = (
@@ -364,19 +343,6 @@ class DewarLocationList(Base):
     )
 
 
-class EMMicroscope(Base):
-    __tablename__ = "EMMicroscope"
-
-    emMicroscopeId = Column(INTEGER(11), primary_key=True)
-    instrumentName = Column(String(100), nullable=False)
-    voltage = Column(Float)
-    CS = Column(Float)
-    detectorPixelSize = Column(Float)
-    C2aperture = Column(Float)
-    ObjAperture = Column(Float)
-    C2lens = Column(Float)
-
-
 class EventType(Base):
     __tablename__ = "EventType"
     __table_args__ = {
@@ -385,24 +351,6 @@ class EventType(Base):
 
     eventTypeId = Column(INTEGER(11), primary_key=True)
     name = Column(String(30), nullable=False, unique=True)
-
-
-class Experiment(Base):
-    __tablename__ = "Experiment"
-
-    experimentId = Column(INTEGER(11), primary_key=True)
-    proposalId = Column(INTEGER(10), nullable=False)
-    name = Column(String(255))
-    creationDate = Column(DateTime)
-    comments = Column(String(512))
-    experimentType = Column(String(128))
-    sourceFilePath = Column(String(256))
-    dataAcquisitionFilePath = Column(
-        String(256),
-        comment="The file path pointing to the data acquisition. Eventually it may be a compressed file with all the files or just the folder",
-    )
-    status = Column(String(45))
-    sessionId = Column(INTEGER(10))
 
 
 class ExperimentType(Base):
@@ -415,22 +363,6 @@ class ExperimentType(Base):
     active = Column(
         TINYINT(1), server_default=text("1"), comment="1=active, 0=inactive"
     )
-
-
-class Frame(Base):
-    __tablename__ = "Frame"
-
-    frameId = Column(INTEGER(10), primary_key=True)
-    FRAMESETID = Column(INTEGER(11))
-    filePath = Column(String(255))
-    comments = Column(String(45))
-
-
-class FrameList(Base):
-    __tablename__ = "FrameList"
-
-    frameListId = Column(INTEGER(10), primary_key=True)
-    comments = Column(INTEGER(10))
 
 
 class GeometryClassname(Base):
@@ -491,13 +423,6 @@ class InspectionType(Base):
 
     inspectionTypeId = Column(INTEGER(11), primary_key=True)
     name = Column(String(45))
-
-
-class InstructionSet(Base):
-    __tablename__ = "InstructionSet"
-
-    instructionSetId = Column(INTEGER(10), primary_key=True)
-    type = Column(String(50))
 
 
 class IspybCrystalClass(Base):
@@ -574,50 +499,6 @@ class Laboratory(Base):
     )
 
 
-class Log4Stat(Base):
-    __tablename__ = "Log4Stat"
-
-    id = Column(INTEGER(11), primary_key=True)
-    priority = Column(String(15))
-    LOG4JTIMESTAMP = Column(DateTime)
-    msg = Column(String(255))
-    detail = Column(String(255))
-    value = Column(String(255))
-    timestamp = Column(DateTime)
-
-
-class MeasurementUnit(Base):
-    __tablename__ = "MeasurementUnit"
-
-    measurementUnitId = Column(INTEGER(10), primary_key=True)
-    name = Column(String(45))
-    unitType = Column(String(45))
-
-
-class Model(Base):
-    __tablename__ = "Model"
-
-    modelId = Column(INTEGER(10), primary_key=True)
-    name = Column(String(45))
-    pdbFile = Column(String(255))
-    fitFile = Column(String(255))
-    firFile = Column(String(255))
-    logFile = Column(String(255))
-    rFactor = Column(String(45))
-    chiSqrt = Column(String(45))
-    volume = Column(String(45))
-    rg = Column(String(45))
-    dMax = Column(String(45))
-
-
-class ModelList(Base):
-    __tablename__ = "ModelList"
-
-    modelListId = Column(INTEGER(10), primary_key=True)
-    nsdFilePath = Column(String(255))
-    chi2RgFilePath = Column(String(255))
-
-
 class MotorPosition(Base):
     __tablename__ = "MotorPosition"
 
@@ -653,14 +534,6 @@ class PDB(Base):
     source = Column(String(30), comment="Could be e.g. AlphaFold or RoseTTAFold")
 
 
-class PHPSession(Base):
-    __tablename__ = "PHPSession"
-
-    id = Column(String(50), primary_key=True)
-    accessDate = Column(DateTime)
-    data = Column(String(4000))
-
-
 class Permission(Base):
     __tablename__ = "Permission"
 
@@ -694,26 +567,6 @@ class PhasingProgramRun(Base):
     phasingEndTime = Column(DateTime, comment="Processing end time")
     phasingEnvironment = Column(String(255), comment="Cpus, Nodes,...")
     recordTimeStamp = Column(DateTime, server_default=text("current_timestamp()"))
-
-
-class PlateGroup(Base):
-    __tablename__ = "PlateGroup"
-
-    plateGroupId = Column(INTEGER(10), primary_key=True)
-    name = Column(String(255))
-    storageTemperature = Column(String(45))
-
-
-class PlateType(Base):
-    __tablename__ = "PlateType"
-
-    PlateTypeId = Column(INTEGER(10), primary_key=True)
-    name = Column(String(45))
-    description = Column(String(45))
-    shape = Column(String(45))
-    rowCount = Column(INTEGER(11))
-    columnCount = Column(INTEGER(11))
-    experimentId = Column(INTEGER(10), index=True)
 
 
 class Position(Base):
@@ -771,80 +624,6 @@ class PurificationColumn(Base):
     active = Column(
         TINYINT(1), server_default=text("1"), comment="1=active, 0=inactive"
     )
-
-
-class Run(Base):
-    __tablename__ = "Run"
-
-    runId = Column(INTEGER(10), primary_key=True)
-    timePerFrame = Column(String(45))
-    timeStart = Column(String(45))
-    timeEnd = Column(String(45))
-    storageTemperature = Column(String(45))
-    exposureTemperature = Column(String(45))
-    spectrophotometer = Column(String(45))
-    energy = Column(String(45))
-    creationDate = Column(DateTime)
-    frameAverage = Column(String(45))
-    frameCount = Column(String(45))
-    transmission = Column(String(45))
-    beamCenterX = Column(String(45))
-    beamCenterY = Column(String(45))
-    pixelSizeX = Column(String(45))
-    pixelSizeY = Column(String(45))
-    radiationRelative = Column(String(45))
-    radiationAbsolute = Column(String(45))
-    normalization = Column(String(45))
-
-
-t_SAFETYREQUEST = Table(
-    "SAFETYREQUEST",
-    metadata,
-    Column("SAFETYREQUESTID", DECIMAL(10, 0)),
-    Column("XMLDOCUMENTID", DECIMAL(10, 0)),
-    Column("PROTEINID", DECIMAL(10, 0)),
-    Column("PROJECTCODE", String(45)),
-    Column("SUBMISSIONDATE", DateTime),
-    Column("RESPONSE", DECIMAL(3, 0)),
-    Column("REPONSEDATE", DateTime),
-    Column("RESPONSEDETAILS", String(255)),
-)
-
-
-class SAMPLECELL(Base):
-    __tablename__ = "SAMPLECELL"
-
-    SAMPLECELLID = Column(INTEGER(11), primary_key=True)
-    SAMPLEEXPOSUREUNITID = Column(INTEGER(11))
-    ID = Column(String(45))
-    NAME = Column(String(45))
-    DIAMETER = Column(String(45))
-    MATERIAL = Column(String(45))
-
-
-class SAMPLEEXPOSUREUNIT(Base):
-    __tablename__ = "SAMPLEEXPOSUREUNIT"
-
-    SAMPLEEXPOSUREUNITID = Column(INTEGER(11), primary_key=True)
-    ID = Column(String(45))
-    PATHLENGTH = Column(String(45))
-    VOLUME = Column(String(45))
-
-
-class SAXSDATACOLLECTIONGROUP(Base):
-    __tablename__ = "SAXSDATACOLLECTIONGROUP"
-
-    DATACOLLECTIONGROUPID = Column(INTEGER(11), primary_key=True)
-    DEFAULTDATAACQUISITIONID = Column(INTEGER(11))
-    SAXSDATACOLLECTIONARRAYID = Column(INTEGER(11))
-
-
-class SafetyLevel(Base):
-    __tablename__ = "SafetyLevel"
-
-    safetyLevelId = Column(INTEGER(10), primary_key=True)
-    code = Column(String(45))
-    description = Column(String(45))
 
 
 class ScanParametersService(Base):
@@ -909,245 +688,6 @@ class UserGroup(Base):
     name = Column(String(31), nullable=False, unique=True)
 
 
-class Workflow(Base):
-    __tablename__ = "Workflow"
-
-    workflowId = Column(
-        INTEGER(11), primary_key=True, comment="Primary key (auto-incremented)"
-    )
-    workflowTitle = Column(String(255))
-    workflowType = Column(
-        Enum(
-            "Undefined",
-            "BioSAXS Post Processing",
-            "EnhancedCharacterisation",
-            "LineScan",
-            "MeshScan",
-            "Dehydration",
-            "KappaReorientation",
-            "BurnStrategy",
-            "XrayCentering",
-            "DiffractionTomography",
-            "TroubleShooting",
-            "VisualReorientation",
-            "HelicalCharacterisation",
-            "GroupedProcessing",
-            "MXPressE",
-            "MXPressO",
-            "MXPressL",
-            "MXScore",
-            "MXPressI",
-            "MXPressM",
-            "MXPressA",
-        )
-    )
-    workflowTypeId = Column(INTEGER(11))
-    comments = Column(String(1024))
-    status = Column(String(255))
-    resultFilePath = Column(String(255))
-    logFilePath = Column(String(255))
-    recordTimeStamp = Column(DateTime, comment="Creation or last update date/time")
-    workflowDescriptionFullPath = Column(
-        String(255), comment="Full file path to a json description of the workflow"
-    )
-
-
-class WorkflowType(Base):
-    __tablename__ = "WorkflowType"
-
-    workflowTypeId = Column(INTEGER(11), primary_key=True)
-    workflowTypeName = Column(String(45))
-    comments = Column(String(2048))
-    recordTimeStamp = Column(TIMESTAMP)
-
-
-t_v_Log4Stat = Table(
-    "v_Log4Stat",
-    metadata,
-    Column("id", INTEGER(11), server_default=text("'0'")),
-    Column("priority", String(15)),
-    Column("timestamp", DateTime),
-    Column("msg", String(255)),
-    Column("detail", String(255)),
-    Column("value", String(255)),
-)
-
-
-t_v_dewar = Table(
-    "v_dewar",
-    metadata,
-    Column("proposalId", INTEGER(10), server_default=text("'0'")),
-    Column("shippingId", INTEGER(10), server_default=text("'0'")),
-    Column("shippingName", String(45)),
-    Column("dewarId", INTEGER(10), server_default=text("'0'")),
-    Column("dewarName", String(45)),
-    Column("dewarStatus", String(45)),
-    Column("proposalCode", String(45)),
-    Column("proposalNumber", String(45)),
-    Column("creationDate", DateTime),
-    Column("shippingType", String(45)),
-    Column("barCode", String(45)),
-    Column("shippingStatus", String(45)),
-    Column("beamLineName", String(45)),
-    Column("nbEvents", BIGINT(21), server_default=text("'0'")),
-    Column("storesin", BIGINT(21), server_default=text("'0'")),
-    Column("nbSamples", BIGINT(21), server_default=text("'0'")),
-)
-
-
-t_v_dewarBeamline = Table(
-    "v_dewarBeamline",
-    metadata,
-    Column("beamLineName", String(45)),
-    Column("COUNT(*)", BIGINT(21), server_default=text("'0'")),
-)
-
-
-t_v_dewarBeamlineByWeek = Table(
-    "v_dewarBeamlineByWeek",
-    metadata,
-    Column("Week", String(23)),
-    Column("ID14", BIGINT(21), server_default=text("'0'")),
-    Column("ID23", BIGINT(21), server_default=text("'0'")),
-    Column("ID29", BIGINT(21), server_default=text("'0'")),
-    Column("BM14", BIGINT(21), server_default=text("'0'")),
-)
-
-
-t_v_dewarByWeek = Table(
-    "v_dewarByWeek",
-    metadata,
-    Column("Week", String(23)),
-    Column("Dewars Tracked", BIGINT(21), server_default=text("'0'")),
-    Column("Dewars Non-Tracked", BIGINT(21), server_default=text("'0'")),
-)
-
-
-t_v_dewarByWeekTotal = Table(
-    "v_dewarByWeekTotal",
-    metadata,
-    Column("Week", String(23)),
-    Column("Dewars Tracked", BIGINT(21), server_default=text("'0'")),
-    Column("Dewars Non-Tracked", BIGINT(21), server_default=text("'0'")),
-    Column("Total", BIGINT(21), server_default=text("'0'")),
-)
-
-
-t_v_dewarList = Table(
-    "v_dewarList",
-    metadata,
-    Column("proposal", String(90)),
-    Column("shippingName", String(45)),
-    Column("dewarName", String(45)),
-    Column("barCode", String(45)),
-    Column("creationDate", String(10)),
-    Column("shippingType", String(45)),
-    Column("nbEvents", BIGINT(21), server_default=text("'0'")),
-    Column("dewarStatus", String(45)),
-    Column("shippingStatus", String(45)),
-    Column("nbSamples", BIGINT(21), server_default=text("'0'")),
-)
-
-
-t_v_dewarProposalCode = Table(
-    "v_dewarProposalCode",
-    metadata,
-    Column("proposalCode", String(45)),
-    Column("COUNT(*)", BIGINT(21), server_default=text("'0'")),
-)
-
-
-t_v_dewarProposalCodeByWeek = Table(
-    "v_dewarProposalCodeByWeek",
-    metadata,
-    Column("Week", String(23)),
-    Column("MX", BIGINT(21), server_default=text("'0'")),
-    Column("FX", BIGINT(21), server_default=text("'0'")),
-    Column("BM14U", BIGINT(21), server_default=text("'0'")),
-    Column("BM161", BIGINT(21), server_default=text("'0'")),
-    Column("BM162", BIGINT(21), server_default=text("'0'")),
-    Column("Others", BIGINT(21), server_default=text("'0'")),
-)
-
-
-t_v_hour = Table("v_hour", metadata, Column("num", String(18)))
-
-
-t_v_logonByHour = Table(
-    "v_logonByHour",
-    metadata,
-    Column("Hour", String(7)),
-    Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
-    Column("Total logins", BIGINT(22), server_default=text("'0'")),
-)
-
-
-t_v_logonByHour2 = Table(
-    "v_logonByHour2",
-    metadata,
-    Column("Hour", String(7)),
-    Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
-    Column("Total logins", BIGINT(22), server_default=text("'0'")),
-)
-
-
-t_v_logonByMonthDay = Table(
-    "v_logonByMonthDay",
-    metadata,
-    Column("Day", String(5)),
-    Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
-    Column("Total logins", BIGINT(22), server_default=text("'0'")),
-)
-
-
-t_v_logonByMonthDay2 = Table(
-    "v_logonByMonthDay2",
-    metadata,
-    Column("Day", String(5)),
-    Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
-    Column("Total logins", BIGINT(22), server_default=text("'0'")),
-)
-
-
-t_v_logonByWeek = Table(
-    "v_logonByWeek",
-    metadata,
-    Column("Week", String(23)),
-    Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
-    Column("Total logins", BIGINT(22), server_default=text("'0'")),
-)
-
-
-t_v_logonByWeek2 = Table(
-    "v_logonByWeek2",
-    metadata,
-    Column("Week", String(23)),
-    Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
-    Column("Total logins", BIGINT(22), server_default=text("'0'")),
-)
-
-
-t_v_logonByWeekDay = Table(
-    "v_logonByWeekDay",
-    metadata,
-    Column("Day", String(64)),
-    Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
-    Column("Total logins", BIGINT(22), server_default=text("'0'")),
-)
-
-
-t_v_logonByWeekDay2 = Table(
-    "v_logonByWeekDay2",
-    metadata,
-    Column("Day", String(64)),
-    Column("Distinct logins", BIGINT(21), server_default=text("'0'")),
-    Column("Total logins", BIGINT(22), server_default=text("'0'")),
-)
-
-
-t_v_monthDay = Table("v_monthDay", metadata, Column("num", String(10)))
-
-
 class VRun(Base):
     __tablename__ = "v_run"
     __table_args__ = (Index("v_run_idx1", "startDate", "endDate"),)
@@ -1156,70 +696,6 @@ class VRun(Base):
     run = Column(String(7), nullable=False, server_default=text("''"))
     startDate = Column(DateTime)
     endDate = Column(DateTime)
-
-
-t_v_sample = Table(
-    "v_sample",
-    metadata,
-    Column("proposalId", INTEGER(10), server_default=text("'0'")),
-    Column("shippingId", INTEGER(10), server_default=text("'0'")),
-    Column("dewarId", INTEGER(10), server_default=text("'0'")),
-    Column("containerId", INTEGER(10), server_default=text("'0'")),
-    Column("blSampleId", INTEGER(10), server_default=text("'0'")),
-    Column("proposalCode", String(45)),
-    Column("proposalNumber", String(45)),
-    Column("creationDate", DateTime),
-    Column("shippingType", String(45)),
-    Column("barCode", String(45)),
-    Column("shippingStatus", String(45)),
-)
-
-
-t_v_sampleByWeek = Table(
-    "v_sampleByWeek",
-    metadata,
-    Column("Week", String(23)),
-    Column("Samples", BIGINT(21)),
-)
-
-
-t_v_week = Table("v_week", metadata, Column("num", String(7)))
-
-
-t_v_weekDay = Table("v_weekDay", metadata, Column("day", String(10)))
-
-
-class AbInitioModel(Base):
-    __tablename__ = "AbInitioModel"
-
-    abInitioModelId = Column(INTEGER(10), primary_key=True)
-    modelListId = Column(
-        ForeignKey("ModelList.modelListId", ondelete="CASCADE", onupdate="CASCADE"),
-        index=True,
-    )
-    averagedModelId = Column(
-        ForeignKey("Model.modelId", ondelete="CASCADE", onupdate="CASCADE"), index=True
-    )
-    rapidShapeDeterminationModelId = Column(
-        ForeignKey("Model.modelId", ondelete="CASCADE", onupdate="CASCADE"), index=True
-    )
-    shapeDeterminationModelId = Column(
-        ForeignKey("Model.modelId", ondelete="CASCADE", onupdate="CASCADE"), index=True
-    )
-    comments = Column(String(512))
-    creationTime = Column(DateTime)
-
-    Model = relationship(
-        "Model", primaryjoin="AbInitioModel.averagedModelId == Model.modelId"
-    )
-    ModelList = relationship("ModelList")
-    Model1 = relationship(
-        "Model",
-        primaryjoin="AbInitioModel.rapidShapeDeterminationModelId == Model.modelId",
-    )
-    Model2 = relationship(
-        "Model", primaryjoin="AbInitioModel.shapeDeterminationModelId == Model.modelId"
-    )
 
 
 class AutoProcScaling(Base):
@@ -1377,84 +853,6 @@ class BeamLineSetup(Base):
     Detector = relationship("Detector")
 
 
-class Buffer(Base):
-    __tablename__ = "Buffer"
-
-    bufferId = Column(INTEGER(10), primary_key=True)
-    BLSESSIONID = Column(INTEGER(11))
-    safetyLevelId = Column(
-        ForeignKey("SafetyLevel.safetyLevelId", ondelete="CASCADE", onupdate="CASCADE"),
-        index=True,
-    )
-    name = Column(String(45))
-    acronym = Column(String(45))
-    pH = Column(String(45))
-    composition = Column(String(45))
-    comments = Column(String(512))
-    proposalId = Column(INTEGER(10), nullable=False, server_default=text("-1"))
-
-    SafetyLevel = relationship("SafetyLevel")
-
-
-class FrameSet(Base):
-    __tablename__ = "FrameSet"
-
-    frameSetId = Column(INTEGER(10), primary_key=True)
-    runId = Column(
-        ForeignKey("Run.runId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-    )
-    FILEPATH = Column(String(255))
-    INTERNALPATH = Column(String(255))
-    frameListId = Column(
-        ForeignKey("FrameList.frameListId", ondelete="CASCADE", onupdate="CASCADE"),
-        index=True,
-    )
-    detectorId = Column(INTEGER(10))
-    detectorDistance = Column(String(45))
-
-    FrameList = relationship("FrameList")
-    Run = relationship("Run")
-
-
-class FrameToList(Base):
-    __tablename__ = "FrameToList"
-
-    frameToListId = Column(INTEGER(10), primary_key=True)
-    frameListId = Column(
-        ForeignKey("FrameList.frameListId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-    )
-    frameId = Column(
-        ForeignKey("Frame.frameId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-    )
-
-    Frame = relationship("Frame")
-    FrameList = relationship("FrameList")
-
-
-class Instruction(Base):
-    __tablename__ = "Instruction"
-
-    instructionId = Column(INTEGER(10), primary_key=True)
-    instructionSetId = Column(
-        ForeignKey(
-            "InstructionSet.instructionSetId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        nullable=False,
-        index=True,
-    )
-    INSTRUCTIONORDER = Column(INTEGER(11))
-    comments = Column(String(255))
-    order = Column(INTEGER(11), nullable=False)
-
-    InstructionSet = relationship("InstructionSet")
-
-
 class LDAPSearchBase(Base):
     __tablename__ = "LDAPSearchBase"
     __table_args__ = {
@@ -1478,45 +876,6 @@ class LDAPSearchBase(Base):
     )
 
     LDAPSearchParameters = relationship("LDAPSearchParameters")
-
-
-class Macromolecule(Base):
-    __tablename__ = "Macromolecule"
-
-    macromoleculeId = Column(INTEGER(11), primary_key=True)
-    proposalId = Column(INTEGER(10))
-    safetyLevelId = Column(
-        ForeignKey("SafetyLevel.safetyLevelId", ondelete="CASCADE", onupdate="CASCADE"),
-        index=True,
-    )
-    name = Column(String(45))
-    acronym = Column(String(45))
-    molecularMass = Column(String(45))
-    extintionCoefficient = Column(String(45))
-    sequence = Column(String(1000))
-    creationDate = Column(DateTime)
-    comments = Column(String(1024))
-
-    SafetyLevel = relationship("SafetyLevel")
-
-
-class ModelToList(Base):
-    __tablename__ = "ModelToList"
-
-    modelToListId = Column(INTEGER(10), primary_key=True)
-    modelId = Column(
-        ForeignKey("Model.modelId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-    )
-    modelListId = Column(
-        ForeignKey("ModelList.modelListId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-    )
-
-    Model = relationship("Model")
-    ModelList = relationship("ModelList")
 
 
 class Person(Base):
@@ -1597,57 +956,6 @@ class ProcessingPipeline(Base):
     )
 
     ProcessingPipelineCategory = relationship("ProcessingPipelineCategory")
-
-
-class SamplePlate(Base):
-    __tablename__ = "SamplePlate"
-
-    samplePlateId = Column(INTEGER(10), primary_key=True)
-    BLSESSIONID = Column(INTEGER(11))
-    plateGroupId = Column(
-        ForeignKey("PlateGroup.plateGroupId", ondelete="CASCADE", onupdate="CASCADE"),
-        index=True,
-    )
-    plateTypeId = Column(
-        ForeignKey("PlateType.PlateTypeId", ondelete="CASCADE", onupdate="CASCADE"),
-        index=True,
-    )
-    instructionSetId = Column(
-        ForeignKey(
-            "InstructionSet.instructionSetId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        index=True,
-    )
-    boxId = Column(INTEGER(10))
-    name = Column(String(45))
-    slotPositionRow = Column(String(45))
-    slotPositionColumn = Column(String(45))
-    storageTemperature = Column(String(45))
-    experimentId = Column(
-        ForeignKey("Experiment.experimentId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-    )
-
-    Experiment = relationship("Experiment")
-    InstructionSet = relationship("InstructionSet")
-    PlateGroup = relationship("PlateGroup")
-    PlateType = relationship("PlateType")
-
-
-class SaxsDataCollection(Base):
-    __tablename__ = "SaxsDataCollection"
-
-    dataCollectionId = Column(INTEGER(10), primary_key=True)
-    BLSESSIONID = Column(INTEGER(11))
-    experimentId = Column(
-        ForeignKey("Experiment.experimentId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-    )
-    comments = Column(String(5120))
-
-    Experiment = relationship("Experiment")
 
 
 class ScheduleComponent(Base):
@@ -1743,44 +1051,6 @@ t_UserGroup_has_Permission = Table(
 )
 
 
-class WorkflowStep(Base):
-    __tablename__ = "WorkflowStep"
-
-    workflowStepId = Column(INTEGER(11), primary_key=True)
-    workflowId = Column(ForeignKey("Workflow.workflowId"), nullable=False, index=True)
-    type = Column(String(45))
-    status = Column(String(45))
-    folderPath = Column(String(1024))
-    imageResultFilePath = Column(String(1024))
-    htmlResultFilePath = Column(String(1024))
-    resultFilePath = Column(String(1024))
-    comments = Column(String(2048))
-    crystalSizeX = Column(String(45))
-    crystalSizeY = Column(String(45))
-    crystalSizeZ = Column(String(45))
-    maxDozorScore = Column(String(45))
-    recordTimeStamp = Column(TIMESTAMP)
-
-    Workflow = relationship("Workflow")
-
-
-class Assembly(Base):
-    __tablename__ = "Assembly"
-
-    assemblyId = Column(INTEGER(10), primary_key=True)
-    macromoleculeId = Column(
-        ForeignKey(
-            "Macromolecule.macromoleculeId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        nullable=False,
-        index=True,
-    )
-    creationDate = Column(DateTime)
-    comments = Column(String(255))
-
-    Macromolecule = relationship("Macromolecule")
-
-
 class AutoProcScalingStatistics(Base):
     __tablename__ = "AutoProcScalingStatistics"
     __table_args__ = (
@@ -1855,33 +1125,6 @@ class BFSubcomponent(Base):
     BF_component = relationship("BFComponent")
 
 
-class BufferHasAdditive(Base):
-    __tablename__ = "BufferHasAdditive"
-
-    bufferHasAdditiveId = Column(INTEGER(10), primary_key=True)
-    bufferId = Column(
-        ForeignKey("Buffer.bufferId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-    )
-    additiveId = Column(
-        ForeignKey("Additive.additiveId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-    )
-    measurementUnitId = Column(
-        ForeignKey(
-            "MeasurementUnit.measurementUnitId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        index=True,
-    )
-    quantity = Column(String(45))
-
-    Additive = relationship("Additive")
-    Buffer = relationship("Buffer")
-    MeasurementUnit = relationship("MeasurementUnit")
-
-
 class ContainerReport(Base):
     __tablename__ = "ContainerReport"
 
@@ -1898,25 +1141,6 @@ class ContainerReport(Base):
 
     ContainerRegistry = relationship("ContainerRegistry")
     Person = relationship("Person")
-
-
-class MacromoleculeRegion(Base):
-    __tablename__ = "MacromoleculeRegion"
-
-    macromoleculeRegionId = Column(INTEGER(10), primary_key=True)
-    macromoleculeId = Column(
-        ForeignKey(
-            "Macromolecule.macromoleculeId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        nullable=False,
-        index=True,
-    )
-    regionType = Column(String(45))
-    id = Column(String(45))
-    count = Column(String(45))
-    sequence = Column(String(45))
-
-    Macromolecule = relationship("Macromolecule")
 
 
 class ModelBuilding(Base):
@@ -2063,36 +1287,6 @@ class PhasingHasScaling(Base):
     PhasingAnalysis = relationship("PhasingAnalysis")
 
 
-class Pod(Base):
-    __tablename__ = "Pod"
-    __table_args__ = {"comment": "Status tracker for k8s pods launched from SynchWeb"}
-
-    podId = Column(INTEGER(10), primary_key=True)
-    personId = Column(
-        ForeignKey("Person.personId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-        comment="Pod owner defined by the logged in SynchWeb user who requested the pod start up",
-    )
-    filePath = Column(
-        String(255), comment="File or directory path to mount into the Pod if required"
-    )
-    app = Column(Enum("MAXIV HDF5 Viewer", "H5Web", "JNB"), nullable=False)
-    podName = Column(String(255))
-    status = Column(String(25))
-    ip = Column(String(15))
-    message = Column(
-        Text,
-        comment="Generic text field intended for storing error messages related to status field",
-    )
-    created = Column(
-        TIMESTAMP, nullable=False, server_default=text("current_timestamp()")
-    )
-    shutdown = Column(TIMESTAMP)
-
-    Person = relationship("Person")
-
-
 class PreparePhasingData(Base):
     __tablename__ = "PreparePhasingData"
 
@@ -2177,107 +1371,6 @@ class Proposal(Base):
     Person = relationship("Person")
 
 
-class SamplePlatePosition(Base):
-    __tablename__ = "SamplePlatePosition"
-
-    samplePlatePositionId = Column(INTEGER(10), primary_key=True)
-    samplePlateId = Column(
-        ForeignKey("SamplePlate.samplePlateId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-    )
-    rowNumber = Column(INTEGER(11))
-    columnNumber = Column(INTEGER(11))
-    volume = Column(String(45))
-
-    SamplePlate = relationship("SamplePlate")
-
-
-class StockSolution(Base):
-    __tablename__ = "StockSolution"
-
-    stockSolutionId = Column(INTEGER(10), primary_key=True)
-    BLSESSIONID = Column(INTEGER(11))
-    bufferId = Column(
-        ForeignKey("Buffer.bufferId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-    )
-    macromoleculeId = Column(
-        ForeignKey(
-            "Macromolecule.macromoleculeId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        index=True,
-    )
-    instructionSetId = Column(
-        ForeignKey(
-            "InstructionSet.instructionSetId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        index=True,
-    )
-    boxId = Column(INTEGER(10))
-    name = Column(String(45))
-    storageTemperature = Column(String(55))
-    volume = Column(String(55))
-    concentration = Column(String(55))
-    comments = Column(String(255))
-    proposalId = Column(INTEGER(10), nullable=False, server_default=text("-1"))
-
-    Buffer = relationship("Buffer")
-    InstructionSet = relationship("InstructionSet")
-    Macromolecule = relationship("Macromolecule")
-
-
-class Stoichiometry(Base):
-    __tablename__ = "Stoichiometry"
-
-    stoichiometryId = Column(INTEGER(10), primary_key=True)
-    hostMacromoleculeId = Column(
-        ForeignKey(
-            "Macromolecule.macromoleculeId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        nullable=False,
-        index=True,
-    )
-    macromoleculeId = Column(
-        ForeignKey(
-            "Macromolecule.macromoleculeId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        nullable=False,
-        index=True,
-    )
-    ratio = Column(String(45))
-
-    Macromolecule = relationship(
-        "Macromolecule",
-        primaryjoin="Stoichiometry.hostMacromoleculeId == Macromolecule.macromoleculeId",
-    )
-    Macromolecule1 = relationship(
-        "Macromolecule",
-        primaryjoin="Stoichiometry.macromoleculeId == Macromolecule.macromoleculeId",
-    )
-
-
-class Structure(Base):
-    __tablename__ = "Structure"
-
-    structureId = Column(INTEGER(10), primary_key=True)
-    macromoleculeId = Column(
-        ForeignKey(
-            "Macromolecule.macromoleculeId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        nullable=False,
-        index=True,
-    )
-    PDB = Column(String(45))
-    structureType = Column(String(45))
-    fromResiduesBases = Column(String(45))
-    toResiduesBases = Column(String(45))
-    sequence = Column(String(45))
-
-    Macromolecule = relationship("Macromolecule")
-
-
 class SubstructureDetermination(Base):
     __tablename__ = "SubstructureDetermination"
 
@@ -2320,45 +1413,6 @@ class SubstructureDetermination(Base):
     SpaceGroup = relationship("SpaceGroup")
 
 
-class Subtraction(Base):
-    __tablename__ = "Subtraction"
-
-    subtractionId = Column(INTEGER(10), primary_key=True)
-    dataCollectionId = Column(
-        ForeignKey(
-            "SaxsDataCollection.dataCollectionId",
-            ondelete="CASCADE",
-            onupdate="CASCADE",
-        ),
-        nullable=False,
-        index=True,
-    )
-    rg = Column(String(45))
-    rgStdev = Column(String(45))
-    I0 = Column(String(45))
-    I0Stdev = Column(String(45))
-    firstPointUsed = Column(String(45))
-    lastPointUsed = Column(String(45))
-    quality = Column(String(45))
-    isagregated = Column(String(45))
-    concentration = Column(String(45))
-    gnomFilePath = Column(String(255))
-    rgGuinier = Column(String(45))
-    rgGnom = Column(String(45))
-    dmax = Column(String(45))
-    total = Column(String(45))
-    volume = Column(String(45))
-    creationTime = Column(DateTime)
-    kratkyFilePath = Column(String(255))
-    scatteringFilePath = Column(String(255))
-    guinierFilePath = Column(String(255))
-    SUBTRACTEDFILEPATH = Column(String(255))
-    gnomFilePathOutput = Column(String(255))
-    substractedFilePath = Column(String(255))
-
-    SaxsDataCollection = relationship("SaxsDataCollection")
-
-
 t_UserGroup_has_Person = Table(
     "UserGroup_has_Person",
     metadata,
@@ -2376,27 +1430,6 @@ t_UserGroup_has_Person = Table(
         index=True,
     ),
 )
-
-
-class AssemblyHasMacromolecule(Base):
-    __tablename__ = "AssemblyHasMacromolecule"
-
-    AssemblyHasMacromoleculeId = Column(INTEGER(10), primary_key=True)
-    assemblyId = Column(
-        ForeignKey("Assembly.assemblyId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-    )
-    macromoleculeId = Column(
-        ForeignKey(
-            "Macromolecule.macromoleculeId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        nullable=False,
-        index=True,
-    )
-
-    Assembly = relationship("Assembly")
-    Macromolecule = relationship("Macromolecule")
 
 
 class BFSubcomponentBeamline(Base):
@@ -2444,7 +1477,6 @@ class BLSession(Base):
         ),
         index=True,
     )
-    projectCode = Column(String(45))
     startDate = Column(DateTime, index=True)
     endDate = Column(DateTime, index=True)
     beamLineName = Column(String(45), index=True)
@@ -2460,21 +1492,11 @@ class BLSession(Base):
         TINYINT(1),
         comment="indicates if session has Datacollections or XFE or EnergyScans attached",
     )
-    sessionTitle = Column(String(255), comment="fx accounts only")
-    structureDeterminations = Column(Float)
-    dewarTransport = Column(Float)
-    databackupFrance = Column(Float, comment="data backup and express delivery France")
-    databackupEurope = Column(Float, comment="data backup and express delivery Europe")
-    expSessionPk = Column(INTEGER(11), comment="smis session Pk ")
-    operatorSiteNumber = Column(String(10), index=True, comment="matricule site")
     lastUpdate = Column(
         TIMESTAMP,
         nullable=False,
-        server_default=text("'0000-00-00 00:00:00'"),
+        server_default=text("current_timestamp()"),
         comment="last update timestamp: by default the end of the session, the last collect...",
-    )
-    protectedData = Column(
-        String(1024), comment="indicates if the data are protected or not"
     )
     externalId = Column(BINARY(16))
     archived = Column(
@@ -2921,97 +1943,6 @@ class Screen(Base):
     Proposal = relationship("Proposal")
 
 
-class Specimen(Base):
-    __tablename__ = "Specimen"
-
-    specimenId = Column(INTEGER(10), primary_key=True)
-    BLSESSIONID = Column(INTEGER(11))
-    bufferId = Column(
-        ForeignKey("Buffer.bufferId", ondelete="CASCADE", onupdate="CASCADE"),
-        index=True,
-    )
-    macromoleculeId = Column(
-        ForeignKey(
-            "Macromolecule.macromoleculeId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        index=True,
-    )
-    samplePlatePositionId = Column(
-        ForeignKey(
-            "SamplePlatePosition.samplePlatePositionId",
-            ondelete="CASCADE",
-            onupdate="CASCADE",
-        ),
-        index=True,
-    )
-    safetyLevelId = Column(
-        ForeignKey("SafetyLevel.safetyLevelId", ondelete="CASCADE", onupdate="CASCADE"),
-        index=True,
-    )
-    stockSolutionId = Column(
-        ForeignKey(
-            "StockSolution.stockSolutionId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        index=True,
-    )
-    code = Column(String(255))
-    concentration = Column(String(45))
-    volume = Column(String(45))
-    experimentId = Column(
-        ForeignKey("Experiment.experimentId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-    )
-    comments = Column(String(5120))
-
-    Buffer = relationship("Buffer")
-    Experiment = relationship("Experiment")
-    Macromolecule = relationship("Macromolecule")
-    SafetyLevel = relationship("SafetyLevel")
-    SamplePlatePosition = relationship("SamplePlatePosition")
-    StockSolution = relationship("StockSolution")
-
-
-class SubtractionToAbInitioModel(Base):
-    __tablename__ = "SubtractionToAbInitioModel"
-
-    subtractionToAbInitioModelId = Column(INTEGER(10), primary_key=True)
-    abInitioId = Column(
-        ForeignKey(
-            "AbInitioModel.abInitioModelId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        index=True,
-    )
-    subtractionId = Column(
-        ForeignKey("Subtraction.subtractionId", ondelete="CASCADE", onupdate="CASCADE"),
-        index=True,
-    )
-
-    AbInitioModel = relationship("AbInitioModel")
-    Subtraction = relationship("Subtraction")
-
-
-class AssemblyRegion(Base):
-    __tablename__ = "AssemblyRegion"
-
-    assemblyRegionId = Column(INTEGER(10), primary_key=True)
-    assemblyHasMacromoleculeId = Column(
-        ForeignKey(
-            "AssemblyHasMacromolecule.AssemblyHasMacromoleculeId",
-            ondelete="CASCADE",
-            onupdate="CASCADE",
-        ),
-        nullable=False,
-        index=True,
-    )
-    assemblyRegionType = Column(String(45))
-    name = Column(String(45))
-    fromResiduesBases = Column(String(45))
-    toResiduesBases = Column(String(45))
-
-    AssemblyHasMacromolecule = relationship("AssemblyHasMacromolecule")
-
-
 class BFFault(Base):
     __tablename__ = "BF_fault"
 
@@ -3231,33 +2162,6 @@ class ExperimentKindDetails(Base):
     wedgeValue = Column(Float)
 
     DiffractionPlan = relationship("DiffractionPlan")
-
-
-class Measurement(Base):
-    __tablename__ = "Measurement"
-
-    specimenId = Column(
-        ForeignKey("Specimen.specimenId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-    )
-    runId = Column(
-        ForeignKey("Run.runId", ondelete="CASCADE", onupdate="CASCADE"), index=True
-    )
-    code = Column(String(100))
-    priorityLevelId = Column(INTEGER(10))
-    exposureTemperature = Column(String(45))
-    viscosity = Column(String(45))
-    flow = Column(TINYINT(1))
-    extraFlowTime = Column(String(45))
-    volumeToLoad = Column(String(45))
-    waitTime = Column(String(45))
-    transmission = Column(String(45))
-    comments = Column(String(512))
-    measurementId = Column(INTEGER(10), primary_key=True)
-
-    Run = relationship("Run")
-    Specimen = relationship("Specimen")
 
 
 t_Project_has_Protein = Table(
@@ -3634,49 +2538,6 @@ class DewarReport(Base):
     )
 
     DewarRegistry = relationship("DewarRegistry")
-
-
-class MeasurementToDataCollection(Base):
-    __tablename__ = "MeasurementToDataCollection"
-
-    measurementToDataCollectionId = Column(INTEGER(10), primary_key=True)
-    dataCollectionId = Column(
-        ForeignKey(
-            "SaxsDataCollection.dataCollectionId",
-            ondelete="CASCADE",
-            onupdate="CASCADE",
-        ),
-        index=True,
-    )
-    measurementId = Column(
-        ForeignKey("Measurement.measurementId", ondelete="CASCADE", onupdate="CASCADE"),
-        index=True,
-    )
-    dataCollectionOrder = Column(INTEGER(10))
-
-    SaxsDataCollection = relationship("SaxsDataCollection")
-    Measurement = relationship("Measurement")
-
-
-class Merge(Base):
-    __tablename__ = "Merge"
-
-    mergeId = Column(INTEGER(10), primary_key=True)
-    measurementId = Column(
-        ForeignKey("Measurement.measurementId", ondelete="CASCADE", onupdate="CASCADE"),
-        index=True,
-    )
-    frameListId = Column(
-        ForeignKey("FrameList.frameListId", ondelete="CASCADE", onupdate="CASCADE"),
-        index=True,
-    )
-    discardedFrameNameList = Column(String(1024))
-    averageFilePath = Column(String(255))
-    framesCount = Column(String(45))
-    framesMerge = Column(String(45))
-
-    FrameList = relationship("FrameList")
-    Measurement = relationship("Measurement")
 
 
 t_Project_has_Shipping = Table(
@@ -4152,10 +3013,6 @@ class DataCollectionGroup(Base):
     actualContainerSlotInSC = Column(
         INTEGER(10), comment="Actual container slot number in sample changer"
     )
-    workflowId = Column(
-        ForeignKey("Workflow.workflowId", ondelete="CASCADE", onupdate="CASCADE"),
-        index=True,
-    )
     xtalSnapshotFullPath = Column(String(255))
     scanParameters = Column(LONGTEXT)
     experimentTypeId = Column(ForeignKey("ExperimentType.experimentTypeId"), index=True)
@@ -4163,7 +3020,6 @@ class DataCollectionGroup(Base):
     BLSample = relationship("BLSample")
     ExperimentType = relationship("ExperimentType")
     BLSession = relationship("BLSession")
-    Workflow = relationship("Workflow")
     Project = relationship("Project", secondary="Project_has_DCGroup")
 
 
@@ -4947,6 +3803,64 @@ class GridImageMap(Base):
     DataCollection = relationship("DataCollection")
 
 
+class GridInfo(Base):
+    __tablename__ = "GridInfo"
+
+    gridInfoId = Column(
+        INTEGER(11), primary_key=True, comment="Primary key (auto-incremented)"
+    )
+    xOffset = Column(Float(asdecimal=True))
+    yOffset = Column(Float(asdecimal=True))
+    dx_mm = Column(Float(asdecimal=True))
+    dy_mm = Column(Float(asdecimal=True))
+    steps_x = Column(Float(asdecimal=True))
+    steps_y = Column(Float(asdecimal=True))
+    meshAngle = Column(Float(asdecimal=True))
+    recordTimeStamp = Column(
+        TIMESTAMP,
+        nullable=False,
+        server_default=text("current_timestamp()"),
+        comment="Creation or last update date/time",
+    )
+    workflowMeshId = Column(INTEGER(11), index=True)
+    orientation = Column(
+        Enum("vertical", "horizontal"), server_default=text("'horizontal'")
+    )
+    dataCollectionGroupId = Column(
+        ForeignKey("DataCollectionGroup.dataCollectionGroupId"), index=True
+    )
+    pixelsPerMicronX = Column(Float)
+    pixelsPerMicronY = Column(Float)
+    snapshot_offsetXPixel = Column(Float)
+    snapshot_offsetYPixel = Column(Float)
+    snaked = Column(
+        TINYINT(1),
+        server_default=text("0"),
+        comment="True: The images associated with the DCG were collected in a snaked pattern",
+    )
+    dataCollectionId = Column(
+        ForeignKey(
+            "DataCollection.dataCollectionId", ondelete="CASCADE", onupdate="CASCADE"
+        ),
+        index=True,
+    )
+    patchesX = Column(
+        INTEGER(10),
+        server_default=text("1"),
+        comment="Number of patches the grid is made up of in the X direction",
+    )
+    patchesY = Column(
+        INTEGER(10),
+        server_default=text("1"),
+        comment="Number of patches the grid is made up of in the Y direction",
+    )
+    micronsPerPixelX = Column(Float)
+    micronsPerPixelY = Column(Float)
+
+    DataCollectionGroup = relationship("DataCollectionGroup")
+    DataCollection = relationship("DataCollection")
+
+
 class Image(Base):
     __tablename__ = "Image"
     __table_args__ = (Index("Image_Index3", "fileLocation", "fileName"),)
@@ -5015,23 +3929,6 @@ class Movie(Base):
         INTEGER(11),
         comment="number of frames per movie. This should be equivalent to the number of\xa0MotionCorrectionDrift\xa0entries, but the latter is a property of data analysis, whereas the number of frames is an intrinsic property of acquisition.",
     )
-
-    DataCollection = relationship("DataCollection")
-
-
-class Particle(Base):
-    __tablename__ = "Particle"
-
-    particleId = Column(INTEGER(11), primary_key=True)
-    dataCollectionId = Column(
-        ForeignKey(
-            "DataCollection.dataCollectionId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        nullable=False,
-        index=True,
-    )
-    x = Column(Float)
-    y = Column(Float)
 
     DataCollection = relationship("DataCollection")
 
@@ -5211,44 +4108,6 @@ class ProcessingJobParameter(Base):
     ProcessingJob = relationship("ProcessingJob")
 
 
-class WorkflowMesh(Base):
-    __tablename__ = "WorkflowMesh"
-
-    workflowMeshId = Column(
-        INTEGER(11), primary_key=True, comment="Primary key (auto-incremented)"
-    )
-    workflowId = Column(
-        ForeignKey("Workflow.workflowId", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-        index=True,
-        comment="Related workflow",
-    )
-    bestPositionId = Column(
-        ForeignKey(
-            "MotorPosition.motorPositionId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        index=True,
-    )
-    bestImageId = Column(
-        ForeignKey("Image.imageId", ondelete="CASCADE", onupdate="CASCADE"), index=True
-    )
-    value1 = Column(Float(asdecimal=True))
-    value2 = Column(Float(asdecimal=True))
-    value3 = Column(Float(asdecimal=True), comment="N value")
-    value4 = Column(Float(asdecimal=True))
-    cartographyPath = Column(String(255))
-    recordTimeStamp = Column(
-        TIMESTAMP,
-        nullable=False,
-        server_default=text("current_timestamp()"),
-        comment="Creation or last update date/time",
-    )
-
-    Image = relationship("Image")
-    MotorPosition = relationship("MotorPosition")
-    Workflow = relationship("Workflow")
-
-
 class AutoProcIntegration(Base):
     __tablename__ = "AutoProcIntegration"
 
@@ -5342,70 +4201,6 @@ class AutoProcProgramMessage(Base):
     description = Column(Text)
 
     AutoProcProgram = relationship("AutoProcProgram")
-
-
-class GridInfo(Base):
-    __tablename__ = "GridInfo"
-
-    gridInfoId = Column(
-        INTEGER(11), primary_key=True, comment="Primary key (auto-incremented)"
-    )
-    xOffset = Column(Float(asdecimal=True))
-    yOffset = Column(Float(asdecimal=True))
-    dx_mm = Column(Float(asdecimal=True))
-    dy_mm = Column(Float(asdecimal=True))
-    steps_x = Column(Float(asdecimal=True))
-    steps_y = Column(Float(asdecimal=True))
-    meshAngle = Column(Float(asdecimal=True))
-    recordTimeStamp = Column(
-        TIMESTAMP,
-        nullable=False,
-        server_default=text("current_timestamp()"),
-        comment="Creation or last update date/time",
-    )
-    workflowMeshId = Column(
-        ForeignKey(
-            "WorkflowMesh.workflowMeshId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        index=True,
-    )
-    orientation = Column(
-        Enum("vertical", "horizontal"), server_default=text("'horizontal'")
-    )
-    dataCollectionGroupId = Column(
-        ForeignKey("DataCollectionGroup.dataCollectionGroupId"), index=True
-    )
-    pixelsPerMicronX = Column(Float)
-    pixelsPerMicronY = Column(Float)
-    snapshot_offsetXPixel = Column(Float)
-    snapshot_offsetYPixel = Column(Float)
-    snaked = Column(
-        TINYINT(1),
-        server_default=text("0"),
-        comment="True: The images associated with the DCG were collected in a snaked pattern",
-    )
-    dataCollectionId = Column(
-        ForeignKey(
-            "DataCollection.dataCollectionId", ondelete="CASCADE", onupdate="CASCADE"
-        ),
-        index=True,
-    )
-    patchesX = Column(
-        INTEGER(10),
-        server_default=text("1"),
-        comment="Number of patches the grid is made up of in the X direction",
-    )
-    patchesY = Column(
-        INTEGER(10),
-        server_default=text("1"),
-        comment="Number of patches the grid is made up of in the Y direction",
-    )
-    micronsPerPixelX = Column(Float)
-    micronsPerPixelY = Column(Float)
-
-    DataCollectionGroup = relationship("DataCollectionGroup")
-    DataCollection = relationship("DataCollection")
-    WorkflowMesh = relationship("WorkflowMesh")
 
 
 class MXMRRun(Base):
@@ -5601,6 +4396,49 @@ class Tomogram(Base):
 
     AutoProcProgram = relationship("AutoProcProgram")
     DataCollection = relationship("DataCollection")
+
+
+class XRFFluorescenceMapping(Base):
+    __tablename__ = "XRFFluorescenceMapping"
+    __table_args__ = {
+        "comment": "An XRF map generated from an XRF Mapping ROI based on data from a gridscan of a sample"
+    }
+
+    xrfFluorescenceMappingId = Column(INTEGER(11), primary_key=True)
+    xrfFluorescenceMappingROIId = Column(
+        ForeignKey(
+            "XRFFluorescenceMappingROI.xrfFluorescenceMappingROIId",
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+        ),
+        nullable=False,
+        index=True,
+    )
+    gridInfoId = Column(ForeignKey("GridInfo.gridInfoId"), nullable=False, index=True)
+    dataFormat = Column(
+        String(15),
+        nullable=False,
+        comment="Description of format and any compression, i.e. json+gzip for gzipped json",
+    )
+    data = Column(LONGBLOB, nullable=False, comment="The actual data")
+    points = Column(
+        INTEGER(11), comment="The number of points available, for realtime feedback"
+    )
+    opacity = Column(
+        Float, nullable=False, server_default=text("1"), comment="Display opacity"
+    )
+    colourMap = Column(String(20), comment="Colour map for displaying the data")
+    min = Column(INTEGER(3), comment="Min value in the data for histogramming")
+    max = Column(INTEGER(3), comment="Max value in the data for histogramming")
+    autoProcProgramId = Column(
+        ForeignKey("AutoProcProgram.autoProcProgramId"),
+        index=True,
+        comment="Related autoproc programid",
+    )
+
+    AutoProcProgram = relationship("AutoProcProgram")
+    GridInfo = relationship("GridInfo")
+    XRFFluorescenceMappingROI = relationship("XRFFluorescenceMappingROI")
 
 
 class ZcZocaloBuffer(Base):
@@ -5955,47 +4793,56 @@ class TiltImageAlignment(Base):
     Tomogram = relationship("Tomogram")
 
 
-class XRFFluorescenceMapping(Base):
-    __tablename__ = "XRFFluorescenceMapping"
+class XFEFluorescenceComposite(Base):
+    __tablename__ = "XFEFluorescenceComposite"
     __table_args__ = {
-        "comment": "An XRF map generated from an XRF Mapping ROI based on data from a gridscan of a sample"
+        "comment": "A composite XRF map composed of three XRFFluorescenceMapping entries creating r, g, b layers"
     }
 
-    xrfFluorescenceMappingId = Column(INTEGER(11), primary_key=True)
-    xrfFluorescenceMappingROIId = Column(
-        ForeignKey(
-            "XRFFluorescenceMappingROI.xrfFluorescenceMappingROIId",
-            ondelete="CASCADE",
-            onupdate="CASCADE",
-        ),
+    xfeFluorescenceCompositeId = Column(INTEGER(10), primary_key=True)
+    r = Column(
+        ForeignKey("XRFFluorescenceMapping.xrfFluorescenceMappingId"),
         nullable=False,
         index=True,
+        comment="Red layer",
     )
-    gridInfoId = Column(ForeignKey("GridInfo.gridInfoId"), nullable=False, index=True)
-    dataFormat = Column(
-        String(15),
+    g = Column(
+        ForeignKey("XRFFluorescenceMapping.xrfFluorescenceMappingId"),
         nullable=False,
-        comment="Description of format and any compression, i.e. json+gzip for gzipped json",
+        index=True,
+        comment="Green layer",
     )
-    data = Column(LONGBLOB, nullable=False, comment="The actual data")
-    points = Column(
-        INTEGER(11), comment="The number of points available, for realtime feedback"
+    b = Column(
+        ForeignKey("XRFFluorescenceMapping.xrfFluorescenceMappingId"),
+        nullable=False,
+        index=True,
+        comment="Blue layer",
+    )
+    rOpacity = Column(
+        Float, nullable=False, server_default=text("1"), comment="Red layer opacity"
+    )
+    bOpacity = Column(
+        Float, nullable=False, server_default=text("1"), comment="Red layer opacity"
+    )
+    gOpacity = Column(
+        Float, nullable=False, server_default=text("1"), comment="Red layer opacity"
     )
     opacity = Column(
-        Float, nullable=False, server_default=text("1"), comment="Display opacity"
-    )
-    colourMap = Column(String(20), comment="Colour map for displaying the data")
-    min = Column(INTEGER(3), comment="Min value in the data for histogramming")
-    max = Column(INTEGER(3), comment="Max value in the data for histogramming")
-    autoProcProgramId = Column(
-        ForeignKey("AutoProcProgram.autoProcProgramId"),
-        index=True,
-        comment="Related autoproc programid",
+        Float, nullable=False, server_default=text("1"), comment="Total map opacity"
     )
 
-    AutoProcProgram = relationship("AutoProcProgram")
-    GridInfo = relationship("GridInfo")
-    XRFFluorescenceMappingROI = relationship("XRFFluorescenceMappingROI")
+    XRFFluorescenceMapping = relationship(
+        "XRFFluorescenceMapping",
+        primaryjoin="XFEFluorescenceComposite.b == XRFFluorescenceMapping.xrfFluorescenceMappingId",
+    )
+    XRFFluorescenceMapping1 = relationship(
+        "XRFFluorescenceMapping",
+        primaryjoin="XFEFluorescenceComposite.g == XRFFluorescenceMapping.xrfFluorescenceMappingId",
+    )
+    XRFFluorescenceMapping2 = relationship(
+        "XRFFluorescenceMapping",
+        primaryjoin="XFEFluorescenceComposite.r == XRFFluorescenceMapping.xrfFluorescenceMappingId",
+    )
 
 
 class ParticleClassificationGroup(Base):
@@ -6092,58 +4939,6 @@ class ScreeningStrategy(Base):
     )
 
     ScreeningOutput = relationship("ScreeningOutput")
-
-
-class XFEFluorescenceComposite(Base):
-    __tablename__ = "XFEFluorescenceComposite"
-    __table_args__ = {
-        "comment": "A composite XRF map composed of three XRFFluorescenceMapping entries creating r, g, b layers"
-    }
-
-    xfeFluorescenceCompositeId = Column(INTEGER(10), primary_key=True)
-    r = Column(
-        ForeignKey("XRFFluorescenceMapping.xrfFluorescenceMappingId"),
-        nullable=False,
-        index=True,
-        comment="Red layer",
-    )
-    g = Column(
-        ForeignKey("XRFFluorescenceMapping.xrfFluorescenceMappingId"),
-        nullable=False,
-        index=True,
-        comment="Green layer",
-    )
-    b = Column(
-        ForeignKey("XRFFluorescenceMapping.xrfFluorescenceMappingId"),
-        nullable=False,
-        index=True,
-        comment="Blue layer",
-    )
-    rOpacity = Column(
-        Float, nullable=False, server_default=text("1"), comment="Red layer opacity"
-    )
-    bOpacity = Column(
-        Float, nullable=False, server_default=text("1"), comment="Red layer opacity"
-    )
-    gOpacity = Column(
-        Float, nullable=False, server_default=text("1"), comment="Red layer opacity"
-    )
-    opacity = Column(
-        Float, nullable=False, server_default=text("1"), comment="Total map opacity"
-    )
-
-    XRFFluorescenceMapping = relationship(
-        "XRFFluorescenceMapping",
-        primaryjoin="XFEFluorescenceComposite.b == XRFFluorescenceMapping.xrfFluorescenceMappingId",
-    )
-    XRFFluorescenceMapping1 = relationship(
-        "XRFFluorescenceMapping",
-        primaryjoin="XFEFluorescenceComposite.g == XRFFluorescenceMapping.xrfFluorescenceMappingId",
-    )
-    XRFFluorescenceMapping2 = relationship(
-        "XRFFluorescenceMapping",
-        primaryjoin="XFEFluorescenceComposite.r == XRFFluorescenceMapping.xrfFluorescenceMappingId",
-    )
 
 
 class ParticleClassification(Base):

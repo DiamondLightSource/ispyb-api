@@ -41,13 +41,11 @@ class Core(ispyb.interface.core.IF):
             ("start_date", None),
             ("end_date", None),
             ("beamline_name", None),
-            ("title", None),
             ("beamline_operator", None),
             ("nb_shifts", None),
             ("scheduled", None),
             ("used_flag", None),
             ("comments", None),
-            ("external_pk_id", None),
             ("external_pk_uuid", None),
         ]
     )
