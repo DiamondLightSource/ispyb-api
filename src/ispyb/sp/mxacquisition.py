@@ -223,9 +223,8 @@ class MXAcquisition(Acquisition):
         Generally the list will only contain a single dictionary.
         """
         result = self.get_connection().call_sp_retrieve(
-            procname="retrieve_grid_info_for_dc", args=(dcid, auth_login)
+            procname="retrieve_grid_info_for_dc_v2", args=(dcid, auth_login)
         )
-        self._fixup_pixels_per_micron(result)
         return result
 
     def _fixup_pixels_per_micron(self, result):
