@@ -56,7 +56,7 @@ def autoprocprogram_status_as_text(app: AutoProcProgram):
     return "queued"
 
 
-def create_processing_job(i, db_session, options):
+def create_processing_job(mx_processing, db_session, options):
     sweeps = []
     for s in options.sweeps:
         match = re.match(r"^([0-9]+):([0-9]+):([0-9]+)$", s)
@@ -110,7 +110,7 @@ def create_processing_job(i, db_session, options):
                 sys.exit("Invalid trigger variable specification: " + p)
             trigger_variables.append(p.split(":", 1))
 
-    jp = i.mx_processing.get_job_params()
+    jp = mx_processing.get_job_params()
     jp["automatic"] = options.source == "automatic"
     jp["comments"] = options.comment
     jp["datacollectionid"] = dcid or sweeps[0][0]
@@ -118,23 +118,23 @@ def create_processing_job(i, db_session, options):
     jp["recipe"] = options.recipe
     print("Creating database entries...")
 
-    jobid = i.mx_processing.upsert_job(list(jp.values()))
+    jobid = mx_processing.upsert_job(list(jp.values()))
     print(f"  JobID={jobid}")
     for key, value in parameters:
-        jpp = i.mx_processing.get_job_parameter_params()
+        jpp = mx_processing.get_job_parameter_params()
         jpp["job_id"] = jobid
         jpp["parameter_key"] = key
         jpp["parameter_value"] = value
-        jppid = i.mx_processing.upsert_job_parameter(list(jpp.values()))
+        jppid = mx_processing.upsert_job_parameter(list(jpp.values()))
         print(f"  JPP={jppid}")
 
     for sweep in sweeps:
-        jisp = i.mx_processing.get_job_image_sweep_params()
+        jisp = mx_processing.get_job_image_sweep_params()
         jisp["job_id"] = jobid
         jisp["datacollectionid"] = sweep[0]
         jisp["start_image"] = sweep[1]
         jisp["end_image"] = sweep[2]
-        jispid = i.mx_processing.upsert_job_image_sweep(list(jisp.values()))
+        jispid = mx_processing.upsert_job_image_sweep(list(jisp.values()))
         print(f"  JISP={jispid}")
 
     print(f"All done. Processing job {jobid} created")
@@ -407,36 +407,35 @@ def main(cmd_args=sys.argv[1:]):
     engine = sqlalchemy.create_engine(url, connect_args={"use_pure": True})
     Session = sqlalchemy.orm.sessionmaker(bind=engine)
 
-    i = ispyb.open()
-
-    if options.new:
-        with Session() as db_session:
-            jobid = create_processing_job(i, db_session, options)
-    else:
-        jobid = args[0]
-
-    if options.create:
-        i.mx_processing.upsert_program_ex(
-            job_id=jobid,
-            name=options.program,
-            command=options.cmdline,
-            environment=options.environment,
-            time_start=options.starttime,
-            time_update=options.updatetime,
-            message=options.status,
-            status={"success": 1, "failure": 0}.get(options.result),
-        )
-
-    elif options.update:
-        i.mx_processing.upsert_program_ex(
-            program_id=options.update,
-            status={"success": 1, "failure": 0}.get(options.result),
-            time_start=options.updatetime,
-            time_update=options.updatetime,
-            message=options.status,
-        )
-
     with Session() as db_session:
+        with ispyb.open() as conn:
+            mx_processing = conn.mx_processing
+            if options.new:
+                jobid = create_processing_job(mx_processing, db_session, options)
+            else:
+                jobid = args[0]
+
+            if options.create:
+                mx_processing.upsert_program_ex(
+                    job_id=jobid,
+                    name=options.program,
+                    command=options.cmdline,
+                    environment=options.environment,
+                    time_start=options.starttime,
+                    time_update=options.updatetime,
+                    message=options.status,
+                    status={"success": 1, "failure": 0}.get(options.result),
+                )
+
+            elif options.update:
+                mx_processing.upsert_program_ex(
+                    program_id=options.update,
+                    status={"success": 1, "failure": 0}.get(options.result),
+                    time_start=options.updatetime,
+                    time_update=options.updatetime,
+                    message=options.status,
+                )
+
         query = db_session.query(ProcessingJob).filter(
             ProcessingJob.processingJobId == jobid
         )
