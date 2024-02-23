@@ -45,6 +45,11 @@ except ModuleNotFoundError:
     zocalo = None
 
 
+url = ispyb.sqlalchemy.url()
+engine = sqlalchemy.create_engine(url, connect_args={"use_pure": True})
+Session = sqlalchemy.orm.sessionmaker(bind=engine)
+
+
 def autoprocprogram_status_as_text(app: AutoProcProgram):
     """Returns a human-readable status."""
     if app.processingStatus == 1:
@@ -56,7 +61,7 @@ def autoprocprogram_status_as_text(app: AutoProcProgram):
     return "queued"
 
 
-def create_processing_job(mx_processing, db_session, options):
+def create_processing_job(mx_processing, options):
     sweeps = []
     for s in options.sweeps:
         match = re.match(r"^([0-9]+):([0-9]+):([0-9]+)$", s)
@@ -81,21 +86,22 @@ def create_processing_job(mx_processing, db_session, options):
                 "When creating a processing job you must specify at least one data collection sweep or a DCID"
             )
 
-        query = db_session.query(DataCollection).filter(
-            DataCollection.dataCollectionId == dcid
-        )
-        dc = query.one_or_none()
-        if not dc:
-            sys.exit(f"DCID {dcid} not found")
-        start = dc.startImageNumber
-        number = dc.numberOfImages
-        if not start or not number:
-            print("Can not automatically infer data collection sweep for this DCID")
-            sweeps = []
-        else:
-            end = start + number - 1
-            sweeps = [(dcid, start, end)]
-            print(f"Using images {start} to {end} for data collection sweep")
+        with Session() as db_session:
+            query = db_session.query(DataCollection).filter(
+                DataCollection.dataCollectionId == dcid
+            )
+            dc = query.one_or_none()
+            if not dc:
+                sys.exit(f"DCID {dcid} not found")
+            start = dc.startImageNumber
+            number = dc.numberOfImages
+            if not start or not number:
+                print("Can not automatically infer data collection sweep for this DCID")
+                sweeps = []
+            else:
+                end = start + number - 1
+                sweeps = [(dcid, start, end)]
+                print(f"Using images {start} to {end} for data collection sweep")
 
     parameters = []
     for p in options.parameters:
@@ -403,39 +409,33 @@ def main(cmd_args=sys.argv[1:]):
     if zocalo and options.triggervariables and not options.trigger:
         sys.exit("--trigger-variable only makes sense with --trigger")
 
-    url = ispyb.sqlalchemy.url()
-    engine = sqlalchemy.create_engine(url, connect_args={"use_pure": True})
-    Session = sqlalchemy.orm.sessionmaker(bind=engine)
+    with ispyb.open() as conn:
+        mx_processing = conn.mx_processing
+        if options.new:
+            jobid = create_processing_job(mx_processing, options)
+        else:
+            jobid = args[0]
+        if options.create:
+            mx_processing.upsert_program_ex(
+                job_id=jobid,
+                name=options.program,
+                command=options.cmdline,
+                environment=options.environment,
+                time_start=options.starttime,
+                time_update=options.updatetime,
+                message=options.status,
+                status={"success": 1, "failure": 0}.get(options.result),
+            )
+        elif options.update:
+            mx_processing.upsert_program_ex(
+                program_id=options.update,
+                status={"success": 1, "failure": 0}.get(options.result),
+                time_start=options.updatetime,
+                time_update=options.updatetime,
+                message=options.status,
+            )
 
     with Session() as db_session:
-        with ispyb.open() as conn:
-            mx_processing = conn.mx_processing
-            if options.new:
-                jobid = create_processing_job(mx_processing, db_session, options)
-            else:
-                jobid = args[0]
-
-            if options.create:
-                mx_processing.upsert_program_ex(
-                    job_id=jobid,
-                    name=options.program,
-                    command=options.cmdline,
-                    environment=options.environment,
-                    time_start=options.starttime,
-                    time_update=options.updatetime,
-                    message=options.status,
-                    status={"success": 1, "failure": 0}.get(options.result),
-                )
-
-            elif options.update:
-                mx_processing.upsert_program_ex(
-                    program_id=options.update,
-                    status={"success": 1, "failure": 0}.get(options.result),
-                    time_start=options.updatetime,
-                    time_update=options.updatetime,
-                    message=options.status,
-                )
-
         query = db_session.query(ProcessingJob).filter(
             ProcessingJob.processingJobId == jobid
         )
