@@ -20,11 +20,14 @@ Update stored information:
   ispyb.job 73 -u 1234 -s "everything is broken" -r failure
 """
 
+from __future__ import annotations
+
 import os
 import re
 import shutil
 import subprocess
 import sys
+import typing
 from optparse import SUPPRESS_HELP, OptionGroup, OptionParser
 
 import sqlalchemy.orm
@@ -44,6 +47,10 @@ try:
 except ModuleNotFoundError:
     zocalo = None
 
+if typing.TYPE_CHECKING:
+    import optparse
+
+    import ispyb.sp.mxprocessing
 
 url = ispyb.sqlalchemy.url()
 engine = sqlalchemy.create_engine(url, connect_args={"use_pure": True})
@@ -61,7 +68,10 @@ def autoprocprogram_status_as_text(app: AutoProcProgram):
     return "queued"
 
 
-def create_processing_job(mx_processing, options):
+def create_processing_job(
+    mx_processing: ispyb.sp.mxprocessing.MXProcessing,
+    options: optparse.Values,
+) -> str:
     sweeps = []
     for s in options.sweeps:
         match = re.match(r"^([0-9]+):([0-9]+):([0-9]+)$", s)
