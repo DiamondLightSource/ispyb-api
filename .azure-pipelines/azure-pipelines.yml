@@ -60,6 +60,7 @@ stages:
       - bash: |
           pip install -U pip
           pip install collective.checkdocs wheel
+          apt install mariadb-client
         displayName: Install dependencies
 
       - bash: |
