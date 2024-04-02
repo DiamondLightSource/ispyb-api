@@ -60,7 +60,6 @@ stages:
       - bash: |
           pip install -U pip
           pip install collective.checkdocs wheel
-          sudo apt-get install mariadb-client
         displayName: Install dependencies
 
       - bash: |
@@ -124,6 +123,8 @@ stages:
     services:
       db: mariadb
     steps:
+    - bash:
+        sudo apt-get install mariadb-client
     - template: update-orm.yml
 
 - stage: deploy
