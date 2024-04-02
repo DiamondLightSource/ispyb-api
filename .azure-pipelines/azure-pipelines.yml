@@ -123,8 +123,6 @@ stages:
     services:
       db: mariadb
     steps:
-    - bash:
-        sudo apt-get install mariadb-client
     - template: update-orm.yml
 
 - stage: deploy

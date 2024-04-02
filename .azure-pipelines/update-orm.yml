@@ -46,6 +46,9 @@ steps:
     database=ispybtest
     EOF
 
+    echo "Installing mariadb-client"
+    sudo apt-get install mariadb-client
+
     mkdir schema
     cd schema
     tar xfz "$(System.ArtifactsDirectory)/package/ispyb-database.tar.gz"
