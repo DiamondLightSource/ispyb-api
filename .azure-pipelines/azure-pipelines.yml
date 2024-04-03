@@ -1,5 +1,5 @@
 variables:
-  DATABASE_SCHEMA: 4.0.1
+  DATABASE_SCHEMA: 4.1.0
 
 trigger:
   branches:
@@ -26,7 +26,7 @@ stages:
   - job: checks
     displayName: static code analysis
     pool:
-      vmImage: ubuntu-20.04
+      vmImage: ubuntu-22.04
     steps:
       # Use Python >=3.7 for syntax validation
       - task: UsePythonVersion@0
@@ -50,7 +50,7 @@ stages:
   - job: build
     displayName: build package
     pool:
-      vmImage: ubuntu-20.04
+      vmImage: ubuntu-22.04
     steps:
       - task: UsePythonVersion@0
         displayName: Set up python
@@ -93,7 +93,7 @@ stages:
   jobs:
   - job: linux
     pool:
-      vmImage: ubuntu-20.04
+      vmImage: ubuntu-22.04
     strategy:
       matrix:
         python37:
@@ -119,7 +119,7 @@ stages:
   - job: update_ORM
     displayName: Update ORM
     pool:
-      vmImage: ubuntu-20.04
+      vmImage: ubuntu-22.04
     services:
       db: mariadb
     steps:
@@ -135,7 +135,7 @@ stages:
   - job: pypi
     displayName: Publish pypi release
     pool:
-      vmImage: ubuntu-20.04
+      vmImage: ubuntu-22.04
     steps:
       - checkout: none
 
