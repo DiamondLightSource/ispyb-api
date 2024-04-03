@@ -1,4 +1,4 @@
-__schema_version__ = "4.0.1"
+__schema_version__ = "4.1.0"
 # coding: utf-8
 from sqlalchemy import (
     BINARY,
@@ -74,7 +74,6 @@ class AutoProc(Base):
             "refinedCell_alpha",
             "refinedCell_beta",
             "refinedCell_gamma",
-            "spaceGroup",
         ),
     )
 
@@ -2359,6 +2358,10 @@ class Shipping(Base):
         LONGTEXT,
         comment="JSON column for facility-specific or hard-to-define attributes",
     )
+    source = Column(String(50), server_default=text("current_user()"))
+    externalShippingIdToSynchrotron = Column(
+        INTEGER(11), comment="ID for shipping to synchrotron in external application"
+    )
 
     Person = relationship("Person")
     Proposal = relationship("Proposal")
@@ -2489,6 +2492,10 @@ class Dewar(Base):
     extra = Column(
         LONGTEXT,
         comment="JSON column for facility-specific or hard-to-define attributes, e.g. LN2 top-ups and contents checks",
+    )
+    source = Column(String(50), server_default=text("current_user()"))
+    externalShippingIdFromSynchrotron = Column(
+        INTEGER(11), comment="ID for shipping from synchrotron in external application"
     )
 
     BLSession = relationship("BLSession")
@@ -2645,6 +2652,7 @@ class Container(Base):
         comment="The dewar with which the container is currently associated",
     )
     parentContainerId = Column(ForeignKey("Container.containerId"), index=True)
+    source = Column(String(50), server_default=text("current_user()"))
 
     ContainerRegistry = relationship("ContainerRegistry")
     ContainerType = relationship("ContainerType")
@@ -2768,6 +2776,7 @@ class BLSample(Base):
         comment="Indicates the sample's location on a multi-sample pin, where 1 is closest to the pin base",
     )
     staffComments = Column(String(255), comment="Any staff comments on the sample")
+    source = Column(String(50), server_default=text("current_user()"))
 
     Container = relationship("Container")
     Crystal = relationship("Crystal")
@@ -2840,10 +2849,14 @@ class ContainerInspection(Base):
 
 class ContainerQueue(Base):
     __tablename__ = "ContainerQueue"
+    __table_args__ = (
+        Index("ContainerQueue_idx1", "containerId", "completedTimeStamp"),
+    )
 
     containerQueueId = Column(INTEGER(11), primary_key=True)
     containerId = Column(
         ForeignKey("Container.containerId", ondelete="CASCADE", onupdate="CASCADE"),
+        nullable=False,
         index=True,
     )
     personId = Column(ForeignKey("Person.personId", onupdate="CASCADE"), index=True)
@@ -3127,6 +3140,23 @@ class XRFFluorescenceMappingROI(Base):
     BLSample = relationship("BLSample")
 
 
+class Atlas(Base):
+    __tablename__ = "Atlas"
+    __table_args__ = {"comment": "Atlas of a Cryo-EM grid"}
+
+    atlasId = Column(INTEGER(11), primary_key=True)
+    dataCollectionGroupId = Column(
+        ForeignKey("DataCollectionGroup.dataCollectionGroupId", onupdate="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    atlasImage = Column(String(255), nullable=False, comment="path to atlas image")
+    pixelSize = Column(Float, nullable=False, comment="pixel size of atlas image")
+    cassetteSlot = Column(INTEGER(10))
+
+    DataCollectionGroup = relationship("DataCollectionGroup")
+
+
 class BLSampleImageAnalysis(Base):
     __tablename__ = "BLSampleImageAnalysis"
 
@@ -3197,6 +3227,7 @@ class BLSampleImageHasPositioner(Base):
 
 class BLSubSample(Base):
     __tablename__ = "BLSubSample"
+    __table_args__ = (Index("BLSubSample_blSampleId_source", "blSampleId", "source"),)
 
     blSubSampleId = Column(
         INTEGER(11), primary_key=True, comment="Primary key (auto-incremented)"
@@ -3204,7 +3235,6 @@ class BLSubSample(Base):
     blSampleId = Column(
         ForeignKey("BLSample.blSampleId", ondelete="CASCADE", onupdate="CASCADE"),
         nullable=False,
-        index=True,
         comment="sample",
     )
     diffractionPlanId = Column(
@@ -3588,6 +3618,39 @@ class EnergyScan(Base):
     Project = relationship("Project", secondary="Project_has_EnergyScan")
 
 
+class GridSquare(Base):
+    __tablename__ = "GridSquare"
+    __table_args__ = {
+        "comment": "Details of a Cryo-EM grid square including image captured at grid square magnification"
+    }
+
+    gridSquareId = Column(INTEGER(11), primary_key=True)
+    atlasId = Column(
+        ForeignKey("Atlas.atlasId", onupdate="CASCADE"), nullable=False, index=True
+    )
+    gridSquareLabel = Column(
+        INTEGER(11), comment="grid square reference from acquisition software"
+    )
+    gridSquareImage = Column(String(255), comment="path to grid square image")
+    pixelLocationX = Column(
+        INTEGER(11), comment="pixel location of grid square centre on atlas image (x)"
+    )
+    pixelLocationY = Column(
+        INTEGER(11), comment="pixel location of grid square centre on atlas image (y)"
+    )
+    height = Column(INTEGER(11), comment="grid square height on atlas image in pixels")
+    width = Column(INTEGER(11), comment="grid square width on atlas image in pixels")
+    angle = Column(Float, comment="angle of grid square relative to atlas image")
+    stageLocationX = Column(Float, comment="x stage position (microns)")
+    stageLocationY = Column(Float, comment="y stage position (microns)")
+    qualityIndicator = Column(
+        Float, comment="metric for determining quality of grid square"
+    )
+    pixelSize = Column(Float, comment="pixel size of grid square image")
+
+    Atlas = relationship("Atlas")
+
+
 class XFEFluorescenceSpectrum(Base):
     __tablename__ = "XFEFluorescenceSpectrum"
 
@@ -3788,6 +3851,48 @@ class EventChain(Base):
     DataCollection = relationship("DataCollection")
 
 
+class FoilHole(Base):
+    __tablename__ = "FoilHole"
+    __table_args__ = {
+        "comment": "Details of a Cryo-EM foil hole within a grid square including image captured at foil hole magnification if applicable"
+    }
+
+    foilHoleId = Column(INTEGER(11), primary_key=True)
+    gridSquareId = Column(
+        ForeignKey("GridSquare.gridSquareId", onupdate="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    foilHoleLabel = Column(
+        String(30),
+        nullable=False,
+        comment="foil hole reference name from acquisition software",
+    )
+    foilHoleImage = Column(
+        String(255),
+        comment="path to foil hole image, nullable as there is not always a foil hole image",
+    )
+    pixelLocationX = Column(
+        INTEGER(11),
+        comment="pixel location of foil hole centre on grid square image (x)",
+    )
+    pixelLocationY = Column(
+        INTEGER(11),
+        comment="pixel location of foil hole centre on grid square image (y)",
+    )
+    diameter = Column(
+        INTEGER(11), comment="foil hole diameter on grid square image in pixels"
+    )
+    stageLocationX = Column(Float, comment="x stage position (microns)")
+    stageLocationY = Column(Float, comment="y stage position (microns)")
+    qualityIndicator = Column(
+        Float, comment="metric for determining quality of foil hole"
+    )
+    pixelSize = Column(Float, comment="pixel size of foil hole image")
+
+    GridSquare = relationship("GridSquare")
+
+
 class GridImageMap(Base):
     __tablename__ = "GridImageMap"
 
@@ -3903,34 +4008,6 @@ class Image(Base):
 
     DataCollection = relationship("DataCollection")
     MotorPosition = relationship("MotorPosition")
-
-
-class Movie(Base):
-    __tablename__ = "Movie"
-
-    movieId = Column(INTEGER(11), primary_key=True)
-    dataCollectionId = Column(ForeignKey("DataCollection.dataCollectionId"), index=True)
-    movieNumber = Column(MEDIUMINT(8))
-    movieFullPath = Column(String(255))
-    createdTimeStamp = Column(
-        TIMESTAMP,
-        nullable=False,
-        server_default=text("current_timestamp() ON UPDATE current_timestamp()"),
-    )
-    positionX = Column(Float)
-    positionY = Column(Float)
-    nominalDefocus = Column(Float, comment="Nominal defocus, Units: A")
-    angle = Column(Float, comment="unit: degrees relative to perpendicular to beam")
-    fluence = Column(
-        Float,
-        comment="accumulated electron fluence from start to end of acquisition of this movie (commonly, but incorrectly, referred to as ‘dose’)",
-    )
-    numberOfFrames = Column(
-        INTEGER(11),
-        comment="number of frames per movie. This should be equivalent to the number of\xa0MotionCorrectionDrift\xa0entries, but the latter is a property of data analysis, whereas the number of frames is an intrinsic property of acquisition.",
-    )
-
-    DataCollection = relationship("DataCollection")
 
 
 class ProcessingJob(Base):
@@ -4081,6 +4158,39 @@ class Event(Base):
     EventType = relationship("EventType")
 
 
+class Movie(Base):
+    __tablename__ = "Movie"
+
+    movieId = Column(INTEGER(11), primary_key=True)
+    dataCollectionId = Column(ForeignKey("DataCollection.dataCollectionId"), index=True)
+    movieNumber = Column(MEDIUMINT(8))
+    movieFullPath = Column(String(255))
+    createdTimeStamp = Column(
+        TIMESTAMP,
+        nullable=False,
+        server_default=text("current_timestamp() ON UPDATE current_timestamp()"),
+    )
+    positionX = Column(Float)
+    positionY = Column(Float)
+    nominalDefocus = Column(Float, comment="Nominal defocus, Units: A")
+    angle = Column(Float, comment="unit: degrees relative to perpendicular to beam")
+    fluence = Column(
+        Float,
+        comment="accumulated electron fluence from start to end of acquisition of this movie (commonly, but incorrectly, referred to as ‘dose’)",
+    )
+    numberOfFrames = Column(
+        INTEGER(11),
+        comment="number of frames per movie. This should be equivalent to the number of\xa0MotionCorrectionDrift\xa0entries, but the latter is a property of data analysis, whereas the number of frames is an intrinsic property of acquisition.",
+    )
+    foilHoleId = Column(
+        ForeignKey("FoilHole.foilHoleId", onupdate="CASCADE"), index=True
+    )
+    templateLabel = Column(INTEGER(10))
+
+    DataCollection = relationship("DataCollection")
+    FoilHole = relationship("FoilHole")
+
+
 class ProcessingJobImageSweep(Base):
     __tablename__ = "ProcessingJobImageSweep"
     __table_args__ = {
@@ -4099,6 +4209,13 @@ class ProcessingJobImageSweep(Base):
 
 class ProcessingJobParameter(Base):
     __tablename__ = "ProcessingJobParameter"
+    __table_args__ = (
+        Index(
+            "ProcessingJobParameter_idx_paramKey_procJobId",
+            "parameterKey",
+            "processingJobId",
+        ),
+    )
 
     processingJobParameterId = Column(INTEGER(11), primary_key=True)
     processingJobId = Column(ForeignKey("ProcessingJob.processingJobId"), index=True)
@@ -4196,7 +4313,7 @@ class AutoProcProgramMessage(Base):
     recordTimeStamp = Column(
         TIMESTAMP, nullable=False, server_default=text("current_timestamp()")
     )
-    severity = Column(Enum("ERROR", "WARNING", "INFO"))
+    severity = Column(Enum("ERROR", "WARNING", "INFO"), nullable=False)
     message = Column(String(200))
     description = Column(Text)
 
