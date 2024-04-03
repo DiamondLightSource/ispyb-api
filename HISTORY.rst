@@ -5,6 +5,8 @@ History
 Unreleased / main
 -------------------
 
+* Update SQLAlchemy ORM models for ispyb-database v4.1.0.
+
 10.0.0 (2024-01-10)
 -------------------
 * Update SQLAlchemy ORM models for ispyb-database v4.0.1. This drops some
