@@ -5,7 +5,12 @@ History
 Unreleased / main
 -------------------
 
+10.1.0 (2024-04-03)
+-------------------
+
+* Use context manager interface to open ispyb connection (`#210 <https://github.com/DiamondLightSource/ispyb-api/pull/210>`)
 * Update SQLAlchemy ORM models for ispyb-database v4.1.0.
+* Azure pipelines CI: Use ubuntu-22.04 and install mariadb-client package
 
 10.0.0 (2024-01-10)
 -------------------
