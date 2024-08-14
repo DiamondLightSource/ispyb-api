@@ -1,4 +1,4 @@
-__schema_version__ = "4.1.0"
+__schema_version__ = "4.2.0"
 # coding: utf-8
 from sqlalchemy import (
     BINARY,
@@ -1450,7 +1450,13 @@ class BLSampleGroup(Base):
         ForeignKey("Proposal.proposalId", ondelete="SET NULL", onupdate="CASCADE"),
         index=True,
     )
+    ownerId = Column(
+        ForeignKey("Person.personId", onupdate="CASCADE"),
+        index=True,
+        comment="Sample group owner",
+    )
 
+    Person = relationship("Person")
     Proposal = relationship("Proposal")
 
 
@@ -1583,6 +1589,7 @@ class DiffractionPlan(Base):
             "XChem High Symmetry",
             "XChem Low Symmetry",
             "Commissioning",
+            "Metal ID",
         )
     )
     observedResolution = Column(Float)
@@ -3011,6 +3018,7 @@ class DataCollectionGroup(Base):
             "Still",
             "SSX-Chip",
             "SSX-Jet",
+            "Metal ID",
         ),
         comment="Standard: Routine structure determination experiment. Time Resolved: Investigate the change of a system over time. Custom: Special or non-standard data collection.",
     )
@@ -4764,6 +4772,23 @@ class ParticlePicker(Base):
 
     MotionCorrection = relationship("MotionCorrection")
     AutoProcProgram = relationship("AutoProcProgram")
+
+
+class ProcessedTomogram(Base):
+    __tablename__ = "ProcessedTomogram"
+    __table_args__ = {"comment": "References to processed tomogram paths"}
+
+    processedTomogramId = Column(INTEGER(11), primary_key=True)
+    tomogramId = Column(
+        ForeignKey("Tomogram.tomogramId", ondelete="CASCADE", onupdate="CASCADE"),
+        nullable=False,
+        index=True,
+        comment="references Tomogram table",
+    )
+    filePath = Column(String(255), comment="location on disk for the tomogram file")
+    processingType = Column(String(255), comment="nature of the processed tomogram")
+
+    Tomogram = relationship("Tomogram")
 
 
 class RelativeIceThickness(Base):
