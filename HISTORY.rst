@@ -5,6 +5,9 @@ History
 Unreleased / main
 -------------------
 
+* Update SQLAlchemy ORM models for ispyb-database v4.2.0.
+* Azure pipelines CI: Use ispyb-database schema v4.2.0
+
 10.1.0 (2024-04-03)
 -------------------
 
