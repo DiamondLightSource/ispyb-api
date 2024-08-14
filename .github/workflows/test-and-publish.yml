@@ -1,0 +1,146 @@
+name: Run tests and publish Python distribution to PyPI
+
+on:
+  [push, pull_request]
+
+env:
+  DATABASE_SCHEMA: 4.1.0
+
+permissions:
+  contents: read
+
+jobs:
+  mariadb:
+    name: mariadb
+    runs-on: ubuntu-latest
+    container: mariadb
+    services:
+      image: mariadb:10.6
+      env:
+        MYSQL_DATABASE: ispybtest
+        MYSQL_ROOT_PASSWORD: mysql_root_pwd
+      ports:
+        - 3306:3306
+
+  build:
+    name: Build package
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+      - name: Install dependencies
+        run: |
+          pip install -U pip
+          pip install  collective.checkdocs wheel
+      - name: Build python package
+        run: |
+          set -ex
+          python setup.py sdist bdist_wheel
+          mkdir -p dist/pypi
+          shopt -s extglob
+          mv -v dist/!(pypi) dist/pypi
+          git archive HEAD | gzip > dist/repo-source.tar.gz
+          ls -laR dist
+      - name: Download ISPyB DB schema v${{ DATABASE_SCHEMA }} for tests
+        run: wget -t 3 --waitretry=20 https://github.com/DiamondLightSource/ispyb-database/releases/download/v${{ DATABASE_SCHEMA }}/ispyb-database-$${{ DATABASE_SCHEMA }}.tar.gz -O dist/ispyb-database.tar.gz
+      - name: Store artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Check package description
+        run: python setup.py checkdocs
+
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - mariadb
+    strategy:
+      matrix:
+        python-version: [ "3.7", "3.8", "3.9", "3.10", "3.11" ]
+    steps:
+      - uses: ./.github/workflows/ci.yml
+        with:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+
+  update_ORM:
+    name: Update ORM
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - mariadb
+    steps:
+      - uses: ./.github/workflows/update-orm.yml
+        with:
+          DATABASE_SCHEMA: ${{ DATABASE_SCHEMA }}
+
+  publish-to-pypi:
+    name: >-
+      Publish Python distribution to PyPI
+    if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/ispyb
+    permissions:
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
+
+    steps:
+      - name: Download all the dists
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Publish distribution to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+  github-release:
+    name: >-
+      Sign the Python distribution with Sigstore
+      and upload them to GitHub Release
+    needs:
+      - publish-to-pypi
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # IMPORTANT: mandatory for making GitHub Releases
+      id-token: write  # IMPORTANT: mandatory for sigstore
+
+    steps:
+      - name: Download all the dists
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Sign the dists with Sigstore
+        uses: sigstore/gh-action-sigstore-python@v2.1.1
+        with:
+          inputs: >-
+            ./dist/*.tar.gz
+            ./dist/*.whl
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create
+          '${{ github.ref_name }}'
+          --repo '${{ github.repository }}'
+          --notes ""
+      - name: Upload artifact signatures to GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        # Upload to GitHub Release using the `gh` CLI.
+        # `dist/` contains the built packages, and the
+        # sigstore-produced signatures and certificates.
+        run: >-
+          gh release upload
+          '${{ github.ref_name }}' dist/**
+          --repo '${{ github.repository }}'
