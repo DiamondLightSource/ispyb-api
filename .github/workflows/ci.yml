@@ -44,8 +44,8 @@ jobs:
 
       - name: Start mysql
         run: |
-          #!/bin/bash
-          sudo systemctl start mysql
+          apt-get update && apt-get install sudo
+          sudo systemctl start mysql.service
 
       - name: Set up test database
         run: |

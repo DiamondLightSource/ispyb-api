@@ -40,7 +40,7 @@ jobs:
             echo "needsUpdate=false" >> $GITHUB_OUTPUT
           else
             echo "##[warning]ORM needs to be updated (${CURRENT_VERSION} -> ${{ inputs.DATABASE_SCHEMA }})."
-            echo "needsUpdate=true-test" >> $GITHUB_OUTPUT
+            echo "needsUpdate=true" >> $GITHUB_OUTPUT
           fi
         working-directory: ./src/ispyb/sqlalchemy
 
