@@ -21,11 +21,11 @@ jobs:
           python-version: "3.9"
       - name: Syntax validation
         run: |
-          python .azure-pipelines/syntax-validation.py
+          python .github/workflows/scripts/syntax-validation.py
       - name: Flake8 validation
         run: |
           pip install flake8
-          python .azure-pipelines/flake8-validation.py
+          python .github/workflows/scripts/flake8-validation.py
 
   build:
     name: Build package

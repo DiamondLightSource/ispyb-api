@@ -117,6 +117,6 @@ jobs:
 
       - name: Create ORM pull request
         if: ${{ steps.checkUpdate.needsUpdate == 'true' && github.ref_name == 'main' }}
-        run: .azure-pipelines/create-orm-update-pull-request
+        run: .github/workflows/scripts/create-orm-update-pull-request
         env:
           GITHUB_TOKEN: ${{ github.token }}
