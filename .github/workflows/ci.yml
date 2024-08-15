@@ -42,6 +42,9 @@ jobs:
           name: package-distributions
           path: dist/
 
+      - name: Start mysql
+        run: sudo systemctl start mysql
+
       - name: Set up test database
         run: |
           set -eu
@@ -58,7 +61,6 @@ jobs:
           tar xfz "dist/ispyb-database.tar.gz"
       
           printf 'Waiting for MySQL database to accept connections'
-          sudo systemctl start mysql
           until mysql -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 0.5; done
           printf '\n'
       

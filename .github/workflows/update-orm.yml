@@ -35,13 +35,13 @@ jobs:
         run: |
           set -eu
           CURRENT_VERSION=$(grep __schema_version__ _auto_db_schema.py | cut -d'"' -f2)
-          diff -a <(echo ${CURRENT_VERSION}) <(echo ${{ inputs.DATABASE_SCHEMA }}) >/dev/null && {
+          if [ ${CURRENT_VERSION} == ${{ inputs.DATABASE_SCHEMA }} ]; then
             echo "##[section]ORM is up to date (${CURRENT_VERSION})"
             echo "needsUpdate=false" >> $GITHUB_OUTPUT
-          } || {
+          else
             echo "##[warning]ORM needs to be updated (${CURRENT_VERSION} -> ${{ inputs.DATABASE_SCHEMA }})."
             echo "needsUpdate=true-test" >> $GITHUB_OUTPUT
-          }
+          fi
         working-directory: ./src/ispyb/sqlalchemy
 
       - name: Install sqlacodegen
