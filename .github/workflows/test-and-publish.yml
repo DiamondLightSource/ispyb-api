@@ -34,7 +34,7 @@ jobs:
           git archive HEAD | gzip > dist/repo-source.tar.gz
           ls -laR dist
       - name: Download ISPyB DB schema v${{ env.DATABASE_SCHEMA }} for tests
-        run: wget -t 3 --waitretry=20 https://github.com/DiamondLightSource/ispyb-database/releases/download/v${{ env.DATABASE_SCHEMA }}/ispyb-database-$${{ DATABASE_SCHEMA }}.tar.gz -O dist/ispyb-database.tar.gz
+        run: wget -t 3 --waitretry=20 https://github.com/DiamondLightSource/ispyb-database/releases/download/v${{ env.DATABASE_SCHEMA }}/ispyb-database-${{ env.DATABASE_SCHEMA }}.tar.gz -O dist/ispyb-database.tar.gz
       - name: Store artifact
         uses: actions/upload-artifact@v4
         with:
@@ -53,12 +53,13 @@ jobs:
         python-version: [ "3.7", "3.8", "3.9", "3.10", "3.11" ]
     container: mariadb
     services:
-      image: mariadb:10.6
-      env:
-        MYSQL_DATABASE: ispybtest
-        MYSQL_ROOT_PASSWORD: mysql_root_pwd
-      ports:
-        - 3306:3306
+      mariadb:
+        image: mariadb:10.6
+        env:
+          MYSQL_DATABASE: ispybtest
+          MYSQL_ROOT_PASSWORD: mysql_root_pwd
+        ports:
+          - 3306:3306
     steps:
       - uses: ./.github/workflows/ci.yml
         with:
@@ -71,12 +72,13 @@ jobs:
       - build
     container: mariadb
     services:
-      image: mariadb:10.6
-      env:
-        MYSQL_DATABASE: ispybtest
-        MYSQL_ROOT_PASSWORD: mysql_root_pwd
-      ports:
-        - 3306:3306
+      mariadb:
+        image: mariadb:10.6
+        env:
+          MYSQL_DATABASE: ispybtest
+          MYSQL_ROOT_PASSWORD: mysql_root_pwd
+        ports:
+          - 3306:3306
     steps:
       - uses: ./.github/workflows/update-orm.yml
         with:
