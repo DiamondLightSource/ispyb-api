@@ -30,17 +30,17 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install package
+        run: |
+          set -eux
+          pip install -r ./requirements_dev.txt
+          pip install .
+
       - name: Get pre-built package
         uses: actions/download-artifact@v4
         with:
           name: python-package-distributions
           path: dist/
-
-      - name: Install package
-        run: |
-          set -eux
-          pip install -r "./src/requirements_dev.txt"
-          pip install "./src"
 
       - name: Set up test database
         run: |
@@ -53,8 +53,8 @@ jobs:
           database=ispybtest
           EOF
       
-          cp "./src/conf/config.example.cfg" "./src/conf/config.cfg"
-          cp "./src/conf/ws_config.example.cfg" "./src/conf/ws_config.cfg"
+          cp "./conf/config.example.cfg" "./conf/config.cfg"
+          cp "./conf/ws_config.example.cfg" "./conf/ws_config.cfg"
       
           mkdir schema
           cd schema
@@ -81,11 +81,10 @@ jobs:
 
       - name: Run tests
         run: |
-          export ISPYB_CREDENTIALS="./src/conf/config.cfg"
+          export ISPYB_CREDENTIALS="./conf/config.cfg"
           PYTHONDEVMODE=1 pytest tests -ra --cov=ispyb --cov-report=xml --cov-branch
 
       - name: Publish coverage stats
         run: bash <(curl -s https://codecov.io/bash) -n "Python ${{ matrix.python-version }}"
         continue-on-error: true
-        working-directory: ./src
         timeout-minutes: 2
