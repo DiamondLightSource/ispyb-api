@@ -10,10 +10,25 @@ permissions:
   contents: read
 
 jobs:
+  static:
+    name: Static Analysis
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+      - name: Syntax validation
+        run: |
+          python .azure-pipelines/syntax-validation.py
+      - name: Flake8 validation
+        run: |
+          pip install flake8
+          python .azure-pipelines/flake8-validation.py
+
   build:
     name: Build package
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3.9
@@ -43,11 +58,12 @@ jobs:
       - name: Check package description
         run: python setup.py checkdocs
 
-  call-test-workflow:
+  tests:
     name: Call ci test workflow
     uses: ./.github/workflows/ci.yml
     needs:
       - build
+      - static
 
   get-env-vars:
     name: Get environment variables
@@ -72,7 +88,7 @@ jobs:
       Publish Python distribution to PyPI
     if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
     needs:
-      - build
+      - tests
     runs-on: ubuntu-latest
     environment:
       name: pypi
