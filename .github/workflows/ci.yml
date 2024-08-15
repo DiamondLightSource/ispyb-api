@@ -39,7 +39,7 @@ jobs:
       - name: Get pre-built package
         uses: actions/download-artifact@v4
         with:
-          name: python-package-distributions
+          name: package-distributions
           path: dist/
 
       - name: Set up test database
@@ -55,9 +55,6 @@ jobs:
       
           cp "./conf/config.example.cfg" "./conf/config.cfg"
           cp "./conf/ws_config.example.cfg" "./conf/ws_config.cfg"
-      
-          mkdir schema
-          cd schema
           tar xfz "dist/ispyb-database.tar.gz"
       
           printf 'Waiting for MySQL database to accept connections'

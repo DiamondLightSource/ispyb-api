@@ -34,7 +34,7 @@ jobs:
         id: checkUpdate
         run: |
           set -eu
-          CURRENT_VERSION=$(grep __schema_version__ ./src/ispyb/sqlalchemy/_auto_db_schema.py | cut -d'"' -f2)
+          CURRENT_VERSION=$(grep __schema_version__ _auto_db_schema.py | cut -d'"' -f2)
           diff -a <(echo ${CURRENT_VERSION}) <(echo ${{ inputs.DATABASE_SCHEMA }}) >/dev/null && {
             echo "##[section]ORM is up to date (${CURRENT_VERSION})"
             echo "needsUpdate=false" >> $GITHUB_OUTPUT
@@ -42,6 +42,7 @@ jobs:
             echo "##[warning]ORM needs to be updated (${CURRENT_VERSION} -> ${{ inputs.DATABASE_SCHEMA }})."
             echo "needsUpdate=true-test" >> $GITHUB_OUTPUT
           }
+        working-directory: ./src/ispyb/sqlalchemy
 
       - name: Install sqlacodegen
         if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
