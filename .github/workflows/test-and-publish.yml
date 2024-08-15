@@ -45,6 +45,8 @@ jobs:
 
   call-test-workflow:
     uses: ./.github/workflows/ci.yml
+    needs:
+      - build
 
   update_ORM:
     name: Update ORM
