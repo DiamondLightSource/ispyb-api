@@ -28,7 +28,7 @@ jobs:
       - name: Use Python 3.10
         uses: actions/setup-python@v5
         with:
-          python-version: 3.10
+          python-version: "3.10"
 
       - name: Check if update is required
         id: checkUpdate
