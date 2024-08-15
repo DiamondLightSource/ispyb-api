@@ -33,6 +33,7 @@ jobs:
       - name: Check if update is required
         id: checkUpdate
         run: |
+          #!/bin/bash
           set -eu
           CURRENT_VERSION=$(grep __schema_version__ _auto_db_schema.py | cut -d'"' -f2)
           if [[ ${CURRENT_VERSION} == ${{ inputs.DATABASE_SCHEMA }} ]]; then
