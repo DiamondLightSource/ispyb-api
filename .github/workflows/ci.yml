@@ -90,4 +90,4 @@ jobs:
         run: bash <(curl -s https://codecov.io/bash) -n "Python ${{ matrix.python-version }}"
         continue-on-error: true
         working-directory: ./src
-        timeout-inutes: 2
+        timeout-minutes: 2
