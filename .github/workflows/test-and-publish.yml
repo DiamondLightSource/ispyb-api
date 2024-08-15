@@ -61,6 +61,7 @@ jobs:
         ports:
           - 3306:3306
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/workflows/ci.yml
         with:
           PYTHON_VERSION: ${{ matrix.python-version }}
@@ -80,6 +81,7 @@ jobs:
         ports:
           - 3306:3306
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/workflows/update-orm.yml
         with:
           DATABASE_SCHEMA: ${{ env.DATABASE_SCHEMA }}
