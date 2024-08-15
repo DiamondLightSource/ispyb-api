@@ -35,7 +35,7 @@ jobs:
         run: |
           set -eu
           CURRENT_VERSION=$(grep __schema_version__ _auto_db_schema.py | cut -d'"' -f2)
-          if [ ${CURRENT_VERSION} == ${{ inputs.DATABASE_SCHEMA }} ]; then
+          if [[ ${CURRENT_VERSION} == ${{ inputs.DATABASE_SCHEMA }} ]]; then
             echo "##[section]ORM is up to date (${CURRENT_VERSION})"
             echo "needsUpdate=false" >> $GITHUB_OUTPUT
           else
