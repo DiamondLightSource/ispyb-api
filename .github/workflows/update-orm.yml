@@ -9,8 +9,18 @@ on:
 
 jobs:
   orm-update:
-    name: ORMCheck
+    uses: ./.github/workflows/update-orm.yml
+    name: Update ORM
     runs-on: ubuntu-latest
+    container: mariadb
+    services:
+      mariadb:
+        image: mariadb:10.6
+        env:
+          MYSQL_DATABASE: ispybtest
+          MYSQL_ROOT_PASSWORD: mysql_root_pwd
+        ports:
+          - 3306:3306
     outputs:
       output1: ${{ steps.checkUpdate.needsUpdate }}
 

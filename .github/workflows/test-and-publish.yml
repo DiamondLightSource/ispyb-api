@@ -49,24 +49,11 @@ jobs:
       - build
 
   update_ORM:
-    name: Update ORM
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/update-orm.yml
+    with:
+      DATABASE_SCHEMA: ${{ env.DATABASE_SCHEMA }}
     needs:
       - build
-    container: mariadb
-    services:
-      mariadb:
-        image: mariadb:10.6
-        env:
-          MYSQL_DATABASE: ispybtest
-          MYSQL_ROOT_PASSWORD: mysql_root_pwd
-        ports:
-          - 3306:3306
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/workflows/update-orm
-        with:
-          DATABASE_SCHEMA: ${{ env.DATABASE_SCHEMA }}
 
   publish-to-pypi:
     name: >-
