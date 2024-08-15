@@ -33,8 +33,8 @@ jobs:
           mv -v dist/!(pypi) dist/pypi
           git archive HEAD | gzip > dist/repo-source.tar.gz
           ls -laR dist
-      - name: Download ISPyB DB schema v${{ DATABASE_SCHEMA }} for tests
-        run: wget -t 3 --waitretry=20 https://github.com/DiamondLightSource/ispyb-database/releases/download/v${{ DATABASE_SCHEMA }}/ispyb-database-$${{ DATABASE_SCHEMA }}.tar.gz -O dist/ispyb-database.tar.gz
+      - name: Download ISPyB DB schema v${{ env.DATABASE_SCHEMA }} for tests
+        run: wget -t 3 --waitretry=20 https://github.com/DiamondLightSource/ispyb-database/releases/download/v${{ env.DATABASE_SCHEMA }}/ispyb-database-$${{ DATABASE_SCHEMA }}.tar.gz -O dist/ispyb-database.tar.gz
       - name: Store artifact
         uses: actions/upload-artifact@v4
         with:
@@ -80,7 +80,7 @@ jobs:
     steps:
       - uses: ./.github/workflows/update-orm.yml
         with:
-          DATABASE_SCHEMA: ${{ DATABASE_SCHEMA }}
+          DATABASE_SCHEMA: ${{ env.DATABASE_SCHEMA }}
 
   publish-to-pypi:
     name: >-
