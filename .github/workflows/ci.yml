@@ -57,7 +57,11 @@ jobs:
           cp "./conf/ws_config.example.cfg" "./conf/ws_config.cfg"
           tar xfz "dist/ispyb-database.tar.gz"
           
-          apt-get update && apt-get install sudo mysql-server mysql-client -y
+          ls /etc/init.d
+          ls /usr/bin
+          ls /bin
+          
+          apt-get update && apt-get install sudo -y
           sudo /etc/init.d/mysql start
       
           printf 'Waiting for MySQL database to accept connections'
