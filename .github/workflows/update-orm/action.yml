@@ -1,3 +1,5 @@
+name: Check if ORM update is needed
+
 on:
   workflow_call:
     inputs:
@@ -24,11 +26,11 @@ jobs:
         run: |
           set -eu
           CURRENT_VERSION=$(grep __schema_version__ _auto_db_schema.py | cut -d'"' -f2)
-          diff -a <(echo ${CURRENT_VERSION}) <(echo ${{ inputs.DATABASE_SCHEMA }}) >/dev/null && {
+          diff -a <(echo ${CURRENT_VERSION}) <(echo ${{ github.event.inputs.DATABASE_SCHEMA }}) >/dev/null && {
             echo "##[section]ORM is up to date (${CURRENT_VERSION})"
             echo "needsUpdate=false" >> $GITHUB_OUTPUT
           } || {
-            echo "##[warning]ORM needs to be updated (${CURRENT_VERSION} -> ${{ inputs.DATABASE_SCHEMA }})."
+            echo "##[warning]ORM needs to be updated (${CURRENT_VERSION} -> ${{ github.event.inputs.DATABASE_SCHEMA }})."
             echo "needsUpdate=talse" >> $GITHUB_OUTPUT
           }
         working-directory: ./src/ispyb/sqlalchemy
@@ -88,7 +90,7 @@ jobs:
           # This code produces false positives due to non-deterministic ordering.
           # Add an identifier to the file, and only update/PR the changes when the
           # identifier indicates the file is out of date.
-          cat <(echo "__schema_version__ = \"$(DATABASE_SCHEMA)\"") _auto_db_schema.py.in > _auto_db_schema.py
+          cat <(echo "__schema_version__ = \"${{ github.event.inputs.DATABASE_SCHEMA }}\"") _auto_db_schema.py.in > _auto_db_schema.py
           rm _auto_db_schema.py.in
           pre-commit run --files _auto_db_schema.py || echo pre-commit exited with non-zero return code
         working-directory: ./src/ispyb/sqlalchemy

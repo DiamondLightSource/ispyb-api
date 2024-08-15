@@ -1,3 +1,5 @@
+name: Run tests
+
 on:
   workflow_call:
     inputs:
@@ -12,10 +14,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Use Python ${{ inputs.PYTHON_VERSION }}
+      - name: Use Python ${{ github.event.inputs.PYTHON_VERSION }}
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ inputs.PYTHON_VERSION }}
+          python-version: ${{ github.event.inputs.PYTHON_VERSION }}
 
       - name: Get pre-built package
         uses: actions/download-artifact@v4
@@ -72,7 +74,7 @@ jobs:
           PYTHONDEVMODE=1 pytest tests -ra --cov=ispyb --cov-report=xml --cov-branch
 
       - name: Publish coverage stats
-        run: bash <(curl -s https://codecov.io/bash) -n "Python ${{ inputs.PYTHON_VERSION }}"
+        run: bash <(curl -s https://codecov.io/bash) -n "Python ${{ github.event.inputs.PYTHON_VERSION }}"
         continue-on-error: true
         working-directory: ./src
         timeout-inutes: 2
