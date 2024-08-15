@@ -13,98 +13,99 @@ jobs:
       output1: ${{ steps.checkUpdate.needsUpdate }}
 
     steps:
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: 3.10
-      displayName: Use Python 3.10
+      - uses: actions/checkout@v4
+      - name: Use Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.10
 
-    - name: Check if update is required
-      id: checkUpdate
-      run: |
-        set -eu
-        CURRENT_VERSION=$(grep __schema_version__ _auto_db_schema.py | cut -d'"' -f2)
-        diff -a <(echo ${CURRENT_VERSION}) <(echo ${{ inputs.DATABASE_SCHEMA }}) >/dev/null && {
-          echo "##[section]ORM is up to date (${CURRENT_VERSION})"
-          echo "needsUpdate=false" >> $GITHUB_OUTPUT
-        } || {
-          echo "##[warning]ORM needs to be updated (${CURRENT_VERSION} -> ${{ inputs.DATABASE_SCHEMA }})."
-          echo "needsUpdate=talse" >> $GITHUB_OUTPUT
-        }
-      working-directory: ./src/ispyb/sqlalchemy
+      - name: Check if update is required
+        id: checkUpdate
+        run: |
+          set -eu
+          CURRENT_VERSION=$(grep __schema_version__ _auto_db_schema.py | cut -d'"' -f2)
+          diff -a <(echo ${CURRENT_VERSION}) <(echo ${{ inputs.DATABASE_SCHEMA }}) >/dev/null && {
+            echo "##[section]ORM is up to date (${CURRENT_VERSION})"
+            echo "needsUpdate=false" >> $GITHUB_OUTPUT
+          } || {
+            echo "##[warning]ORM needs to be updated (${CURRENT_VERSION} -> ${{ inputs.DATABASE_SCHEMA }})."
+            echo "needsUpdate=talse" >> $GITHUB_OUTPUT
+          }
+        working-directory: ./src/ispyb/sqlalchemy
 
-    - name: Install sqlacodegen
-      if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
-      run: |
-        set -eux
-        pip install -r requirements_orm.txt
-        pip install pre-commit
+      - name: Install sqlacodegen
+        if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
+        run: |
+          set -eux
+          pip install -r requirements_orm.txt
+          pip install pre-commit
 
-    - name: Get database schema
-      if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
-      uses: actions/download-artifact@v4
-      with:
-        name: ispyb-database.tar.gz
-        path: dist/
+      - name: Get database schema
+        if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ispyb-database.tar.gz
+          path: dist/
 
-    - name: Set up reference database schema
-      if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
-      run: |
-        set -eu
-        cat >~/.my.cnf <<EOF
-        [client]
-        user=root
-        host=127.0.0.1
-        password=mysql_root_pwd
-        database=ispybtest
-        EOF
-    
-        echo "Installing mariadb-client"
-        sudo apt-get install mariadb-client
-    
-        mkdir schema
-        cd schema
-        tar xfz "$(System.ArtifactsDirectory)/package/ispyb-database.tar.gz"
-        patch -p1 < "$(Build.SourcesDirectory)/src/ispyb/sqlalchemy/sqlacodegen.patch"
-        ln ~/.my.cnf .my.cnf -s
-    
-        printf 'Waiting for MySQL database to accept connections'
-        until mysql -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 0.5; done
-        printf '\n'
-    
-        echo "Installing reference database"
-        ./build.sh
-    
-        echo
-        echo "Installed tables:"
-        mysql -D ispyb_build -e "SHOW TABLES"
-      working-directory: dist
+      - name: Set up reference database schema
+        if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
+        run: |
+          set -eu
+          cat >~/.my.cnf <<EOF
+          [client]
+          user=root
+          host=127.0.0.1
+          password=mysql_root_pwd
+          database=ispybtest
+          EOF
+      
+          echo "Installing mariadb-client"
+          sudo apt-get install mariadb-client
+      
+          mkdir schema
+          cd schema
+          tar xfz "$(System.ArtifactsDirectory)/package/ispyb-database.tar.gz"
+          patch -p1 < "$(Build.SourcesDirectory)/src/ispyb/sqlalchemy/sqlacodegen.patch"
+          ln ~/.my.cnf .my.cnf -s
+      
+          printf 'Waiting for MySQL database to accept connections'
+          until mysql -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 0.5; done
+          printf '\n'
+      
+          echo "Installing reference database"
+          ./build.sh
+      
+          echo
+          echo "Installed tables:"
+          mysql -D ispyb_build -e "SHOW TABLES"
+        working-directory: dist
 
-    - name: Generate ORM
-      if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
-      run: |
-        set -eux
-        sqlacodegen mysql+mysqlconnector://root:mysql_root_pwd@127.0.0.1/ispyb_build --noinflect --nojoined --outfile _auto_db_schema.py.in
-        # This code produces false positives due to non-deterministic ordering.
-        # Add an identifier to the file, and only update/PR the changes when the
-        # identifier indicates the file is out of date.
-        cat <(echo "__schema_version__ = \"$(DATABASE_SCHEMA)\"") _auto_db_schema.py.in > _auto_db_schema.py
-        rm _auto_db_schema.py.in
-        pre-commit run --files _auto_db_schema.py || echo pre-commit exited with non-zero return code
-      working-directory: ./src/ispyb/sqlalchemy
+      - name: Generate ORM
+        if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
+        run: |
+          set -eux
+          sqlacodegen mysql+mysqlconnector://root:mysql_root_pwd@127.0.0.1/ispyb_build --noinflect --nojoined --outfile _auto_db_schema.py.in
+          # This code produces false positives due to non-deterministic ordering.
+          # Add an identifier to the file, and only update/PR the changes when the
+          # identifier indicates the file is out of date.
+          cat <(echo "__schema_version__ = \"$(DATABASE_SCHEMA)\"") _auto_db_schema.py.in > _auto_db_schema.py
+          rm _auto_db_schema.py.in
+          pre-commit run --files _auto_db_schema.py || echo pre-commit exited with non-zero return code
+        working-directory: ./src/ispyb/sqlalchemy
 
-    - name: Show differences
-      if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
-      run: git diff
+      - name: Show differences
+        if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
+        run: git diff
 
-    - name: Store artifact
-      if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: ORM
-        path: ./src/ispyb/sqlalchemy/_auto_db_schema.py
+      - name: Store artifact
+        if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ORM
+          path: ./src/ispyb/sqlalchemy/_auto_db_schema.py
 
-    - name: Create ORM pull request
-      if: ${{ steps.checkUpdate.needsUpdate == 'true' && github.ref_name == 'main' }}
-      run: .azure-pipelines/create-orm-update-pull-request
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+      - name: Create ORM pull request
+        if: ${{ steps.checkUpdate.needsUpdate == 'true' && github.ref_name == 'main' }}
+        run: .azure-pipelines/create-orm-update-pull-request
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

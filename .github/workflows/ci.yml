@@ -23,11 +23,6 @@ jobs:
           name: python-package-distributions
           path: dist/
 
-      - name: Checkout sources
-        inputs:
-          archiveFilePatterns: "dist/package/repo-source.tar.gz"
-          destinationFolder: "./src"
-
       - name: Install package
         run: |
           set -eux
