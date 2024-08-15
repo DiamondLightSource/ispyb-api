@@ -62,7 +62,7 @@ jobs:
           - 3306:3306
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/workflows/ci.yml
+      - uses: ./.github/workflows/ci
         with:
           PYTHON_VERSION: ${{ matrix.python-version }}
 
@@ -82,7 +82,7 @@ jobs:
           - 3306:3306
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/workflows/update-orm.yml
+      - uses: ./.github/workflows/update-orm
         with:
           DATABASE_SCHEMA: ${{ env.DATABASE_SCHEMA }}
 
