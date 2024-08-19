@@ -58,6 +58,7 @@ jobs:
           tar xfz "dist/ispyb-database.tar.gz"
           
           apt-get update && apt-get install sudo -y
+          apt-get remove --purge mysql-\*
           apt-get install mysql-server mysql-client --fix-broken --fix-missing -y
           sudo service mysql start
           
