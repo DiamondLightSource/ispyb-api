@@ -57,6 +57,11 @@ jobs:
           cp "./conf/ws_config.example.cfg" "./conf/ws_config.cfg"
           tar xfz "dist/ispyb-database.tar.gz"
           
+          echo $PATH
+          dpkg -L systemd
+          apt-get install --reinstall systemd
+          dpkg -L systemd
+          
           ls -R /etc
           
           systemctl start mysql
