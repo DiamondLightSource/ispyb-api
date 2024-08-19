@@ -58,8 +58,7 @@ jobs:
           tar xfz "dist/ispyb-database.tar.gz"
           
           echo $PATH
-          apt-get install sudo
-          apt-get install systemd
+          apt-get update && apt-get install sudo systemd -y
           dpkg -L systemd
           
           ls -R /etc
