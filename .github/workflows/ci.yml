@@ -58,6 +58,7 @@ jobs:
           tar xfz "dist/ispyb-database.tar.gz"
           
           apt-get update && apt-get install sudo -y
+          apt-get install mysql-server mysql-client --fix-broken --fix-missin
           sudo service mysql start
           
           printf 'Waiting for MySQL database to accept connections'
