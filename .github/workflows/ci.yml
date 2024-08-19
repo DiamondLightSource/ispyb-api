@@ -59,7 +59,7 @@ jobs:
           
           apt-get update && apt-get install sudo -y
           sudo apt purge mysql-server mysql-client mysql-common mysql-server-core-* mysql-client-core-* -y
-          sudo rm -rf /etc/mysql /var/lib/mysql /var/log/mysql
+          sudo rm -rf /etc/mysql
           sudo apt autoremove
           sudo apt autoclean
           apt-get install mysql-server mysql-client --fix-broken --fix-missing -y
