@@ -2,10 +2,6 @@ name: Run tests
 
 on:
   workflow_call:
-    inputs:
-      dummy_input:
-        required: false
-        type: string
 
 jobs:
   test:
@@ -57,14 +53,7 @@ jobs:
           cp "./conf/ws_config.example.cfg" "./conf/ws_config.cfg"
           tar xfz "dist/ispyb-database.tar.gz"
           
-          apt-get update && apt-get install sudo -y
-          sudo apt purge mysql-server mysql-client mysql-common mysql-server-core-* mysql-client-core-* -y
-          sudo rm -rf /etc/mysql
-          sudo apt autoremove -y
-          sudo apt autoclean -y
-          apt-get install mysql-server mysql-client --fix-broken --fix-missing -y
-          sudo service mysql start
-          
+          sudo service mariadb start
           printf 'Waiting for MySQL database to accept connections'
           until mysql -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 0.5; done
           printf '\n'
