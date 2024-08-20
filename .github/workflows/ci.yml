@@ -13,7 +13,7 @@ jobs:
     container: mariadb
     services:
       mariadb:
-        image: mariadb:10.8
+        image: mariadb:10.6
         env:
           MARIADB_USER: test
           MARIADB_PASSWORD: test
