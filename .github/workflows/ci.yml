@@ -41,12 +41,6 @@ jobs:
           name: package-distributions
           path: dist/
 
-      - uses: shogo82148/actions-setup-mysql@v1
-        with:
-          distribution: 'mariadb'
-          mysql-version: '10.6'
-          auto-start: false
-
       - name: Set up test database
         run: |
           set -eu
@@ -64,7 +58,7 @@ jobs:
           tar xfz "dist/ispyb-database.tar.gz"
           
           printf 'Waiting for MySQL database to accept connections'
-          until mariadb --defaults-file=.my.cnf -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 0.5; done
+          until mariadb --defaults-file=.my.cnf -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 10; done
           printf '\n'
       
           mariadb -e "SET GLOBAL log_bin_trust_function_creators = 1;"
@@ -80,7 +74,7 @@ jobs:
           mariadb -e "CREATE USER ispyb_api@'%' IDENTIFIED BY 'password_1234'; GRANT ispyb_processing to ispyb_api@'%'; GRANT ispyb_import to ispyb_api@'%'; SET DEFAULT ROLE ispyb_processing FOR ispyb_api@'%';"
           mariadb -e "CREATE USER ispyb_api_future@'%' IDENTIFIED BY 'password_4321'; GRANT SELECT ON ispybtest.* to ispyb_api_future@'%';"
           mariadb -e "CREATE USER ispyb_api_sqlalchemy@'%' IDENTIFIED BY 'password_5678'; GRANT SELECT ON ispybtest.* to ispyb_api_sqlalchemy@'%'; GRANT INSERT ON ispybtest.* to ispyb_api_sqlalchemy@'%'; GRANT UPDATE ON ispybtest.* to ispyb_api_sqlalchemy@'%';"
-          rm ~/.my.cnf
+          rm .my.cnf
 
       - name: Run tests
         run: |
