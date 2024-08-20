@@ -48,7 +48,7 @@ jobs:
           [client]
           user = root
           password = mariadb_root_pwd
-          host = 127.0.0.1
+          host = localhost
           port = 3306
           database = ispybtest
           EOF
