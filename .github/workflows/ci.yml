@@ -13,9 +13,9 @@ jobs:
     container: mariadb
     services:
       mariadb:
-        image: mariadb:10.6
+        image: mariadb:10.8
         env:
-          DATABASE_HOST: 127.0.0.1
+          MARIADB_ROOT_HOST: 127.0.0.1
           MARIADB_USER: test
           MARIADB_PASSWORD: test
           MARIADB_DATABASE: ispybtest
@@ -47,11 +47,11 @@ jobs:
           set -eu
           cat > .my.cnf <<EOF
           [client]
-          user=test
-          password=test
-          host=127.0.0.1
-          port=3306
-          database=ispybtest
+          user = root
+          password = mariadb_root_pwd
+          host = 127.0.0.1
+          port = 3306
+          database = ispybtest
           EOF
       
           cp "./conf/config.example.cfg" "./conf/config.cfg"
