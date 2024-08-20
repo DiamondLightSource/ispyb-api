@@ -57,9 +57,8 @@ jobs:
           cp "./conf/ws_config.example.cfg" "./conf/ws_config.cfg"
           tar xfz "dist/ispyb-database.tar.gz"
           
-          mariadb-install-db --defaults-file=.my.cnf --datadir=/var/lib/mysql
+          mariadb-install-db --defaults-file=.my.cnf --user=mysql --datadir=/var/lib/mysql --skip-test-db
           /etc/init.d/mariadb start
-          find / -name '*.sql'
           mariadb --defaults-file=.my.cnf -e "CREATE OR REPLACE DATABASE ispybtest"
           
           printf 'Waiting for MySQL database to accept connections'
