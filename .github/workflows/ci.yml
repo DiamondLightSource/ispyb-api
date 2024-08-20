@@ -58,7 +58,7 @@ jobs:
           tar xfz "dist/ispyb-database.tar.gz"
           
           find / -name '*.sql'
-          mariadb-install-db --defaults-file=.my.cnf
+          mariadb-install-db --defaults-file=.my.cnf --user=mysql --datadir=/var/lib/mysql
           /etc/init.d/mariadb start
           find / -name '*.sql'
           
