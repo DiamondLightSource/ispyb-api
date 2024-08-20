@@ -15,7 +15,6 @@ jobs:
       mariadb:
         image: mariadb:10.8
         env:
-          MARIADB_ROOT_HOST: 127.0.0.1
           MARIADB_USER: test
           MARIADB_PASSWORD: test
           MARIADB_DATABASE: ispybtest
