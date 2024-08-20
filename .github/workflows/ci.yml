@@ -48,8 +48,9 @@ jobs:
           cat >~/.my.cnf <<EOF
           [client]
           user=test
-          host=127.0.0.1
           password=test
+          host=127.0.0.1
+          port=3306
           database=ispybtest
           EOF
       
