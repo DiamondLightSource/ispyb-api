@@ -59,12 +59,13 @@ jobs:
           
           mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
           /etc/init.d/mariadb start
+          mariadb --defaults-file=.my.cnf -e "CREATE DATABASE ispybtest"
           
           printf 'Waiting for MySQL database to accept connections'
           until mariadb --defaults-file=.my.cnf -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 10; done
           printf '\n'
       
-          mariadb -e "SET GLOBAL log_bin_trust_function_creators = 1;"
+          mariadb --defaults-file=.my.cnf -e "SET GLOBAL log_bin_trust_function_creators = 1;"
           for f in schemas/ispyb/tables.sql \
                    schemas/ispyb/lookups.sql \
                    schemas/ispyb/data.sql \
@@ -74,9 +75,9 @@ jobs:
               echo Importing ${f}...
               mariadb < $f
           done
-          mariadb -e "CREATE USER ispyb_api@'%' IDENTIFIED BY 'password_1234'; GRANT ispyb_processing to ispyb_api@'%'; GRANT ispyb_import to ispyb_api@'%'; SET DEFAULT ROLE ispyb_processing FOR ispyb_api@'%';"
-          mariadb -e "CREATE USER ispyb_api_future@'%' IDENTIFIED BY 'password_4321'; GRANT SELECT ON ispybtest.* to ispyb_api_future@'%';"
-          mariadb -e "CREATE USER ispyb_api_sqlalchemy@'%' IDENTIFIED BY 'password_5678'; GRANT SELECT ON ispybtest.* to ispyb_api_sqlalchemy@'%'; GRANT INSERT ON ispybtest.* to ispyb_api_sqlalchemy@'%'; GRANT UPDATE ON ispybtest.* to ispyb_api_sqlalchemy@'%';"
+          mariadb --defaults-file=.my.cnf -e "CREATE USER ispyb_api@'%' IDENTIFIED BY 'password_1234'; GRANT ispyb_processing to ispyb_api@'%'; GRANT ispyb_import to ispyb_api@'%'; SET DEFAULT ROLE ispyb_processing FOR ispyb_api@'%';"
+          mariadb --defaults-file=.my.cnf -e "CREATE USER ispyb_api_future@'%' IDENTIFIED BY 'password_4321'; GRANT SELECT ON ispybtest.* to ispyb_api_future@'%';"
+          mariadb --defaults-file=.my.cnf -e "CREATE USER ispyb_api_sqlalchemy@'%' IDENTIFIED BY 'password_5678'; GRANT SELECT ON ispybtest.* to ispyb_api_sqlalchemy@'%'; GRANT INSERT ON ispybtest.* to ispyb_api_sqlalchemy@'%'; GRANT UPDATE ON ispybtest.* to ispyb_api_sqlalchemy@'%';"
           rm .my.cnf
 
       - name: Run tests
