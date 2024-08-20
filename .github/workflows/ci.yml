@@ -53,14 +53,11 @@ jobs:
           cp "./conf/ws_config.example.cfg" "./conf/ws_config.cfg"
           tar xfz "dist/ispyb-database.tar.gz"
           
-          apt-get update && apt-get install sudo -y
-          sudo service mariadb start
-          
           printf 'Waiting for MySQL database to accept connections'
-          until mysql -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 0.5; done
+          until mariadb -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 0.5; done
           printf '\n'
       
-          mysql -e "SET GLOBAL log_bin_trust_function_creators = 1;"
+          mariadb -e "SET GLOBAL log_bin_trust_function_creators = 1;"
           for f in schemas/ispyb/tables.sql \
                    schemas/ispyb/lookups.sql \
                    schemas/ispyb/data.sql \
@@ -68,11 +65,11 @@ jobs:
                    grants/ispyb_processing.sql \
                    grants/ispyb_import.sql; do
               echo Importing ${f}...
-              mysql < $f
+              mariadb < $f
           done
-          mysql -e "CREATE USER ispyb_api@'%' IDENTIFIED BY 'password_1234'; GRANT ispyb_processing to ispyb_api@'%'; GRANT ispyb_import to ispyb_api@'%'; SET DEFAULT ROLE ispyb_processing FOR ispyb_api@'%';"
-          mysql -e "CREATE USER ispyb_api_future@'%' IDENTIFIED BY 'password_4321'; GRANT SELECT ON ispybtest.* to ispyb_api_future@'%';"
-          mysql -e "CREATE USER ispyb_api_sqlalchemy@'%' IDENTIFIED BY 'password_5678'; GRANT SELECT ON ispybtest.* to ispyb_api_sqlalchemy@'%'; GRANT INSERT ON ispybtest.* to ispyb_api_sqlalchemy@'%'; GRANT UPDATE ON ispybtest.* to ispyb_api_sqlalchemy@'%';"
+          mariadb -e "CREATE USER ispyb_api@'%' IDENTIFIED BY 'password_1234'; GRANT ispyb_processing to ispyb_api@'%'; GRANT ispyb_import to ispyb_api@'%'; SET DEFAULT ROLE ispyb_processing FOR ispyb_api@'%';"
+          mariadb -e "CREATE USER ispyb_api_future@'%' IDENTIFIED BY 'password_4321'; GRANT SELECT ON ispybtest.* to ispyb_api_future@'%';"
+          mariadb -e "CREATE USER ispyb_api_sqlalchemy@'%' IDENTIFIED BY 'password_5678'; GRANT SELECT ON ispybtest.* to ispyb_api_sqlalchemy@'%'; GRANT INSERT ON ispybtest.* to ispyb_api_sqlalchemy@'%'; GRANT UPDATE ON ispybtest.* to ispyb_api_sqlalchemy@'%';"
           rm ~/.my.cnf
 
       - name: Run tests
