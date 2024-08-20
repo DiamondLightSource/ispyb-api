@@ -59,6 +59,7 @@ jobs:
           
           mariadb-install-db --defaults-file=.my.cnf --user=mysql --basedir=/usr --datadir=/var/lib/mysql
           /etc/init.d/mariadb start
+          mariadb --defaults-file=.my.cnf -e "CREATE DATABASE ispybtest"
           
           printf 'Waiting for MySQL database to accept connections'
           until mariadb --defaults-file=.my.cnf -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 10; done
