@@ -15,10 +15,14 @@ jobs:
       mariadb:
         image: mariadb:10.6
         env:
-          MYSQL_DATABASE: ispybtest
-          MYSQL_ROOT_PASSWORD: mysql_root_pwd
+          DATABASE_HOST: 127.0.0.1
+          MARIADB_USER: test
+          MARIADB_PASSWORD: test
+          MARIADB_DATABASE: ispybtest
+          MARIADB_ROOT_PASSWORD: mariadb_root_pwd
         ports:
           - 3306:3306
+        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - uses: actions/checkout@v4
       - name: Use Python ${{ matrix.python-version }}
@@ -43,9 +47,9 @@ jobs:
           set -eu
           cat >~/.my.cnf <<EOF
           [client]
-          user=root
+          user=test
           host=127.0.0.1
-          password=mysql_root_pwd
+          password=test
           database=ispybtest
           EOF
       
