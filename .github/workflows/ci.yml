@@ -41,6 +41,12 @@ jobs:
           name: package-distributions
           path: dist/
 
+      - uses: shogo82148/actions-setup-mysql@v1
+        with:
+          distribution: 'mariadb'
+          mysql-version: '10.6'
+          auto-start: false
+
       - name: Set up test database
         run: |
           set -eu
@@ -58,7 +64,7 @@ jobs:
           tar xfz "dist/ispyb-database.tar.gz"
           
           printf 'Waiting for MySQL database to accept connections'
-          until mariadb --defaults-file=.my.cnf -h 0.0.0.0 -P 3306 -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 0.5; done
+          until mariadb --defaults-file=.my.cnf -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 0.5; done
           printf '\n'
       
           mariadb -e "SET GLOBAL log_bin_trust_function_creators = 1;"
