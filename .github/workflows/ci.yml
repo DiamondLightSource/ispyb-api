@@ -45,7 +45,7 @@ jobs:
       - name: Set up test database
         run: |
           set -eu
-          cat >~/.my.cnf <<EOF
+          cat > .my.cnf <<EOF
           [client]
           user=test
           password=test
@@ -59,7 +59,7 @@ jobs:
           tar xfz "dist/ispyb-database.tar.gz"
           
           printf 'Waiting for MySQL database to accept connections'
-          until mariadb -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 0.5; done
+          until mariadb --defaults-file=.my.cnf -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 0.5; done
           printf '\n'
       
           mariadb -e "SET GLOBAL log_bin_trust_function_creators = 1;"
