@@ -6,17 +6,16 @@ on:
 jobs:
   test:
     name: Run tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [ "3.7", "3.8", "3.9", "3.10", "3.11" ]
-    container: mariadb
     services:
       mariadb:
         image: mariadb:10.6
         env:
-          MYSQL_DATABASE: ispybtest
-          MYSQL_ROOT_PASSWORD: mariadb_root_pwd
+          MARIADB_DATABASE: ispybtest
+          MARIADB_ROOT_PASSWORD: mariadb_root_pwd
         ports:
           - 3306:3306
         options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -32,12 +31,6 @@ jobs:
           set -eux
           python -m pip install -r ./requirements_dev.txt
           python -m pip install .
-
-      - name: Debug
-        uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 15
-        with:
-          sudo: false
 
       - name: Get pre-built package
         uses: actions/download-artifact@v4
@@ -62,6 +55,8 @@ jobs:
           port = 3306
           database = ispybtest
           EOF
+
+          cat /etc/os-release
       
           cp "./conf/config.example.cfg" "./conf/config.cfg"
           cp "./conf/ws_config.example.cfg" "./conf/ws_config.cfg"
