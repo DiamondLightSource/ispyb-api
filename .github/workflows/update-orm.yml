@@ -54,7 +54,7 @@ jobs:
         if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         uses: actions/download-artifact@v4
         with:
-          name: ispyb-database.tar.gz
+          name: package-distributions
           path: dist/
 
       - name: Set up reference database schema
@@ -74,12 +74,12 @@ jobs:
       
           mkdir schema
           cd schema
-          tar xfz "$(System.ArtifactsDirectory)/package/ispyb-database.tar.gz"
-          patch -p1 < "$(Build.SourcesDirectory)/src/ispyb/sqlalchemy/sqlacodegen.patch"
+          tar xfz "dist/ispyb-database.tar.gz"
+          patch -p1 < "src/ispyb/sqlalchemy/sqlacodegen.patch"
           ln ~/.my.cnf .my.cnf -s
       
           printf 'Waiting for MySQL database to accept connections'
-          until mysql -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 0.5; done
+          until mariadb --defaults-file=.my.cnf -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 0.5; done
           printf '\n'
       
           echo "Installing reference database"
@@ -87,7 +87,7 @@ jobs:
       
           echo
           echo "Installed tables:"
-          mysql -D ispyb_build -e "SHOW TABLES"
+          mariadb --defaults-file=.my.cnf -D ispyb_build -e "SHOW TABLES"
         working-directory: dist
 
       - name: Generate ORM
