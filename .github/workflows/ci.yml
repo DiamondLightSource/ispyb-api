@@ -33,6 +33,12 @@ jobs:
           python -m pip install -r ./requirements_dev.txt
           python -m pip install .
 
+      - name: Debug
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 15
+        with:
+          sudo: false
+
       - name: Get pre-built package
         uses: actions/download-artifact@v4
         with:
@@ -42,7 +48,7 @@ jobs:
       - uses: shogo82148/actions-setup-mysql@v1
         with:
           distribution: 'mariadb'
-          mysql-version: '10.8'
+          mysql-version: '10.6'
           auto-start: false
 
       - name: Set up test database
