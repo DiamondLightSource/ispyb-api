@@ -41,11 +41,8 @@ jobs:
           name: package-distributions
           path: dist/
 
-      - name: Debug
-        uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 15
-        with:
-          sudo: false
+      - name: Install MariaDB client
+        run: apt-get update && apt-get install mariadb-client-10.6
 
       - name: Set up test database
         run: |
