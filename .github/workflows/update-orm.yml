@@ -90,7 +90,6 @@ jobs:
           echo
           echo "Installed tables:"
           mariadb --defaults-file=.my.cnf -D ispyb_build -e "SHOW TABLES"
-        working-directory: dist
 
       - name: Generate ORM
         if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
