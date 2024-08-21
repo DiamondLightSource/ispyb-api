@@ -42,7 +42,7 @@ jobs:
           path: dist/
 
       - name: Install MariaDB client
-        run: apt-get update && apt-get install mariadb-client-10.6
+        run: apt-get update && apt-get install mariadb-client
 
       - name: Set up test database
         run: |
