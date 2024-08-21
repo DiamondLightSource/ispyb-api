@@ -41,6 +41,12 @@ jobs:
           name: package-distributions
           path: dist/
 
+      - name: Debug
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 15
+        with:
+          sudo: false
+
       - name: Set up test database
         run: |
           set -eu
