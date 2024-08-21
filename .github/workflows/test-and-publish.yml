@@ -4,7 +4,7 @@ on:
   [push, pull_request]
 
 env:
-  DATABASE_SCHEMA: 4.1.0
+  DATABASE_SCHEMA: 4.2.1
 
 permissions:
   contents: read
