@@ -1,0 +1,90 @@
+name: Run tests
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ "3.7", "3.8", "3.9", "3.10", "3.11" ]
+    services:
+      mariadb:
+        image: mariadb:10.6
+        env:
+          MARIADB_DATABASE: ispybtest
+          MARIADB_ROOT_PASSWORD: mariadb_root_pwd
+        ports:
+          - 3306:3306
+        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install package
+        run: |
+          set -eux
+          python -m pip install -r ./requirements_dev.txt
+          python -m pip install .
+
+      - name: Get pre-built package
+        uses: actions/download-artifact@v4
+        with:
+          name: package-distributions
+          path: dist/
+
+      - uses: shogo82148/actions-setup-mysql@v1
+        with:
+          distribution: 'mariadb'
+          mysql-version: '10.6'
+          auto-start: false
+
+      - name: Set up test database
+        run: |
+          set -eu
+          cat > .my.cnf <<EOF
+          [client]
+          user = root
+          password = mariadb_root_pwd
+          host = 127.0.0.1
+          port = 3306
+          database = ispybtest
+          EOF
+      
+          cp "./conf/config.example.cfg" "./conf/config.cfg"
+          cp "./conf/ws_config.example.cfg" "./conf/ws_config.cfg"
+          tar xfz "dist/ispyb-database.tar.gz"
+          
+          printf 'Waiting for MySQL database to accept connections'
+          until mariadb --defaults-file=.my.cnf -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 10; done
+          printf '\n'
+      
+          mariadb --defaults-file=.my.cnf -e "SET GLOBAL log_bin_trust_function_creators = 1;"
+          for f in schemas/ispyb/tables.sql \
+                   schemas/ispyb/lookups.sql \
+                   schemas/ispyb/data.sql \
+                   schemas/ispyb/routines.sql \
+                   grants/ispyb_processing.sql \
+                   grants/ispyb_import.sql; do
+              echo Importing ${f}...
+              mariadb --defaults-file=.my.cnf < $f
+          done
+          mariadb --defaults-file=.my.cnf -e "CREATE USER ispyb_api@'%' IDENTIFIED BY 'password_1234'; GRANT ispyb_processing to ispyb_api@'%'; GRANT ispyb_import to ispyb_api@'%'; SET DEFAULT ROLE ispyb_processing FOR ispyb_api@'%';"
+          mariadb --defaults-file=.my.cnf -e "CREATE USER ispyb_api_future@'%' IDENTIFIED BY 'password_4321'; GRANT SELECT ON ispybtest.* to ispyb_api_future@'%';"
+          mariadb --defaults-file=.my.cnf -e "CREATE USER ispyb_api_sqlalchemy@'%' IDENTIFIED BY 'password_5678'; GRANT SELECT ON ispybtest.* to ispyb_api_sqlalchemy@'%'; GRANT INSERT ON ispybtest.* to ispyb_api_sqlalchemy@'%'; GRANT UPDATE ON ispybtest.* to ispyb_api_sqlalchemy@'%';"
+          rm .my.cnf
+
+      - name: Run tests
+        run: |
+          export ISPYB_CREDENTIALS="./conf/config.cfg"
+          PYTHONDEVMODE=1 pytest tests -ra --cov=ispyb --cov-report=xml --cov-branch
+
+      - name: Publish coverage stats
+        run: bash <(curl -s https://codecov.io/bash) -n "Python ${{ matrix.python-version }}"
+        continue-on-error: true
+        timeout-minutes: 2
