@@ -120,3 +120,4 @@ jobs:
         run: .github/workflows/scripts/create-orm-update-pull-request
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          DATABASE_SCHEMA: ${{ inputs.DATABASE_SCHEMA }}
