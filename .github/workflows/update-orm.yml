@@ -11,7 +11,6 @@ jobs:
   orm-update:
     name: Update ORM
     runs-on: ubuntu-latest
-    container: mariadb
     services:
       mariadb:
         image: mariadb:10.6
@@ -21,7 +20,7 @@ jobs:
         ports:
           - 3306:3306
     outputs:
-      output1: ${{ steps.checkUpdate.needsUpdate }}
+      needsUpdate: ${{ steps.checkUpdate.outputs.needsUpdate }}
 
     steps:
       - uses: actions/checkout@v4
@@ -45,21 +44,21 @@ jobs:
         working-directory: ./src/ispyb/sqlalchemy
 
       - name: Install sqlacodegen
-        if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
+        if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         run: |
           set -eux
           pip install -r requirements_orm.txt
           pip install pre-commit
 
       - name: Get database schema
-        if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
+        if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         uses: actions/download-artifact@v4
         with:
           name: ispyb-database.tar.gz
           path: dist/
 
       - name: Set up reference database schema
-        if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
+        if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         run: |
           set -eu
           cat >~/.my.cnf <<EOF
@@ -92,7 +91,7 @@ jobs:
         working-directory: dist
 
       - name: Generate ORM
-        if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
+        if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         run: |
           set -eux
           sqlacodegen mysql+mysqlconnector://root:mysql_root_pwd@127.0.0.1/ispyb_build --noinflect --nojoined --outfile _auto_db_schema.py.in
@@ -105,18 +104,18 @@ jobs:
         working-directory: ./src/ispyb/sqlalchemy
 
       - name: Show differences
-        if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
+        if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         run: git diff
 
       - name: Store artifact
-        if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
+        if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: ORM
           path: ./src/ispyb/sqlalchemy/_auto_db_schema.py
 
       - name: Create ORM pull request
-        if: ${{ steps.checkUpdate.needsUpdate == 'true' && github.ref_name == 'main' }}
+        if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' && github.ref_name == 'main' }}
         run: .github/workflows/scripts/create-orm-update-pull-request
         env:
           GITHUB_TOKEN: ${{ github.token }}
