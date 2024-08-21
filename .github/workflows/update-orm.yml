@@ -116,7 +116,7 @@ jobs:
           path: ./src/ispyb/sqlalchemy/_auto_db_schema.py
 
       - name: Create ORM pull request
-        if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' && github.ref_name == 'main' }}
+        if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         run: .github/workflows/scripts/create-orm-update-pull-request
         env:
           GITHUB_TOKEN: ${{ github.token }}
