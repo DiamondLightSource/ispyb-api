@@ -41,9 +41,6 @@ jobs:
           name: package-distributions
           path: dist/
 
-      - name: Install MariaDB client
-        run: apt-get update && apt-get install mariadb-client
-
       - name: Set up test database
         run: |
           set -eu
@@ -61,7 +58,7 @@ jobs:
           tar xfz "dist/ispyb-database.tar.gz"
           
           printf 'Waiting for MySQL database to accept connections'
-          until mariadb --defaults-file=.my.cnf -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 10; done
+          until mariadb --defaults-file=.my.cnf --protocol=tcp -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 10; done
           printf '\n'
       
           mariadb --defaults-file=.my.cnf -e "SET GLOBAL log_bin_trust_function_creators = 1;"
