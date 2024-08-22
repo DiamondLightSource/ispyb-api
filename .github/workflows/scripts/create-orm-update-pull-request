@@ -8,7 +8,7 @@ echo "https://${GITHUB_TOKEN}:@github.com" > .git/credentials
 echo
 
 echo "##[section]Check for existing pull request"
-gh pr list -B ${BRANCH} | grep "orm-update" && {
+echo $( gh pr list -B ${BRANCH} -H orm-update ) && {
   echo Pull request already exists. Stopping here.
   exit
 } || {
