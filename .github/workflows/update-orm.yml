@@ -125,3 +125,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           DATABASE_SCHEMA: ${{ inputs.DATABASE_SCHEMA }}
+          BRANCH: ${{ github.ref_name }}
