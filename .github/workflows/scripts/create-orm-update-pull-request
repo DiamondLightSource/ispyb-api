@@ -7,16 +7,8 @@ git config credential.helper "store --file=.git/credentials"
 echo "https://${GITHUB_TOKEN}:@github.com" > .git/credentials
 echo
 
-echo "##[section]Installing github cli"
-pushd .. >/dev/null
-wget -nv https://github.com/github/hub/releases/download/v2.6.0/hub-linux-amd64-2.6.0.tgz -O - | tar xz
-export PATH=$(pwd)/hub-linux-amd64-2.6.0/bin/:${PATH}
-popd >/dev/null
-hub --version
-echo
-
 echo "##[section]Check for existing pull request"
-hub pr list -b main -f '%H%n' | grep "^orm-update$" && {
+echo $( gh pr list -B ${BRANCH} -H orm-update ) | grep orm-update && {
   echo Pull request already exists. Stopping here.
   exit
 } || {
@@ -39,8 +31,7 @@ echo
 
 echo "##[section]Creating pull request"
 git push -f --set-upstream origin orm-update
-HUB_VERBOSE=1 hub pull-request -b main -f -m "ISPyB ORM schema update v${DATABASE_SCHEMA}
-
+gh pr create -B ${BRANCH} -H orm-update -t "ISPyB ORM schema update v${DATABASE_SCHEMA}" -b "
 This is an automated pull request to update the ISPyB ORM schema.
 
 Before merging this pull request you may want to
