@@ -175,9 +175,9 @@ def test_mxacquisition_methods(testdb):
 
     params = mxacquisition.get_data_collection_file_attachment_params()
     params["parentid"] = id1
-    params[
-        "file_full_path"
-    ] = "/dls/mx/data/mx12345/mx12345-6/processed/xia2_run/result.json"
+    params["file_full_path"] = (
+        "/dls/mx/data/mx12345/mx12345-6/processed/xia2_run/result.json"
+    )
     params["file_type"] = "log"
     dcfa_id = mxacquisition.upsert_data_collection_file_attachment(
         list(params.values())

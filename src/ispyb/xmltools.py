@@ -68,7 +68,9 @@ class XmlDictConfig(dict):
                         currentValue = self[element.tag]
                         currentValue.append(aDict)
                         self.update({element.tag: currentValue})
-                    except Exception:  # the first of its kind, an empty list must be created
+                    except (
+                        Exception
+                    ):  # the first of its kind, an empty list must be created
                         self.update(
                             {element.tag: [aDict]}
                         )  # aDict is written in [], i.e. it will be a list
