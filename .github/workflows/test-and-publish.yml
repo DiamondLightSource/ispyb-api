@@ -45,7 +45,9 @@ jobs:
       - name: Build python package
         run: python3 -m build
       - name: Download ISPyB DB schema v${{ env.DATABASE_SCHEMA }} for tests
-        run: wget -t 3 --waitretry=20 https://github.com/DiamondLightSource/ispyb-database/releases/download/v${{ env.DATABASE_SCHEMA }}/ispyb-database-${{ env.DATABASE_SCHEMA }}.tar.gz -O database/ispyb-database.tar.gz
+        run: |
+          mkdir database
+          wget -t 3 --waitretry=20 https://github.com/DiamondLightSource/ispyb-database/releases/download/v${{ env.DATABASE_SCHEMA }}/ispyb-database-${{ env.DATABASE_SCHEMA }}.tar.gz -O database/ispyb-database.tar.gz
       - name: Store built package artifact
         uses: actions/upload-artifact@v4
         with:
