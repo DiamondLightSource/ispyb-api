@@ -11,17 +11,21 @@ jobs:
   orm-update:
     name: Update ORM
     runs-on: ubuntu-latest
-    container: mariadb
+    permissions:
+      contents: write
+      pull-requests: write
+
     services:
       mariadb:
         image: mariadb:10.6
         env:
-          MYSQL_DATABASE: ispybtest
-          MYSQL_ROOT_PASSWORD: mysql_root_pwd
+          MARIADB_DATABASE: ispybtest
+          MARIADB_ROOT_PASSWORD: mariadb_root_pwd
         ports:
           - 3306:3306
+        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=3
     outputs:
-      output1: ${{ steps.checkUpdate.needsUpdate }}
+      needsUpdate: ${{ steps.checkUpdate.outputs.needsUpdate }}
 
     steps:
       - uses: actions/checkout@v4
@@ -45,42 +49,43 @@ jobs:
         working-directory: ./src/ispyb/sqlalchemy
 
       - name: Install sqlacodegen
-        if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
+        if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         run: |
           set -eux
           pip install -r requirements_orm.txt
           pip install pre-commit
 
       - name: Get database schema
-        if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
+        if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         uses: actions/download-artifact@v4
         with:
-          name: ispyb-database.tar.gz
+          name: package-distributions
           path: dist/
 
+      - uses: shogo82148/actions-setup-mysql@v1
+        with:
+          distribution: 'mariadb'
+          mysql-version: '10.6'
+          auto-start: false
+
       - name: Set up reference database schema
-        if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
+        if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         run: |
           set -eu
-          cat >~/.my.cnf <<EOF
+          cat > .my.cnf <<EOF
           [client]
-          user=root
-          host=127.0.0.1
-          password=mysql_root_pwd
-          database=ispybtest
+          user = root
+          password = mariadb_root_pwd
+          host = 127.0.0.1
+          port = 3306
+          database = ispybtest
           EOF
-      
-          echo "Installing mariadb-client"
-          sudo apt-get install mariadb-client
-      
-          mkdir schema
-          cd schema
-          tar xfz "$(System.ArtifactsDirectory)/package/ispyb-database.tar.gz"
-          patch -p1 < "$(Build.SourcesDirectory)/src/ispyb/sqlalchemy/sqlacodegen.patch"
-          ln ~/.my.cnf .my.cnf -s
+
+          tar xfz "dist/ispyb-database.tar.gz"
+          patch -p1 < "src/ispyb/sqlalchemy/sqlacodegen.patch"
       
           printf 'Waiting for MySQL database to accept connections'
-          until mysql -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 0.5; done
+          until mariadb --defaults-file=.my.cnf -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 0.5; done
           printf '\n'
       
           echo "Installing reference database"
@@ -88,14 +93,13 @@ jobs:
       
           echo
           echo "Installed tables:"
-          mysql -D ispyb_build -e "SHOW TABLES"
-        working-directory: dist
+          mariadb --defaults-file=.my.cnf -D ispyb_build -e "SHOW TABLES"
 
       - name: Generate ORM
-        if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
+        if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         run: |
           set -eux
-          sqlacodegen mysql+mysqlconnector://root:mysql_root_pwd@127.0.0.1/ispyb_build --noinflect --nojoined --outfile _auto_db_schema.py.in
+          sqlacodegen mysql+mysqlconnector://root:mariadb_root_pwd@127.0.0.1/ispyb_build --noinflect --nojoined --outfile _auto_db_schema.py.in
           # This code produces false positives due to non-deterministic ordering.
           # Add an identifier to the file, and only update/PR the changes when the
           # identifier indicates the file is out of date.
@@ -105,18 +109,20 @@ jobs:
         working-directory: ./src/ispyb/sqlalchemy
 
       - name: Show differences
-        if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
+        if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         run: git diff
 
       - name: Store artifact
-        if: ${{ steps.checkUpdate.needsUpdate == 'true' }}
+        if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: ORM
           path: ./src/ispyb/sqlalchemy/_auto_db_schema.py
 
       - name: Create ORM pull request
-        if: ${{ steps.checkUpdate.needsUpdate == 'true' && github.ref_name == 'main' }}
+        if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         run: .github/workflows/scripts/create-orm-update-pull-request
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          DATABASE_SCHEMA: ${{ inputs.DATABASE_SCHEMA }}
+          BRANCH: ${{ github.ref_name }}

@@ -76,6 +76,9 @@ jobs:
 
   update_ORM:
     name: Call orm update workflow
+    permissions:
+      contents: write
+      pull-requests: write
     needs:
       - build
       - get-env-vars
