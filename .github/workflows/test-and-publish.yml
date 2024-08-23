@@ -58,8 +58,6 @@ jobs:
         with:
           name: database
           path: database/
-      - name: Check package description
-        run: python setup.py checkdocs
 
   tests:
     name: Call ci unit tests workflow
