@@ -2,6 +2,9 @@ name: Run tests
 
 on:
   workflow_call:
+    secrets:
+      CODECOV_TOKEN:
+        required: true
 
 jobs:
   test:
@@ -90,7 +93,12 @@ jobs:
           export ISPYB_CREDENTIALS="./conf/config.cfg"
           PYTHONDEVMODE=1 pytest tests -ra --cov=ispyb --cov-report=xml --cov-branch
 
-      - name: Publish coverage stats
-        run: bash <(curl -s https://codecov.io/bash) -n "Python ${{ matrix.python-version }}"
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          name: ${{ matrix.python-version }}
+          files: coverage.xml
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         continue-on-error: true
         timeout-minutes: 2

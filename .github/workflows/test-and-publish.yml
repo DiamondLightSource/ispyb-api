@@ -65,6 +65,8 @@ jobs:
     needs:
       - build
       - static
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   get-env-vars:
     name: Get environment variables
