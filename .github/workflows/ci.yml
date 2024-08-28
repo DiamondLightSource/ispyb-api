@@ -2,6 +2,9 @@ name: Run tests
 
 on:
   workflow_call:
+    secrets:
+      CODECOV_TOKEN:
+        required: true
 
 jobs:
   test:
@@ -32,11 +35,11 @@ jobs:
           python -m pip install -r ./requirements_dev.txt
           python -m pip install .
 
-      - name: Get pre-built package
+      - name: Get database
         uses: actions/download-artifact@v4
         with:
-          name: package-distributions
-          path: dist/
+          name: database
+          path: database/
 
       - uses: shogo82148/actions-setup-mysql@v1
         with:
@@ -58,7 +61,7 @@ jobs:
       
           cp "./conf/config.example.cfg" "./conf/config.cfg"
           cp "./conf/ws_config.example.cfg" "./conf/ws_config.cfg"
-          tar xfz "dist/ispyb-database.tar.gz"
+          tar xfz "database/ispyb-database.tar.gz"
           
           printf 'Waiting for MySQL database to accept connections'
           until mariadb --defaults-file=.my.cnf -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 10; done
@@ -84,7 +87,12 @@ jobs:
           export ISPYB_CREDENTIALS="./conf/config.cfg"
           PYTHONDEVMODE=1 pytest tests -ra --cov=ispyb --cov-report=xml --cov-branch
 
-      - name: Publish coverage stats
-        run: bash <(curl -s https://codecov.io/bash) -n "Python ${{ matrix.python-version }}"
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          name: ${{ matrix.python-version }}
+          files: coverage.xml
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         continue-on-error: true
         timeout-minutes: 2

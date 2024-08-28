@@ -1,4 +1,4 @@
-name: Run tests and publish Python distribution to PyPI
+name: Test & Publish
 
 on:
   [push, pull_request]
@@ -36,35 +36,37 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.9"
-      - name: Install dependencies
-        run: |
-          pip install -U pip
-          pip install  collective.checkdocs wheel
+      - name: Install pypa/build
+        run: >-
+          python3 -m
+          pip install
+          build
+          --user
       - name: Build python package
-        run: |
-          set -ex
-          python setup.py sdist bdist_wheel
-          mkdir -p dist/pypi
-          shopt -s extglob
-          mv -v dist/!(pypi) dist/pypi
-          git archive HEAD | gzip > dist/repo-source.tar.gz
-          ls -laR dist
+        run: python3 -m build
       - name: Download ISPyB DB schema v${{ env.DATABASE_SCHEMA }} for tests
-        run: wget -t 3 --waitretry=20 https://github.com/DiamondLightSource/ispyb-database/releases/download/v${{ env.DATABASE_SCHEMA }}/ispyb-database-${{ env.DATABASE_SCHEMA }}.tar.gz -O dist/ispyb-database.tar.gz
-      - name: Store artifact
+        run: |
+          mkdir database
+          wget -t 3 --waitretry=20 https://github.com/DiamondLightSource/ispyb-database/releases/download/v${{ env.DATABASE_SCHEMA }}/ispyb-database-${{ env.DATABASE_SCHEMA }}.tar.gz -O database/ispyb-database.tar.gz
+      - name: Store built package artifact
         uses: actions/upload-artifact@v4
         with:
           name: package-distributions
           path: dist/
-      - name: Check package description
-        run: python setup.py checkdocs
+      - name: Store database artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: database
+          path: database/
 
   tests:
-    name: Call ci unit tests workflow
+    name: Testing
     uses: ./.github/workflows/ci.yml
     needs:
       - build
       - static
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   get-env-vars:
     name: Get environment variables
@@ -75,7 +77,7 @@ jobs:
       - run: echo "null"
 
   update_ORM:
-    name: Call orm update workflow
+    name: Update ORM
     permissions:
       contents: write
       pull-requests: write
@@ -88,8 +90,7 @@ jobs:
 
 
   publish-to-pypi:
-    name: >-
-      Publish Python distribution to PyPI
+    name: Publish PyPI
     if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
     needs:
       - tests
@@ -110,9 +111,7 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
 
   github-release:
-    name: >-
-      Sign the Python distribution with Sigstore
-      and upload them to GitHub Release
+    name: Publish Github Release
     needs:
       - publish-to-pypi
     runs-on: ubuntu-latest
