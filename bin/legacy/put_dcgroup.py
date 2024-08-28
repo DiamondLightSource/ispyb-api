@@ -11,7 +11,6 @@ import logging
 import sys
 
 if __name__ == "__main__":
-
     from datetime import datetime
 
     from ispyb_api.core import core
