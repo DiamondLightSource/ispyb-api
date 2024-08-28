@@ -1,3 +1,51 @@
+[build-system]
+requires = ["setuptools>=61.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ispyb"
+version = "10.2.3"
+description = "Python package to access ISPyB database"
+authors = [
+    { name = "Diamond Light Source", email = "scientificsoftware@diamond.ac.uk" },
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+keywords = ["ISPyB", "database"]
+requires-python = ">=3.7"
+readme = "README.md"
+license = { text = "Apache License 2.0" }
+dependencies = ["mysql-connector-python>=8.0.32", "sqlalchemy<2", "tabulate"]
+
+[project.urls]
+Documentation = "https://ispyb.readthedocs.io"
+GitHub = "https://github.com/DiamondLightSource/ispyb-api"
+Bug-Tracker = "https://github.com/DiamondLightSource/ispyb-api/issues"
+
+[project.entry-points."libtbx.dispatcher.script"]
+"ispyb.job" = "ispyb.job"
+"ispyb.last_data_collections_on" = "ispyb.last_data_collections_on"
+
+[project.entry-points."libtbx.precommit"]
+ispyb = "ispyb"
+
+[project.scripts]
+"ispyb.job" = "ispyb.cli.job:main"
+"ispyb.last_data_collections_on" = "ispyb.cli.last_data_collections_on:main"
+
+[tool.setuptools]
+script-files = ["bin/dimple2ispyb.py", "bin/mxdatareduction2ispyb.py"]
+
 [tool.ruff.lint.isort]
 known-first-party = ["ispyb"]
 
