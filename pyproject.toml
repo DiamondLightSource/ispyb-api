@@ -1,4 +1,8 @@
-[tool.isort]
-#sections="FUTURE,STDLIB,THIRDPARTY,CCTBX,FIRSTPARTY,LOCALFOLDER"
-known_firstparty="ispyb"
-profile="black"
+[tool.ruff.lint.isort]
+known-first-party = ["ispyb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "C4", "I"]
+unfixable = ["F841"]
+# E501 line too long (if formatter cannot split, we don't worry)
+ignore = ["E501"]
