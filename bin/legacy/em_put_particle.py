@@ -11,7 +11,6 @@ import logging
 import sys
 
 if __name__ == "__main__":
-
     from ispyb_api.dbconnection import dbconnection
     from ispyb_api.em import em
 
