@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ispyb"
-version = "10.2.3"
+version = "10.2.4"
 description = "Python package to access ISPyB database"
 authors = [
     { name = "Diamond Light Source", email = "scientificsoftware@diamond.ac.uk" },
@@ -56,7 +56,7 @@ unfixable = ["F841"]
 ignore = ["E501"]
 
 [tool.bumpversion]
-current_version = "10.2.3"
+current_version = "10.2.4"
 commit = true
 tag = true
 
