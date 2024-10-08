@@ -13,6 +13,7 @@ jobs:
     strategy:
       matrix:
         python-version: [ "3.7", "3.8", "3.9", "3.10", "3.11" ]
+        sqlalchemy-version: ["sqlalchemy==1.4", "sqlalchemy>=2,<3"]
     services:
       mariadb:
         image: mariadb:10.6
@@ -32,8 +33,7 @@ jobs:
       - name: Install package
         run: |
           set -eux
-          python -m pip install -r ./requirements_dev.txt
-          python -m pip install .
+          python -m pip install . -r ./requirements_dev.txt "${{ matrix.sqlalchemy-version }}"
 
       - name: Get database
         uses: actions/download-artifact@v4
