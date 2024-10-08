@@ -5,6 +5,8 @@ History
 Unreleased / main
 -------------------
 
+* Compatibility with SQLAlchemy 2. SQLAlchemy 1.4 remains supported.
+
 10.2.0 (2024-08-14)
 -------------------
 
