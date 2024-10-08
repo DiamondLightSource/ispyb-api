@@ -25,7 +25,7 @@ keywords = ["ISPyB", "database"]
 requires-python = ">=3.7"
 readme = "README.md"
 license = { text = "Apache License 2.0" }
-dependencies = ["mysql-connector-python>=8.0.32", "sqlalchemy>=2,<3", "tabulate"]
+dependencies = ["mysql-connector-python>=8.0.32", "sqlalchemy>=1.4,<3", "tabulate"]
 
 [project.urls]
 Documentation = "https://ispyb.readthedocs.io"
