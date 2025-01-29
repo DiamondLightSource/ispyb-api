@@ -59,8 +59,8 @@ jobs:
         if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         uses: actions/download-artifact@v4
         with:
-          name: package-distributions
-          path: dist/
+          name: database
+          path: database/
 
       - uses: shogo82148/actions-setup-mysql@v1
         if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
@@ -82,7 +82,7 @@ jobs:
           database = ispybtest
           EOF
 
-          tar xfz "dist/ispyb-database.tar.gz"
+          tar xfz "database/ispyb-database.tar.gz"
           patch -p1 < "src/ispyb/sqlalchemy/sqlacodegen.patch"
       
           printf 'Waiting for MySQL database to accept connections'
@@ -100,7 +100,7 @@ jobs:
         if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         run: |
           set -eux
-          sqlacodegen mysql+mysqlconnector://root:mariadb_root_pwd@127.0.0.1/ispyb_build --noinflect --nojoined --outfile _auto_db_schema.py.in
+          sqlacodegen mysql+mysqlconnector://root:mariadb_root_pwd@127.0.0.1/ispyb_build --options nojoined --outfile _auto_db_schema.py.in
           # This code produces false positives due to non-deterministic ordering.
           # Add an identifier to the file, and only update/PR the changes when the
           # identifier indicates the file is out of date.
