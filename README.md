@@ -21,7 +21,7 @@ as webservices.
 Please see https://ispyb.readthedocs.io.
 
 ### Requirements
-* Python 3.10, 3.11, 3.12, 3.13
+* Python 3.7, 3.8, 3.9 (minimum), 3.10, 3.11, 3.12, 3.13 (recommended)
 * The MySQL Connector/Python package.
 * MariaDB 10.0+ or MySQL 5.6+, but we recommend MariaDB 10.2 or later.
 * An ISPyB database installed on the above. See the [ispyb-database](https://github.com/DiamondLightSource/ispyb-database) repository for details.
