@@ -53,6 +53,7 @@ jobs:
         run: |
           set -eux
           pip install -r requirements_orm.txt
+          pip install .
           pip install pre-commit
 
       - name: Get database schema
