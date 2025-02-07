@@ -100,7 +100,7 @@ jobs:
         if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         run: |
           set -eux
-          sqlacodegen mysql+mysqlconnector://root:mariadb_root_pwd@127.0.0.1/ispyb_build --options nojoined --outfile _auto_db_schema.py.in
+          sqlacodegen --generator declarative_ispyb mysql+mysqlconnector://root:mariadb_root_pwd@127.0.0.1/ispyb_build --options nojoined --outfile _auto_db_schema.py.in
           # This code produces false positives due to non-deterministic ordering.
           # Add an identifier to the file, and only update/PR the changes when the
           # identifier indicates the file is out of date.

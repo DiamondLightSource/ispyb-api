@@ -11,7 +11,6 @@ from sqlalchemy.orm import relationship
 from ._auto_db_schema import *  # noqa F403; lgtm
 from ._auto_db_schema import (
     AutoProcProgram,
-    AutoProcScaling,
     ProcessingJob,
     __schema_version__,
 )
@@ -19,16 +18,19 @@ from ._auto_db_schema import (
 logger = logging.getLogger("ispyb.sqlalchemy")
 
 AutoProcProgram.AutoProcProgramAttachments = relationship(
-    "AutoProcProgramAttachment", back_populates="AutoProcProgram"
-)
-AutoProcScaling.AutoProcScalingStatistics = relationship(
-    "AutoProcScalingStatistics", back_populates="AutoProcScaling"
+    "AutoProcProgramAttachment",
+    back_populates="AutoProcProgram",
+    overlaps="AutoProcProgramAttachment",
 )
 ProcessingJob.ProcessingJobParameters = relationship(
-    "ProcessingJobParameter", back_populates="ProcessingJob"
+    "ProcessingJobParameter",
+    back_populates="ProcessingJob",
+    overlaps="ProcessingJobParameter",
 )
 ProcessingJob.ProcessingJobImageSweeps = relationship(
-    "ProcessingJobImageSweep", back_populates="ProcessingJob"
+    "ProcessingJobImageSweep",
+    back_populates="ProcessingJob",
+    overlaps="ProcessingJobImageSweep",
 )
 assert __schema_version__
 
