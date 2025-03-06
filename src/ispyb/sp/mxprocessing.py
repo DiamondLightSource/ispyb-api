@@ -238,6 +238,7 @@ class MXProcessing(ispyb.interface.processing.IF):
         self,
         program_id=None,
         job_id=None,
+        pipeline_id=None,
         name=None,
         command=None,
         environment=None,
@@ -257,7 +258,7 @@ class MXProcessing(ispyb.interface.processing.IF):
         :return: The program_id.
         """
         return self.get_connection().call_sp_write(
-            procname="upsert_processing_program",
+            procname="upsert_processing_program_v2",
             args=[
                 program_id,
                 command,
@@ -268,6 +269,7 @@ class MXProcessing(ispyb.interface.processing.IF):
                 time_update,
                 environment,
                 job_id,
+                pipeline_id,
                 time_defined,
             ],
         )
