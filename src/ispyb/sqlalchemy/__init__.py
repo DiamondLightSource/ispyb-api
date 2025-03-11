@@ -19,16 +19,24 @@ from ._auto_db_schema import (
 logger = logging.getLogger("ispyb.sqlalchemy")
 
 AutoProcProgram.AutoProcProgramAttachments = relationship(
-    "AutoProcProgramAttachment", back_populates="AutoProcProgram"
+    "AutoProcProgramAttachment",
+    back_populates="AutoProcProgram",
+    overlaps="AutoProcProgramAttachment",
 )
 AutoProcScaling.AutoProcScalingStatistics = relationship(
-    "AutoProcScalingStatistics", back_populates="AutoProcScaling"
+    "AutoProcScalingStatistics",
+    back_populates="AutoProcScaling",
+    overlaps="AutoProcScalingStatistics",
 )
 ProcessingJob.ProcessingJobParameters = relationship(
-    "ProcessingJobParameter", back_populates="ProcessingJob"
+    "ProcessingJobParameter",
+    back_populates="ProcessingJob",
+    overlaps="ProcessingJobParameter",
 )
 ProcessingJob.ProcessingJobImageSweeps = relationship(
-    "ProcessingJobImageSweep", back_populates="ProcessingJob"
+    "ProcessingJobImageSweep",
+    back_populates="ProcessingJob",
+    overlaps="ProcessingJobImageSweep",
 )
 assert __schema_version__
 
