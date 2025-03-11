@@ -66,8 +66,8 @@ jobs:
       - uses: shogo82148/actions-setup-mysql@v1
         if: ${{ steps.checkUpdate.outputs.needsUpdate == 'true' }}
         with:
-          distribution: 'mariadb'
-          mysql-version: '10.6'
+          distribution: "mariadb"
+          mysql-version: "10.6"
           auto-start: false
 
       - name: Set up reference database schema
@@ -85,14 +85,14 @@ jobs:
 
           tar xfz "database/ispyb-database.tar.gz"
           patch -p1 < "src/ispyb/sqlalchemy/sqlacodegen.patch"
-      
+
           printf 'Waiting for MySQL database to accept connections'
           until mariadb --defaults-file=.my.cnf -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 0.5; done
           printf '\n'
-      
+
           echo "Installing reference database"
           ./build.sh
-      
+
           echo
           echo "Installed tables:"
           mariadb --defaults-file=.my.cnf -D ispyb_build -e "SHOW TABLES"
