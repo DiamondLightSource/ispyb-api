@@ -31,6 +31,7 @@ echo
 
 echo "##[section]Creating pull request"
 git push -f --set-upstream origin orm-update
+
 gh pr create -B ${BRANCH} -H orm-update -t "ISPyB ORM schema update v${DATABASE_SCHEMA}" -b "
 This is an automated pull request to update the ISPyB ORM schema.
 
@@ -38,4 +39,5 @@ Before merging this pull request you may want to
 * [ ] ensure tests pass
 * [ ] update \`HISTORY.rst\` to reflect the changes in this pull request
 "
+
 echo

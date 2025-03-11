@@ -6,7 +6,9 @@ Unreleased / main
 -------------------
 
 * Add `pipeline_id` param to `upsert_program_ex` and use new sproc `upsert_processing_program_v2`
-* Azure pipelines CI: Use ispyb-database schema v4.6.0
+* Update database schema to v4.6.0
+* Drops support for Python <3.10
+* Drops support for sqlalchemy <2
 
 10.2.4 (2024-10-08)
 -------------------
