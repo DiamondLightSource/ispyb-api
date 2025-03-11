@@ -5,6 +5,10 @@ History
 Unreleased / main
 -------------------
 
+* Drops support for Python <3.10
+* Drops support for sqlalchemy <2
+* Update database schema to 4.4.0
+
 10.2.4 (2024-10-08)
 -------------------
 

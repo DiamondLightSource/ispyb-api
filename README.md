@@ -3,12 +3,8 @@
 [![Development status](https://img.shields.io/pypi/status/ispyb.svg)](https://pypi.python.org/pypi/ispyb)
 [![Python versions](https://img.shields.io/pypi/pyversions/ispyb.svg)](https://pypi.python.org/pypi/ispyb)
 
-[![Build Status](https://dev.azure.com/DLS-tooling/ispyb/_apis/build/status/DiamondLightSource.ispyb-api?branchName=main)](https://dev.azure.com/DLS-tooling/ispyb/\_build/latest?definitionId=2)
-[![Coverage Status](https://coveralls.io/repos/github/DiamondLightSource/ispyb-api/badge.svg?branch=main)](https://coveralls.io/github/DiamondLightSource/ispyb-api?branch=main)
 [![Documentation Status](https://readthedocs.org/projects/ispyb/badge/?version=latest)](https://ispyb.readthedocs.io/en/latest/?badge=latest)
-![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/DiamondLightSource/ispyb-api.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/DiamondLightSource/ispyb-api/context:python)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/DiamondLightSource/ispyb-api.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/DiamondLightSource/ispyb-api/alerts/)
+![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)
 
 # ISPyB API
 
