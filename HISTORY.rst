@@ -5,6 +5,11 @@ History
 Unreleased / main
 -------------------
 
+11.0.1 (2025-03-11)
+-------------------
+
+* Update pyproject dependencies to reflect code requirements (python, sqlalchemy)
+
 11.0.0 (2025-03-11)
 -------------------
 
