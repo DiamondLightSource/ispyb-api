@@ -50,6 +50,7 @@ def test_processing1(testdb):
     program_start = datetime.datetime.now()
     program_id = mxprocessing.upsert_program_ex(
         job_id=5,
+        pipeline_id=10,
         name="new program",
         command="program.sh --help",
         environment="environ=True",

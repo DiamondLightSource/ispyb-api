@@ -5,9 +5,10 @@ History
 Unreleased / main
 -------------------
 
+* Add `pipeline_id` param to `upsert_program_ex` and use new sproc `upsert_processing_program_v2`
+* Update database schema to v4.6.0
 * Drops support for Python <3.10
 * Drops support for sqlalchemy <2
-* Update database schema to 4.4.0
 
 10.2.4 (2024-10-08)
 -------------------
