@@ -1,4 +1,4 @@
-__schema_version__ = "4.4.0"
+__schema_version__ = "4.6.0"
 import datetime
 import decimal
 from typing import List, Optional
@@ -2487,6 +2487,11 @@ class BLSession(Base):
         Enum("Low", "Medium", "High", "Not Permitted"),
         comment="ERA in user admin system",
     )
+    purgedProcessedData: Mapped[Optional[int]] = mapped_column(
+        TINYINT(1),
+        server_default=text("0"),
+        comment="Flag to indicate whether the processed folder in the associated visit directory has been purged",
+    )
 
     Project: Mapped[List["Project"]] = relationship(
         "Project", secondary="Project_has_Session", back_populates="BLSession"
@@ -3558,6 +3563,7 @@ class DewarRegistry(Base):
     Proposal: Mapped["Proposal"] = relationship(
         "Proposal", back_populates="DewarRegistry"
     )
+    Dewar: Mapped[List["Dewar"]] = relationship("Dewar", back_populates="DewarRegistry")
     DewarRegistry_has_Proposal: Mapped[List["DewarRegistryHasProposal"]] = relationship(
         "DewarRegistryHasProposal", back_populates="DewarRegistry"
     )
@@ -4064,6 +4070,13 @@ class Dewar(Base):
     __tablename__ = "Dewar"
     __table_args__ = (
         ForeignKeyConstraint(
+            ["dewarRegistryId"],
+            ["DewarRegistry.dewarRegistryId"],
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+            name="Dewar_fk_dewarRegistryId",
+        ),
+        ForeignKeyConstraint(
             ["firstExperimentId"],
             ["BLSession.sessionId"],
             ondelete="SET NULL",
@@ -4081,6 +4094,7 @@ class Dewar(Base):
         Index("Dewar_FKIndex2", "firstExperimentId"),
         Index("Dewar_FKIndexCode", "code"),
         Index("Dewar_FKIndexStatus", "dewarStatus"),
+        Index("Dewar_fk_dewarRegistryId", "dewarRegistryId"),
         Index("barCode", "barCode", unique=True),
     )
 
@@ -4118,7 +4132,13 @@ class Dewar(Base):
     externalShippingIdFromSynchrotron: Mapped[Optional[int]] = mapped_column(
         INTEGER(11), comment="ID for shipping from synchrotron in external application"
     )
+    dewarRegistryId: Mapped[Optional[int]] = mapped_column(
+        INTEGER(11), comment="Reference to the registered dewar i.e. the physical item"
+    )
 
+    DewarRegistry: Mapped["DewarRegistry"] = relationship(
+        "DewarRegistry", back_populates="Dewar"
+    )
     BLSession: Mapped["BLSession"] = relationship("BLSession", back_populates="Dewar")
     Shipping: Mapped["Shipping"] = relationship("Shipping", back_populates="Dewar")
     Container: Mapped[List["Container"]] = relationship(
