@@ -22,6 +22,11 @@ AutoProcProgram.AutoProcProgramAttachments = relationship(
     back_populates="AutoProcProgram",
     overlaps="AutoProcProgramAttachment",
 )
+AutoProcProgram.AutoProcScalingStatistics = relationship(
+    "AutoProcScalingStatistics",
+    back_populates="AutoProcScaling",
+    overlaps="AutoProcScalingStatistics",
+)
 ProcessingJob.ProcessingJobParameters = relationship(
     "ProcessingJobParameter",
     back_populates="ProcessingJob",
