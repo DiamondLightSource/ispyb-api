@@ -11,6 +11,7 @@ from sqlalchemy.orm import relationship
 from ._auto_db_schema import *  # noqa F403; lgtm
 from ._auto_db_schema import (
     AutoProcProgram,
+    AutoProcScaling,
     ProcessingJob,
     __schema_version__,
 )
@@ -22,7 +23,7 @@ AutoProcProgram.AutoProcProgramAttachments = relationship(
     back_populates="AutoProcProgram",
     overlaps="AutoProcProgramAttachment",
 )
-AutoProcProgram.AutoProcScalingStatistics = relationship(
+AutoProcScaling.AutoProcScalingStatistics = relationship(
     "AutoProcScalingStatistics",
     back_populates="AutoProcScaling",
     overlaps="AutoProcScalingStatistics",
