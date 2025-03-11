@@ -36,6 +36,9 @@ Bug-Tracker = "https://github.com/DiamondLightSource/ispyb-api/issues"
 "ispyb.job" = "ispyb.job"
 "ispyb.last_data_collections_on" = "ispyb.last_data_collections_on"
 
+[project.entry-points."sqlacodegen.generators"]
+declarative_ispyb = "ispyb.generators:DeclarativeIspybGenerator"
+
 [project.entry-points."libtbx.precommit"]
 ispyb = "ispyb"
 
