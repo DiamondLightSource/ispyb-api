@@ -12,8 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [ "3.10", "3.11", "3.12", "3.13" ]
-        sqlalchemy-version: ["sqlalchemy==1.4", "sqlalchemy>=2,<3"]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        sqlalchemy-version: ["sqlalchemy>=2,<3"]
     services:
       mariadb:
         image: mariadb:10.6
@@ -43,8 +43,8 @@ jobs:
 
       - uses: shogo82148/actions-setup-mysql@v1
         with:
-          distribution: 'mariadb'
-          mysql-version: '10.6'
+          distribution: "mariadb"
+          mysql-version: "10.6"
           auto-start: false
 
       - name: Set up test database
@@ -58,15 +58,15 @@ jobs:
           port = 3306
           database = ispybtest
           EOF
-      
+
           cp "./conf/config.example.cfg" "./conf/config.cfg"
           cp "./conf/ws_config.example.cfg" "./conf/ws_config.cfg"
           tar xfz "database/ispyb-database.tar.gz"
-          
+
           printf 'Waiting for MySQL database to accept connections'
           until mariadb --defaults-file=.my.cnf -e "SHOW DATABASES" >/dev/null; do printf '.'; sleep 10; done
           printf '\n'
-      
+
           mariadb --defaults-file=.my.cnf -e "SET GLOBAL log_bin_trust_function_creators = 1;"
           for f in schemas/ispyb/tables.sql \
                    schemas/ispyb/lookups.sql \
