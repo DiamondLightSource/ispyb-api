@@ -5,6 +5,12 @@ History
 Unreleased / main
 -------------------
 
+11.0.2 (2025-03-13)
+-------------------
+
+* Replace manually declared accessors in table models with SQLAlchemy 2 compatible synonyms (in ProcessingJob, AutoProcProgramAttachment)
+* Remove manually declared accessors in AutoProcScaling
+
 11.0.1 (2025-03-11)
 -------------------
 
