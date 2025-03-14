@@ -6,38 +6,21 @@ import warnings
 
 import sqlalchemy.engine
 import sqlalchemy.orm
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, synonym
 
 from ._auto_db_schema import *  # noqa F403; lgtm
 from ._auto_db_schema import (
     AutoProcProgram,
-    AutoProcScaling,
     ProcessingJob,
     __schema_version__,
 )
 
 logger = logging.getLogger("ispyb.sqlalchemy")
 
-AutoProcProgram.AutoProcProgramAttachments = relationship(
-    "AutoProcProgramAttachment",
-    back_populates="AutoProcProgram",
-    overlaps="AutoProcProgramAttachment",
-)
-AutoProcScaling.AutoProcScalingStatistics = relationship(
-    "AutoProcScalingStatistics",
-    back_populates="AutoProcScaling",
-    overlaps="AutoProcScalingStatistics",
-)
-ProcessingJob.ProcessingJobParameters = relationship(
-    "ProcessingJobParameter",
-    back_populates="ProcessingJob",
-    overlaps="ProcessingJobParameter",
-)
-ProcessingJob.ProcessingJobImageSweeps = relationship(
-    "ProcessingJobImageSweep",
-    back_populates="ProcessingJob",
-    overlaps="ProcessingJobImageSweep",
-)
+AutoProcProgram.AutoProcProgramAttachments = synonym("AutoProcProgramAttachment")
+ProcessingJob.ProcessingJobParameters = synonym("ProcessingJobParameter")
+ProcessingJob.ProcessingJobImageSweeps = synonym("ProcessingJobImageSweep")
+
 assert __schema_version__
 
 
