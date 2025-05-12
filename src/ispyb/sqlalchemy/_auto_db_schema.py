@@ -1,4 +1,4 @@
-__schema_version__ = "4.6.0"
+__schema_version__ = "4.7.0"
 import datetime
 import decimal
 from typing import List, Optional
@@ -3804,6 +3804,8 @@ class Shipping(Base):
         ForeignKeyConstraint(
             ["deliveryAgent_flightCodePersonId"],
             ["Person.personId"],
+            ondelete="SET NULL",
+            onupdate="CASCADE",
             name="Shipping_ibfk_4",
         ),
         ForeignKeyConstraint(
@@ -3816,14 +3818,14 @@ class Shipping(Base):
         ForeignKeyConstraint(
             ["returnLabContactId"],
             ["LabContact.labContactId"],
-            ondelete="CASCADE",
+            ondelete="SET NULL",
             onupdate="CASCADE",
             name="Shipping_ibfk_3",
         ),
         ForeignKeyConstraint(
             ["sendingLabContactId"],
             ["LabContact.labContactId"],
-            ondelete="CASCADE",
+            ondelete="SET NULL",
             onupdate="CASCADE",
             name="Shipping_ibfk_2",
         ),
@@ -4166,6 +4168,7 @@ class DewarRegistryHasProposal(Base):
         ForeignKeyConstraint(
             ["labContactId"],
             ["LabContact.labContactId"],
+            ondelete="SET NULL",
             onupdate="CASCADE",
             name="DewarRegistry_has_Proposal_ibfk4",
         ),
@@ -4677,6 +4680,9 @@ class BLSample(Base):
     BLSampleImage: Mapped[List["BLSampleImage"]] = relationship(
         "BLSampleImage", back_populates="BLSample"
     )
+    BLSamplePosition: Mapped[List["BLSamplePosition"]] = relationship(
+        "BLSamplePosition", back_populates="BLSample"
+    )
     BLSample_has_DataCollectionPlan: Mapped[List["BLSampleHasDataCollectionPlan"]] = (
         relationship("BLSampleHasDataCollectionPlan", back_populates="BLSample")
     )
@@ -4706,6 +4712,9 @@ class BLSample(Base):
     )
     XFEFluorescenceSpectrum: Mapped[List["XFEFluorescenceSpectrum"]] = relationship(
         "XFEFluorescenceSpectrum", back_populates="BLSample"
+    )
+    XrayCentringResult: Mapped[List["XrayCentringResult"]] = relationship(
+        "XrayCentringResult", back_populates="BLSample"
     )
     BLSample_has_EnergyScan: Mapped[List["BLSampleHasEnergyScan"]] = relationship(
         "BLSampleHasEnergyScan", back_populates="BLSample"
@@ -4959,6 +4968,39 @@ class BLSampleImage(Base):
     )
     BLSampleImageMeasurement: Mapped[List["BLSampleImageMeasurement"]] = relationship(
         "BLSampleImageMeasurement", back_populates="BLSampleImage"
+    )
+
+
+class BLSamplePosition(Base):
+    __tablename__ = "BLSamplePosition"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["blSampleId"],
+            ["BLSample.blSampleId"],
+            name="BLSamplePosition_fk_blSampleId",
+        ),
+        Index("BLSamplePosition_fk_blSampleId", "blSampleId"),
+    )
+
+    blSamplePositionId: Mapped[int] = mapped_column(
+        INTEGER(11), primary_key=True, comment="Primary key (auto-incremented)"
+    )
+    blSampleId: Mapped[int] = mapped_column(
+        INTEGER(11), comment="FK, references parent sample"
+    )
+    posX: Mapped[Optional[decimal.Decimal]] = mapped_column(Double(asdecimal=True))
+    posY: Mapped[Optional[decimal.Decimal]] = mapped_column(Double(asdecimal=True))
+    posZ: Mapped[Optional[decimal.Decimal]] = mapped_column(Double(asdecimal=True))
+    recordTimeStamp: Mapped[Optional[datetime.datetime]] = mapped_column(
+        DateTime, comment="Creation or last update date/time"
+    )
+    positionType: Mapped[Optional[str]] = mapped_column(
+        Enum("dispensing"),
+        comment="Type of marked position (e.g.: dispensing location)",
+    )
+
+    BLSample: Mapped["BLSample"] = relationship(
+        "BLSample", back_populates="BLSamplePosition"
     )
 
 
@@ -6222,12 +6264,20 @@ class XrayCentringResult(Base):
     __tablename__ = "XrayCentringResult"
     __table_args__ = (
         ForeignKeyConstraint(
+            ["blSampleId"],
+            ["BLSample.blSampleId"],
+            ondelete="SET NULL",
+            onupdate="CASCADE",
+            name="XrayCentringResult_fk_blSampleId",
+        ),
+        ForeignKeyConstraint(
             ["xrayCentringId"],
             ["XrayCentring.xrayCentringId"],
             ondelete="CASCADE",
             onupdate="CASCADE",
             name="XrayCentringResult_ibfk_1",
         ),
+        Index("XrayCentringResult_fk_blSampleId", "blSampleId"),
         Index("xrayCentringId", "xrayCentringId"),
         {"comment": "Xray Centring result."},
     )
@@ -6297,7 +6347,14 @@ class XrayCentringResult(Base):
     gridInfoId: Mapped[Optional[int]] = mapped_column(
         INTEGER(11), comment="to be removed"
     )
+    blSampleId: Mapped[Optional[int]] = mapped_column(
+        INTEGER(11),
+        comment="The BLSample attributed for this x-ray centring result, i.e. the actual sample even for multi-pins",
+    )
 
+    BLSample: Mapped["BLSample"] = relationship(
+        "BLSample", back_populates="XrayCentringResult"
+    )
     XrayCentring: Mapped["XrayCentring"] = relationship(
         "XrayCentring", back_populates="XrayCentringResult"
     )
@@ -8448,6 +8505,14 @@ class ParticleClassification(Base):
     bFactorFitQuadratic: Mapped[Optional[float]] = mapped_column(
         Float,
         comment="Quadratic coefficient of quadratic fit to refinement resolution against the logarithm of the number of particles",
+    )
+    angularEfficiency: Mapped[Optional[decimal.Decimal]] = mapped_column(
+        Double(asdecimal=True),
+        comment="Variation in resolution across different angles, 1-2sig/mean",
+    )
+    suggestedTilt: Mapped[Optional[decimal.Decimal]] = mapped_column(
+        Double(asdecimal=True),
+        comment="Suggested stage tilt angle to improve angular efficiency. Unit: degrees",
     )
 
     CryoemInitialModel: Mapped[List["CryoemInitialModel"]] = relationship(
