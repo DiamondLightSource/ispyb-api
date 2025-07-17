@@ -1,4 +1,4 @@
-__schema_version__ = "4.7.0"
+__schema_version__ = "4.8.0"
 import datetime
 import decimal
 from typing import List, Optional
@@ -776,6 +776,9 @@ class PDB(Base):
         String(30), comment="Could be e.g. AlphaFold or RoseTTAFold"
     )
 
+    Ligand: Mapped[List["Ligand"]] = relationship(
+        "Ligand", secondary="Ligand_has_PDB", back_populates="PDB"
+    )
     Protein_has_PDB: Mapped[List["ProteinHasPDB"]] = relationship(
         "ProteinHasPDB", back_populates="PDB"
     )
@@ -2252,6 +2255,7 @@ class Proposal(Base):
     LabContact: Mapped[List["LabContact"]] = relationship(
         "LabContact", back_populates="Proposal"
     )
+    Ligand: Mapped[List["Ligand"]] = relationship("Ligand", back_populates="Proposal")
     ProposalHasPerson: Mapped[List["ProposalHasPerson"]] = relationship(
         "ProposalHasPerson", back_populates="Proposal"
     )
@@ -2491,6 +2495,9 @@ class BLSession(Base):
         TINYINT(1),
         server_default=text("0"),
         comment="Flag to indicate whether the processed folder in the associated visit directory has been purged",
+    )
+    icatId: Mapped[Optional[int]] = mapped_column(
+        INTEGER(11), comment="The internal ICAT ID for this BLSession"
     )
 
     Project: Mapped[List["Project"]] = relationship(
@@ -2915,6 +2922,51 @@ class LabContact(Base):
     )
     DewarRegistry_has_Proposal: Mapped[List["DewarRegistryHasProposal"]] = relationship(
         "DewarRegistryHasProposal", back_populates="LabContact"
+    )
+
+
+class Ligand(Base):
+    __tablename__ = "Ligand"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["proposalId"],
+            ["Proposal.proposalId"],
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+            name="Ligand_fk_proposalId",
+        ),
+        Index("Ligand_fk_proposalId", "proposalId"),
+        {"comment": "Ligands in biochemistry are substances that bind to biomolecules"},
+    )
+
+    ligandId: Mapped[int] = mapped_column(INTEGER(11), primary_key=True)
+    proposalId: Mapped[int] = mapped_column(
+        INTEGER(10), comment="References Proposal table"
+    )
+    name: Mapped[str] = mapped_column(String(30), comment="Ligand name")
+    SMILES: Mapped[Optional[str]] = mapped_column(
+        String(400), comment="Chemical structure"
+    )
+    libraryName: Mapped[Optional[str]] = mapped_column(
+        String(30), comment="Name of ligand library, to preserve provenance"
+    )
+    libraryBatchNumber: Mapped[Optional[str]] = mapped_column(
+        String(30), comment="Batch number of library, to preserve provenance"
+    )
+    plateBarcode: Mapped[Optional[str]] = mapped_column(
+        String(30),
+        comment="Specific barcode of the plate it came from, to preserve provenance",
+    )
+    sourceWell: Mapped[Optional[str]] = mapped_column(
+        String(30), comment="Location within that plate, to preserve provenance"
+    )
+
+    Proposal: Mapped["Proposal"] = relationship("Proposal", back_populates="Ligand")
+    PDB: Mapped[List["PDB"]] = relationship(
+        "PDB", secondary="Ligand_has_PDB", back_populates="Ligand"
+    )
+    BLSample: Mapped[List["BLSample"]] = relationship(
+        "BLSample", secondary="BLSample_has_Ligand", back_populates="Ligand"
     )
 
 
@@ -3549,6 +3601,9 @@ class DewarRegistry(Base):
     bltimestamp: Mapped[datetime.datetime] = mapped_column(
         DateTime, server_default=text("current_timestamp()")
     )
+    type: Mapped[str] = mapped_column(
+        Enum("Dewar", "Toolbox", "Thermal Shipper"), server_default=text("'Dewar'")
+    )
     proposalId: Mapped[Optional[int]] = mapped_column(INTEGER(11))
     labContactId: Mapped[Optional[int]] = mapped_column(INTEGER(11))
     purchaseDate: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime)
@@ -3595,6 +3650,30 @@ class ExperimentKindDetails(Base):
     DiffractionPlan: Mapped["DiffractionPlan"] = relationship(
         "DiffractionPlan", back_populates="ExperimentKindDetails"
     )
+
+
+t_Ligand_has_PDB = Table(
+    "Ligand_has_PDB",
+    Base.metadata,
+    Column("ligandId", INTEGER(11), primary_key=True, nullable=False),
+    Column("pdbId", INTEGER(11), primary_key=True, nullable=False),
+    ForeignKeyConstraint(
+        ["ligandId"],
+        ["Ligand.ligandId"],
+        ondelete="CASCADE",
+        onupdate="CASCADE",
+        name="Ligand_Has_PDB_fk1",
+    ),
+    ForeignKeyConstraint(
+        ["pdbId"],
+        ["PDB.pdbId"],
+        ondelete="CASCADE",
+        onupdate="CASCADE",
+        name="Ligand_Has_PDB_fk2",
+    ),
+    Index("Ligand_Has_PDB_fk2", "pdbId"),
+    comment="Junction table for Ligand and PDB",
+)
 
 
 t_Project_has_Protein = Table(
@@ -4671,6 +4750,9 @@ class BLSample(Base):
     ScreenComponentGroup: Mapped["ScreenComponentGroup"] = relationship(
         "ScreenComponentGroup", back_populates="BLSample"
     )
+    Ligand: Mapped[List["Ligand"]] = relationship(
+        "Ligand", secondary="BLSample_has_Ligand", back_populates="BLSample"
+    )
     Project: Mapped[List["Project"]] = relationship(
         "Project", secondary="Project_has_BLSample", back_populates="BLSample"
     )
@@ -4992,7 +5074,7 @@ class BLSamplePosition(Base):
     posY: Mapped[Optional[decimal.Decimal]] = mapped_column(Double(asdecimal=True))
     posZ: Mapped[Optional[decimal.Decimal]] = mapped_column(Double(asdecimal=True))
     recordTimeStamp: Mapped[Optional[datetime.datetime]] = mapped_column(
-        DateTime, comment="Creation or last update date/time"
+        DateTime, server_default=text("current_timestamp()")
     )
     positionType: Mapped[Optional[str]] = mapped_column(
         Enum("dispensing"),
@@ -5030,6 +5112,30 @@ class BLSampleHasDataCollectionPlan(Base):
     DiffractionPlan: Mapped["DiffractionPlan"] = relationship(
         "DiffractionPlan", back_populates="BLSample_has_DataCollectionPlan"
     )
+
+
+t_BLSample_has_Ligand = Table(
+    "BLSample_has_Ligand",
+    Base.metadata,
+    Column("blSampleId", INTEGER(10), primary_key=True, nullable=False),
+    Column("ligandId", INTEGER(11), primary_key=True, nullable=False),
+    ForeignKeyConstraint(
+        ["blSampleId"],
+        ["BLSample.blSampleId"],
+        ondelete="CASCADE",
+        onupdate="CASCADE",
+        name="BLSample_has_Ligand_fk1",
+    ),
+    ForeignKeyConstraint(
+        ["ligandId"],
+        ["Ligand.ligandId"],
+        ondelete="CASCADE",
+        onupdate="CASCADE",
+        name="BLSample_has_Ligand_fk2",
+    ),
+    Index("BLSample_has_Ligand_fk2", "ligandId"),
+    comment="Junction table for BLSample and Ligand",
+)
 
 
 class BLSampleHasPositioner(Base):
@@ -7583,6 +7689,12 @@ class Tomogram(Base):
     )
     gridSquareId: Mapped[Optional[int]] = mapped_column(
         INTEGER(11), comment="FK, references medium mag map in GridSquare"
+    )
+    pixelLocationX: Mapped[Optional[int]] = mapped_column(
+        INTEGER(11), comment="pixel location of tomogram centre on search map image (x)"
+    )
+    pixelLocationY: Mapped[Optional[int]] = mapped_column(
+        INTEGER(11), comment="pixel location of tomogram centre on search map image (y)"
     )
 
     AutoProcProgram: Mapped["AutoProcProgram"] = relationship(
