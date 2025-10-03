@@ -4,7 +4,7 @@ on:
   push:
 
 env:
-  DATABASE_SCHEMA: 4.8.0
+  DATABASE_SCHEMA: 4.9.0
 
 permissions:
   contents: read

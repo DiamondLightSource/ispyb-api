@@ -27,6 +27,7 @@ class MXScreening(ispyb.interface.screening.IF):
             ("program_version", None),
             ("short_comments", None),
             ("comments", None),
+            ("auto_proc_program_id", None),
         ]
     )
     _screening_input_params = StrictOrderedDict(
@@ -180,7 +181,7 @@ class MXScreening(ispyb.interface.screening.IF):
 
     def insert_screening(self, values):
         return self.get_connection().call_sp_write(
-            procname="insert_screening", args=(values)
+            procname="insert_screening_v2", args=(values)
         )
 
     def insert_screening_input(self, values):

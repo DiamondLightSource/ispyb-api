@@ -5,6 +5,12 @@ History
 Unreleased / main
 -------------------
 
+11.1.0 (2025-10-02)
+-------------------
+
+* Update database schema to v4.9.0
+* Use procedure insert_screening_v2 with extra param instead of insert_screening
+
 11.0.4 (2025-07-17)
 -------------------
 
