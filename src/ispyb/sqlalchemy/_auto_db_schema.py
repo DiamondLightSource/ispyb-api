@@ -1,4 +1,4 @@
-__schema_version__ = "4.8.0"
+__schema_version__ = "4.9.0"
 import datetime
 import decimal
 from typing import List, Optional
@@ -2234,6 +2234,12 @@ class Proposal(Base):
     externalId: Mapped[Optional[bytes]] = mapped_column(BINARY(16))
     state: Mapped[Optional[str]] = mapped_column(
         Enum("Open", "Closed", "Cancelled"), server_default=text("'Open'")
+    )
+    startDate: Mapped[Optional[datetime.datetime]] = mapped_column(
+        DateTime, comment="Start of the allocation period"
+    )
+    endDate: Mapped[Optional[datetime.datetime]] = mapped_column(
+        DateTime, comment="End of the allocation period"
     )
 
     Person: Mapped["Person"] = relationship("Person", back_populates="Proposal")
@@ -4506,6 +4512,10 @@ class Container(Base):
     parentContainerId: Mapped[Optional[int]] = mapped_column(INTEGER(10))
     source: Mapped[Optional[str]] = mapped_column(
         String(50), server_default=text("current_user()")
+    )
+    parentContainerLocation: Mapped[Optional[int]] = mapped_column(
+        INTEGER(10),
+        comment="Indicates where inside the parent container this container is located",
     )
 
     ContainerRegistry: Mapped["ContainerRegistry"] = relationship(
