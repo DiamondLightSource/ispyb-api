@@ -1,4 +1,4 @@
-__schema_version__ = "4.8.0"
+__schema_version__ = "4.11.0"
 import datetime
 import decimal
 from typing import List, Optional
@@ -2234,6 +2234,12 @@ class Proposal(Base):
     externalId: Mapped[Optional[bytes]] = mapped_column(BINARY(16))
     state: Mapped[Optional[str]] = mapped_column(
         Enum("Open", "Closed", "Cancelled"), server_default=text("'Open'")
+    )
+    startDate: Mapped[Optional[datetime.datetime]] = mapped_column(
+        DateTime, comment="Start of the allocation period"
+    )
+    endDate: Mapped[Optional[datetime.datetime]] = mapped_column(
+        DateTime, comment="End of the allocation period"
     )
 
     Person: Mapped["Person"] = relationship("Person", back_populates="Proposal")
@@ -4507,6 +4513,10 @@ class Container(Base):
     source: Mapped[Optional[str]] = mapped_column(
         String(50), server_default=text("current_user()")
     )
+    parentContainerLocation: Mapped[Optional[int]] = mapped_column(
+        INTEGER(10),
+        comment="Indicates where inside the parent container this container is located",
+    )
 
     ContainerRegistry: Mapped["ContainerRegistry"] = relationship(
         "ContainerRegistry", back_populates="Container"
@@ -5348,7 +5358,7 @@ class RobotAction(Base):
     )
     blsampleId: Mapped[Optional[int]] = mapped_column(INTEGER(11))
     actionType: Mapped[Optional[str]] = mapped_column(
-        Enum("LOAD", "UNLOAD", "DISPOSE", "STORE", "WASH", "ANNEAL", "MOSAIC")
+        Enum("LOAD", "UNLOAD", "DISPOSE", "STORE", "WASH", "ANNEAL", "MOSAIC", "LASER")
     )
     status: Mapped[Optional[str]] = mapped_column(
         Enum("SUCCESS", "ERROR", "CRITICAL", "WARNING", "EPICSFAIL", "COMMANDNOTSENT")
@@ -5365,6 +5375,9 @@ class RobotAction(Base):
     )
     BLSession: Mapped["BLSession"] = relationship(
         "BLSession", back_populates="RobotAction"
+    )
+    LaserParameters: Mapped[List["LaserParameters"]] = relationship(
+        "LaserParameters", back_populates="RobotAction"
     )
 
 
@@ -5471,6 +5484,39 @@ class Atlas(Base):
     atlasImage: Mapped[str] = mapped_column(String(255), comment="path to atlas image")
     pixelSize: Mapped[float] = mapped_column(Float, comment="pixel size of atlas image")
     cassetteSlot: Mapped[Optional[int]] = mapped_column(INTEGER(10))
+    hasRed: Mapped[Optional[int]] = mapped_column(
+        TINYINT(1), server_default=text("0"), comment="Whether atlas has red channel"
+    )
+    hasBlue: Mapped[Optional[int]] = mapped_column(
+        TINYINT(1), server_default=text("0"), comment="Whether atlas has blue channel"
+    )
+    hasGreen: Mapped[Optional[int]] = mapped_column(
+        TINYINT(1), server_default=text("0"), comment="Whether atlas has green channel"
+    )
+    hasYellow: Mapped[Optional[int]] = mapped_column(
+        TINYINT(1), server_default=text("0"), comment="Whether atlas has yellow channel"
+    )
+    hasCyan: Mapped[Optional[int]] = mapped_column(
+        TINYINT(1), server_default=text("0"), comment="Whether atlas has cyan channel"
+    )
+    hasMagenta: Mapped[Optional[int]] = mapped_column(
+        TINYINT(1),
+        server_default=text("0"),
+        comment="Whether atlas has magenta channel",
+    )
+    hasGrey: Mapped[Optional[int]] = mapped_column(
+        TINYINT(1), server_default=text("0"), comment="Whether atlas has grey channel"
+    )
+    mode: Mapped[Optional[str]] = mapped_column(
+        Enum(
+            "Bright Field and Fluorescent",
+            "Bright Field",
+            "Fluorescent",
+            "Tomography",
+            "Single Particle",
+        ),
+        comment="Collection mode",
+    )
 
     DataCollectionGroup: Mapped["DataCollectionGroup"] = relationship(
         "DataCollectionGroup", back_populates="Atlas"
@@ -5711,6 +5757,47 @@ class BLSubSample(Base):
     )
     XFEFluorescenceSpectrum: Mapped[List["XFEFluorescenceSpectrum"]] = relationship(
         "XFEFluorescenceSpectrum", back_populates="BLSubSample"
+    )
+
+
+class LaserParameters(Base):
+    __tablename__ = "LaserParameters"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["robotActionId"],
+            ["RobotAction.robotActionId"],
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+            name="LaserParameters_fk_robotActionId",
+        ),
+        Index("LaserParameters_fk_robotActionId", "robotActionId"),
+        {"comment": "Laser parameters"},
+    )
+
+    laserParametersId: Mapped[int] = mapped_column(INTEGER(11), primary_key=True)
+    robotActionId: Mapped[Optional[int]] = mapped_column(INTEGER(11))
+    laserRepetitionRate: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Laser repetition rate, in kHz"
+    )
+    scanheadMoveSpeed: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Scanhead move speed, in m/s"
+    )
+    laserTransmission: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Laser transmission, in %"
+    )
+    numberOfPasses: Mapped[Optional[int]] = mapped_column(INTEGER(10))
+    gonioRotationSpeed: Mapped[Optional[int]] = mapped_column(
+        INTEGER(10), comment="Goniometer rotation speed, in deg/s"
+    )
+    totalMarkingTime: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Total marking time, in s"
+    )
+
+    RobotAction: Mapped["RobotAction"] = relationship(
+        "RobotAction", back_populates="LaserParameters"
+    )
+    LaserPoint: Mapped[List["LaserPoint"]] = relationship(
+        "LaserPoint", back_populates="LaserParameters"
     )
 
 
@@ -6286,6 +6373,41 @@ class GridSquare(Base):
     pixelSize: Mapped[Optional[float]] = mapped_column(
         Float, comment="pixel size of grid square image"
     )
+    hasRed: Mapped[Optional[int]] = mapped_column(
+        TINYINT(1), server_default=text("0"), comment="Whether region has red channel"
+    )
+    hasBlue: Mapped[Optional[int]] = mapped_column(
+        TINYINT(1), server_default=text("0"), comment="Whether region has blue channel"
+    )
+    hasGreen: Mapped[Optional[int]] = mapped_column(
+        TINYINT(1), server_default=text("0"), comment="Whether region has green channel"
+    )
+    hasYellow: Mapped[Optional[int]] = mapped_column(
+        TINYINT(1),
+        server_default=text("0"),
+        comment="Whether region has yellow channel",
+    )
+    hasCyan: Mapped[Optional[int]] = mapped_column(
+        TINYINT(1), server_default=text("0"), comment="Whether region has cyan channel"
+    )
+    hasMagenta: Mapped[Optional[int]] = mapped_column(
+        TINYINT(1),
+        server_default=text("0"),
+        comment="Whether region has magenta channel",
+    )
+    hasGrey: Mapped[Optional[int]] = mapped_column(
+        TINYINT(1), server_default=text("0"), comment="Whether region has grey channel"
+    )
+    mode: Mapped[Optional[str]] = mapped_column(
+        Enum(
+            "Bright Field and Fluorescent",
+            "Bright Field",
+            "Fluorescent",
+            "Tomography",
+            "Single Particle",
+        ),
+        comment="Collection mode",
+    )
 
     Atlas: Mapped["Atlas"] = relationship("Atlas", back_populates="GridSquare")
     FoilHole: Mapped[List["FoilHole"]] = relationship(
@@ -6293,6 +6415,41 @@ class GridSquare(Base):
     )
     Tomogram: Mapped[List["Tomogram"]] = relationship(
         "Tomogram", back_populates="GridSquare"
+    )
+
+
+class LaserPoint(Base):
+    __tablename__ = "LaserPoint"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["laserParametersId"],
+            ["LaserParameters.laserParametersId"],
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+            name="LaserPoint_fk_laserParametersId",
+        ),
+        Index("LaserPoint_fk_laserParametersId", "laserParametersId"),
+        {"comment": "Laser points"},
+    )
+
+    laserPointId: Mapped[int] = mapped_column(INTEGER(11), primary_key=True)
+    x: Mapped[int] = mapped_column(
+        INTEGER(10), comment="X coordinate of point, in microns"
+    )
+    y: Mapped[int] = mapped_column(
+        INTEGER(10), comment="Y coordinate of point, in microns"
+    )
+    pointIndex: Mapped[int] = mapped_column(
+        INTEGER(10), comment="Index of point, expresses ordinality"
+    )
+    laserParametersId: Mapped[Optional[int]] = mapped_column(INTEGER(11))
+    radius: Mapped[Optional[int]] = mapped_column(
+        INTEGER(10), comment="Radius of point, in microns"
+    )
+    laserOn: Mapped[Optional[int]] = mapped_column(TINYINT(1), server_default=text("0"))
+
+    LaserParameters: Mapped["LaserParameters"] = relationship(
+        "LaserParameters", back_populates="LaserPoint"
     )
 
 
@@ -7957,6 +8114,9 @@ class CTF(Base):
         String(255), comment="Full path to the jpg image of the simulated FFT"
     )
     comments: Mapped[Optional[str]] = mapped_column(String(255))
+    iceRingDensity: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Summed intensity of ice ring in fourier space"
+    )
 
     AutoProcProgram: Mapped["AutoProcProgram"] = relationship(
         "AutoProcProgram", back_populates="CTF"
