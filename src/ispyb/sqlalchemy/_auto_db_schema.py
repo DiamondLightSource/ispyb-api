@@ -1,4 +1,4 @@
-__schema_version__ = "4.12.0"
+__schema_version__ = "5.0.0"
 import datetime
 import decimal
 from typing import List, Optional
@@ -2585,6 +2585,9 @@ class Component(Base):
         "ComponentType", back_populates="Component"
     )
     Proposal: Mapped["Proposal"] = relationship("Proposal", back_populates="Component")
+    Protein_has_Component: Mapped[List["ProteinHasComponent"]] = relationship(
+        "ProteinHasComponent", back_populates="Component"
+    )
     CrystalComposition: Mapped[List["CrystalComposition"]] = relationship(
         "CrystalComposition", back_populates="Component"
     )
@@ -2949,7 +2952,7 @@ class Ligand(Base):
     proposalId: Mapped[int] = mapped_column(
         INTEGER(10), comment="References Proposal table"
     )
-    name: Mapped[str] = mapped_column(String(30), comment="Ligand name")
+    name: Mapped[str] = mapped_column(String(255))
     SMILES: Mapped[Optional[str]] = mapped_column(
         String(400), comment="Chemical structure"
     )
@@ -3230,6 +3233,9 @@ class Protein(Base):
         "ComponentLattice", back_populates="Protein"
     )
     Crystal: Mapped[List["Crystal"]] = relationship("Crystal", back_populates="Protein")
+    Protein_has_Component: Mapped[List["ProteinHasComponent"]] = relationship(
+        "ProteinHasComponent", back_populates="Protein"
+    )
     Protein_has_PDB: Mapped[List["ProteinHasPDB"]] = relationship(
         "ProteinHasPDB", back_populates="Protein"
     )
@@ -3724,6 +3730,44 @@ t_Project_has_Session = Table(
     ),
     Index("project_has_session_FK2", "sessionId"),
 )
+
+
+class ProteinHasComponent(Base):
+    __tablename__ = "Protein_has_Component"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["componentId"],
+            ["Component.componentId"],
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+            name="Protein_has_Component_fk_componentId",
+        ),
+        ForeignKeyConstraint(
+            ["proteinId"],
+            ["Protein.proteinId"],
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+            name="Protein_has_Component_fk_proteinId",
+        ),
+        Index("Protein_has_Component_fk_componentId", "componentId"),
+        Index("Protein_has_Component_fk_proteinId", "proteinId"),
+        {"comment": "Which elements are contained inside a molecule"},
+    )
+
+    proteinHasComponentId: Mapped[int] = mapped_column(INTEGER(11), primary_key=True)
+    proteinId: Mapped[int] = mapped_column(
+        INTEGER(10), comment="References Protein table"
+    )
+    componentId: Mapped[int] = mapped_column(
+        INTEGER(10), comment="References Component table"
+    )
+
+    Component: Mapped["Component"] = relationship(
+        "Component", back_populates="Protein_has_Component"
+    )
+    Protein: Mapped["Protein"] = relationship(
+        "Protein", back_populates="Protein_has_Component"
+    )
 
 
 class ProteinHasPDB(Base):
@@ -5771,6 +5815,7 @@ class LaserParameters(Base):
             name="LaserParameters_fk_robotActionId",
         ),
         Index("LaserParameters_fk_robotActionId", "robotActionId"),
+        Index("LaserParameters_robotActionId_uc1", "robotActionId", unique=True),
         {"comment": "Laser parameters"},
     )
 
@@ -6429,6 +6474,12 @@ class LaserPoint(Base):
             name="LaserPoint_fk_laserParametersId",
         ),
         Index("LaserPoint_fk_laserParametersId", "laserParametersId"),
+        Index(
+            "LaserPoint_laserParametersId_pointIndex_uc1",
+            "laserParametersId",
+            "pointIndex",
+            unique=True,
+        ),
         {"comment": "Laser points"},
     )
 
@@ -6874,8 +6925,6 @@ class GridInfo(Base):
         Enum("vertical", "horizontal"), server_default=text("'horizontal'")
     )
     dataCollectionGroupId: Mapped[Optional[int]] = mapped_column(INTEGER(11))
-    pixelsPerMicronX: Mapped[Optional[float]] = mapped_column(Float)
-    pixelsPerMicronY: Mapped[Optional[float]] = mapped_column(Float)
     snapshot_offsetXPixel: Mapped[Optional[float]] = mapped_column(Float)
     snapshot_offsetYPixel: Mapped[Optional[float]] = mapped_column(Float)
     snaked: Mapped[Optional[int]] = mapped_column(
