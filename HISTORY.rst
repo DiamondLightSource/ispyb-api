@@ -5,6 +5,11 @@ History
 Unreleased / main
 -------------------
 
+12.0.0 (2026-04-21)
+-------------------
+
+* Update database schema to v5.0.0 (breaking change, see https://github.com/DiamondLightSource/ispyb-database/blob/main/HISTORY.rst)
+
 11.1.2 (2026-02-13)
 -------------------
 
