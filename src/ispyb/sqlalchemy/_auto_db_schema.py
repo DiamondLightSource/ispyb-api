@@ -1,4 +1,4 @@
-__schema_version__ = "5.0.0"
+__schema_version__ = "5.1.0"
 import datetime
 import decimal
 from typing import List, Optional
