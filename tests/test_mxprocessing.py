@@ -198,7 +198,7 @@ def test_processing2(testdb):
     assert id > 0
 
     params = mxprocessing.get_processing_params()
-    params["parentid"] = id
+    params["parentid"] = programs[0]["id"]
     params["spacegroup"] = "P212121"
     params["refinedcell_a"] = 10
     params["refinedcell_b"] = 10

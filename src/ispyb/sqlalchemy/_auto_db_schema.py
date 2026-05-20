@@ -1,4 +1,4 @@
-__schema_version__ = "5.0.0"
+__schema_version__ = "5.1.0"
 import datetime
 import decimal
 from typing import List, Optional
@@ -71,55 +71,6 @@ class Aperture(Base):
 
     apertureId: Mapped[int] = mapped_column(INTEGER(10), primary_key=True)
     sizeX: Mapped[Optional[float]] = mapped_column(Float)
-
-
-class AutoProc(Base):
-    __tablename__ = "AutoProc"
-    __table_args__ = (
-        Index("AutoProc_FKIndex1", "autoProcProgramId"),
-        Index(
-            "AutoProc_refined_unit_cell",
-            "refinedCell_a",
-            "refinedCell_b",
-            "refinedCell_c",
-            "refinedCell_alpha",
-            "refinedCell_beta",
-            "refinedCell_gamma",
-        ),
-    )
-
-    autoProcId: Mapped[int] = mapped_column(
-        INTEGER(10), primary_key=True, comment="Primary key (auto-incremented)"
-    )
-    autoProcProgramId: Mapped[Optional[int]] = mapped_column(
-        INTEGER(10), comment="Related program item"
-    )
-    spaceGroup: Mapped[Optional[str]] = mapped_column(String(45), comment="Space group")
-    refinedCell_a: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Refined cell"
-    )
-    refinedCell_b: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Refined cell"
-    )
-    refinedCell_c: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Refined cell"
-    )
-    refinedCell_alpha: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Refined cell"
-    )
-    refinedCell_beta: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Refined cell"
-    )
-    refinedCell_gamma: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Refined cell"
-    )
-    recordTimeStamp: Mapped[Optional[datetime.datetime]] = mapped_column(
-        DateTime, comment="Creation or last update date/time"
-    )
-
-    AutoProcScaling: Mapped[List["AutoProcScaling"]] = relationship(
-        "AutoProcScaling", back_populates="AutoProc"
-    )
 
 
 class BFAutomationError(Base):
@@ -726,6 +677,19 @@ class Laboratory(Base):
     Person: Mapped[List["Person"]] = relationship("Person", back_populates="Laboratory")
 
 
+class MillingStepName(Base):
+    __tablename__ = "MillingStepName"
+    __table_args__ = {"comment": "Milling step names and recipes"}
+
+    millingStepNameId: Mapped[int] = mapped_column(INTEGER(11), primary_key=True)
+    step: Mapped[str] = mapped_column(String(45))
+    recipe: Mapped[str] = mapped_column(String(45))
+
+    MillingStep: Mapped[List["MillingStep"]] = relationship(
+        "MillingStep", back_populates="MillingStepName"
+    )
+
+
 class MotorPosition(Base):
     __tablename__ = "MotorPosition"
 
@@ -812,14 +776,14 @@ class PhasingAnalysis(Base):
     Phasing: Mapped[List["Phasing"]] = relationship(
         "Phasing", back_populates="PhasingAnalysis"
     )
-    Phasing_has_Scaling: Mapped[List["PhasingHasScaling"]] = relationship(
-        "PhasingHasScaling", back_populates="PhasingAnalysis"
-    )
     PreparePhasingData: Mapped[List["PreparePhasingData"]] = relationship(
         "PreparePhasingData", back_populates="PhasingAnalysis"
     )
     SubstructureDetermination: Mapped[List["SubstructureDetermination"]] = relationship(
         "SubstructureDetermination", back_populates="PhasingAnalysis"
+    )
+    Phasing_has_Scaling: Mapped[List["PhasingHasScaling"]] = relationship(
+        "PhasingHasScaling", back_populates="PhasingAnalysis"
     )
 
 
@@ -863,14 +827,14 @@ class PhasingProgramRun(Base):
     Phasing: Mapped[List["Phasing"]] = relationship(
         "Phasing", back_populates="PhasingProgramRun"
     )
-    PhasingStep: Mapped[List["PhasingStep"]] = relationship(
-        "PhasingStep", back_populates="PhasingProgramRun"
-    )
     PreparePhasingData: Mapped[List["PreparePhasingData"]] = relationship(
         "PreparePhasingData", back_populates="PhasingProgramRun"
     )
     SubstructureDetermination: Mapped[List["SubstructureDetermination"]] = relationship(
         "SubstructureDetermination", back_populates="PhasingProgramRun"
+    )
+    PhasingStep: Mapped[List["PhasingStep"]] = relationship(
+        "PhasingStep", back_populates="PhasingProgramRun"
     )
 
 
@@ -1084,50 +1048,6 @@ class VRun(Base):
     run: Mapped[str] = mapped_column(String(7), server_default=text("''"))
     startDate: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime)
     endDate: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime)
-
-
-class AutoProcScaling(Base):
-    __tablename__ = "AutoProcScaling"
-    __table_args__ = (
-        ForeignKeyConstraint(
-            ["autoProcId"],
-            ["AutoProc.autoProcId"],
-            ondelete="CASCADE",
-            onupdate="CASCADE",
-            name="AutoProcScalingFk1",
-        ),
-        Index("AutoProcScalingFk1", "autoProcId"),
-        Index("AutoProcScalingIdx1", "autoProcScalingId", "autoProcId"),
-    )
-
-    autoProcScalingId: Mapped[int] = mapped_column(
-        INTEGER(10), primary_key=True, comment="Primary key (auto-incremented)"
-    )
-    autoProcId: Mapped[Optional[int]] = mapped_column(
-        INTEGER(10), comment="Related autoProc item (used by foreign key)"
-    )
-    recordTimeStamp: Mapped[Optional[datetime.datetime]] = mapped_column(
-        DateTime, comment="Creation or last update date/time"
-    )
-
-    AutoProc: Mapped["AutoProc"] = relationship(
-        "AutoProc", back_populates="AutoProcScaling"
-    )
-    AutoProcScalingStatistics: Mapped[List["AutoProcScalingStatistics"]] = relationship(
-        "AutoProcScalingStatistics", back_populates="AutoProcScaling"
-    )
-    PhasingStep: Mapped[List["PhasingStep"]] = relationship(
-        "PhasingStep", back_populates="AutoProcScaling"
-    )
-    Phasing_has_Scaling: Mapped[List["PhasingHasScaling"]] = relationship(
-        "PhasingHasScaling", back_populates="AutoProcScaling"
-    )
-    MXMRRun: Mapped[List["MXMRRun"]] = relationship(
-        "MXMRRun", back_populates="AutoProcScaling"
-    )
-    AutoProcScaling_has_Int: Mapped[List["AutoProcScalingHasInt"]] = relationship(
-        "AutoProcScalingHasInt", back_populates="AutoProcScaling"
-    )
 
 
 class BFComponent(Base):
@@ -1636,14 +1556,14 @@ class SpaceGroup(Base):
     Phasing: Mapped[List["Phasing"]] = relationship(
         "Phasing", back_populates="SpaceGroup"
     )
-    PhasingStep: Mapped[List["PhasingStep"]] = relationship(
-        "PhasingStep", back_populates="SpaceGroup"
-    )
     PreparePhasingData: Mapped[List["PreparePhasingData"]] = relationship(
         "PreparePhasingData", back_populates="SpaceGroup"
     )
     SubstructureDetermination: Mapped[List["SubstructureDetermination"]] = relationship(
         "SubstructureDetermination", back_populates="SpaceGroup"
+    )
+    PhasingStep: Mapped[List["PhasingStep"]] = relationship(
+        "PhasingStep", back_populates="SpaceGroup"
     )
 
 
@@ -1702,94 +1622,6 @@ t_UserGroup_has_Permission = Table(
     ),
     Index("UserGroup_has_Permission_fk2", "permissionId"),
 )
-
-
-class AutoProcScalingStatistics(Base):
-    __tablename__ = "AutoProcScalingStatistics"
-    __table_args__ = (
-        ForeignKeyConstraint(
-            ["autoProcScalingId"],
-            ["AutoProcScaling.autoProcScalingId"],
-            ondelete="CASCADE",
-            onupdate="CASCADE",
-            name="_AutoProcScalingStatisticsFk1",
-        ),
-        Index("AutoProcScalingStatistics_FKindexType", "scalingStatisticsType"),
-        Index(
-            "AutoProcScalingStatistics_scalingId_statisticsType",
-            "autoProcScalingId",
-            "scalingStatisticsType",
-        ),
-    )
-
-    autoProcScalingStatisticsId: Mapped[int] = mapped_column(
-        INTEGER(10), primary_key=True, comment="Primary key (auto-incremented)"
-    )
-    scalingStatisticsType: Mapped[str] = mapped_column(
-        Enum("overall", "innerShell", "outerShell"),
-        server_default=text("'overall'"),
-        comment="Scaling statistics type",
-    )
-    autoProcScalingId: Mapped[Optional[int]] = mapped_column(
-        INTEGER(10), comment="Related autoProcScaling item (used by foreign key)"
-    )
-    comments: Mapped[Optional[str]] = mapped_column(String(255), comment="Comments...")
-    resolutionLimitLow: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Low resolution limit"
-    )
-    resolutionLimitHigh: Mapped[Optional[float]] = mapped_column(
-        Float, comment="High resolution limit"
-    )
-    rMerge: Mapped[Optional[float]] = mapped_column(Float, comment="Rmerge")
-    rMeasWithinIPlusIMinus: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Rmeas (within I+/I-)"
-    )
-    rMeasAllIPlusIMinus: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Rmeas (all I+ & I-)"
-    )
-    rPimWithinIPlusIMinus: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Rpim (within I+/I-) "
-    )
-    rPimAllIPlusIMinus: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Rpim (all I+ & I-)"
-    )
-    fractionalPartialBias: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Fractional partial bias"
-    )
-    nTotalObservations: Mapped[Optional[int]] = mapped_column(
-        INTEGER(10), comment="Total number of observations"
-    )
-    nTotalUniqueObservations: Mapped[Optional[int]] = mapped_column(
-        INTEGER(10), comment="Total number unique"
-    )
-    meanIOverSigI: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Mean((I)/sd(I))"
-    )
-    completeness: Mapped[Optional[float]] = mapped_column(Float, comment="Completeness")
-    multiplicity: Mapped[Optional[float]] = mapped_column(Float, comment="Multiplicity")
-    anomalousCompleteness: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Anomalous completeness"
-    )
-    anomalousMultiplicity: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Anomalous multiplicity"
-    )
-    recordTimeStamp: Mapped[Optional[datetime.datetime]] = mapped_column(
-        DateTime, comment="Creation or last update date/time"
-    )
-    anomalous: Mapped[Optional[int]] = mapped_column(
-        TINYINT(1), server_default=text("0"), comment="boolean type:0 noanoum - 1 anoum"
-    )
-    ccHalf: Mapped[Optional[float]] = mapped_column(
-        Float, comment="information from XDS"
-    )
-    ccAnomalous: Mapped[Optional[float]] = mapped_column(Float)
-    resIOverSigI2: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Resolution where I/Sigma(I) equals 2"
-    )
-
-    AutoProcScaling: Mapped["AutoProcScaling"] = relationship(
-        "AutoProcScaling", back_populates="AutoProcScalingStatistics"
-    )
 
 
 class BFComponentBeamline(Base):
@@ -1988,116 +1820,6 @@ class Phasing(Base):
     )
     SpaceGroup: Mapped["SpaceGroup"] = relationship(
         "SpaceGroup", back_populates="Phasing"
-    )
-
-
-class PhasingStep(Base):
-    __tablename__ = "PhasingStep"
-    __table_args__ = (
-        ForeignKeyConstraint(
-            ["autoProcScalingId"],
-            ["AutoProcScaling.autoProcScalingId"],
-            name="FK_autoprocScaling",
-        ),
-        ForeignKeyConstraint(
-            ["programRunId"],
-            ["PhasingProgramRun.phasingProgramRunId"],
-            name="FK_program",
-        ),
-        ForeignKeyConstraint(
-            ["spaceGroupId"], ["SpaceGroup.spaceGroupId"], name="FK_spacegroup"
-        ),
-        Index("FK_autoprocScaling_id", "autoProcScalingId"),
-        Index("FK_phasingAnalysis_id", "phasingAnalysisId"),
-        Index("FK_programRun_id", "programRunId"),
-        Index("FK_spacegroup_id", "spaceGroupId"),
-    )
-
-    phasingStepId: Mapped[int] = mapped_column(INTEGER(10), primary_key=True)
-    recordTimeStamp: Mapped[datetime.datetime] = mapped_column(
-        TIMESTAMP, server_default=text("current_timestamp()")
-    )
-    previousPhasingStepId: Mapped[Optional[int]] = mapped_column(INTEGER(10))
-    programRunId: Mapped[Optional[int]] = mapped_column(INTEGER(10))
-    spaceGroupId: Mapped[Optional[int]] = mapped_column(INTEGER(10))
-    autoProcScalingId: Mapped[Optional[int]] = mapped_column(INTEGER(10))
-    phasingAnalysisId: Mapped[Optional[int]] = mapped_column(INTEGER(10))
-    phasingStepType: Mapped[Optional[str]] = mapped_column(
-        Enum("PREPARE", "SUBSTRUCTUREDETERMINATION", "PHASING", "MODELBUILDING")
-    )
-    method: Mapped[Optional[str]] = mapped_column(String(45))
-    solventContent: Mapped[Optional[str]] = mapped_column(String(45))
-    enantiomorph: Mapped[Optional[str]] = mapped_column(String(45))
-    lowRes: Mapped[Optional[str]] = mapped_column(String(45))
-    highRes: Mapped[Optional[str]] = mapped_column(String(45))
-
-    AutoProcScaling: Mapped["AutoProcScaling"] = relationship(
-        "AutoProcScaling", back_populates="PhasingStep"
-    )
-    PhasingProgramRun: Mapped["PhasingProgramRun"] = relationship(
-        "PhasingProgramRun", back_populates="PhasingStep"
-    )
-    SpaceGroup: Mapped["SpaceGroup"] = relationship(
-        "SpaceGroup", back_populates="PhasingStep"
-    )
-    PhasingStatistics: Mapped[List["PhasingStatistics"]] = relationship(
-        "PhasingStatistics", back_populates="PhasingStep"
-    )
-
-
-class PhasingHasScaling(Base):
-    __tablename__ = "Phasing_has_Scaling"
-    __table_args__ = (
-        ForeignKeyConstraint(
-            ["autoProcScalingId"],
-            ["AutoProcScaling.autoProcScalingId"],
-            ondelete="CASCADE",
-            onupdate="CASCADE",
-            name="PhasingHasScaling_autoProcScalingfk_1",
-        ),
-        ForeignKeyConstraint(
-            ["phasingAnalysisId"],
-            ["PhasingAnalysis.phasingAnalysisId"],
-            ondelete="CASCADE",
-            onupdate="CASCADE",
-            name="PhasingHasScaling_phasingAnalysisfk_1",
-        ),
-        Index("PhasingHasScaling_FKIndex1", "phasingAnalysisId"),
-        Index("PhasingHasScaling_FKIndex2", "autoProcScalingId"),
-    )
-
-    phasingHasScalingId: Mapped[int] = mapped_column(
-        INTEGER(11), primary_key=True, comment="Primary key (auto-incremented)"
-    )
-    phasingAnalysisId: Mapped[int] = mapped_column(
-        INTEGER(11), comment="Related phasing analysis item"
-    )
-    autoProcScalingId: Mapped[int] = mapped_column(
-        INTEGER(10), comment="Related autoProcScaling item"
-    )
-    datasetNumber: Mapped[Optional[int]] = mapped_column(
-        INTEGER(11),
-        comment="serial number of the dataset and always reserve 0 for the reference",
-    )
-    recordTimeStamp: Mapped[Optional[datetime.datetime]] = mapped_column(
-        DateTime, server_default=text("current_timestamp()")
-    )
-
-    AutoProcScaling: Mapped["AutoProcScaling"] = relationship(
-        "AutoProcScaling", back_populates="Phasing_has_Scaling"
-    )
-    PhasingAnalysis: Mapped["PhasingAnalysis"] = relationship(
-        "PhasingAnalysis", back_populates="Phasing_has_Scaling"
-    )
-    PhasingStatistics: Mapped[List["PhasingStatistics"]] = relationship(
-        "PhasingStatistics",
-        foreign_keys="[PhasingStatistics.phasingHasScalingId1]",
-        back_populates="Phasing_has_Scaling",
-    )
-    PhasingStatistics: Mapped[List["PhasingStatistics"]] = relationship(
-        "PhasingStatistics",
-        foreign_keys="[PhasingStatistics.phasingHasScalingId2]",
-        back_populates="Phasing_has_Scaling",
     )
 
 
@@ -2976,98 +2698,6 @@ class Ligand(Base):
     )
     BLSample: Mapped[List["BLSample"]] = relationship(
         "BLSample", secondary="BLSample_has_Ligand", back_populates="Ligand"
-    )
-
-
-class PhasingStatistics(Base):
-    __tablename__ = "PhasingStatistics"
-    __table_args__ = (
-        ForeignKeyConstraint(
-            ["phasingHasScalingId1"],
-            ["Phasing_has_Scaling.phasingHasScalingId"],
-            ondelete="CASCADE",
-            onupdate="CASCADE",
-            name="PhasingStatistics_phasingHasScalingfk_1",
-        ),
-        ForeignKeyConstraint(
-            ["phasingHasScalingId2"],
-            ["Phasing_has_Scaling.phasingHasScalingId"],
-            ondelete="CASCADE",
-            onupdate="CASCADE",
-            name="PhasingStatistics_phasingHasScalingfk_2",
-        ),
-        ForeignKeyConstraint(
-            ["phasingStepId"],
-            ["PhasingStep.phasingStepId"],
-            name="fk_PhasingStatistics_phasingStep",
-        ),
-        Index("PhasingStatistics_FKIndex1", "phasingHasScalingId1"),
-        Index("PhasingStatistics_FKIndex2", "phasingHasScalingId2"),
-        Index("fk_PhasingStatistics_phasingStep_idx", "phasingStepId"),
-    )
-
-    phasingStatisticsId: Mapped[int] = mapped_column(
-        INTEGER(11), primary_key=True, comment="Primary key (auto-incremented)"
-    )
-    phasingHasScalingId1: Mapped[int] = mapped_column(
-        INTEGER(11), comment="the dataset in question"
-    )
-    phasingHasScalingId2: Mapped[Optional[int]] = mapped_column(
-        INTEGER(11),
-        comment="if this is MIT or MAD, which scaling are being compared, null otherwise",
-    )
-    phasingStepId: Mapped[Optional[int]] = mapped_column(INTEGER(10))
-    numberOfBins: Mapped[Optional[int]] = mapped_column(
-        INTEGER(11), comment="the total number of bins"
-    )
-    binNumber: Mapped[Optional[int]] = mapped_column(
-        INTEGER(11), comment="binNumber, 999 for overall"
-    )
-    lowRes: Mapped[Optional[decimal.Decimal]] = mapped_column(
-        Double(asdecimal=True), comment="low resolution cutoff of this binfloat"
-    )
-    highRes: Mapped[Optional[decimal.Decimal]] = mapped_column(
-        Double(asdecimal=True), comment="high resolution cutoff of this binfloat"
-    )
-    metric: Mapped[Optional[str]] = mapped_column(
-        Enum(
-            "Rcullis",
-            "Average Fragment Length",
-            "Chain Count",
-            "Residues Count",
-            "CC",
-            "PhasingPower",
-            "FOM",
-            '<d"/sig>',
-            "Best CC",
-            "CC(1/2)",
-            "Weak CC",
-            "CFOM",
-            "Pseudo_free_CC",
-            "CC of partial model",
-        ),
-        comment="metric",
-    )
-    statisticsValue: Mapped[Optional[decimal.Decimal]] = mapped_column(
-        Double(asdecimal=True), comment="the statistics value"
-    )
-    nReflections: Mapped[Optional[int]] = mapped_column(INTEGER(11))
-    recordTimeStamp: Mapped[Optional[datetime.datetime]] = mapped_column(
-        DateTime, server_default=text("current_timestamp()")
-    )
-
-    Phasing_has_Scaling: Mapped["PhasingHasScaling"] = relationship(
-        "PhasingHasScaling",
-        foreign_keys=[phasingHasScalingId1],
-        back_populates="PhasingStatistics",
-    )
-    Phasing_has_Scaling: Mapped["PhasingHasScaling"] = relationship(
-        "PhasingHasScaling",
-        foreign_keys=[phasingHasScalingId2],
-        back_populates="PhasingStatistics",
-    )
-    PhasingStep: Mapped["PhasingStep"] = relationship(
-        "PhasingStep", back_populates="PhasingStatistics"
     )
 
 
@@ -6458,6 +6088,9 @@ class GridSquare(Base):
     FoilHole: Mapped[List["FoilHole"]] = relationship(
         "FoilHole", back_populates="GridSquare"
     )
+    MillingStep: Mapped[List["MillingStep"]] = relationship(
+        "MillingStep", back_populates="GridSquare"
+    )
     Tomogram: Mapped[List["Tomogram"]] = relationship(
         "Tomogram", back_populates="GridSquare"
     )
@@ -7011,6 +6644,95 @@ class Image(Base):
     )
 
 
+class MillingStep(Base):
+    __tablename__ = "MillingStep"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["gridSquareId"],
+            ["GridSquare.gridSquareId"],
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+            name="MillingStep_fk_gridSquareId",
+        ),
+        ForeignKeyConstraint(
+            ["millingStepNameId"],
+            ["MillingStepName.millingStepNameId"],
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+            name="MillingStep_fk_millingStepNameId",
+        ),
+        Index("MillingStep_fk_gridSquareId", "gridSquareId"),
+        Index("MillingStep_fk_millingStepNameId", "millingStepNameId"),
+        {"comment": "FIB Milling Step"},
+    )
+
+    millingStepId: Mapped[int] = mapped_column(INTEGER(11), primary_key=True)
+    gridSquareId: Mapped[int] = mapped_column(INTEGER(11))
+    millingStepNameId: Mapped[Optional[int]] = mapped_column(INTEGER(11))
+    isEnabled: Mapped[Optional[int]] = mapped_column(
+        TINYINT(1),
+        server_default=text("0"),
+        comment="This marks whether the milling step is enabled and queued up; when the FIB starts this step, it will be set to False",
+    )
+    status: Mapped[Optional[str]] = mapped_column(
+        Enum("Finished", "Failed", "Aborted"),
+        comment="Describes the status of the milling step",
+    )
+    executionTime: Mapped[Optional[float]] = mapped_column(
+        Float, comment="The time in seconds the step took to complete"
+    )
+    stageX: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Stage position in metres"
+    )
+    stageY: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Stage position in metres"
+    )
+    stageZ: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Stage position in metres"
+    )
+    rotation: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Rotation of stage in xy plane in degrees"
+    )
+    alphaTilt: Mapped[Optional[float]] = mapped_column(Float, comment="Unit: degrees")
+    beamType: Mapped[Optional[str]] = mapped_column(
+        Enum("Electron", "Ion"), comment="Type of beam used"
+    )
+    beamVoltage: Mapped[Optional[float]] = mapped_column(Float, comment="Unit: volts")
+    beamCurrent: Mapped[Optional[float]] = mapped_column(Float, comment="Unit: amperes")
+    millingAngle: Mapped[Optional[float]] = mapped_column(
+        Float, comment="The angle the stage is tilted to for milling, in degrees"
+    )
+    depthCorrection: Mapped[Optional[float]] = mapped_column(Float)
+    lamellaOffset: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Unit: metres"
+    )
+    trenchHeightFront: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Unit: metres"
+    )
+    trenchHeightRear: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Unit: metres"
+    )
+    widthOverlapFrontLeft: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Unit: metres"
+    )
+    widthOverlapFrontRight: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Unit: metres"
+    )
+    widthOverlapRearLeft: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Unit: metres"
+    )
+    widthOverlapRearRight: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Unit: metres"
+    )
+
+    GridSquare: Mapped["GridSquare"] = relationship(
+        "GridSquare", back_populates="MillingStep"
+    )
+    MillingStepName: Mapped["MillingStepName"] = relationship(
+        "MillingStepName", back_populates="MillingStep"
+    )
+
+
 class ProcessingJob(Base):
     __tablename__ = "ProcessingJob"
     __table_args__ = (
@@ -7209,6 +6931,9 @@ class AutoProcProgram(Base):
     ProcessingJob: Mapped["ProcessingJob"] = relationship(
         "ProcessingJob", back_populates="AutoProcProgram"
     )
+    AutoProc: Mapped[List["AutoProc"]] = relationship(
+        "AutoProc", back_populates="AutoProcProgram"
+    )
     AutoProcIntegration: Mapped[List["AutoProcIntegration"]] = relationship(
         "AutoProcIntegration", back_populates="AutoProcProgram"
     )
@@ -7217,9 +6942,6 @@ class AutoProcProgram(Base):
     )
     AutoProcProgramMessage: Mapped[List["AutoProcProgramMessage"]] = relationship(
         "AutoProcProgramMessage", back_populates="AutoProcProgram"
-    )
-    MXMRRun: Mapped[List["MXMRRun"]] = relationship(
-        "MXMRRun", back_populates="AutoProcProgram"
     )
     MotionCorrection: Mapped[List["MotionCorrection"]] = relationship(
         "MotionCorrection", back_populates="AutoProcProgram"
@@ -7248,6 +6970,9 @@ class AutoProcProgram(Base):
     )
     RelativeIceThickness: Mapped[List["RelativeIceThickness"]] = relationship(
         "RelativeIceThickness", back_populates="AutoProcProgram"
+    )
+    MXMRRun: Mapped[List["MXMRRun"]] = relationship(
+        "MXMRRun", back_populates="AutoProcProgram"
     )
     ParticleClassificationGroup: Mapped[List["ParticleClassificationGroup"]] = (
         relationship("ParticleClassificationGroup", back_populates="AutoProcProgram")
@@ -7425,6 +7150,63 @@ class ProcessingJobParameter(Base):
     )
 
 
+class AutoProc(Base):
+    __tablename__ = "AutoProc"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["autoProcProgramId"],
+            ["AutoProcProgram.autoProcProgramId"],
+            name="AutoProc_fk_autoProcProgramId",
+        ),
+        Index("AutoProc_FKIndex1", "autoProcProgramId"),
+        Index(
+            "AutoProc_refined_unit_cell",
+            "refinedCell_a",
+            "refinedCell_b",
+            "refinedCell_c",
+            "refinedCell_alpha",
+            "refinedCell_beta",
+            "refinedCell_gamma",
+        ),
+    )
+
+    autoProcId: Mapped[int] = mapped_column(
+        INTEGER(10), primary_key=True, comment="Primary key (auto-incremented)"
+    )
+    autoProcProgramId: Mapped[Optional[int]] = mapped_column(
+        INTEGER(10), comment="Related program item"
+    )
+    spaceGroup: Mapped[Optional[str]] = mapped_column(String(45), comment="Space group")
+    refinedCell_a: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Refined cell"
+    )
+    refinedCell_b: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Refined cell"
+    )
+    refinedCell_c: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Refined cell"
+    )
+    refinedCell_alpha: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Refined cell"
+    )
+    refinedCell_beta: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Refined cell"
+    )
+    refinedCell_gamma: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Refined cell"
+    )
+    recordTimeStamp: Mapped[Optional[datetime.datetime]] = mapped_column(
+        DateTime, comment="Creation or last update date/time"
+    )
+
+    AutoProcProgram: Mapped["AutoProcProgram"] = relationship(
+        "AutoProcProgram", back_populates="AutoProc"
+    )
+    AutoProcScaling: Mapped[List["AutoProcScaling"]] = relationship(
+        "AutoProcScaling", back_populates="AutoProc"
+    )
+
+
 class AutoProcIntegration(Base):
     __tablename__ = "AutoProcIntegration"
     __table_args__ = (
@@ -7501,11 +7283,11 @@ class AutoProcIntegration(Base):
     DataCollection: Mapped["DataCollection"] = relationship(
         "DataCollection", back_populates="AutoProcIntegration"
     )
-    AutoProcScaling_has_Int: Mapped[List["AutoProcScalingHasInt"]] = relationship(
-        "AutoProcScalingHasInt", back_populates="AutoProcIntegration"
-    )
     AutoProcStatus: Mapped[List["AutoProcStatus"]] = relationship(
         "AutoProcStatus", back_populates="AutoProcIntegration"
+    )
+    AutoProcScaling_has_Int: Mapped[List["AutoProcScalingHasInt"]] = relationship(
+        "AutoProcScalingHasInt", back_populates="AutoProcIntegration"
     )
 
 
@@ -7578,49 +7360,6 @@ class AutoProcProgramMessage(Base):
 
     AutoProcProgram: Mapped["AutoProcProgram"] = relationship(
         "AutoProcProgram", back_populates="AutoProcProgramMessage"
-    )
-
-
-class MXMRRun(Base):
-    __tablename__ = "MXMRRun"
-    __table_args__ = (
-        ForeignKeyConstraint(
-            ["autoProcProgramId"],
-            ["AutoProcProgram.autoProcProgramId"],
-            name="mxMRRun_FK2",
-        ),
-        ForeignKeyConstraint(
-            ["autoProcScalingId"],
-            ["AutoProcScaling.autoProcScalingId"],
-            name="mxMRRun_FK1",
-        ),
-        Index("mxMRRun_FK1", "autoProcScalingId"),
-        Index("mxMRRun_FK2", "autoProcProgramId"),
-    )
-
-    mxMRRunId: Mapped[int] = mapped_column(INTEGER(11), primary_key=True)
-    autoProcScalingId: Mapped[int] = mapped_column(INTEGER(11))
-    rValueStart: Mapped[Optional[float]] = mapped_column(Float)
-    rValueEnd: Mapped[Optional[float]] = mapped_column(Float)
-    rFreeValueStart: Mapped[Optional[float]] = mapped_column(Float)
-    rFreeValueEnd: Mapped[Optional[float]] = mapped_column(Float)
-    LLG: Mapped[Optional[float]] = mapped_column(Float, comment="Log Likelihood Gain")
-    TFZ: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Translation Function Z-score"
-    )
-    spaceGroup: Mapped[Optional[str]] = mapped_column(
-        String(45), comment="Space group of the MR solution"
-    )
-    autoProcProgramId: Mapped[Optional[int]] = mapped_column(INTEGER(11))
-
-    AutoProcProgram: Mapped["AutoProcProgram"] = relationship(
-        "AutoProcProgram", back_populates="MXMRRun"
-    )
-    AutoProcScaling: Mapped["AutoProcScaling"] = relationship(
-        "AutoProcScaling", back_populates="MXMRRun"
-    )
-    MXMRRunBlob: Mapped[List["MXMRRunBlob"]] = relationship(
-        "MXMRRunBlob", back_populates="MXMRRun"
     )
 
 
@@ -8049,49 +7788,47 @@ class ZcZocaloBuffer(Base):
     )
 
 
-class AutoProcScalingHasInt(Base):
-    __tablename__ = "AutoProcScaling_has_Int"
+class AutoProcScaling(Base):
+    __tablename__ = "AutoProcScaling"
     __table_args__ = (
         ForeignKeyConstraint(
-            ["autoProcIntegrationId"],
-            ["AutoProcIntegration.autoProcIntegrationId"],
+            ["autoProcId"],
+            ["AutoProc.autoProcId"],
             ondelete="CASCADE",
             onupdate="CASCADE",
-            name="AutoProcScaling_has_IntFk2",
+            name="AutoProcScalingFk1",
         ),
-        ForeignKeyConstraint(
-            ["autoProcScalingId"],
-            ["AutoProcScaling.autoProcScalingId"],
-            ondelete="CASCADE",
-            onupdate="CASCADE",
-            name="AutoProcScaling_has_IntFk1",
-        ),
-        Index("AutoProcScal_has_IntIdx2", "autoProcIntegrationId"),
-        Index(
-            "AutoProcScalingHasInt_FKIndex3",
-            "autoProcScalingId",
-            "autoProcIntegrationId",
-        ),
+        Index("AutoProcScalingFk1", "autoProcId"),
+        Index("AutoProcScalingIdx1", "autoProcScalingId", "autoProcId"),
     )
 
-    autoProcScaling_has_IntId: Mapped[int] = mapped_column(
+    autoProcScalingId: Mapped[int] = mapped_column(
         INTEGER(10), primary_key=True, comment="Primary key (auto-incremented)"
     )
-    autoProcIntegrationId: Mapped[int] = mapped_column(
-        INTEGER(10), comment="AutoProcIntegration item"
-    )
-    autoProcScalingId: Mapped[Optional[int]] = mapped_column(
-        INTEGER(10), comment="AutoProcScaling item"
+    autoProcId: Mapped[Optional[int]] = mapped_column(
+        INTEGER(10), comment="Related autoProc item (used by foreign key)"
     )
     recordTimeStamp: Mapped[Optional[datetime.datetime]] = mapped_column(
         DateTime, comment="Creation or last update date/time"
     )
 
-    AutoProcIntegration: Mapped["AutoProcIntegration"] = relationship(
-        "AutoProcIntegration", back_populates="AutoProcScaling_has_Int"
+    AutoProc: Mapped["AutoProc"] = relationship(
+        "AutoProc", back_populates="AutoProcScaling"
     )
-    AutoProcScaling: Mapped["AutoProcScaling"] = relationship(
-        "AutoProcScaling", back_populates="AutoProcScaling_has_Int"
+    AutoProcScalingStatistics: Mapped[List["AutoProcScalingStatistics"]] = relationship(
+        "AutoProcScalingStatistics", back_populates="AutoProcScaling"
+    )
+    AutoProcScaling_has_Int: Mapped[List["AutoProcScalingHasInt"]] = relationship(
+        "AutoProcScalingHasInt", back_populates="AutoProcScaling"
+    )
+    MXMRRun: Mapped[List["MXMRRun"]] = relationship(
+        "MXMRRun", back_populates="AutoProcScaling"
+    )
+    PhasingStep: Mapped[List["PhasingStep"]] = relationship(
+        "PhasingStep", back_populates="AutoProcScaling"
+    )
+    Phasing_has_Scaling: Mapped[List["PhasingHasScaling"]] = relationship(
+        "PhasingHasScaling", back_populates="AutoProcScaling"
     )
 
 
@@ -8190,62 +7927,6 @@ class CTF(Base):
     MotionCorrection: Mapped["MotionCorrection"] = relationship(
         "MotionCorrection", back_populates="CTF"
     )
-
-
-class MXMRRunBlob(Base):
-    __tablename__ = "MXMRRunBlob"
-    __table_args__ = (
-        ForeignKeyConstraint(
-            ["mxMRRunId"], ["MXMRRun.mxMRRunId"], name="mxMRRunBlob_FK1"
-        ),
-        Index("mxMRRunBlob_FK1", "mxMRRunId"),
-    )
-
-    mxMRRunBlobId: Mapped[int] = mapped_column(INTEGER(11), primary_key=True)
-    mxMRRunId: Mapped[int] = mapped_column(INTEGER(11))
-    view1: Mapped[Optional[str]] = mapped_column(String(255))
-    view2: Mapped[Optional[str]] = mapped_column(String(255))
-    view3: Mapped[Optional[str]] = mapped_column(String(255))
-    filePath: Mapped[Optional[str]] = mapped_column(
-        String(255),
-        comment="File path corresponding to the filenames in the view* columns",
-    )
-    x: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Fractional x coordinate of blob in range [-1, 1]"
-    )
-    y: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Fractional y coordinate of blob in range [-1, 1]"
-    )
-    z: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Fractional z coordinate of blob in range [-1, 1]"
-    )
-    height: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Blob height (sigmas)"
-    )
-    occupancy: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Site occupancy factor in range [0, 1]"
-    )
-    nearestAtomName: Mapped[Optional[str]] = mapped_column(
-        String(4), comment="Name of nearest atom"
-    )
-    nearestAtomChainId: Mapped[Optional[str]] = mapped_column(
-        String(2), comment="Chain identifier of nearest atom"
-    )
-    nearestAtomResName: Mapped[Optional[str]] = mapped_column(
-        String(4), comment="Residue name of nearest atom"
-    )
-    nearestAtomResSeq: Mapped[Optional[int]] = mapped_column(
-        MEDIUMINT(8), comment="Residue sequence number of nearest atom"
-    )
-    nearestAtomDistance: Mapped[Optional[float]] = mapped_column(
-        Float, comment="Distance in Angstrom to nearest atom"
-    )
-    mapType: Mapped[Optional[str]] = mapped_column(
-        Enum("anomalous", "difference"),
-        comment="Type of electron density map corresponding to this blob",
-    )
-
-    MXMRRun: Mapped["MXMRRun"] = relationship("MXMRRun", back_populates="MXMRRunBlob")
 
 
 class PDBEntryHasAutoProcProgram(Base):
@@ -8671,6 +8352,183 @@ class XFEFluorescenceComposite(Base):
     )
 
 
+class AutoProcScalingStatistics(Base):
+    __tablename__ = "AutoProcScalingStatistics"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["autoProcScalingId"],
+            ["AutoProcScaling.autoProcScalingId"],
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+            name="_AutoProcScalingStatisticsFk1",
+        ),
+        Index("AutoProcScalingStatistics_FKindexType", "scalingStatisticsType"),
+        Index(
+            "AutoProcScalingStatistics_scalingId_statisticsType",
+            "autoProcScalingId",
+            "scalingStatisticsType",
+        ),
+    )
+
+    autoProcScalingStatisticsId: Mapped[int] = mapped_column(
+        INTEGER(10), primary_key=True, comment="Primary key (auto-incremented)"
+    )
+    scalingStatisticsType: Mapped[str] = mapped_column(
+        Enum("overall", "innerShell", "outerShell"),
+        server_default=text("'overall'"),
+        comment="Scaling statistics type",
+    )
+    autoProcScalingId: Mapped[Optional[int]] = mapped_column(
+        INTEGER(10), comment="Related autoProcScaling item (used by foreign key)"
+    )
+    comments: Mapped[Optional[str]] = mapped_column(String(255), comment="Comments...")
+    resolutionLimitLow: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Low resolution limit"
+    )
+    resolutionLimitHigh: Mapped[Optional[float]] = mapped_column(
+        Float, comment="High resolution limit"
+    )
+    rMerge: Mapped[Optional[float]] = mapped_column(Float, comment="Rmerge")
+    rMeasWithinIPlusIMinus: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Rmeas (within I+/I-)"
+    )
+    rMeasAllIPlusIMinus: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Rmeas (all I+ & I-)"
+    )
+    rPimWithinIPlusIMinus: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Rpim (within I+/I-) "
+    )
+    rPimAllIPlusIMinus: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Rpim (all I+ & I-)"
+    )
+    fractionalPartialBias: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Fractional partial bias"
+    )
+    nTotalObservations: Mapped[Optional[int]] = mapped_column(
+        INTEGER(10), comment="Total number of observations"
+    )
+    nTotalUniqueObservations: Mapped[Optional[int]] = mapped_column(
+        INTEGER(10), comment="Total number unique"
+    )
+    meanIOverSigI: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Mean((I)/sd(I))"
+    )
+    completeness: Mapped[Optional[float]] = mapped_column(Float, comment="Completeness")
+    multiplicity: Mapped[Optional[float]] = mapped_column(Float, comment="Multiplicity")
+    anomalousCompleteness: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Anomalous completeness"
+    )
+    anomalousMultiplicity: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Anomalous multiplicity"
+    )
+    recordTimeStamp: Mapped[Optional[datetime.datetime]] = mapped_column(
+        DateTime, comment="Creation or last update date/time"
+    )
+    anomalous: Mapped[Optional[int]] = mapped_column(
+        TINYINT(1), server_default=text("0"), comment="boolean type:0 noanoum - 1 anoum"
+    )
+    ccHalf: Mapped[Optional[float]] = mapped_column(
+        Float, comment="information from XDS"
+    )
+    ccAnomalous: Mapped[Optional[float]] = mapped_column(Float)
+    resIOverSigI2: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Resolution where I/Sigma(I) equals 2"
+    )
+
+    AutoProcScaling: Mapped["AutoProcScaling"] = relationship(
+        "AutoProcScaling", back_populates="AutoProcScalingStatistics"
+    )
+
+
+class AutoProcScalingHasInt(Base):
+    __tablename__ = "AutoProcScaling_has_Int"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["autoProcIntegrationId"],
+            ["AutoProcIntegration.autoProcIntegrationId"],
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+            name="AutoProcScaling_has_IntFk2",
+        ),
+        ForeignKeyConstraint(
+            ["autoProcScalingId"],
+            ["AutoProcScaling.autoProcScalingId"],
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+            name="AutoProcScaling_has_IntFk1",
+        ),
+        Index("AutoProcScal_has_IntIdx2", "autoProcIntegrationId"),
+        Index(
+            "AutoProcScalingHasInt_FKIndex3",
+            "autoProcScalingId",
+            "autoProcIntegrationId",
+        ),
+    )
+
+    autoProcScaling_has_IntId: Mapped[int] = mapped_column(
+        INTEGER(10), primary_key=True, comment="Primary key (auto-incremented)"
+    )
+    autoProcIntegrationId: Mapped[int] = mapped_column(
+        INTEGER(10), comment="AutoProcIntegration item"
+    )
+    autoProcScalingId: Mapped[Optional[int]] = mapped_column(
+        INTEGER(10), comment="AutoProcScaling item"
+    )
+    recordTimeStamp: Mapped[Optional[datetime.datetime]] = mapped_column(
+        DateTime, comment="Creation or last update date/time"
+    )
+
+    AutoProcIntegration: Mapped["AutoProcIntegration"] = relationship(
+        "AutoProcIntegration", back_populates="AutoProcScaling_has_Int"
+    )
+    AutoProcScaling: Mapped["AutoProcScaling"] = relationship(
+        "AutoProcScaling", back_populates="AutoProcScaling_has_Int"
+    )
+
+
+class MXMRRun(Base):
+    __tablename__ = "MXMRRun"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["autoProcProgramId"],
+            ["AutoProcProgram.autoProcProgramId"],
+            name="mxMRRun_FK2",
+        ),
+        ForeignKeyConstraint(
+            ["autoProcScalingId"],
+            ["AutoProcScaling.autoProcScalingId"],
+            name="mxMRRun_FK1",
+        ),
+        Index("mxMRRun_FK1", "autoProcScalingId"),
+        Index("mxMRRun_FK2", "autoProcProgramId"),
+    )
+
+    mxMRRunId: Mapped[int] = mapped_column(INTEGER(11), primary_key=True)
+    autoProcScalingId: Mapped[int] = mapped_column(INTEGER(11))
+    rValueStart: Mapped[Optional[float]] = mapped_column(Float)
+    rValueEnd: Mapped[Optional[float]] = mapped_column(Float)
+    rFreeValueStart: Mapped[Optional[float]] = mapped_column(Float)
+    rFreeValueEnd: Mapped[Optional[float]] = mapped_column(Float)
+    LLG: Mapped[Optional[float]] = mapped_column(Float, comment="Log Likelihood Gain")
+    TFZ: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Translation Function Z-score"
+    )
+    spaceGroup: Mapped[Optional[str]] = mapped_column(
+        String(45), comment="Space group of the MR solution"
+    )
+    autoProcProgramId: Mapped[Optional[int]] = mapped_column(INTEGER(11))
+
+    AutoProcProgram: Mapped["AutoProcProgram"] = relationship(
+        "AutoProcProgram", back_populates="MXMRRun"
+    )
+    AutoProcScaling: Mapped["AutoProcScaling"] = relationship(
+        "AutoProcScaling", back_populates="MXMRRun"
+    )
+    MXMRRunBlob: Mapped[List["MXMRRunBlob"]] = relationship(
+        "MXMRRunBlob", back_populates="MXMRRun"
+    )
+
+
 class ParticleClassificationGroup(Base):
     __tablename__ = "ParticleClassificationGroup"
     __table_args__ = (
@@ -8719,6 +8577,116 @@ class ParticleClassificationGroup(Base):
     )
     ParticleClassification: Mapped[List["ParticleClassification"]] = relationship(
         "ParticleClassification", back_populates="ParticleClassificationGroup"
+    )
+
+
+class PhasingStep(Base):
+    __tablename__ = "PhasingStep"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["autoProcScalingId"],
+            ["AutoProcScaling.autoProcScalingId"],
+            name="FK_autoprocScaling",
+        ),
+        ForeignKeyConstraint(
+            ["programRunId"],
+            ["PhasingProgramRun.phasingProgramRunId"],
+            name="FK_program",
+        ),
+        ForeignKeyConstraint(
+            ["spaceGroupId"], ["SpaceGroup.spaceGroupId"], name="FK_spacegroup"
+        ),
+        Index("FK_autoprocScaling_id", "autoProcScalingId"),
+        Index("FK_phasingAnalysis_id", "phasingAnalysisId"),
+        Index("FK_programRun_id", "programRunId"),
+        Index("FK_spacegroup_id", "spaceGroupId"),
+    )
+
+    phasingStepId: Mapped[int] = mapped_column(INTEGER(10), primary_key=True)
+    recordTimeStamp: Mapped[datetime.datetime] = mapped_column(
+        TIMESTAMP, server_default=text("current_timestamp()")
+    )
+    previousPhasingStepId: Mapped[Optional[int]] = mapped_column(INTEGER(10))
+    programRunId: Mapped[Optional[int]] = mapped_column(INTEGER(10))
+    spaceGroupId: Mapped[Optional[int]] = mapped_column(INTEGER(10))
+    autoProcScalingId: Mapped[Optional[int]] = mapped_column(INTEGER(10))
+    phasingAnalysisId: Mapped[Optional[int]] = mapped_column(INTEGER(10))
+    phasingStepType: Mapped[Optional[str]] = mapped_column(
+        Enum("PREPARE", "SUBSTRUCTUREDETERMINATION", "PHASING", "MODELBUILDING")
+    )
+    method: Mapped[Optional[str]] = mapped_column(String(45))
+    solventContent: Mapped[Optional[str]] = mapped_column(String(45))
+    enantiomorph: Mapped[Optional[str]] = mapped_column(String(45))
+    lowRes: Mapped[Optional[str]] = mapped_column(String(45))
+    highRes: Mapped[Optional[str]] = mapped_column(String(45))
+
+    AutoProcScaling: Mapped["AutoProcScaling"] = relationship(
+        "AutoProcScaling", back_populates="PhasingStep"
+    )
+    PhasingProgramRun: Mapped["PhasingProgramRun"] = relationship(
+        "PhasingProgramRun", back_populates="PhasingStep"
+    )
+    SpaceGroup: Mapped["SpaceGroup"] = relationship(
+        "SpaceGroup", back_populates="PhasingStep"
+    )
+    PhasingStatistics: Mapped[List["PhasingStatistics"]] = relationship(
+        "PhasingStatistics", back_populates="PhasingStep"
+    )
+
+
+class PhasingHasScaling(Base):
+    __tablename__ = "Phasing_has_Scaling"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["autoProcScalingId"],
+            ["AutoProcScaling.autoProcScalingId"],
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+            name="PhasingHasScaling_autoProcScalingfk_1",
+        ),
+        ForeignKeyConstraint(
+            ["phasingAnalysisId"],
+            ["PhasingAnalysis.phasingAnalysisId"],
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+            name="PhasingHasScaling_phasingAnalysisfk_1",
+        ),
+        Index("PhasingHasScaling_FKIndex1", "phasingAnalysisId"),
+        Index("PhasingHasScaling_FKIndex2", "autoProcScalingId"),
+    )
+
+    phasingHasScalingId: Mapped[int] = mapped_column(
+        INTEGER(11), primary_key=True, comment="Primary key (auto-incremented)"
+    )
+    phasingAnalysisId: Mapped[int] = mapped_column(
+        INTEGER(11), comment="Related phasing analysis item"
+    )
+    autoProcScalingId: Mapped[int] = mapped_column(
+        INTEGER(10), comment="Related autoProcScaling item"
+    )
+    datasetNumber: Mapped[Optional[int]] = mapped_column(
+        INTEGER(11),
+        comment="serial number of the dataset and always reserve 0 for the reference",
+    )
+    recordTimeStamp: Mapped[Optional[datetime.datetime]] = mapped_column(
+        DateTime, server_default=text("current_timestamp()")
+    )
+
+    AutoProcScaling: Mapped["AutoProcScaling"] = relationship(
+        "AutoProcScaling", back_populates="Phasing_has_Scaling"
+    )
+    PhasingAnalysis: Mapped["PhasingAnalysis"] = relationship(
+        "PhasingAnalysis", back_populates="Phasing_has_Scaling"
+    )
+    PhasingStatistics: Mapped[List["PhasingStatistics"]] = relationship(
+        "PhasingStatistics",
+        foreign_keys="[PhasingStatistics.phasingHasScalingId1]",
+        back_populates="Phasing_has_Scaling",
+    )
+    PhasingStatistics: Mapped[List["PhasingStatistics"]] = relationship(
+        "PhasingStatistics",
+        foreign_keys="[PhasingStatistics.phasingHasScalingId2]",
+        back_populates="Phasing_has_Scaling",
     )
 
 
@@ -8809,6 +8777,62 @@ class ScreeningStrategy(Base):
     )
 
 
+class MXMRRunBlob(Base):
+    __tablename__ = "MXMRRunBlob"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["mxMRRunId"], ["MXMRRun.mxMRRunId"], name="mxMRRunBlob_FK1"
+        ),
+        Index("mxMRRunBlob_FK1", "mxMRRunId"),
+    )
+
+    mxMRRunBlobId: Mapped[int] = mapped_column(INTEGER(11), primary_key=True)
+    mxMRRunId: Mapped[int] = mapped_column(INTEGER(11))
+    view1: Mapped[Optional[str]] = mapped_column(String(255))
+    view2: Mapped[Optional[str]] = mapped_column(String(255))
+    view3: Mapped[Optional[str]] = mapped_column(String(255))
+    filePath: Mapped[Optional[str]] = mapped_column(
+        String(255),
+        comment="File path corresponding to the filenames in the view* columns",
+    )
+    x: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Fractional x coordinate of blob in range [-1, 1]"
+    )
+    y: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Fractional y coordinate of blob in range [-1, 1]"
+    )
+    z: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Fractional z coordinate of blob in range [-1, 1]"
+    )
+    height: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Blob height (sigmas)"
+    )
+    occupancy: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Site occupancy factor in range [0, 1]"
+    )
+    nearestAtomName: Mapped[Optional[str]] = mapped_column(
+        String(4), comment="Name of nearest atom"
+    )
+    nearestAtomChainId: Mapped[Optional[str]] = mapped_column(
+        String(2), comment="Chain identifier of nearest atom"
+    )
+    nearestAtomResName: Mapped[Optional[str]] = mapped_column(
+        String(4), comment="Residue name of nearest atom"
+    )
+    nearestAtomResSeq: Mapped[Optional[int]] = mapped_column(
+        MEDIUMINT(8), comment="Residue sequence number of nearest atom"
+    )
+    nearestAtomDistance: Mapped[Optional[float]] = mapped_column(
+        Float, comment="Distance in Angstrom to nearest atom"
+    )
+    mapType: Mapped[Optional[str]] = mapped_column(
+        Enum("anomalous", "difference"),
+        comment="Type of electron density map corresponding to this blob",
+    )
+
+    MXMRRun: Mapped["MXMRRun"] = relationship("MXMRRun", back_populates="MXMRRunBlob")
+
+
 class ParticleClassification(Base):
     __tablename__ = "ParticleClassification"
     __table_args__ = (
@@ -8886,6 +8910,98 @@ class ParticleClassification(Base):
     )
     BFactorFit: Mapped[List["BFactorFit"]] = relationship(
         "BFactorFit", back_populates="ParticleClassification"
+    )
+
+
+class PhasingStatistics(Base):
+    __tablename__ = "PhasingStatistics"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["phasingHasScalingId1"],
+            ["Phasing_has_Scaling.phasingHasScalingId"],
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+            name="PhasingStatistics_phasingHasScalingfk_1",
+        ),
+        ForeignKeyConstraint(
+            ["phasingHasScalingId2"],
+            ["Phasing_has_Scaling.phasingHasScalingId"],
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+            name="PhasingStatistics_phasingHasScalingfk_2",
+        ),
+        ForeignKeyConstraint(
+            ["phasingStepId"],
+            ["PhasingStep.phasingStepId"],
+            name="fk_PhasingStatistics_phasingStep",
+        ),
+        Index("PhasingStatistics_FKIndex1", "phasingHasScalingId1"),
+        Index("PhasingStatistics_FKIndex2", "phasingHasScalingId2"),
+        Index("fk_PhasingStatistics_phasingStep_idx", "phasingStepId"),
+    )
+
+    phasingStatisticsId: Mapped[int] = mapped_column(
+        INTEGER(11), primary_key=True, comment="Primary key (auto-incremented)"
+    )
+    phasingHasScalingId1: Mapped[int] = mapped_column(
+        INTEGER(11), comment="the dataset in question"
+    )
+    phasingHasScalingId2: Mapped[Optional[int]] = mapped_column(
+        INTEGER(11),
+        comment="if this is MIT or MAD, which scaling are being compared, null otherwise",
+    )
+    phasingStepId: Mapped[Optional[int]] = mapped_column(INTEGER(10))
+    numberOfBins: Mapped[Optional[int]] = mapped_column(
+        INTEGER(11), comment="the total number of bins"
+    )
+    binNumber: Mapped[Optional[int]] = mapped_column(
+        INTEGER(11), comment="binNumber, 999 for overall"
+    )
+    lowRes: Mapped[Optional[decimal.Decimal]] = mapped_column(
+        Double(asdecimal=True), comment="low resolution cutoff of this binfloat"
+    )
+    highRes: Mapped[Optional[decimal.Decimal]] = mapped_column(
+        Double(asdecimal=True), comment="high resolution cutoff of this binfloat"
+    )
+    metric: Mapped[Optional[str]] = mapped_column(
+        Enum(
+            "Rcullis",
+            "Average Fragment Length",
+            "Chain Count",
+            "Residues Count",
+            "CC",
+            "PhasingPower",
+            "FOM",
+            '<d"/sig>',
+            "Best CC",
+            "CC(1/2)",
+            "Weak CC",
+            "CFOM",
+            "Pseudo_free_CC",
+            "CC of partial model",
+        ),
+        comment="metric",
+    )
+    statisticsValue: Mapped[Optional[decimal.Decimal]] = mapped_column(
+        Double(asdecimal=True), comment="the statistics value"
+    )
+    nReflections: Mapped[Optional[int]] = mapped_column(INTEGER(11))
+    recordTimeStamp: Mapped[Optional[datetime.datetime]] = mapped_column(
+        DateTime, server_default=text("current_timestamp()")
+    )
+
+    Phasing_has_Scaling: Mapped["PhasingHasScaling"] = relationship(
+        "PhasingHasScaling",
+        foreign_keys=[phasingHasScalingId1],
+        back_populates="PhasingStatistics",
+    )
+    Phasing_has_Scaling: Mapped["PhasingHasScaling"] = relationship(
+        "PhasingHasScaling",
+        foreign_keys=[phasingHasScalingId2],
+        back_populates="PhasingStatistics",
+    )
+    PhasingStep: Mapped["PhasingStep"] = relationship(
+        "PhasingStep", back_populates="PhasingStatistics"
     )
 
 
