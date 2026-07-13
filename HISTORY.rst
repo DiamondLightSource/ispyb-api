@@ -5,7 +5,12 @@ History
 Unreleased / main
 -------------------
 
-12.0.1 (2026-05-18)
+12.1.1 (2026-07-13)
+-------------------
+
+* Update database schema to v5.2.0
+
+12.1.0 (2026-05-18)
 -------------------
 
 * Update database schema to v5.1.0 
