@@ -1,4 +1,4 @@
-__schema_version__ = "5.1.0"
+__schema_version__ = "5.2.0"
 import datetime
 import decimal
 from typing import List, Optional
@@ -6917,6 +6917,10 @@ class AutoProcProgram(Base):
     processingJobId: Mapped[Optional[int]] = mapped_column(INTEGER(11))
     processingPipelineId: Mapped[Optional[int]] = mapped_column(INTEGER(11))
     parentAutoProcProgramId: Mapped[Optional[int]] = mapped_column(INTEGER(10))
+    jobUuid: Mapped[Optional[bytes]] = mapped_column(
+        BINARY(16),
+        comment="External UUID for the job as described by the Zocalo service",
+    )
 
     AutoProcProgram: Mapped["AutoProcProgram"] = relationship(
         "AutoProcProgram",
@@ -7658,6 +7662,7 @@ class Tomogram(Base):
     pixelLocationY: Mapped[Optional[int]] = mapped_column(
         INTEGER(11), comment="pixel location of tomogram centre on search map image (y)"
     )
+    thickness: Mapped[Optional[float]] = mapped_column(Float, comment="Unit: nm")
 
     AutoProcProgram: Mapped["AutoProcProgram"] = relationship(
         "AutoProcProgram", back_populates="Tomogram"
